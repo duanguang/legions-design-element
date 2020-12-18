@@ -1,0 +1,16 @@
+{
+    "singleQuote": true,
+    "trailingComma": "all",
+    "printWidth": 140,
+    "overrides": [{
+        "files": ".prettierrc",
+        "options": {
+            "parser": "json"
+        }
+    }],
+    "semi": true,
+    "bracketSpacing": true,
+    "jsxBracketSameLine": true,
+    "insertPragma": true,
+    "proseWrap": "always"
+}
