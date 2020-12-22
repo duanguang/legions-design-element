@@ -7,7 +7,7 @@
     "pro-echarts"
   ],
   "author": "duanguang <18520583569@163.com>",
-  "homepage": "https://github.com/duanguang/legions-design-element.git",
+  "homepage": "https://github.com/duanguang/legions-design-element/tree/master/packages/legions-pro-echarts",
   "license": "MIT",
   "main": "dist/legions-pro-echarts.umd.js",
   "module": "dist/legions-pro-echarts.umd.js",
@@ -64,6 +64,7 @@
   ],  
   "scripts": {
     "test": "jest --no-cache",
+    "test:proEhcarts": "jest --no-cache --watch /src/components/LegionsProEcharts/.*.ts",
     "test1": "jest --watch /__tests__/legions-micro-service.*.ts",
     "build:b": "cross-env PACKAGE=browser lrpc rpc -c",
     "build:es": "cross-env PACKAGE=es lrpc rpc -c",
