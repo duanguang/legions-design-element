@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[59],{1291:function(n,o){n.exports={content:["article"],meta:{order:12,title:{"zh-CN":"动效","en-US":"Motion"},link:"http://motion.ant.design",filename:"docs/spec/motion.md"},toc:["ul"]}}}]);

@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-23 10:55:09
- * @LastEditTime: 2020-12-23 10:55:39
+ * @LastEditTime: 2020-12-23 16:36:37
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-echarts/site/bisheng.config.js
@@ -16,7 +16,7 @@ const usePreact = process.env.REACT_ENV === 'preact';
 module.exports = {
   port: 8001,
   source: {
-    components: './components',
+    /* components: './components', */
     docs: './docs',
     changelog: [
       'CHANGELOG.zh-CN.md',
@@ -55,16 +55,20 @@ module.exports = {
       return [filePath, filePath.replace(/\.html$/, '-cn.html')];
     }
     return filePath;
-  },
+    },
+    lessConfig: {
+        javascriptEnabled: true,
+      },
   doraConfig: {
     verbose: true,
-    plugins: ['dora-plugin-upload'],
+    /* plugins: ['dora-plugin-upload'], */
   },
-  webpackConfig(config) {
+    webpackConfig(config) {
     config.resolve.alias = {
-      'antd/lib': path.join(process.cwd(), 'components'),
-      antd: path.join(process.cwd(), 'index'),
-      site: path.join(process.cwd(), 'site'),
+        /* 'antd/lib': path.join(process.cwd(), 'components'),
+        'antd/es': path.join(process.cwd(), 'components'),
+        antd: path.join(process.cwd(), 'index'), */
+      /* site: path.join(process.cwd(), 'site'), */
       'react-router': 'react-router/umd/ReactRouter',
     };
 
@@ -73,23 +77,20 @@ module.exports = {
     };
 
     if (usePreact) {
-      config.resolve.alias = Object.assign({}, config.resolve.alias, {
+      /* config.resolve.alias = Object.assign({}, config.resolve.alias, {
         react: 'preact-compat',
         'react-dom': 'preact-compat',
         'create-react-class': 'preact-compat/lib/create-react-class',
         'react-router': 'react-router',
-      });
+      }); */
     }
+    /* config.module.rules.push({
+        test: /\.mjs$/,
+        include: /node_modules/,
+        type: 'javascript/auto',
+      }); */
 
-    config.babel.plugins.push([
-      require.resolve('babel-plugin-transform-runtime'),
-      {
-        polyfill: false,
-        regenerator: true,
-      },
-    ]);
-
-    config.plugins.push(new CSSSplitWebpackPlugin({ size: 4000 }));
+    /* config.plugins.push(new CSSSplitWebpackPlugin({ size: 4000 })); */
 
     return config;
   },

@@ -1,12 +1,3 @@
-/*
- * @Author: duanguang
- * @Date: 2020-12-23 10:57:13
- * @LastEditTime: 2020-12-23 10:57:20
- * @LastEditors: duanguang
- * @Description: 
- * @FilePath: /legions-design-element/packages/legions-pro-echarts/site/theme/en-US.js
- * @「扫去窗上的尘埃，才可以看到窗外的美景。」
- */
 const appLocaleData = require('react-intl/locale-data/en');
 
 module.exports = {

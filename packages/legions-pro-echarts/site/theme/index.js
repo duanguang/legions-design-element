@@ -1,16 +1,15 @@
 /*
  * @Author: duanguang
- * @Date: 2020-12-23 10:58:15
- * @LastEditTime: 2020-12-23 10:58:22
+ * @Date: 2018-04-27 20:06:00
+ * @LastEditTime: 2020-12-23 16:01:24
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-echarts/site/theme/index.js
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
-
 const path = require('path');
 
-const homeTmpl = './template/Home/index';
+const homeTmpl = './template/Home/index.jsx';
 const contentTmpl = './template/Content/index';
 
 function pickerGenerator(module) {
