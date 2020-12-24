@@ -1,3 +1,12 @@
+/*
+ * @Author: duanguang
+ * @Date: 2018-04-27 20:06:00
+ * @LastEditTime: 2020-12-23 23:58:50
+ * @LastEditors: duanguang
+ * @Description: 
+ * @FilePath: /legions-design-element/packages/legions-pro-echarts/site/theme/en-US.js
+ * @「扫去窗上的尘埃，才可以看到窗外的美景。」
+ */
 const appLocaleData = require('react-intl/locale-data/en');
 
 module.exports = {
@@ -21,7 +30,7 @@ module.exports = {
     'app.demo.copied': 'Copied!',
     'app.demo.codepen': 'Open in CodePen',
     'app.demo.riddle': 'Open in Riddle',
-    'app.home.slogan': 'A UI Design Language',
+    'app.home.slogan': 'Use Ant Design like a Pro!',
     'app.home.introduce': 'Introduce',
     'app.home.start': 'Get Started',
     'app.home.best-practice': 'Best Practice',

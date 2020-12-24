@@ -1,3 +1,12 @@
+/*
+ * @Author: duanguang
+ * @Date: 2018-04-27 20:06:00
+ * @LastEditTime: 2020-12-24 00:00:38
+ * @LastEditors: duanguang
+ * @Description: 
+ * @FilePath: /legions-design-element/packages/legions-pro-echarts/site/theme/zh-CN.js
+ * @「扫去窗上的尘埃，才可以看到窗外的美景。」
+ */
 const appLocaleData = require('react-intl/locale-data/zh');
 
 module.exports = {
@@ -21,7 +30,7 @@ module.exports = {
     'app.demo.copied': '复制成功',
     'app.demo.codepen': '在 CodePen 中打开',
     'app.demo.riddle': '在 Riddle 中打开',
-    'app.home.slogan': '一个 UI 设计语言',
+    'app.home.slogan': '基于Echarts 设计的可视化业务组件库',
     'app.home.introduce': '设计规范',
     'app.home.start': '开发指引',
     'app.home.best-practice': '最佳实践',

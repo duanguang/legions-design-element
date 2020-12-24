@@ -27,7 +27,7 @@ export default function Banner({ location, onEnterChange }) {
         playScale={0.9}
       >
         <QueueAnim className="banner-text-wrapper" type={typeFunc} delay={300} key="banner">
-          <h2 key="h2">ANT <p>DESIGN</p></h2>
+          <h2 key="h2">Legions <p>ProEcharts</p></h2>
           <p key="content"><FormattedMessage id="app.home.slogan" /></p>
           <span className="line" key="line" />
           <div key="button1" className="start-button clearfix">

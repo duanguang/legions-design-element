@@ -9,9 +9,10 @@ import Footer from './Footer';
 import enLocale from '../../en-US';
 import cnLocale from '../../zh-CN';
 import * as utils from '../utils';
+import 'antd/dist/antd.less';
 import 'react-github-button/assets/style.css';
 import '../../static/index.less';
-import 'antd/dist/antd.less';
+
 // if (typeof window !== 'undefined') {
 //   /* eslint-disable global-require */
 //   require('../../static/style');
