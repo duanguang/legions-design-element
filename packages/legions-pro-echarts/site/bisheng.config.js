@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-23 10:55:09
- * @LastEditTime: 2020-12-23 16:36:37
+ * @LastEditTime: 2020-12-24 21:48:35
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-echarts/site/bisheng.config.js
@@ -16,7 +16,7 @@ const usePreact = process.env.REACT_ENV === 'preact';
 module.exports = {
   port: 8001,
   source: {
-    /* components: './components', */
+    components: './components',
     docs: './docs',
     changelog: [
       'CHANGELOG.zh-CN.md',
@@ -61,7 +61,7 @@ module.exports = {
       },
   doraConfig: {
     verbose: true,
-    /* plugins: ['dora-plugin-upload'], */
+    plugins: ['dora-plugin-upload'],
   },
     webpackConfig(config) {
     config.resolve.alias = {

@@ -88,22 +88,22 @@ class Footer extends React.Component {
       <footer id="footer">
         <ul>
           <li>
-            <h2><Icon type="github" /> Ant Design</h2>
+            <h2><Icon type="github" /> Legions Design Element</h2>
             <div>
-              <a target="_blank " href="https://github.com/ant-design/ant-design">
+              <a target="_blank " href="https://github.com/duanguang/legions-design-element.git">
                 GitHub
               </a>
             </div>
             <div>
-              <a href="http://pro.ant.design">Ant Design Pro</a>
+              <a href="https://github.com/duanguang/legions-design-element/tree/master/packages/legions-pro-echarts">Legions Pro Echarts</a>
             </div>
             <div>
-              <a href="http://mobile.ant.design">Ant Design Mobile</a>
+              <a href="http://mobile.ant.design">Legions Pro Design</a>
             </div>
             <div>
-              <a href="http://ng.ant.design">NG-ZORRO</a>
+              <a href="http://ng.ant.design">Legions Pro Mobile Design</a>
               <span> - </span>
-              Ant Design of Angular
+              Legions Pro Mobile Design
             </div>
             <div>
               <a target="_blank " href="https://github.com/websemantics/awesome-ant-design">
@@ -131,18 +131,14 @@ class Footer extends React.Component {
                   '#ffbf00',
                   '#00a2ae',
                 ]}
-                onChangeComplete={this.handleColorChange}
+               /*  onChangeComplete={this.handleColorChange} */
               />
             </div>
           </li>
           <li>
             <h2><Icon type="link" /> <FormattedMessage id="app.footer.resources" /></h2>
-            <div>
-              <a href="http://scaffold.ant.design">Scaffolds</a>
-              <span> - </span>
-              <FormattedMessage id="app.footer.scaffolds" />
-            </div>
-            <div>
+            
+            {/* <div>
               <a target="_blank" rel="noopener noreferrer" href="https://github.com/dvajs/dva">dva</a> - <FormattedMessage id="app.footer.dva" />
             </div>
             <div>
@@ -173,7 +169,7 @@ class Footer extends React.Component {
               <a target="_blank" rel="noopener noreferrer" href="http://ux.ant.design">Ant UX</a>
               <span> - </span>
               <FormattedMessage id="app.footer.antux" />
-            </div>
+            </div> */}
           </li>
           <li>
             <h2><Icon type="customer-service" /> <FormattedMessage id="app.footer.community" /></h2>
@@ -182,38 +178,19 @@ class Footer extends React.Component {
                 <FormattedMessage id="app.footer.change-log" />
               </a>
             </div>
+          
             <div>
-              <a target="_blank" rel="noopener noreferrer" href="https://github.com/ant-design/ant-design/wiki/FAQ">
-                <FormattedMessage id="app.footer.faq" />
-              </a>
-            </div>
-            <div>
-              <a target="_blank" rel="noopener noreferrer" href="https://gitter.im/ant-design/ant-design">
-                <FormattedMessage id="app.footer.discuss-cn" />
-              </a>
-            </div>
-            <div>
-              <a target="_blank" rel="noopener noreferrer" href="https://gitter.im/ant-design/ant-design-english">
-                <FormattedMessage id="app.footer.discuss-en" />
-              </a>
-            </div>
-            <div>
-              <a target="_blank" rel="noopener noreferrer" href="http://new-issue.ant.design/">
-                <FormattedMessage id="app.footer.bug-report" />
-              </a>
-            </div>
-            <div>
-              <a target="_blank" rel="noopener noreferrer" href="https://github.com/ant-design/ant-design/issues">
+              <a target="_blank" rel="noopener noreferrer" href="https://github.com/duanguang/legions-design-element/issues">
                 <FormattedMessage id="app.footer.issues" />
               </a>
             </div>
             <div>
-              <a target="_blank" rel="noopener noreferrer" href="http://stackoverflow.com/questions/tagged/antd">
+              <a target="_blank" rel="noopener noreferrer" href="http://stackoverflow.com/questions/tagged/legions-pro-echarts">
                 <FormattedMessage id="app.footer.stackoverflow" />
               </a>
             </div>
             <div>
-              <a target="_blank" rel="noopener noreferrer" href="https://segmentfault.com/t/antd">
+              <a target="_blank" rel="noopener noreferrer" href="https://segmentfault.com/t/legions-pro-echarts">
                 <FormattedMessage id="app.footer.segmentfault" />
               </a>
             </div>

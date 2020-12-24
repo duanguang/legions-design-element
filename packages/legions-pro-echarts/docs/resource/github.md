@@ -1,5 +1,5 @@
 ---
 order: 3
-link: //github.com/ant-design/ant-design
+link: https://github.com/duanguang/legions-design-element/tree/master/packages/legions-pro-echarts
 title: GitHub
 ---

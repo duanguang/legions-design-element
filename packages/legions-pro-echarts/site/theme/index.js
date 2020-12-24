@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2018-04-27 20:06:00
- * @LastEditTime: 2020-12-23 16:01:24
+ * @LastEditTime: 2020-12-24 20:46:02
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-echarts/site/theme/index.js
@@ -52,7 +52,7 @@ module.exports = {
     'docs/pattern': pickerGenerator('pattern'),
     'docs/react': pickerGenerator('react'),
     'docs/resource': pickerGenerator('resource'),
-    'docs/spec': pickerGenerator('spec'),
+   /*  'docs/spec': pickerGenerator('spec'), */
   },
   plugins: [
     'bisheng-plugin-description',

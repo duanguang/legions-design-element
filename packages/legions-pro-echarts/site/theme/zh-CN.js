@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2018-04-27 20:06:00
- * @LastEditTime: 2020-12-24 00:00:38
+ * @LastEditTime: 2020-12-24 18:53:12
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-echarts/site/theme/zh-CN.js
@@ -68,7 +68,7 @@ module.exports = {
     'app.footer.bug-report': '报告 Bug',
     'app.footer.issues': '讨论列表',
     'app.footer.version': '文档版本：',
-    'app.footer.author': '蚂蚁金服体验技术部出品 @ AFX',
+    'app.footer.author': '昊链科技前端出品 @ AFX',
     'app.footer.work_with_us': '加入我们',
     'app.publish.title': 'antd@2.0.0 发布！',
     'app.publish.greeting': '你好，',
