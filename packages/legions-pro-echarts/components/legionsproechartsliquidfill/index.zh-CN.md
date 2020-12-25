@@ -1,8 +1,8 @@
 ---
 category: Components
 type: General
-title: LegionsProEchartsLiquidFill
-subtitle: 球状液体填充
+title: ProEchartsLiquidFill
+subtitle: 球状
 ---
 
 球状液体填充通常用来表示百分比，比如流量使用占比，销售数据占比等

@@ -87,7 +87,7 @@
     "test": "jest --no-cache",
     "test:proEhcarts": "jest --no-cache --watch /src/components/LegionsProEcharts/.*.ts",
     "test1": "jest --watch /__tests__/legions-micro-service.*.ts",
-    "site": "cross-env NODE_ENV=production bisheng build --ssr -c ./site/bisheng.config.js",
+    "site": "cross-env NODE_ENV=production bisheng build -c ./site/bisheng.config.js",
     "start": "rimraf _site && mkdir _site &&  cross-env NODE_ENV=development bisheng start -c ./site/bisheng.config.js",
     "build:b": "cross-env PACKAGE=browser lrpc rpc -c",
     "build:es": "cross-env PACKAGE=es lrpc rpc -c",

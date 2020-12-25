@@ -11,18 +11,18 @@ import cnLocale from '../../zh-CN';
 import * as utils from '../utils';
 import 'antd/dist/antd.less';
 import 'react-github-button/assets/style.css';
-import '../../static/index.less';
+/* import '../../static/index.less'; */
 
-// if (typeof window !== 'undefined') {
-//   /* eslint-disable global-require */
-//   require('../../static/style');
+if (typeof window !== 'undefined') {
+  /* eslint-disable global-require */
+  require('../../static/index.less');
 
-//   // Expose to iframe
-//   window.react = React;
-//   window['react-dom'] = ReactDOM;
-//   window.antd = require('antd');
-//   /* eslint-enable global-require */
-// }
+  // Expose to iframe
+  window.react = React;
+  window['react-dom'] = ReactDOM;
+  window.antd = require('antd');
+  /* eslint-enable global-require */
+}
 
 export default class Layout extends React.Component {
   static contextTypes = {

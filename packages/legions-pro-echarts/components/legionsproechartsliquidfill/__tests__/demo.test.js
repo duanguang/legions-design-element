@@ -9,4 +9,4 @@
  */
 import demoTest from '../../../tests/shared/demoTest';
 
-demoTest('LegionsProEchartsLiquidFill');
+demoTest('legionsproechartsliquidfill');
