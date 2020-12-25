@@ -49,7 +49,7 @@ module.exports = {
         };
       }
     },
-    'docs/pattern': pickerGenerator('pattern'),
+    /* 'docs/pattern': pickerGenerator('pattern'), */
     'docs/react': pickerGenerator('react'),
     'docs/resource': pickerGenerator('resource'),
    /*  'docs/spec': pickerGenerator('spec'), */

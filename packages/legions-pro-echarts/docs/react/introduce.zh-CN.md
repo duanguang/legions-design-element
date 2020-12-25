@@ -1,9 +1,11 @@
 ---
 order: 0
-title: Ant Design of React
+title: Legions Pro Echarts of React
 ---
 
-这里是 Ant Design 的 React 实现，开发和服务于企业级后台产品。
+Echarts 定义了基础的可视化规范，对应也提供了大量的基础组件。但是对于中后台类应用，我们希望提供更高程度的抽象，提供更上层的设计规范，并且对应提供相应的组件使得开发者可以快速搭建出高质量的页面。
+
+在 ProErcharts 中我们内置了一系列的设计规范，预设了常用的逻辑。在这个基础上我们同样提供了灵活的支持。我们希望通过 Pro 系列组件提供快速高效大家高质量中后台应用的能力，进一步扩展 Echarts 的能力，欢迎使用并提出宝贵的意见。
 
 <div class="pic-plus">
   <img width="150" src="https://t.alipayobjects.com/images/rmsweb/T11aVgXc4eXXXXXXXX.svg">
@@ -28,15 +30,14 @@ title: Ant Design of React
 ## 特性
 
 - 提炼自企业级中后台产品的交互语言和视觉风格。
-- 开箱即用的高质量 React 组件。
+- 开箱即用的高质量 React 可视化组件。
 - 使用 TypeScript 构建，提供完整的类型定义文件。
 - 基于 npm + webpack + babel 的工作流，支持 ES2015 和 TypeScript。
 
 ## 支持环境
 
-* 现代浏览器和 IE9 及以上（需要 [polyfills](https://ant.design/docs/react/getting-started-cn#兼容性)）。
-* 支持服务端渲染。
-* [Electron](http://electron.atom.io/)
+* 现代浏览器和 IE11 及以上（需要 [polyfills](https://ant.design/docs/react/getting-started-cn#兼容性)）。
+
 
 ## 版本
 
@@ -52,35 +53,32 @@ title: Ant Design of React
 **我们推荐使用 npm 或 yarn 的方式进行开发**，不仅可在开发环境轻松调试，也可放心地在生产环境打包部署使用，享受整个生态圈和工具链带来的诸多好处。
 
 ```bash
-$ npm install antd --save
+$ npm install legions-pro-echarts --save
 ```
 
 ```bash
-$ yarn add antd
+$ yarn add legions-pro-echarts
 ```
 
 如果你的网络环境不佳，推荐使用 [cnpm](https://github.com/cnpm/cnpm)。
 
 ### 浏览器引入
 
-在浏览器中使用 `script` 和 `link` 标签直接引入文件，并使用全局变量 `antd`。
 
-我们在 npm 发布包内的 `antd/dist` 目录下提供了 `antd.js` `antd.css` 以及 `antd.min.js` `antd.min.css`。你也可以通过 [![CDNJS](https://img.shields.io/cdnjs/v/antd.svg?style=flat-square)](https://cdnjs.com/libraries/antd)
- 或 [UNPKG](https://unpkg.com/antd/dist/) 进行下载。
 
 > **强烈不推荐使用已构建文件**，这样无法按需加载，而且难以获得底层依赖模块的 bug 快速修复支持。
 
 ## 示例
 
 ```jsx
-import { DatePicker } from 'antd';
-ReactDOM.render(<DatePicker />, mountNode);
+import { LegionsProEchartsLiquidFill } from 'legions-pro-echarts';
+ReactDOM.render(<LegionsProEchartsLiquidFill option={{}} />, mountNode);
 ```
 
 引入样式：
 
 ```jsx
-import 'antd/dist/antd.css';  // or 'antd/dist/antd.less'
+import 'legions-pro-echarts/dist/legions-pro-echarts.css';  // or 'legions-pro-echarts/dist/legions-pro-echarts.less'
 ```
 
 ### 按需加载
@@ -93,7 +91,7 @@ import 'antd/dist/antd.css';  // or 'antd/dist/antd.less'
    // .babelrc or babel-loader option
    {
      "plugins": [
-       ["import", { "libraryName": "antd", "style": "css" }] // `style: true` 会加载 less 文件
+       ["import", { "libraryName": "legions-pro-echarts", "style": "css" }] // `style: true` 会加载 less 文件
      ]
    }
    ```
@@ -102,15 +100,14 @@ import 'antd/dist/antd.css';  // or 'antd/dist/antd.less'
 
    ```jsx
    // babel-plugin-import 会帮助你加载 JS 和 CSS
-   import { DatePicker } from 'antd';
+   import { LegionsProEchartsLiquidFill } from 'legions-pro-echarts';
    ```
 
 - 手动引入
 
    ```jsx
-   import DatePicker from 'antd/lib/date-picker';  // 加载 JS
-   import 'antd/lib/date-picker/style/css';        // 加载 CSS
-   // import 'antd/lib/date-picker/style';         // 加载 LESS
+   import {LegionsProEchartsLiquidFill} from 'legions-pro-echarts/lib/LegionsProEchartsLiquidFill';  // 加载 JS
+   import 'legions-pro-echarts/lib/LegionsProEchartsLiquidFill/style/css';        // 加载 CSS
    ```
 
 ### TypeScript
@@ -136,34 +133,12 @@ import 'antd/dist/antd.css';  // or 'antd/dist/antd.less'
 - [组件库](/docs/react/introduce)
 - [Ant Design Pro](http://pro.ant.design/)
 - [更新日志](/changelog)
-- [脚手架市场](http://scaffold.ant.design)
-- [React 底层基础组件](http://react-component.github.io/)
-- [移动端组件](http://mobile.ant.design)
-- [动效](https://motion.ant.design)
-- [设计规范速查手册](https://github.com/ant-design/ant-design/wiki/Ant-Design-%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80%E7%AE%80%E7%89%88)
-- [开发者说明](https://github.com/ant-design/ant-design/wiki/Development)
-- [版本发布规则](https://github.com/ant-design/ant-design/wiki/%E8%BD%AE%E5%80%BC%E8%A7%84%E5%88%99%E5%92%8C%E7%89%88%E6%9C%AC%E5%8F%91%E5%B8%83%E6%B5%81%E7%A8%8B)
-- [常见问题](https://github.com/ant-design/ant-design/wiki/FAQ)
-- [CodePen 模板](http://codepen.io/benjycui/pen/KgPZrE?editors=001) for bug reports
-- [Awesome Ant Design](https://github.com/websemantics/awesome-ant-design)
-- [定制主题](/docs/react/customize-theme)
 
-## 谁在使用
 
-- [蚂蚁金服](http://www.antgroup.com/)
-- [阿里巴巴](http://www.alibaba.com/)
-- [腾讯](http://www.tencent.com)
-- [百度](http://www.baidu.com)
-- [口碑](http://www.koubei.com/)
-- [美团](http://www.meituan.com)
-- [滴滴](http://www.xiaojukeji.com/)
-- [饿了么](https://www.ele.me/)
-
-> 如果你的公司和产品使用了 Ant Design，欢迎到 [这里](https://github.com/ant-design/ant-design/issues/477) 留言。
 
 ## 如何贡献
 
-在任何形式的参与前，请先阅读 [贡献者文档](https://github.com/ant-design/ant-design/blob/master/.github/CONTRIBUTING.md)。如果你希望参与贡献，欢迎 [Pull Request](https://github.com/ant-design/ant-design/pulls)，或给我们 [报告 Bug](http://new-issue.ant.design/)。
+在任何形式的参与前，请先阅读 [贡献者文档](https://github.com/ant-design/ant-design/blob/master/.github/CONTRIBUTING.md)。如果你希望参与贡献，欢迎 [Pull Request](https://github.com/ant-design/ant-design/pulls)。
 
 > 强烈推荐阅读 [《提问的智慧》](https://github.com/ryanhanwu/How-To-Ask-Questions-The-Smart-Way)、[《如何向开源社区提问题》](https://github.com/seajs/seajs/issues/545) 和 [《如何有效地报告 Bug》](http://www.chiark.greenend.org.uk/%7Esgtatham/bugs-cn.html)、[《如何向开源项目提交无法解答的问题》](https://zhuanlan.zhihu.com/p/25795393)，更好的问题更容易获得帮助。
 
@@ -171,9 +146,7 @@ import 'antd/dist/antd.css';  // or 'antd/dist/antd.less'
 
 如果您在使用的过程中碰到问题，可以通过下面几个途径寻求帮助，同时我们也鼓励资深用户通过下面的途径给新人提供帮助。
 
-通过 Stack Overflow 或者 Segment Fault 提问时，建议加上 `antd` 标签。
+通过 Stack Overflow 或者 Segment Fault 提问时，建议加上 `pro-echarts` 标签。
 
-1. [<img alt="Stack Overflow" src="https://cdn.sstatic.net/Sites/stackoverflow/company/img/logos/so/so-logo.svg?v=2bb144720a66" width="140" />](http://stackoverflow.com/questions/tagged/antd)（English）
-2. [<img alt="Segment Fault" src="http://static.segmentfault.com/global/img/logo.svg" width="100" />](https://segmentfault.com/t/antd)（中文）
-3. [![Gitter](https://badges.gitter.im/ant-design/ant-design-english.svg)](https://gitter.im/ant-design/ant-design-english?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge) (English)
-4. [![Join the chat at https://gitter.im/ant-design/ant-design](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ant-design/ant-design?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)（中文）
+1. [<img alt="Stack Overflow" src="https://cdn.sstatic.net/Sites/stackoverflow/company/img/logos/so/so-logo.svg?v=2bb144720a66" width="140" />](http://stackoverflow.com/questions/tagged/pro-echarts)（English）
+2. [<img alt="Segment Fault" src="http://static.segmentfault.com/global/img/logo.svg" width="100" />](https://segmentfault.com/t/pro-echarts)（中文）

@@ -155,7 +155,7 @@ export default class Header extends React.Component {
     });
 
     const menu = [
-      <Button className="header-lang-button" ghost size="small" onClick={this.handleLangChange} key="lang">
+      <Button className="header-lang-button" ghost size="small" /* onClick={this.handleLangChange} */ key="lang">
         <FormattedMessage id="app.header.lang" />
       </Button>,
       <Select
@@ -181,11 +181,11 @@ export default class Header extends React.Component {
             <FormattedMessage id="app.header.menu.components" />
           </Link>
         </Menu.Item>
-        <Menu.Item key="docs/pattern">
+        {/* <Menu.Item key="docs/pattern">
           <Link to={utils.getLocalizedPathname('/docs/pattern/navigation', isZhCN)}>
             <FormattedMessage id="app.header.menu.pattern" />
           </Link>
-        </Menu.Item>
+        </Menu.Item> */}
         <Menu.Item key="docs/resource">
           <Link to={utils.getLocalizedPathname('/docs/resource/download', isZhCN)}>
             <FormattedMessage id="app.header.menu.resource" />
