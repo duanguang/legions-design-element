@@ -23,7 +23,6 @@ function getModuleData(props) {
           moduleName === 'changelog' || moduleName === 'changelog-cn' ?
     [...props.picked.components, ...props.picked['docs/react'], ...props.picked.changelog] :
     props.picked[moduleName];
-  console.log(moduleData,'props.location.pathname');
   const excludedSuffix = utils.isZhCN(props.location.pathname) ? 'en-US.md' : 'zh-CN.md';
   return moduleData.filter(({ meta }) => !meta.filename.endsWith(excludedSuffix));
 }

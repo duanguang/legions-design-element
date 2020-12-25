@@ -30,12 +30,4 @@ subtitle: 按钮
 
 `<Button>Hello world!</Button>` 最终会被渲染为 `<button><span>Hello world!</span></button>`，并且除了上表中的属性，其它属性都会直接传到 `<button></button>`。
 
-<style>
-[id^="components-legionsproecharts-demo-"] .ant-btn {
-  margin-right: 8px;
-  margin-bottom: 12px;
-}
-[id^="components-legionsproecharts-demo-"] .ant-btn-group > .ant-btn {
-  margin-right: 0;
-}
-</style>
+

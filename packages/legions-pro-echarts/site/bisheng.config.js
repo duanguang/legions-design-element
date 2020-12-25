@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-23 10:55:09
- * @LastEditTime: 2020-12-24 21:48:35
+ * @LastEditTime: 2020-12-25 11:33:38
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-echarts/site/bisheng.config.js
@@ -63,8 +63,9 @@ module.exports = {
     verbose: true,
     plugins: ['dora-plugin-upload'],
   },
-    webpackConfig(config) {
-    config.resolve.alias = {
+  webpackConfig(config) {
+      config.resolve.alias = {
+        'legions-pro-echarts': path.join(process.cwd(), 'src/components/index'),
         /* 'antd/lib': path.join(process.cwd(), 'components'),
         'antd/es': path.join(process.cwd(), 'components'),
         antd: path.join(process.cwd(), 'index'), */
