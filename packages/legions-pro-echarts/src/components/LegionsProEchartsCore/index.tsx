@@ -20,7 +20,7 @@ export  class LegionsProEchartsCore<P = {}> extends Component<LegionsProEchartsP
     constructor(props: ILegionsProEchartsReactCore&P) {
         super(props);
         this.echartsLib = props.echarts; // the echarts object.
-        // @ts-ignore 
+        // @ts-ignore
         this.echartsElement = null; // echarts div element
     }
     // first add

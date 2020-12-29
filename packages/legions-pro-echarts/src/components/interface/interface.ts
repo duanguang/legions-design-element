@@ -3,7 +3,7 @@
  * @Date: 2020-12-10 15:31:01
  * @LastEditTime: 2020-12-18 16:17:58
  * @LastEditors: duanguang
- * @Description: 
+ * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-echarts/src/components/interface/interface.ts
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
@@ -12,6 +12,12 @@ import { HeadersPrams } from 'legions/fetch';
 import { observablePromise,observableViewModel } from 'brain-store-utils';
 const theme = require('../locale/theme.json');
 type TEchartOption = echarts.EChartOption
+export interface IMethods{
+    onSearch:(option?:Object)=>void
+}
+export interface InstanceHlEcharts extends echarts.ECharts{
+    methods:IMethods
+}
 export class LegionsProEchartsPropsTypes<EchartOption= TEchartOption> {
   /** 配置项 */
   option?: TEchartOption = {};
@@ -37,7 +43,7 @@ export class LegionsProEchartsPropsTypes<EchartOption= TEchartOption> {
     currProps: LegionsProEchartsPropsTypes
   ) => boolean = () => true;
   /** echarts 实例化完成后执行并抛出实例 */
-  onChartReady?: (instance: echarts.ECharts) => void = () => {};
+  onChartReady?: (instance: InstanceHlEcharts) => void = () => {};
 }
 export class LegionsEchartsAutoQueryParams {
   /** 数据模型 */
