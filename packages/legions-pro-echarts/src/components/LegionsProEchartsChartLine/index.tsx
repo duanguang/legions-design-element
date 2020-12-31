@@ -146,14 +146,12 @@ export class LegionsProEchartsChartLine extends React.Component<LegionsProEchart
             {...this.props}
             onChartReady={(value)=>{
                 if(this.props.onChartReady){
-                    //@ts-ignore
-                    this.props.onChartReady({
-                        ...value,
+                    this.props.onChartReady(value,{
                         methods:{
                             onSearch:(option?:Object)=>{
                                 this.getData(option)
                             }
-                        }
+                        },
                     })
                 }
             }}

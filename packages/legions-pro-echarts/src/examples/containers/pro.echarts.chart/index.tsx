@@ -13,12 +13,14 @@ import {
 } from '../../../components/LegionsProEchartsLiquidFill';
 import { StockModeContainerEntity } from 'examples/models/mockEntity';
 import { observablePromise } from 'legions/store-utils';
-import { IMethods, InstanceHlEcharts } from 'components/interface/interface';
+import { IExtendsOption } from 'components/interface/interface';
 export class LegionsProEchartsChartPieDemo extends React.Component {
     //@ts-ignore
     chartsRef: echarts.ECharts = null;
     //@ts-ignore
-    lineAutoRef:InstanceHlEcharts = null;
+    lineAutoRef:echarts.ECharts = null;
+     //@ts-ignore
+    lineAutoMethod:IExtendsOption = null;
     liquidFillValue=0.6
     lineOptions: echarts.EChartOption = {
         legend: {
@@ -114,7 +116,9 @@ export class LegionsProEchartsChartPieDemo extends React.Component {
     render() {
         return <LegionsProEchartsLayout>
             <Button onClick={()=>{
-                this.lineAutoRef.methods.onSearch({pageSize: 2, pageNo: 1})
+                /* this.lineAutoRef.methods.onSearch() */
+                console.log(this.lineAutoRef.getWidth(),'lineAutoRef')
+                this.lineAutoMethod.methods.onSearch()
             }}>test</Button>
             <LegionsProEchartsCol xs={{
                 span:24
@@ -160,8 +164,9 @@ export class LegionsProEchartsChartPieDemo extends React.Component {
                         option={{ xAxis: {
                             data: ['202001','202002','202003','202004','202005','202006','202007','202008','202009','202010'],
                         }}}
-                        onChartReady={(instance)=>{
+                        onChartReady={(instance,extendsOption)=>{
                             this.lineAutoRef = instance
+                            this.lineAutoMethod = extendsOption!
                         }}
                         autoQuery={{
                             model: StockModeContainerEntity,
@@ -170,7 +175,7 @@ export class LegionsProEchartsChartPieDemo extends React.Component {
                             params: { pageSize: 3000, pageNo: 1 },
                             headerOption: {
                                 "api-target": 'https://uat-api.hoolinks.com/scmjg/dcl/exports-goods-model/list',
-                                "api-cookie": 'SESSION=fb844c7d-7433-41b7-b5a0-c74a34374623; HL-Access-Token=MjIxOWEzNDEtNTM2NC00NDRmLTg2OWEtN2E4YjFiMzE0NmRk; UCTOKEN=MjIxOWEzNDEtNTM2NC00NDRmLTg2OWEtN2E4YjFiMzE0NmRk;'
+                                "api-cookie": 'SESSION=d2ef8c85-7e92-4fba-b1a8-8233cb7843c3; HL-Access-Token=YjMxYzlmOTQtZTVlOC00NTQ2LWE4ZjQtY2Q4N2VjMzBhNmRi; UCTOKEN=YjMxYzlmOTQtZTVlOC00NTQ2LWE4ZjQtY2Q4N2VjMzBhNmRi;'
                             },
                             responseTransform: (response: observablePromise.PramsResult<StockModeContainerEntity>):echarts.EChartOption.SeriesLines.DataObject[] => {
                                 if (response.isResolved && response.value.success) {

@@ -15,7 +15,7 @@ type TEchartOption = echarts.EChartOption
 export interface IMethods{
     onSearch:(option?:Object)=>void
 }
-export interface InstanceHlEcharts extends echarts.ECharts{
+export interface IExtendsOption{
     methods:IMethods
 }
 export class LegionsProEchartsPropsTypes<EchartOption= TEchartOption> {
@@ -43,7 +43,7 @@ export class LegionsProEchartsPropsTypes<EchartOption= TEchartOption> {
     currProps: LegionsProEchartsPropsTypes
   ) => boolean = () => true;
   /** echarts 实例化完成后执行并抛出实例 */
-  onChartReady?: (instance: InstanceHlEcharts) => void = () => {};
+  onChartReady?: (instance: echarts.ECharts,extendsOption?:IExtendsOption) => void = () => {};
 }
 export class LegionsEchartsAutoQueryParams {
   /** 数据模型 */
