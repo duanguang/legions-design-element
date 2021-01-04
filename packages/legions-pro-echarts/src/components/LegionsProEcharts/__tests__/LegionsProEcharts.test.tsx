@@ -50,7 +50,7 @@ describe('折线图',() => {
     })
     it('default props',() => {
         /* const wrapper = render(<LegionsProEchartsChartPieMouter></LegionsProEchartsChartPieMouter>); */
-        /* const component = mount(<LegionsProEcharts option={barOptions}
+        const component = mount(<LegionsProEcharts option={barOptions}
             className="echarts-for-react-root"
         ></LegionsProEcharts>);
 
@@ -74,7 +74,7 @@ describe('折线图',() => {
 
         expect(typeof component.props().onChartReady).toBe('function');
         expect(component.props().loading).toBe(false);
-        expect(component.props().onEvents).toEqual({}); */
+        expect(component.props().onEvents).toEqual({});
         /* console.table(component) */
     })
 })
