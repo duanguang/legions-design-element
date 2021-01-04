@@ -1,3 +1,4 @@
+import { LegionsProEchartsLayout } from 'components';
 import { Route,Switch } from 'legions/router';
 import React from 'react';
 /* import '../assets/css/theme.less'; */
@@ -23,6 +24,7 @@ export default class App extends React.Component {
                 <Route path="/map" component={LegionsProEchartsMapDemo}></Route>
                 <Route path="/box" component={LegionsProEchartsBoxDemo}></Route>
                 <Route path="/chart" component={LegionsProEchartsChartPieDemo}></Route>
+                <Route path="/layout" component={LegionsProEchartsLayout}></Route>
                 {/* <Route path="/chart" component={LegionsProEchartsChartPieDemo}></Route> */}
                 {/* <Route component={() => {
                         return <div>hello world</div>

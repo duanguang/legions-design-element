@@ -2,7 +2,7 @@ import React,{ Component } from 'react';
 import echarts from 'echarts/lib/echarts';
 import isEqual from 'fast-deep-equal';
 import { bind,clear } from 'size-sensor';
-import { LegionsProEchartsPropsTypes } from '../interface/interface';
+import {LegionsProEchartsPropsTypes } from '../interface/interface';
 interface ILegionsProEchartsReactCore extends LegionsProEchartsPropsTypes {
     echarts: typeof echarts
 }
@@ -20,7 +20,7 @@ export  class LegionsProEchartsCore<P = {}> extends Component<LegionsProEchartsP
     constructor(props: ILegionsProEchartsReactCore&P) {
         super(props);
         this.echartsLib = props.echarts; // the echarts object.
-        // @ts-ignore 
+        // @ts-ignore
         this.echartsElement = null; // echarts div element
     }
     // first add
@@ -80,14 +80,13 @@ export  class LegionsProEchartsCore<P = {}> extends Component<LegionsProEchartsP
         // set loading mask
         if (this.props.loading) echartObj.showLoading(void 0,this.props.loadingOption || void 0);
         else echartObj.hideLoading();
-        return echartObj;
+        return echartObj
     };
     rerender = () => {
         const { onEvents,onChartReady } = this.props;
 
         const echartObj = this.renderEchartDom();
         this.bindEvents(echartObj,onEvents || {});
-
         // on chart ready
         if (typeof onChartReady === 'function' && this.props.onChartReady) this.props.onChartReady(echartObj);
         // on resize

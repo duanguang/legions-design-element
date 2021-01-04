@@ -1,4 +1,3 @@
-
 import React from 'react';
 import  {LegionsProEcharts} from '../LegionsProEcharts';
 import { LegionsEchartsAutoQueryParams, LegionsProEchartsPropsTypes } from '../interface/interface';
@@ -10,6 +9,7 @@ import { LegionsFetch,MORE_IOCN } from '../core';
 import { merge } from 'lodash';
 import 'echarts/lib/chart/line';
 import 'echarts/lib/component/toolbox';
+import { observer } from 'legions/store-react';
 export class LegionsProEchartsChartLineProps extends LegionsProEchartsPropsTypes {
     /** 数据 */
     data?: echarts.EChartOption.SeriesPie.DataObject[] = [{value: 100, name: 'demo'}];
@@ -22,12 +22,13 @@ class ViewModel {
     /** 请求托管response */
     @observable response = observablePromise<LegionsEchartsAutoQueryParams['model']>()
 }
+@observer
 export class LegionsProEchartsChartLine extends React.Component<LegionsProEchartsChartLineProps>{
     static defaultProps: Readonly<LegionsProEchartsChartLineProps> = new LegionsProEchartsChartLineProps()
     viewModel = observableViewModel<ViewModel>(new ViewModel());
     /** 自动接管接口返回数据 */
     get responseData() {
-        if (this.viewModel.response.isResolved&&this.props.autoQuery) {
+        if (this.viewModel.response.isResolved && this.props.autoQuery) {
             return this.props.autoQuery.responseTransform(this.viewModel.response)
         }
         return []
@@ -77,7 +78,7 @@ export class LegionsProEchartsChartLine extends React.Component<LegionsProEchart
                     },
                     extraCssText: 'box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);' // 自定义的 CSS 样式
                 }
-                
+
             },
             xAxis: {
                 type: 'category',
@@ -105,13 +106,56 @@ export class LegionsProEchartsChartLine extends React.Component<LegionsProEchart
                 },
                 show:true,
             },
-            series: [],
+            series: this.props.autoQuery ? this.responseData : this.props.option ? this.props.option.series : [],
         };
+    }
+    componentDidMount(){
+        if(this.props.autoQuery){
+            this.getData()
+        }
+    }
+    /** 获取数据 */
+    getData(option?:Object){
+        const {autoQuery} = this.props
+        const server = new LegionsFetch
+        if(autoQuery){
+            if(autoQuery.method === 'post'){
+                const res = server.post({
+                    url:autoQuery.url as string,
+                    model:autoQuery.model,
+                    parameter: option ? { ...autoQuery.params, ...option } : autoQuery.params,
+                    headers:autoQuery.headerOption,
+                })
+                this.viewModel.response = observablePromise(res)
+            }else{
+                const res = server.get({
+                    url:autoQuery.url as string,
+                    model:autoQuery.model,
+                    parameter: option ? { ...autoQuery.params, ...option } : autoQuery.params,
+                    headers:autoQuery.headerOption,
+                })
+                this.viewModel.response = observablePromise(res)
+            }
+        }
     }
     render() {
         const { option } = this.props;
+        const loading = this.props.autoQuery ? this.viewModel.response.isPending : this.props.loading
         return(
             <LegionsProEcharts
+            {...this.props}
+            onChartReady={(value)=>{
+                if(this.props.onChartReady){
+                    this.props.onChartReady(value,{
+                        methods:{
+                            onSearch:(option?:Object)=>{
+                                this.getData(option)
+                            }
+                        },
+                    })
+                }
+            }}
+            loading={loading}
             option={merge(this.option, option)}
             ></LegionsProEcharts>
         )

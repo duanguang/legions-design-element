@@ -6,14 +6,21 @@ import { LegionsProEchartsChartLine } from '../../../components/LegionsProEchart
 import {LegionsProEchartsBox} from '../../../components/LegionsProEchartsBox';
 import { LegionsProEchartsChartBar } from '../../../components/LegionsProEchartsChartBar';
 import { LegionsProEchartsChartCard } from '../../../components/LegionsProEchartsChartCard';
-import { Col,Row } from 'antd';
+import { Button, Col,Row } from 'antd';
 import { LegionsProEchartsCol } from '../../../components/LegionsProEchartsCol';
 import {
     LegionsProEchartsLiquidFill
 } from '../../../components/LegionsProEchartsLiquidFill';
+import { StockModeContainerEntity } from 'examples/models/mockEntity';
+import { observablePromise } from 'legions/store-utils';
+import { IExtendsOption } from 'components/interface/interface';
 export class LegionsProEchartsChartPieDemo extends React.Component {
     //@ts-ignore
     chartsRef: echarts.ECharts = null;
+    //@ts-ignore
+    lineAutoRef:echarts.ECharts = null;
+     //@ts-ignore
+    lineAutoMethod:IExtendsOption = null;
     liquidFillValue=0.6
     lineOptions: echarts.EChartOption = {
         legend: {
@@ -55,7 +62,7 @@ export class LegionsProEchartsChartPieDemo extends React.Component {
                 },
             },
         ]
-    } 
+    }
     barOptions: echarts.EChartOption = {
         /*  xAxis: {
             data: ['10月', '11月', '12月', '01月', '02月', '03月', '04月', '05月', '06月', '07月', '08月', '09月'],
@@ -105,8 +112,14 @@ export class LegionsProEchartsChartPieDemo extends React.Component {
             }
         }]
     }
+
     render() {
         return <LegionsProEchartsLayout>
+            <Button onClick={()=>{
+                /* this.lineAutoRef.methods.onSearch() */
+                console.log(this.lineAutoRef.getWidth(),'lineAutoRef')
+                this.lineAutoMethod.methods.onSearch()
+            }}>test</Button>
             <LegionsProEchartsCol xs={{
                 span:24
             }} sm={6} md={8} lg={5} xl={5} >
@@ -129,7 +142,7 @@ export class LegionsProEchartsChartPieDemo extends React.Component {
                             { value: 5210,name: '保税跨境',selected: true,itemStyle: { color: '#407fcc' } },
                             { value: 9610,name: '跨境直邮',selected: true,itemStyle: { color: '#00D2FF' } },
                         ]}
-                        onChartReady={(instance: echarts.ECharts) => {
+                        onChartReady={(instance) => {
                             this.chartsRef = instance;
                         }}
                     ></LegionsProEchartsChartPie>
@@ -143,6 +156,48 @@ export class LegionsProEchartsChartPieDemo extends React.Component {
                     style={{ height: '240px',paddingBottom: 5 }}
                     title="折线图">
                     <LegionsProEchartsChartLine option={this.lineOptions}></LegionsProEchartsChartLine>
+                </LegionsProEchartsBox>
+            </LegionsProEchartsCol>
+            <LegionsProEchartsCol xs={24} sm={{span:8,offset:1}} md={{span:7,offset:1}} lg={{span:6,offset:1}} xl={{span:6,offset:1}}>
+                <LegionsProEchartsBox title="折线图自动托管数据">
+                    <LegionsProEchartsChartLine
+                        option={{ xAxis: {
+                            data: ['202001','202002','202003','202004','202005','202006','202007','202008','202009','202010'],
+                        }}}
+                        onChartReady={(instance,extendsOption)=>{
+                            this.lineAutoRef = instance
+                            this.lineAutoMethod = extendsOption!
+                        }}
+                        autoQuery={{
+                            model: StockModeContainerEntity,
+                            url: 'https://gateway.hoolinks.com/api/gateway',
+                            method: 'post',
+                            params: { pageSize: 3000, pageNo: 1 },
+                            headerOption: {
+                                "api-target": 'https://uat-api.hoolinks.com/scmjg/dcl/exports-goods-model/list',
+                                "api-cookie": 'SESSION=d2ef8c85-7e92-4fba-b1a8-8233cb7843c3; HL-Access-Token=YjMxYzlmOTQtZTVlOC00NTQ2LWE4ZjQtY2Q4N2VjMzBhNmRi; UCTOKEN=YjMxYzlmOTQtZTVlOC00NTQ2LWE4ZjQtY2Q4N2VjMzBhNmRi;'
+                            },
+                            responseTransform: (response: observablePromise.PramsResult<StockModeContainerEntity>):echarts.EChartOption.SeriesLines.DataObject[] => {
+                                if (response.isResolved && response.value.success) {
+                                    return response.value.result.records.slice(0, 2).map((item, index) => {
+                                        return {
+                                            name: item.id.toString(),
+                                            type: 'line',
+                                            stack: '总量',
+                                            symbolSize: 5,
+                                            // tslint:disable-next-line: no-magic-numbers
+                                            data: [10.32, 12.43, 26.45, 20.09, 34.42, 11.43, 13.58, 25.47, 38.45, 31.58].map(item => item + index),
+                                            itemStyle: {
+                                                normal: {
+                                                    label: { show: true },
+                                                },
+                                            },
+                                        }
+                                    })
+                                }
+                                return []
+                            }
+                        }}></LegionsProEchartsChartLine>
                 </LegionsProEchartsBox>
             </LegionsProEchartsCol>
             <LegionsProEchartsCol xs={24} sm={{span:8,offset:1}} md={{span:7,offset:1}} lg={{span:5,offset:1}} xl={{span:5,offset:1}}>
