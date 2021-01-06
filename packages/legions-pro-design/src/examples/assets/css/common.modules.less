@@ -1,0 +1,38 @@
+/* 公共样式
+ * @Author: linzeqin
+ * @Date: 2019-07-10 17:51:01
+ * @Last Modified by: linzeqin
+ * @Last Modified time: 2019-07-10 18:16:39
+ */
+
+/** 统一页面容器*/
+.pageWrap{
+    padding: 0px;
+}
+
+/** 操作按钮容器 */
+.btnWrap{
+    padding: 5px 5px 0;
+    margin-top: 5px;
+    background-color: #fff;
+    :global button{
+        margin: 0 3px 5px;
+    }
+    &.right{
+        text-align: right;
+    }
+    &.left{
+        text-align: left;
+    }
+}
+
+/** 表格居中 */
+.alignCenterTable{
+    :global {
+        .ant-table-thead > tr > th,
+        .ant-table-tbody > tr > td{
+            text-align: center;
+        }
+    }
+}
+
