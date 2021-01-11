@@ -1,20 +1,17 @@
 /** @format */
 
-import { action, observable } from 'legions/store';
+import { action, observable, StoreModules } from 'legions/store';
 import { getStorageItem, setStorageItems } from 'legions-utils-tool/storage';
-import StoreBase, { IStoreBaseMeta } from '../StoreBase';
-import { MenuEntity } from '../../models/pro.menu.model';
+import {StoreBase} from '../index';
+import { MenuEntity } from '../../models';
 import { computed } from 'mobx';
 import {
   CollapsedResource,
-  IResourceEvent,
   MenuPanesStorageResource,
   BreadCrumbsResourceEven,
-  ITriggerEventPrams,
-} from '../event/resourceEvent';
+} from '../index';
 import { observableViewModel } from 'legions/store-utils';
 /** Tabs 页签打开缓存数据*/
-import { IPanes } from '../../interface/pro.store';
 import {
   panesStorageKeys,
   activeKeyStorageKeys,
@@ -22,33 +19,15 @@ import {
   selectedStorageKeys,
 } from '../../core';
 import { RegExChk, validatorType } from 'legions-utils-tool/regex';
-import { ProxySanbox } from '../../core/cross-module';
+import { ProxySanbox } from './ProxySanbox';
+import { TabPaneUIView } from './TabPaneUIView';
+import { IResourceEvent,ITriggerEventPrams,IStoreBaseMeta } from '../interface';
+import { IPanes } from './interface';
 
-class TabPaneUIView {
-  /**
-   * 页签生成时间戳信息
-   *
-   * @memberof TabPaneUIView
-   */
-  @observable tabPanesTimestamp = observable.map<number>();
-
-  /**
-   *
-   * 更新相关页签时间戳信息
-   * @memberof TabPaneUIView
-   */
-  @action updateTimestamp(panesKey: string, timeStamp?: number) {
-    if (this.tabPanesTimestamp.has(panesKey)) {
-      this.tabPanesTimestamp.set(panesKey, timeStamp || Date.parse(new Date().toString()));
-    } else {
-      this.tabPanesTimestamp.set(panesKey, timeStamp || Date.parse(new Date().toString()));
-    }
-  }
-}
+@StoreModules
 export default class TabPaneViewStore extends StoreBase {
   static meta: IStoreBaseMeta = {
     ...StoreBase.meta,
-    className: 'TabPaneViewStore',
     eventScopes: [
       CollapsedResource,
       MenuPanesStorageResource,
@@ -87,6 +66,7 @@ export default class TabPaneViewStore extends StoreBase {
   );
   @action addTabPanes(panes:IPanes, menuList: Array<MenuEntity>) {
     let index = this.panes.findIndex(item => item.key === panes.key);
+    const oldpane = this.panes.find((item) => item.key === this.activeKey);
     let currMenu = menuList.find(item => item.key === panes.key);
     this.updateBreadcrumbs(panes, menuList);
     if (index < 0) {
@@ -126,6 +106,7 @@ export default class TabPaneViewStore extends StoreBase {
         params: panes.params || {},
       });
       this.viewUIModel.updateTimestamp(panes.key.toString());
+      this.proxySanbox.switchTabPaneSanboxMicroApp(oldpane, this.panes[this.panes.length - 1], ProxySanbox.SanboxTabActionMode.add)
     } else {
       this.panes[index].keyPath = panes.keyPath;
       this.panes[index].path = currMenu ? currMenu.path : panes.path;
@@ -134,6 +115,7 @@ export default class TabPaneViewStore extends StoreBase {
       if (panes.forceRefresh) {
         this.viewUIModel.updateTimestamp(panes.key.toString());
       }
+      this.proxySanbox.switchTabPaneSanboxMicroApp(oldpane, this.panes[index])
     }
     this.panes = this.panes.slice(); //
 

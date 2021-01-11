@@ -25,6 +25,7 @@ interface IState {
     total?: number;
 }
 export class AbstractSelect<P = {},S = {}> extends React.Component<P,S> {
+    //@ts-ignore
     transformlabelInValue(value,props: P,options = []): LabeledValue[] | LabeledValue {
         if (!props['labelInValue']) {
             if (Array.isArray(value)) {

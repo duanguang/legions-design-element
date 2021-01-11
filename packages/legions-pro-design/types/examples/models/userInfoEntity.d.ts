@@ -12,7 +12,7 @@ declare class UserInfoEntity {
     validated: boolean;
     lastRole: number;
     companyId: number;
-    companyInfo: undefined;
+    companyInfo: any;
     roles: RolesEntity;
     userName: string;
     qpHelperLoginId: string;

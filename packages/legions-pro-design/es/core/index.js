@@ -1,23 +1,9 @@
 /**
-  *  legions-pro-echarts v0.0.7
-  * (c) 2020 duanguang
+  *  legions-pro-design v0.0.7
+  * (c) 2021 duanguang
   * @license MIT
   */
 import { get, post } from 'legions/fetch';
-
-/*
- * @Author: duanguang
- * @Date: 2020-12-16 09:37:30
- * @LastEditTime: 2020-12-16 10:05:35
- * @LastEditors: duanguang
- * @Description:
- * @FilePath: /legions-design-element/packages/legions-pro-echarts/src/components/core/constant.icon.ts
- * @「扫去窗上的尘埃，才可以看到窗外的美景。」
- */
-/**
- * icon
- *  更多 */
-var MORE_IOCN = 'path://M298.666667 586.666667a74.666667 74.666667 0 1 1 0-149.333334 74.666667 74.666667 0 0 1 0 149.333334z m213.333333 0a74.666667 74.666667 0 1 1 0-149.333334 74.666667 74.666667 0 0 1 0 149.333334z m213.333333 0a74.666667 74.666667 0 1 1 0-149.333334 74.666667 74.666667 0 0 1 0 149.333334z';
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -90,4 +76,20 @@ var LegionsFetch = /** @class */ (function () {
     return LegionsFetch;
 }());
 
-export { LegionsFetch, MORE_IOCN };
+var project = {
+    name: 'portal'
+};
+
+/**  当前展开的 SubMenu 菜单项 key 数组 缓存*/
+var OPENKEYS_STORAGE_KEY = 'openKeys_storage_key';
+/**  当前选中的菜单项 key 数组 缓存*/
+var SELECTED_STORAGE_KEY = 'selected_storage_key';
+var panesStorageKeys = 'panes_storage_key';
+/** 活动tabs 编码 缓存 */
+var activeKeyStorageKeys = 'panes_activeKey_key';
+/**  menu 菜单选中缓存数据*/
+var selectedStorageKeys = 'selected_storage_key';
+/**  菜单面包屑缓存数据*/
+var breadcrumbStorageKeys = 'breadcrumb_storage_key';
+
+export { LegionsFetch, OPENKEYS_STORAGE_KEY, SELECTED_STORAGE_KEY, activeKeyStorageKeys, breadcrumbStorageKeys, panesStorageKeys, project, selectedStorageKeys };

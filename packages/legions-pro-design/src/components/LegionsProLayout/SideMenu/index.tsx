@@ -4,18 +4,17 @@ const { Sider } = Layout;
 const SubMenu = Menu.SubMenu;
 import { observer,bind } from 'legions/store-react'
 import {MenuStore,TabPaneViewStore} from '../../store/pro.layout';
-import { MenuEntity } from '../../models/pro.menu.model';
+import { MenuEntity } from '../../models';
 import { SelectParam,MenuProps,ClickParam } from 'antd/lib/menu'
-import ReactDOM from 'react-dom'
-import './style/index.less'
+import '../style/memu.less';
 import { autorun,isObservableArray } from 'mobx';
 import { RegExChk,validatorType } from 'legions-utils-tool/regex';
-import { IUserInfo,ILegionsPluginDataOrigin } from '../../interface';
-import { IPanes,IRouter } from '../../interface//pro.store';
 import { page } from 'legions-lunar/mobx-decorator';
-import { LegionsPluginsExecute } from 'legions-lunar/legion.plugin.sdk';
 import { MasterGlobalStateStore } from '../../core/cross-module';
 import { inject } from 'legions/store';
+import { IPanes } from '../../store/pro.layout/interface';
+import { IRouter } from '../../interface/router';
+import { IUserInfo,ILegionsPluginDataOrigin } from '../../interface';
 interface IProps extends IUserInfo,MenuProps {
   store?: MenuStore
   logo: string,
@@ -311,18 +310,11 @@ export default class MenuParts extends React.Component<IProps>{
     if (newItem) {
       const path = newItem['path'] as string
       const index = this.props.router.findIndex((item) => item.path === path.replace('#',''))
+      const pane = store.context.TabPaneApp.panes.find((item) => item.key === selected['key'])
+      const oldpane = store.context.TabPaneApp.panes.find((item) => item.key === oldActiveKey)
       if (path.indexOf('#') > -1 && index > -1) {
         // window.location.href = `${this.props.domainUrl}${path.replace('','')}`
         this.props.store.history.push(`${path.replace('#','')}`)
-      }
-      else if (path.indexOf('#') > -1 && newItem.loadingMode === 'sandbox') {
-        const _path = path.split('#');
-        if (_path.length > 1) {
-          const pane = store.context.TabPaneApp.panes.find((item) => item.key === selected['key'])
-          const oldpane = store.context.TabPaneApp.panes.find((item) => item.key === oldActiveKey)
-          store.context.TabPaneApp.proxySanbox.routerSanboxOpenMode = 'newOpenactiveTab';
-          store.context.TabPaneApp.proxySanbox.openTabPaneSanbox(oldpane,pane);
-        }
       }
     }
   }

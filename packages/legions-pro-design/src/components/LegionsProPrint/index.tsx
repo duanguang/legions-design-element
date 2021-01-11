@@ -17,7 +17,7 @@ enum Direction {
     vertical,
 }
 /** 打印页面选定区域内容 */
-export default class HLPrint extends React.Component<IProPrintProps> {
+export default class LegionsProPrint extends React.Component<IProPrintProps> {
     triggerRef: React.Ref<HTMLElement>;
     linkTotal: number;
     linksLoaded: Element[];

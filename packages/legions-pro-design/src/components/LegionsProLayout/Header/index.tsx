@@ -12,7 +12,7 @@ import { InstanceProTable } from '../../LegionsProTable/interface'
 import LegionsProTable from '../../LegionsProTable';
 import { TableColumnConfig } from '../../interface/antd';
 import { download } from 'legions-utils-tool/download';
-import {ExportTaskEntity} from '../../models/pro.task.model'
+import {ExportTaskEntity} from '../../models'
 interface IProps {
   store?: MenuStore,
   userName: string
@@ -257,7 +257,7 @@ export default class HeaderPart extends React.Component<IProps>{
     />
   }
   renderBreadcrumbElement() {
-    return <Breadcrumb separator=">" style={{ float: 'left',marginLeft: '22px',lineHeight: '50px' }}>
+    return <Breadcrumb separator=">" style={{ display: 'inline-block',marginLeft: '22px',lineHeight: '50px' }}>
       {this.props.store.context.TabPaneApp.breadcrumbMenu.map((item,index) => {
         return (
           <Breadcrumb.Item key={index}><span style={{ fontSize: '14px' }}>{item}</span></Breadcrumb.Item>

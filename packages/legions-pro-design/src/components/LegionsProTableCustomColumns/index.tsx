@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Button, Row, Col, Card, Tooltip, message, Icon } from 'antd';
 import LegionsProModal from  '../LegionsProModal';
 import { InstanceLegionsProModal} from '../LegionsProModal/interface'
-import ProTableStore from '../store/pro.table';
+import {ProTableStore} from '../store/pro.table';
 import { observer, bind } from 'legions/store-react'
 import LegionsProDragger from '../LegionsProDragger';
 import styles from './style/index.modules.less';

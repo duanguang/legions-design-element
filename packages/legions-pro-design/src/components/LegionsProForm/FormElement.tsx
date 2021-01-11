@@ -3,7 +3,7 @@ import { Row } from 'antd';
 import { WrappedFormUtils, IAntdFormItemProps, IAntdRule } from '../interface/antd';
 import AbstractForm from './AbstractForm';
 import { shortHash } from 'legions-lunar/object-hash';
-import ProFormStore from '../store/pro.form';
+import {ProFormStore} from '../store/pro.form';
 import {bind,observer} from 'legions/store-react'
 import { findDOMNode } from 'react-dom'
 import { InstanceFormElement } from './interface/formElement';

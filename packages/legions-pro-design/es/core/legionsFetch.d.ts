@@ -1,3 +1,4 @@
+import { ClassOf } from 'legions-lunar/types/api/typescript';
 import { request } from 'legions/request';
 interface options<Parameter, Model> {
     url: string;
@@ -14,7 +15,7 @@ interface options<Parameter, Model> {
 }
 export declare class LegionsFetch {
     private setHeaders;
-    get<Model, Parameter>(options: options<Parameter, Model>): Promise<Model>;
-    post<Model, Parameter>(options: options<Parameter, Model>): Promise<Model>;
+    get<Model, Parameter>(options: options<Parameter, ClassOf<Model>>): Promise<Model>;
+    post<Model, Parameter>(options: options<Parameter, ClassOf<Model>>): Promise<Model>;
 }
 export {};

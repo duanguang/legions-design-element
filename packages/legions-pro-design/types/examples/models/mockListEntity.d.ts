@@ -1,9 +1,9 @@
 import { PageEntity, IPageEntity } from './common/pageEntity';
 declare class MockEntity {
-    id: undefined;
-    companyId: undefined;
-    loginId: undefined;
-    name: undefined;
+    id: any;
+    companyId: any;
+    loginId: any;
+    name: any;
 }
 interface IMockEntity {
     msg: string;

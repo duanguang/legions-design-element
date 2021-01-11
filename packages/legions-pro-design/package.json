@@ -1,5 +1,5 @@
 {
-  "name": "legions-pro-echarts",
+  "name": "legions-pro-design",
   "version": "0.0.7",
   "description": "前端可视化业务组件库",
   "keywords": [
@@ -7,10 +7,10 @@
     "pro-echarts"
   ],
   "author": "duanguang <18520583569@163.com>",
-  "homepage": "https://github.com/duanguang/legions-design-element/tree/master/packages/legions-pro-echarts",
+  "homepage": "https://github.com/duanguang/legions-design-element/tree/master/packages/legions-pro-design",
   "license": "MIT",
-  "main": "dist/legions-pro-echarts.umd.js",
-  "module": "dist/legions-pro-echarts.umd.js",
+  "main": "dist/legions-pro-design.umd.js",
+  "module": "dist/legions-pro-design.umd.js",
   "typings": "types/index.d.ts",
   "peerDependencies": {},
   "dependencies": {

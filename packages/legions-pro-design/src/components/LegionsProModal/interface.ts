@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-26 17:57:29
- * @LastEditTime: 2020-12-26 17:59:23
+ * @LastEditTime: 2021-01-07 17:16:01
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProModal/interface.ts
@@ -9,7 +9,7 @@
  */
 
 import { IViewModelModalStore } from '../store/pro.modal/interface';
-import ProModalStore from '../store/pro.modal';
+import {ProModalStore} from '../store/pro.modal';
 export interface InstanceLegionsProModal {
     store: ProModalStore;
     uid: string;

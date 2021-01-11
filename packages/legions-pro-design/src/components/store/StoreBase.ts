@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-26 11:23:17
- * @LastEditTime: 2020-12-26 11:27:25
+ * @LastEditTime: 2021-01-07 17:34:42
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/store/StoreBase.ts
@@ -11,11 +11,11 @@
 
 import Store from 'legions/store';
 // mobx.useStrict(true);
-import { project } from '../core';
-import { StoreSpace } from 'brain-store';
-import { ISchedule } from '../interface/pro.store';
+import { project } from './event/resourceEvent';
+import { ISchedule } from './interface';
 import { schedule } from 'legions-lunar/schedule';
 import { History } from '../interface/history';
+import { IStoreBaseMeta } from './interface';
 interface IDispatchPrams {
   name: string;
   scope: string;
@@ -24,7 +24,7 @@ interface IContext {
   dispatch: (name: IDispatchPrams, payload: Object) => {};
   _manage: any;
 }
-export interface IStoreBaseMeta extends StoreSpace.PramsMeta {}
+
 export default class StoreBase<T = {}, P = {}> extends Store {
   static meta: IStoreBaseMeta = {
     ...Store.meta,
@@ -32,6 +32,7 @@ export default class StoreBase<T = {}, P = {}> extends Store {
   };
   //@ts-ignore
   context: T & IContext;
+  //@ts-ignore
   history: History = this.context._manage.history;
 
   /**

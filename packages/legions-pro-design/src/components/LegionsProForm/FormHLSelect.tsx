@@ -11,7 +11,6 @@ import FormElement from './FormElement';
 import {InstanceFormElement} from './interface/formElement'
 import LegionsProErrorReportShow from '../LegionsProErrorReportShow'
 import Styles from './style/index.modules.less'
-import { observablePromise } from 'legions/store-utils'
 import { on,off } from 'legions-utils-tool/dom'
 import { legionsThirdpartyPlugin } from 'legions-thirdparty-plugin';
 import { IFormSelectProps, IFormSelectWrapError, IFormWithSelectProps } from './interface/select';

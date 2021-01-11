@@ -4,7 +4,7 @@ export declare const HttpConfig: {
     domainTms: string;
     domain3pl: string;
 };
-export declare const setHeaders: (url: string, option?: Object | undefined, cookie?: string | undefined) => {
+export declare const setHeaders: (url: string, option?: Object, cookie?: string) => {
     'api-target': string;
     'api-cookie': string;
 };

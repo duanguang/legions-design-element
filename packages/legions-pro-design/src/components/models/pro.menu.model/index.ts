@@ -1,14 +1,14 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-31 10:38:25
- * @LastEditTime: 2020-12-31 10:46:30
+ * @LastEditTime: 2021-01-07 17:51:59
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/models/pro.menu.model/index.ts
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
 import { JsonProperty } from 'json-mapper-object';
-import { IPanes } from '../../interface/pro.store';
+import { IPanes } from '../../store/pro.layout/interface';
 import { BaseEntity } from '../pro.base.model';
 interface ClassOf<T> {
   new (...args: any[]): T;

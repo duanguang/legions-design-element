@@ -3,4 +3,4 @@
  * @param str 要判断的字符串
  * @returns 返回布尔值
  */
-export declare function isJSON(str: any): boolean | undefined;
+export declare function isJSON(str: any): boolean;

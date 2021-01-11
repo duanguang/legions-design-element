@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-31 10:34:43
- * @LastEditTime: 2021-01-04 10:17:35
+ * @LastEditTime: 2021-01-07 17:52:53
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/store/pro.layout/MenuStore.ts
@@ -10,122 +10,31 @@
 
  /** @format */
 
-import StoreBase, { IStoreBaseMeta } from '../StoreBase';
-import { observable, action, resource } from 'legions/store';
+import { StoreBase,CollapsedResource,
+  MenuPanesStorageResource,
+  BreadCrumbsResourceEven, } from '../index';
+import { IStoreBaseMeta } from '../interface';
+import { observable, action, resource, StoreModules } from 'legions/store';
 import { getStorageItem, setStorageItems } from 'legions-utils-tool/storage';
 import { observablePromise, observableViewModel } from 'legions/store-utils';
-import { MenuContainerEntity, MenuEntity } from '../../models/pro.menu.model';
+import { MenuContainerEntity, MenuEntity } from '../../models';
 import TabPaneViewStore from './TabPaneStore';
-import {
-  CollapsedResource,
-  MenuPanesStorageResource,
-  IResourceEvent,
-  BreadCrumbsResourceEven,
-  ITriggerEventPrams,
-} from '../event/resourceEvent';
+import { IResourceEvent,ITriggerEventPrams } from '../interface';
 import {
   OPENKEYS_STORAGE_KEY,
   SELECTED_STORAGE_KEY,
 } from '../../core';
-import { IPanes,IRouter } from '../../interface/pro.store';
-import { ExportTaskEntity } from '../../models/pro.task.model';
 import {computed} from 'mobx'
+import { MenuViewStore } from './MenuViewStore';
+import {IRouter} from '../../interface/router'
+import { IPanes} from './interface';
 interface IContext {
   TabPaneApp: TabPaneViewStore;
 }
-interface ISkinModel {
-  [propName: string]: {
-    color: string;
-    skin: string;
-    logoSkin: string;
-    theme: 'light' | 'dark';
-    width: number;
-    /** 菜单收起时宽度 */
-    collapsedWidth: number;
-  };
-}
-
-class MenuViewStore {
-  /**
-   * logo 宽度
-   *
-   * @memberof MenuViewStore
-   */
-  @observable logoWidth = 125;
-
-  /**
-   *
-   *皮肤方案
-   * @memberof MenuViewStore
-   */
-  @observable skin = '0';
-
-  /**
-   * 皮肤列表数据
-   *
-   * @type {ISkinModel}
-   * @memberof MenuViewStore
-   */
-  @observable SkinList: ISkinModel = {
-    '0': {
-      color: '#484C72',
-      skin: 'legions-pro-menu-them-dark-green',
-      logoSkin: 'legions-pro-menu-them-dark-green-logo',
-      theme: 'dark',
-      width: 170,
-      collapsedWidth:65,
-    },
-    '1': {
-      skin: 'legions-pro-menu-them-light-blue',
-      color: '#212D32',
-      logoSkin: 'legions-pro-menu-them-light-blue-logo',
-      theme: 'dark',
-      width: 170,
-      collapsedWidth:65,
-    },
-    '2': {
-      skin: 'legions-pro-menu-them-2',
-      color: '#fff',
-      logoSkin: 'legions-pro-menu-them-2-logo',
-      theme: 'light',
-      width: 160,
-      collapsedWidth:65,
-    },
-    '3': {
-      skin: 'legions-pro-menu-them-blue',
-      color: '#015EA3',
-      logoSkin: 'legions-pro-menu-them-blue-logo',
-      theme: 'dark',
-      width: 160,
-      collapsedWidth:40,
-    },
-  };
-
-  /**
-   * true 折叠
-   * 
-   * false 展开
-   *菜单左右方向展开收起
-   * @memberof MenuViewStore
-   */
-  @observable collapsed = false; //
-
-  @observable exportTaskList: ExportTaskEntity[] = [];
-
-   /** 是否固定侧边菜单 */
-  @observable fixedSiderMenu = true;
-  
-  /** 是否固定头部区域 */
-  @observable fixedHeader = true;
-
-  getSkinInfos() {
-    return this.SkinList[this.skin]
-  }
-}
+@StoreModules
 export default class MenuStore extends StoreBase<IContext> {
   static meta: IStoreBaseMeta = {
     ...StoreBase.meta,
-    className: 'MenuStore',
     eventScopes: [
       CollapsedResource,
       MenuPanesStorageResource,

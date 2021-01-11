@@ -4,7 +4,8 @@ import { Table,Row,Col,Button,Icon,Input,message,Menu,Dropdown } from 'antd';
 import './style/index.less';
 import { TableColumnConfig,TableProps,TableRowSelection } from 'antd/lib/table/Table';
 import { observer,bind } from 'legions/store-react';
-import ProTableStore,{ IViewModelProTableStore,ILocalViewModelProTableStore,ITableAutoQuery } from '../store/pro.table';
+import {ProTableStore} from '../store/pro.table';
+import { IViewModelProTableStore,ILocalViewModelProTableStore,ITableAutoQuery } from '../store/pro.table/interface';
 import {
     compare,
 } from 'legions-utils-tool/object.utils';
@@ -17,7 +18,7 @@ import {
     PaginationProps
 } from '../interface/antd';
 import { ITableColumnConfig,IExportCsv, IProTableProps } from './interface';
-import {ISchedule} from '../interface/pro.store'
+import {ISchedule} from '../store/interface'
 import moment from 'moment';
 import LegionsProTableCustomColumns from '../LegionsProTableCustomColumns';
 import LegionsProLineOverflow from '../LegionsProLineOverflow';
@@ -67,7 +68,7 @@ const errorMessage = {
 }
 @bind({ store: ProTableStore })
 @observer
-export default class HLTable<TableRow = {},Model = {}> extends React.Component<IProTableProps<TableRow,Model>,IState>{
+export default class LegionsProTable<TableRow = {},Model = {}> extends React.Component<IProTableProps<TableRow,Model>,IState>{
     timeId = new Date().getTime()
     uid = ''
     /**
@@ -215,7 +216,7 @@ export default class HLTable<TableRow = {},Model = {}> extends React.Component<I
         })
 
     }
-    logger(type: Parameters<HLTable['consoleLog']>[0],logObj?: Object) {
+    logger(type: Parameters<LegionsProTable['consoleLog']>[0],logObj?: Object) {
         if (typeof this.props.onLogRecord === 'function') {
             const obj = logObj || {}
             const viewStoreKeys = ['calculateBody','bodyContainerHeight',
@@ -856,6 +857,7 @@ export default class HLTable<TableRow = {},Model = {}> extends React.Component<I
             return 0;
         };
     }
+    //@ts-ignore
     renderlocale() {
         if (this.props.autoQuery) {
             if (this.getLocalViewStore && this.props.autoQuery.isDefaultLoad === false) {

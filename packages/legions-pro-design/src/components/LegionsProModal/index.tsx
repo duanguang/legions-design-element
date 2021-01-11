@@ -2,10 +2,11 @@ import React,{ Component } from 'react'
 import { findDOMNode,unstable_renderSubtreeIntoContainer,unmountComponentAtNode } from 'react-dom'
 import { Modal,message } from 'antd';
 import { ModalProps,WrappedFormUtils } from '../interface/antd';
-import { ISchedule } from '../interface/pro.store';
 import { bind,observer } from 'legions/store-react'
-import ProModalStore,{ IViewModelModalStore } from '../store/pro.modal';
-import {InstanceLegionsProModal} from '../interface/pro.modal'
+import {ProModalStore  } from '../store/pro.modal';
+import { InstanceLegionsProModal } from './interface';
+import { IViewModelModalStore } from '../store/pro.modal/interface';
+import { ISchedule } from '../store/interface';
 import { shortHash } from 'legions-lunar/object-hash';
 import styles from './style/index.modules.less';
 import './style/index.less';
@@ -495,6 +496,7 @@ export default class LegionsProModal extends Component<IProps,IState> {
     }
 
     /*** 拖拽移动 移动事件 */
+    //@ts-ignore
     handleDraggableMoveMove = (event: MouseEvent) => {
         /* runInAction(() => {
             this.viewStore.dragData.dragging = true;
@@ -673,7 +675,8 @@ export default class LegionsProModal extends Component<IProps,IState> {
 
     }
 
-    /**  拖拽缩放移动坐标轴，触发在window对象*/
+/**  拖拽缩放移动坐标轴，触发在window对象*/
+    //@ts-ignore
     handleResizableMoveMove = (event: MouseEvent) => {
         runInAction(() => {
             this.viewStore.resizableData.resizable = true;

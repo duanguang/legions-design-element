@@ -1,9 +1,4 @@
 {
-    "compileOnSave": true,
-    "buildOnSave": true,
-    "targetHasForOf": true,
-    "targetHasGenerators": true,
-    "targetHasIterables": true,
     "compilerOptions": {
       "declaration": true,
       "declarationDir": "./types",
@@ -25,10 +20,10 @@
         "ES2015.Promise"
       ],
       "allowJs": true,
-      "isolatedModules": false,
+      /* "isolatedModules": false, */
       "jsx": "react",
-      /* "resolveJsonModule": true, */
-      /* "esModuleInterop": true, */
+      "resolveJsonModule": true,
+      "esModuleInterop": true,
       /*  "strict": true, */
       "pretty": true,
       /*  "noUnusedLocals": true,
@@ -39,13 +34,13 @@
       "noImplicitReturns": true,
       /* "skipLibCheck": true, */
       "allowSyntheticDefaultImports": true,
-      /* "stripInternal": true, */
+      "stripInternal": true,
       "emitDecoratorMetadata": true,
       "experimentalDecorators": true,
-      /* "strictPropertyInitialization": true, */
+     /*  "strictPropertyInitialization": true, */
       /* "typeRoots": ["./types"], */
-      "importHelpers": false,
-      "sourceMap": false,
+      "importHelpers": true,
+      "sourceMap": true,
       /* "strictNullChecks": true, */
      /*  "strictFunctionTypes": true, */
       /* "noImplicitThis": true, */

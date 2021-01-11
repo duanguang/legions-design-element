@@ -8,11 +8,11 @@
 
 import React,{ Component } from 'react'
 import { bind,observer } from 'legions/store-react'
-import ProFormStore from '../store/pro.form';
+import {ProFormStore} from '../store/pro.form';
 import { shortHash } from 'legions-lunar/object-hash';
 import { Icon,Popover } from 'antd';
-import styles from './index.modules.less'
-import './index.less'
+import styles from './style/index.modules.less'
+import './style/index.less'
 import { IErrorView } from '../LegionsProForm/interface';
 import { runInAction } from 'mobx';
 interface IProps {

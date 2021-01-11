@@ -13,7 +13,7 @@ module.exports = function (configs) {
   configs = Object.assign({}, configs, {
     name: packageConfig.name,
     /*  name: 'scm-static', */
-    defaultPort: 8056,
+    defaultPort: 8057,
     projectType: 'ts',
     publicPath: '/app/',
     isTslint: true,
@@ -50,7 +50,7 @@ module.exports = function (configs) {
           'mobx',
           'mobx-react',
           'superagent',
-          'react-router-dom',
+          'react-router',
           'react-dom',
           'classnames',
           'isomorphic-fetch',

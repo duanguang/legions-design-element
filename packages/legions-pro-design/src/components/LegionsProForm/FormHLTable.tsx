@@ -9,7 +9,6 @@ import { SwitchProps } from '../interface/antd';
 import AbstractForm from './AbstractForm';
 import FormElement from './FormElement';
 import { InstanceFormElement} from './interface/formElement'
-import LegionsProTable from '../LegionsProTable';
 import {IProTableProps} from '../LegionsProTable/interface'
 const FormItem = Form.Item;
 

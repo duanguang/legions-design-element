@@ -1,11 +1,11 @@
 import { RegExChk,validatorType } from 'legions-utils-tool/regex';
-import { IPanes } from '../../interface/pro.store';
+import { IPanes } from '../../store/pro.layout/interface';
 import ContentPart from '.';
 import LegionsProIframe from "../../LegionsProIframe";
 import React from 'react';
 import { NProgress } from "legions-nprogress";
 import pathToRegexp from 'path-to-regexp'
-import { ProxySanbox } from '../../core/cross-module';
+import { ProxySanbox } from '../../store/pro.layout';
 import cloneDeep from 'lodash/cloneDeep';
 import { getMicroAppStateActions } from 'legions-micro-service'
 import { MasterGlobalStateStore } from '../../core/cross-module';
@@ -96,6 +96,14 @@ export class LayoutContentUtils {
         return LayoutContentUtils.renderTabPaneIframe(newPane,that,src)
       }
       else if (newPane.loadingMode === 'sandbox') {
+        LayoutContentUtils.masterGlobalStateStore.setGlobalState({
+          user: that.props.userEntity,
+          methods: {
+            openTabPane: LayoutContentUtils.masterGlobalStateStore.openTabPane,
+            removeTablePane: LayoutContentUtils.masterGlobalStateStore.removeTablePane,
+          },
+          menuList:LayoutContentUtils.masterGlobalStateStore.menuList,
+        },LayoutContentUtils.masterGlobalStateStore.masterEventScopes.userEvent.created)
         return LayoutContentUtils.renderProxySanboxDom(newPane,that,src,that.props.store.proxySanbox);
       }
     }
@@ -103,6 +111,7 @@ export class LayoutContentUtils {
       return LayoutContentUtils.renderTabPaneRouterComponent(newPane,that,src)
     }
   }
+  //@ts-ignore
   static renderTabPaneIframe(pane: IPanes,that: ContentPart,src: string) {
     /* let url =!this.props.isEnabledTabs?this.transHttpUrl(src, this.props.store.urlRangTimestamp):src; */
     const tabPanesTimestamp = that.props.store.viewUIModel.tabPanesTimestamp.get(pane.key) || new Date().getTime()
@@ -155,6 +164,7 @@ export class LayoutContentUtils {
     }
     
   }
+  //@ts-ignore
   static renderTabPaneRouterComponent(pane: IPanes,that: ContentPart,src: string) {
     NProgress.done();
     const path = src.replace('#','');
@@ -237,7 +247,7 @@ export class LayoutContentUtils {
             const container = document.createElement('div');
             container.setAttribute('id',`${dataApp}`);
             target.appendChild(container)
-            microSanboxApp.loadMicroApp()
+            microSanboxApp.mount()
             microSanboxApp.app.mountPromise.then(() => {
               if (proxySanbox.routerSanboxOpenMode === 'newOpenactiveTab') {
                 proxySanbox.routerSanboxOpenMode = 'inSideActiveTab';
@@ -268,5 +278,25 @@ export class LayoutContentUtils {
       }
     }
   }
-  
+    /** 沙箱单实例加载方式 */
+    static loadMicroApp2(pane: IPanes,that: ContentPart,proxySanbox: ProxySanbox) {
+      /** 非沙箱跳过 */
+      if (pane&&pane.loadingMode !== 'sandbox') {
+          return
+      }
+      /** tab容器直接作为沙箱实例的容器 */
+      const sandboxWrap = document.querySelector('.legions-pro-layout .ant-tabs-content');
+      /** 容器空判 */
+      if (!sandboxWrap) {
+          return
+      }
+      /** 判断实例是否已注册 */
+      if (!proxySanbox.microSanboxApp.has(pane.sandbox.appName)) {
+          let dataApp = pane.sandbox.appName
+          const container = document.createElement('div');
+          container.setAttribute('id',`${dataApp}`);
+          sandboxWrap.appendChild(container)
+          proxySanbox.registerMicroApps(pane);
+      }
+    }
 }

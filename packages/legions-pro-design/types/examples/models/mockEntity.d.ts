@@ -5,17 +5,17 @@ declare class UserEntity {
      *
      * @memberof UserEntity
      */
-    name: undefined;
+    name: any;
     /**
      * 年龄
      *
      * @memberof UserEntity
      */
-    age: undefined;
+    age: any;
 }
 export declare class MockEntity {
-    id: undefined;
-    companyId: undefined;
+    id: any;
+    companyId: any;
     loginId: number;
     /**
      * 用户信息

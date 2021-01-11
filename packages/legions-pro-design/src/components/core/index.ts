@@ -2,7 +2,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-18 16:08:25
- * @LastEditTime: 2021-01-04 11:16:01
+ * @LastEditTime: 2021-01-06 15:40:10
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/core/index.ts

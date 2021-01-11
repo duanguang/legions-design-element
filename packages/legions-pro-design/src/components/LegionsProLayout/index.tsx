@@ -1,15 +1,14 @@
 import React from 'react'
 import { Layout } from 'antd';
 
-import './index.less'
+import './style/index.less'
 import ContentPart,{ IRouter } from './content';
 import MenuParts from './SideMenu';
 import HeaderPart from './Header';
-import { IUserInfo,ILegionsPluginDataOrigin } from '../interface';
+import { IUserInfo } from '../interface';
 import { InstanceLegionsProModal } from '../LegionsProModal/interface';
 import { MenuProps } from 'antd/lib/menu';
-import { LegionsPluginsExecute } from 'legions-lunar/legion.plugin.sdk';
-import { MenuEntity } from '../models/pro.menu.model';
+import { MenuEntity } from '../models';
 const baseCls = 'legions-pro-layout'
 
 interface IProps extends IUserInfo {
@@ -77,7 +76,7 @@ interface IProps extends IUserInfo {
     /** 在菜单数据接口请求完成后，如果需要对菜单数据项进行自定义加工，可传入此函数 */
     loadedMenuTransformData?: (menuList: MenuEntity[]) => void;
 }
-const ContainLayout = (props: IProps) => {
+const LegionsProLayout = (props: IProps) => {
     return (
         <div className={`${baseCls}`}>
             <Layout>
@@ -118,4 +117,4 @@ const ContainLayout = (props: IProps) => {
         </div>
     )
 }
-export default ContainLayout
+export default LegionsProLayout

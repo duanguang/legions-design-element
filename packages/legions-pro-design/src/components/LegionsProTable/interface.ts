@@ -1,16 +1,18 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-26 17:07:34
- * @LastEditTime: 2020-12-26 18:22:41
+ * @LastEditTime: 2021-01-07 17:26:59
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProTable/interface.ts
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
-import ProTableStore, {
+import  {
   IViewModelProTableStore,
   ILocalViewModelProTableStore,
   ITableAutoQuery,
+} from '../store/pro.table/interface';
+import {ProTableStore
 } from '../store/pro.table';
 import { TableColumnConfig,TableRowSelection } from '../interface/antd';
 import {  TableProps} from 'antd/lib/table/Table';

@@ -1,8 +1,9 @@
-import StoreBase, { IStoreBaseMeta } from '../../store/StoreBase';
+import { StoreBase } from '../../store';
+import { IStoreBaseMeta } from '../../store/interface'
 import { MicroAppStateActions } from 'legions-micro-service/types/interfaces'
 import { inject, resource, StoreModules } from 'legions/store';
 import { IGlobalStates, IResource, IUserInfo } from '../../interface';
-import HLTableStore from '../../store/pro.table';
+import {ProTableStore} from '../../store/pro.table';
 import { IframePostMessage, masterEventScopes, subscribeLegionsProGlobal } from './globalStateEven';
 import { MenuEntity } from '../../models/pro.menu.model';
 interface IContext{
@@ -19,8 +20,10 @@ export default class WorkerGlobalStateStore<IGlobalState,User={}> extends StoreB
     static meta :IStoreBaseMeta={
         ...StoreBase.meta,
     }
-    @inject(HLTableStore)
-    private hlTableStore:HLTableStore
+    @inject(ProTableStore)
+    private proTableStore:ProTableStore
+    private onGlobalStateChange: (callback:(value:IGlobalStates&IGlobalState,prev:IGlobalStates&IGlobalState,event:IIGlobalStateEvent)=>void,options:Parameters<MicroAppStateActions['onGlobalStateChange']>[1])=>void = null;
+    private subscribeLegionsProGlobal = subscribeLegionsProGlobal;
     userInfo: IUserInfo<User>;
     menuList: MenuEntity[] = [];
     masterEventScopes = masterEventScopes;
@@ -28,15 +31,36 @@ export default class WorkerGlobalStateStore<IGlobalState,User={}> extends StoreB
     openTabPane: IGlobalStates['methods']['openTabPane'] = () => { };
     /** 移除菜单页签方法 */
     removeTablePane: IGlobalStates['methods']['removeTablePane'] = () => { };
-    private onGlobalStateChange: (callback:(value:IGlobalStates&IGlobalState,prev:IGlobalStates&IGlobalState,event:IIGlobalStateEvent)=>void,options:Parameters<MicroAppStateActions['onGlobalStateChange']>[1])=>void = null;
     setGlobalState: (state: IGlobalStates & IGlobalState,event: IIGlobalStateEvent) => void = null;
     /** postmessage 通信 */
     iframePostMessage = IframePostMessage;
     /** 订阅子应用iframe挂载在全局的变量 */
-    private subscribeLegionsProGlobal = subscribeLegionsProGlobal;
     appId:string=''
     constructor(context:IContext){
         super(context);
+    }
+    listeningSanboxGlobalStateChange(options: {
+        props:{
+            onGlobalStateChange: (callback:(value:any,prev:any,event:IIGlobalStateEvent)=>void,options:Parameters<MicroAppStateActions['onGlobalStateChange']>[1])=>void;
+            setGlobalState: (state: any,event: IIGlobalStateEvent) => void;
+            name?: string;
+        },
+        /** 监听事件队列数据 */
+        eventScopes: IResource[],
+        /** 监听回调执行函数 */
+        callback: (value: IGlobalStates & IGlobalState,prev: IGlobalStates & IGlobalState,event: IIGlobalStateEvent) => void;
+    }) {
+        //@ts-ignore
+        this.syncUpdateGlobalState(options.props);
+        this.onGlobalStateChange((value,prev,event) => {
+            console.log(`[onGlobalStateChange - ${options.props.name}]:`,value,prev,event)
+            if (options.callback && typeof options.callback === 'function') {
+                options.callback(value,prev,event);
+            }
+          },{
+            fireImmediately: true,
+            eventScopes:options.eventScopes,
+          })
     }
     listeningGlobalStateChange(options: {
         /** 监听事件队列数据 */
@@ -87,7 +111,7 @@ export default class WorkerGlobalStateStore<IGlobalState,User={}> extends StoreB
     /** 写入基座系统相关方法及对象变量 */
     private setLayoutData(data:IGlobalStates) {
         if (data.user) {
-            this.hlTableStore.userInfo = data.user;
+            this.proTableStore.userInfo = data.user;
             this.setUserInfo(data.user);
         }
         if (data.methods) {

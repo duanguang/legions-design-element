@@ -5,7 +5,7 @@ import { legionsThirdpartyPlugin } from 'legions-thirdparty-plugin';
 import { NProgress } from 'legions-nprogress';
 import './style/index.less';
 import { FileTypeList,XlsType,XlsxType } from './uploadType';
-import { isNullOrUndefined } from 'util';
+import { isNullUndefined } from 'legions-utils-tool/type.validation';
 import { IProUploadProps } from './interface';
 const Dragger = Upload.Dragger;
 
@@ -30,7 +30,7 @@ export default class LegionsProUpload extends React.Component<IProUploadProps,IS
     constructor(props: IProUploadProps) {
         super(props);
         /** 处理在表单中使用时，初始赋值问题 */
-        const fileList = !isNullOrUndefined(props.value)
+        const fileList = !isNullUndefined(props.value)
             ? (props.value.fileList || [])
             : (this.props.fileList || this.props.defaultFileList || [])
         this.state = {
@@ -40,7 +40,7 @@ export default class LegionsProUpload extends React.Component<IProUploadProps,IS
         }
     }
     componentWillReceiveProps(nextProps: IProUploadProps) {
-        if (!isNullOrUndefined(nextProps.value) && this.props.value !== nextProps.value) {
+        if (!isNullUndefined(nextProps.value) && this.props.value !== nextProps.value) {
             if (nextProps.value && nextProps.value.fileList && nextProps.value.fileList.length <= this.props.maxFileCount) {
                 this.setState({
                     fileList: nextProps.value.fileList || []

@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-26 10:27:31
- * @LastEditTime: 2020-12-26 11:20:45
+ * @LastEditTime: 2021-01-08 15:28:19
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/interface/antd/index.ts
@@ -154,3 +154,12 @@ export interface IAntdSelectOption extends OptionProps {
   
     label?: string;
 }
+/** 表格表单组件列配置约束类型 */
+export type TableFormColumnsType =
+  | 'input'
+  | 'select'
+  | 'date'
+  | 'radio'
+  | 'switch'
+  | 'text'
+  | 'self';

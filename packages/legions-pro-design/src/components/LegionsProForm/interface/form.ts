@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-29 10:26:57
- * @LastEditTime: 2020-12-29 14:55:49
+ * @LastEditTime: 2021-01-08 09:54:01
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProForm/interface/form.ts
@@ -9,10 +9,11 @@
  */
 import { ValidateCallback } from 'antd/lib/form/Form';
 import { HlLabeledValue } from 'legions-lunar/model';
-import ProFormStore, {
+import  {
   ILocalViewModelHlFormStore,
   IViewModelHlFormStore,
-} from '../../store/pro.form';
+} from '../../store/pro.form/interface';
+import {ProFormStore} from '../../store/pro.form'
 export interface IErrorView {
   /**
    * 只读

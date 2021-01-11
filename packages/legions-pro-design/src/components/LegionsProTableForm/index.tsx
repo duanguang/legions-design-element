@@ -8,15 +8,18 @@
 import { debounce } from 'legions-utils-tool/debounce';
 import React from 'react';
 import { BaseFormFields } from 'legions-lunar/model';
-import { LabelWithDatePickerModel,LabelWithHLSelectModel,LabelWithInputNumberModel,LabelWithMonthPickerModel,LabelWithRadioButtonModel,LabelWithRangePickerModel,LabelWithRenderModel,LabelWithSelectModel,LabelWithSwitchModel,LabelWithTextModel,LabelWithUploadModel } from '../../models/HLForm';
-import HLTable from '../hlTable/HlTable';
-import { ITableColumnConfigProps,Weaken,TableFormColumnsType,IAntdRule,ClassOf,ITableColumnConfig,TableColumnConfig,WrappedFormUtils } from '../../typings/antd';
-import { IHLTableProps,InstanceHlTable } from '../../typings/components';
-import { HLFormUtils,InstanceForm } from '../hlForm';
-import CreateForm from '../hlForm/CreateForm';
-import { LabelWithInputModel } from '../hlForm/FormInput';
-import { HLFormContainer,IHLFormProps } from '../hlForm/HlForm';
-import styles from './index.modules.less';
+import LegionsProTable from '../LegionsProTable';
+import {
+    TableFormColumnsType,IAntdRule
+    ,TableColumnConfig,WrappedFormUtils
+} from '../interface/antd';
+import {Weaken,ClassOf} from '../interface'
+import { IProTableProps,InstanceProTable,ITableColumnConfigProps,ITableColumnConfig} from '../LegionsProTable/interface';
+
+import LegionsProForm from '../LegionsProForm'
+import { InstanceForm } from '../LegionsProForm/interface';
+import { IProFormProps } from '../LegionsProForm/HlForm';
+import styles from './style/index.modules.less';
 import { toJS } from 'mobx';
 import { cloneDeep } from 'lodash';
 import { shortHash } from 'legions-lunar/object-hash';
@@ -25,7 +28,7 @@ import set from 'lodash/set'
 import has from 'lodash/has'
 /** 分割符，用于给表单字段添加下标时使用 */
 export const HLTableFormSeparator = '___';
-interface IHlFormConfig<F> extends Partial<IHLFormProps<F>>,Weaken<Partial<IHLFormProps<F>>,'controls' | 'onGetForm'> {
+interface IHlFormConfig<F> extends Partial<IProFormProps<F>>,Weaken<Partial<IProFormProps<F>>,'controls' | 'onGetForm'> {
     /**
     * 获取表单数据模型
     * form  即将废弃，请formRef.viewModel.form 获取 
@@ -42,7 +45,7 @@ interface IHlFormConfig<F> extends Partial<IHLFormProps<F>>,Weaken<Partial<IHLFo
     /** 表单实体函数类 */
     formFieldsClassDeclaration?: Function;
 }
-export class HLTableFormProps<T = {},F = {}> {
+export class ProTableFormProps<T = {},F = {}> {
     /**
      * hlForm配置，只需要传入controls，组件会根据表单字段名称自动匹配并生成可编辑表格
      * 无需配置mapPropsToFields和onFieldsChange，本组件已托管
@@ -50,7 +53,7 @@ export class HLTableFormProps<T = {},F = {}> {
      * @type {Partial<IHLFormProps<F>>}
      * @memberof HLTableFormProps
      */
-    hlFormConfig: IHlFormConfig<F>;
+    proFormConfig: IHlFormConfig<F>;
     // hlFormConfig: Partial<IHLFormProps<F>> & {
     //     /** 表单验证规则函数类 */
     //     ruleClassDeclaration: Function;
@@ -62,7 +65,7 @@ export class HLTableFormProps<T = {},F = {}> {
      * @type {Partial<IHLTableProps<T>>}
      * @memberof HLTableFormProps
      */
-    hlTableConfig: IHLTableProps<T>;
+    proTableConfig: IProTableProps<T>;
     /**
      * 容器样式
      * @type {React.CSSProperties}
@@ -81,7 +84,6 @@ export class HLTableFormProps<T = {},F = {}> {
      */
     onChange?: (dataList: T[]) => void = () => void 0;
 }
-const formUtils = new HLFormUtils();
 type IFormRules<FormRules> = {
     [P in keyof FormRules]: IAntdRule[];
 }
@@ -89,8 +91,8 @@ interface IState<T = {}> {
     data: T[];
     recordEditData: Map<string,boolean>
 }
-export default class LegionsProTableForm<T = {},F = {}> extends CreateForm<HLTableFormProps<T,F>,IState<T>>{
-    static defaultProps = new HLTableFormProps() as Object;
+export default class LegionsProTableForm<T = {},F = {}> extends LegionsProForm.CreateForm<ProTableFormProps<T,F>,IState<T>>{
+    static defaultProps = new ProTableFormProps() as Object;
     /** 用于缓存上一次onFieldsChange中改变的状态，除了value */
     fieldsOtherCache = new Map();
     /** 行缓存, 避免表格render多次执行导致表单各种行为异常 */
@@ -100,12 +102,12 @@ export default class LegionsProTableForm<T = {},F = {}> extends CreateForm<HLTab
     rules: IFormRules<any> = null;
     /** 行唯一id */
     get uniqueKey() {
-        /*  const { hlTableConfig: { uniqueKey } = {} } = this.props;
+        /*  const { proTableConfig: { uniqueKey } = {} } = this.props;
          return uniqueKey; */
         return 'hlTableFormItemKey'
     }
 
-    constructor(props: HLTableFormProps<T,F>) {
+    constructor(props: ProTableFormProps<T,F>) {
         super(props);
         /* const {ruleClassDeclaration,formFieldsClassDeclaration} = this.props.hlFormConfig;
         invariant((ruleClassDeclaration.prototype instanceof formFieldsClassDeclaration), `规则实体类验证: 验证规则函数类原型没有继承表单实体函数类,请检查参数props.ruleClassDeclaration及props.formFieldsClassDeclaration`);
@@ -113,7 +115,7 @@ export default class LegionsProTableForm<T = {},F = {}> extends CreateForm<HLTab
         // @ts-ignore
         this.rules = ruleClassDeclaration['createFormRules']<ruleClassDeclaration>(ruleClassDeclaration); */
         this.state = {
-            data: this.tranformData(cloneDeep(toJS(this.props.hlTableConfig.data))),
+            data: this.tranformData(cloneDeep(toJS(this.props.proTableConfig.data))),
             recordEditData: new Map(),
         }
     }
@@ -143,9 +145,9 @@ export default class LegionsProTableForm<T = {},F = {}> extends CreateForm<HLTab
             }
         })
     }
-    componentWillReceiveProps(nextProps: HLTableFormProps<T,F>) {
-        const { hlTableConfig: { data = [] } } = this.props;
-        const { hlTableConfig: { data: nextData = [] } } = nextProps;
+    componentWillReceiveProps(nextProps: ProTableFormProps<T,F>) {
+        const { proTableConfig: { data = [] } } = this.props;
+        const { proTableConfig: { data: nextData = [] } } = nextProps;
         /** 列表长度变化时，清空缓存 */
         if (data.length !== nextData.length) {
             this.fieldsOtherCache.clear()
@@ -179,38 +181,39 @@ export default class LegionsProTableForm<T = {},F = {}> extends CreateForm<HLTab
                 name: `${control.iAntdProps.name}${HLTableFormSeparator}${key}`,
             }
         }
-        if (control instanceof LabelWithInputModel) {
+        /* const component= new LegionsProForm.CreateForm() */
+        if (control instanceof LegionsProForm.LabelWithInputModel) {
             return super.createFormInput(key,newControl,form,uid,formRef);
         }
-        else if (control instanceof LabelWithInputNumberModel) {
+        else if (control instanceof  LegionsProForm.LabelWithInputNumberModel) {
             return super.createFormInputNumber(key,newControl,form,uid,formRef);
         }
-        else if (control instanceof LabelWithSelectModel || control instanceof LabelWithHLSelectModel) {
+        else if (control instanceof LegionsProForm.LabelWithSelectModel || control instanceof LegionsProForm.LabelWithHLSelectModel) {
             return super.createFormSelect(key,newControl,form,uid,formRef);
         }
-        else if (control instanceof LabelWithRenderModel) {
+        else if (control instanceof LegionsProForm.LabelWithRenderModel) {
 
             return super.createFormRender(key,newControl,form,formRef);
         }
-        else if (control instanceof LabelWithDatePickerModel) {
+        else if (control instanceof LegionsProForm.LabelWithDatePickerModel) {
             return super.createFormDatePicker(key,newControl,form,uid,formRef);
         }
-        else if (control instanceof LabelWithMonthPickerModel) {
+        else if (control instanceof LegionsProForm.LabelWithMonthPickerModel) {
             return super.createFormMonthPicker(key,newControl,form,uid,formRef);
         }
-        else if (control instanceof LabelWithRangePickerModel) {
+        else if (control instanceof LegionsProForm.LabelWithRangePickerModel) {
             return super.createFormRangePicker(key,newControl,form,uid,formRef);
         }
-        else if (control instanceof LabelWithUploadModel) {
+        else if (control instanceof LegionsProForm.LabelWithUploadModel) {
             return super.createFormUpload(key,newControl,form,uid,formRef);
         }
-        else if (control instanceof LabelWithSwitchModel) {
+        else if (control instanceof LegionsProForm.LabelWithSwitchModel) {
             return super.createFormSwitch(key,newControl,form,uid,formRef)
         }
-        else if (control instanceof LabelWithRadioButtonModel) {
+        else if (control instanceof LegionsProForm.LabelWithRadioButtonModel) {
             return super.createFormRadioButton(key,newControl,form,uid,formRef)
         }
-        else if (control instanceof LabelWithTextModel) {
+        else if (control instanceof LegionsProForm.LabelWithTextModel) {
             return super.createFormText(key,newControl,form,uid,formRef)
         }
         else {
@@ -219,8 +222,8 @@ export default class LegionsProTableForm<T = {},F = {}> extends CreateForm<HLTab
     }
     /** 创建行表单 */
     createTable = () => {
-        const formUtils = new HLFormUtils();
-        const { hlTableConfig,hlTableConfig: { columns } = {},hlFormConfig: { controls } = {} } = this.props;
+        const formUtils = new LegionsProForm.ProFormUtils();
+        const { proTableConfig,proTableConfig: { columns } = {},proFormConfig: { controls } = {} } = this.props;
         /** 根据表格列名和表单字段名自动匹配渲染 */
         const newColumns = (formRef: InstanceForm) => (columns || []).map((item,pIndex): ITableColumnConfigProps => {
             const control = controls && controls.find((i) => i.iAntdProps.id === item.dataIndex);
@@ -252,18 +255,18 @@ export default class LegionsProTableForm<T = {},F = {}> extends CreateForm<HLTab
             iFormProps: {
                 render: (form,iAntdProps,rules,formRef: InstanceForm) => {
                     const { data } = this.state
-                    return formRef && <HLTable<T>
-                        {...hlTableConfig}
+                    return formRef && <LegionsProTable<T>
+                        {...proTableConfig}
                         data={data}
                         onPagingQuery={(page: number,pageSize: number,isChangePageSize?: boolean) => {
-                            const { hlTableConfig } = this.props;
+                            const { proTableConfig } = this.props;
                             /** 触发表单的setFields，实现table分页切换时，表单数据不异常 */
                             this.formRef.viewModel.form.setFields({});
-                            hlTableConfig.onPagingQuery && hlTableConfig.onPagingQuery(page,pageSize,isChangePageSize);
+                            proTableConfig.onPagingQuery && proTableConfig.onPagingQuery(page,pageSize,isChangePageSize);
                         }}
                         isOpenRowChange
                         columns={newColumns(formRef)}
-                    ></HLTable>
+                    ></LegionsProTable>
                 }
             }
         })
@@ -310,19 +313,19 @@ export default class LegionsProTableForm<T = {},F = {}> extends CreateForm<HLTab
     }
 
     render() {
-        const { style,className,hlFormConfig } = this.props;
+        const { style,className,proFormConfig } = this.props;
         const { data } = this.state;
         return (
-            <div style={style} className={`HLTableForm ${styles.wrap} ${className}`}>
-                <HLFormContainer<F>
+            <div style={style} className={`ProTableForm ${styles.wrap} ${className}`}>
+                <LegionsProForm<F>
                     key={data.length}
                     {...this.listToFormData(data)}
-                    {...hlFormConfig}
+                    {...proFormConfig}
                     //@ts-ignore
                     uniqueUid={this.props['uniqueUid']}
                     onGetForm={(form,formRef) => {
                         this.formRef = formRef;
-                        hlFormConfig.onGetForm && hlFormConfig.onGetForm(form,{
+                        proFormConfig.onGetForm && proFormConfig.onGetForm(form,{
                             ...formRef,methods: {
                                 updateRecordEditData: this.updateRecordEditData
                             }
@@ -333,7 +336,7 @@ export default class LegionsProTableForm<T = {},F = {}> extends CreateForm<HLTab
                     }}
                     onFieldsChange={debounce((props,fields) => {
                         this.props.onChange(this.formDataToList(data,fields));
-                        hlFormConfig.onFieldsChange && hlFormConfig.onFieldsChange(props,fields)
+                        proFormConfig.onFieldsChange && proFormConfig.onFieldsChange(props,fields)
                     },10) as () => void}
                     controls={this.createTable()}
                 />

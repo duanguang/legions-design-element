@@ -10,7 +10,7 @@ import FormUpload, { LabelWithUploadModel } from './FormUpload';
 import FormHLSelect from './FormHLSelect';
 import {LabelWithHLSelectModel} from './interface'
 import FormInputNumber, { LabelWithInputNumberModel } from './FormInputNumber';
-import { InstanceForm } from './interface/form';
+import { InstanceForm } from './interface';
 import FormSwitch, { LabelWithSwitchModel } from './FormSwitch';
 import FormRadioButton, { LabelWithRadioButtonModel } from './FormRadioButton';
 /* import FormHLTable, { LabelWithHLTableModel } from './FormHLTable'; */

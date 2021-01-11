@@ -22,7 +22,7 @@ export interface ExceptionProps<
   backText?: React.ReactNode;
   redirect?: string;
 }
-export class LegionsProException extends React.PureComponent<ExceptionProps> {
+export default class LegionsProException extends React.PureComponent<ExceptionProps> {
   static defaultProps = {
     backText: '返回主页',
     redirect: '/',

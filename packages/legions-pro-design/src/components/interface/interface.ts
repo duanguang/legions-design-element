@@ -1,14 +1,14 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-10 15:31:01
- * @LastEditTime: 2021-01-06 13:47:25
+ * @LastEditTime: 2021-01-08 15:29:22
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/interface/interface.ts
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
 import { MenuEntity } from '../models/pro.menu.model';
-import { IPanes } from './pro.store';
+import { IPanes } from '../store/pro.layout/interface';
 /**
  *  使用 typescript 有时候需要重写一个库提供的 interface 的某个属性，但是重写 interface 有可能会导致冲突：
  *  原理是，将 类型 T 的所有 K 属性置为 any，
@@ -18,6 +18,9 @@ import { IPanes } from './pro.store';
 export type Weaken<T, K extends keyof T> = {
   [P in keyof T]: P extends K ? any : T[P];
 };
+export interface ClassOf<T> {
+  new (...args: any[]): T;
+}
 /**
  * 移除 T 中的 U 属性
 

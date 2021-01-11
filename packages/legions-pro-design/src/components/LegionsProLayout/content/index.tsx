@@ -9,11 +9,8 @@ import { Tabs,Layout,Form,Icon,Dropdown,Menu,message,Spin } from 'antd';
 const { Content } = Layout;
 const TabPane = Tabs.TabPane;
 import { observer,bind } from "legions/store-react";
-import { Route,Switch,Router } from 'legions/router';
 import {TabPaneViewStore,MenuStore} from "../../store/pro.layout";
 import ReactDOM,{ findDOMNode } from "react-dom";
-import { NProgress } from "legions-nprogress";
-import { RegExChk,validatorType } from 'legions-utils-tool/regex';
 import { observableViewModel } from 'legions/store-utils'
 import { debounce } from 'legions-utils-tool/debounce'
 import styles from '../style/content.modules.less';
@@ -21,9 +18,8 @@ import classNames from 'classnames';
 import { observable } from 'mobx';
 import { shortHash } from 'legions-lunar/object-hash';
 import { focusBind,focusUnbind } from 'legions-thirdparty-plugin/focus-outside'
-import { IPanes } from '../../interface/pro.store';
+import { IPanes } from '../../store/pro.layout/interface';
 import { IUserInfo } from '../../interface';
-import pathToRegexp from 'path-to-regexp'
 import { LayoutContentUtils } from './layoutContentUtils';
 
 export interface ClickParam {
@@ -98,7 +94,7 @@ export default class ContentPart extends React.Component<IProps,IState> {
   componentDidUpdate() {
     this.props.isEnabledTabs && this.addContextmenu()
     const pane = this.props.store.panes.find((item) => item.key === this.props.store.activeKey);
-    LayoutContentUtils.loadMicroApp(pane,this,this.props.store.proxySanbox);
+    LayoutContentUtils.loadMicroApp2(pane,this,this.props.store.proxySanbox);
   }
   /** 添加页签悬浮窗 */
   addContextmenu() {
@@ -116,7 +112,7 @@ export default class ContentPart extends React.Component<IProps,IState> {
               view.isAddContextmenu = true;
             }
             else {
-              if (el.parentElement.parentElement.classList.value.indexOf(styles.outSide) < 0) {
+              if (el.parentElement.parentElement.classList.toString().indexOf(styles.outSide) < 0) {
                 el.parentElement.parentElement.className = `${el.parentElement.parentElement.className} ${styles.outSide}`
               }
             }
@@ -222,6 +218,7 @@ export default class ContentPart extends React.Component<IProps,IState> {
        data-service={keys}
        data-app={pane.sandbox.appName}
        data-page={`${pane.sandbox.appName}-${routerPath}`}
+       data-mode={pane.loadingMode}
         style={{ outline: 'none' }}
         tab={this.renderTitleElement(pane.title,store.activeKey,pane.key)}
         key={pane.key}
@@ -283,6 +280,7 @@ export default class ContentPart extends React.Component<IProps,IState> {
     }
     if (this.props.isEnabledTabs) {
       return <Tabs
+      className="legions-pro-layout-tabs"
         hideAdd
         tabPosition="top"
         animated={{ inkBar: false,tabPane: false }}
@@ -307,7 +305,7 @@ export default class ContentPart extends React.Component<IProps,IState> {
     let classValue = {};
     if (this.props.fixedLayoutPosition === 'fixedSiderHeader') {
       if (this.props.menuStore.viewModel.fixedHeader) {
-        classValue = {className:`hl-tabs-content-fixed ${this.props.isEnabledTabs?'':'hl-tabs-content-fixed-not-pane'}`}
+        classValue = {className:`legions-pro-layout-tabs-content-fixed ${this.props.isEnabledTabs?'':'legions-pro-layout-tabs-content-fixed-not-pane'}`}
        }
     }
     return classValue;

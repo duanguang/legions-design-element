@@ -7,14 +7,14 @@ import { LabelWithInputModel } from './FormInput';
 import './style/index.less'
 import { WrappedFormUtils } from '../interface/antd';
 import { IErrorView } from './interface/form';
-import { ISchedule } from '../interface/pro.store';
+import { ISchedule } from '../store/interface';
 import {
     LabelWithHLSelectModel,LabelWithSelectModel,LabelWithRenderModel,LabelWithDatePickerModel,
     LabelWithMonthPickerModel,LabelWithRangePickerModel,LabelWithUploadModel,LabelWithInputNumberModel,
 } from './interface';
 import { bind,observer } from 'legions/store-react'
-import HLFormStore,{ IViewModelHlFormStore } from '../store/pro.form';
-import { IElementList } from '../store/interface/form';
+import {ProFormStore } from '../store/pro.form';
+import {IViewModelHlFormStore,IElementList} from '../store/pro.form/interface'
 import { shortHash } from 'legions-lunar/object-hash';
 import { LabelWithSwitchModel } from './FormSwitch';
 import { LabelWithRadioButtonModel } from './FormRadioButton';
@@ -24,14 +24,14 @@ import { InstanceForm } from './interface/form';
 import { computed,observable,runInAction,toJS } from 'mobx';
 import LegionsProDragger from '../LegionsProDragger';
 import get from 'lodash/get'
-import set from 'lodash/set'
 import { ValidateCallback } from 'antd/lib/form/Form';
 import { LabelWithCheckboxModel } from './FormCheckbox';
 import { HlLabeledValue } from 'legions-lunar/model';
 import { legionsPlugins,LegionsPluginsExecute,LoggerManager } from 'legions-lunar/legion.plugin.sdk';
+import { ProFormUtils } from './ProFormUtils';
 const baseCls = `legions-pro-form`
 const COMPONENT_TYPE = ['iFormInput','iFormText','iFormWithSelect','iFormDatePicker','iFormMonthPicker','iFormRangePicker','iFormWithRadioButton','iFormWithSwitch',]
-export interface IHLFormProps<mapProps = {}> {
+export interface IProFormProps<mapProps = {}> {
     form?: WrappedFormUtils,
 
     /**
@@ -43,7 +43,7 @@ export interface IHLFormProps<mapProps = {}> {
      * @memberof IHLFormProps
      */
     InputDataModel?: Function,
-    store?: HLFormStore,
+    store?: ProFormStore,
     controls: Array<any>;
     group?: Array<IGroup>,
 
@@ -185,9 +185,9 @@ const size = {
         formItemLayOut: 'form-item-table',
     }
 }
-@bind({ store: HLFormStore })
+@bind({ store: ProFormStore })
 @observer
-class HLForm<mapProps = {}> extends CreateForm<IHLFormProps<mapProps>,IState>{
+class HLForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
     timer = null
     timeId = new Date().getTime()
 
@@ -389,7 +389,7 @@ class HLForm<mapProps = {}> extends CreateForm<IHLFormProps<mapProps>,IState>{
         this.controlsLen = this.props.controls.length;
         this.consoleLog('hlFormContainer-componentDidMount');
     }
-    componentWillReceiveProps(nextProps: IHLFormProps) {
+    componentWillReceiveProps(nextProps: IProFormProps) {
         const store = this.props.store.HLFormContainer.get(this.uid)
         if (store.elementList.size !== store.nodeCount || store.elementList.size !== store.computedAllElementList.length) {
             store.nodeCount = store.elementList.size;
@@ -491,7 +491,7 @@ class HLForm<mapProps = {}> extends CreateForm<IHLFormProps<mapProps>,IState>{
     }
     /** 设置表单选项禁用和启用值 */
     setFormItemStateDisabled(options: {
-        props: IHLFormProps<mapProps>,nextProps?: IHLFormProps<mapProps>
+        props: IProFormProps<mapProps>,nextProps?: IProFormProps<mapProps>
     }) {
         const nextProps = options.nextProps;
         const props = options.props || this.props;
@@ -575,6 +575,7 @@ class HLForm<mapProps = {}> extends CreateForm<IHLFormProps<mapProps>,IState>{
         }
         return null
     }
+    //@ts-ignore
     handleKeyDown(e) {
         let formStore = this.props.store.get(this.uid)
         const { keyCode } = e;
@@ -683,6 +684,7 @@ class HLForm<mapProps = {}> extends CreateForm<IHLFormProps<mapProps>,IState>{
                                 el.element[0].focus && el.element[0].focus()
 
                                 formStore.focusUid = nextUid;
+                                //@ts-ignore
                                 return
                             }
                         }
@@ -934,7 +936,8 @@ class HLForm<mapProps = {}> extends CreateForm<IHLFormProps<mapProps>,IState>{
     renderGroup() {
         const group = this.props.group;
         const controls = this.props.controls;
-        /* const controls = this.storeView.controls; */
+    /* const controls = this.storeView.controls; */
+        //@ts-ignore
         const groupComponent = group.map((item,index) => {
             let groupFormItem = controls.filter((entity) => entity.iAntdProps.groupId === item.id);
             if (groupFormItem && groupFormItem.length) {
@@ -946,7 +949,7 @@ class HLForm<mapProps = {}> extends CreateForm<IHLFormProps<mapProps>,IState>{
                         <span className="span-right" >
                             {entity.isShowFormSizeIcon && <Dropdown overlay={(
                                 <Menu selectedKeys={[this.storeView.styleSize]} onClick={(item) => {
-                                    const size = item.key as IHLFormProps['size']
+                                    const size = item.key as IProFormProps['size']
                                     this.storeView.updateStyleSize(size)
                                     this.props.onUpdateStyleSize && this.props.onUpdateStyleSize(size)
                                 }}>
@@ -1027,23 +1030,37 @@ const debounceOnFieldsChange = debounce((props,changedFields) => {
     props.onFieldsChange && props.onFieldsChange(props,changedFields)
 },200)
 const CustomizedForm = Form.create({
-    mapPropsToFields: (props: IHLFormProps) => {
+    mapPropsToFields: (props: IProFormProps) => {
         return props.mapPropsToFields(props)
     },
-    onFieldsChange: (props: IHLFormProps,changedFields) => {
+    onFieldsChange: (props: IProFormProps,changedFields) => {
         return props.onFieldsChange(props,changedFields);
         /* return debounceOnFieldsChange(props,changedFields) */
     },
-    onValuesChange(props: IHLFormProps,values) {
+    onValuesChange(props: IProFormProps,values) {
         props.onValuesChange && props.onValuesChange(props,values)
     }
 })(HLForm);
 /* export const HLFormContainer = (props: IHLFormProps) => {
     return <CustomizedForm {...props} />
 } */
-export function HLFormContainer<mapProps = {}>(props: IHLFormProps<mapProps>) {
+export function LegionsProForm<mapProps = {}>(props: IProFormProps<mapProps>) {
     return <CustomizedForm {...props} />
 }
+LegionsProForm.CreateForm = CreateForm
+LegionsProForm.ProFormUtils = ProFormUtils;
+LegionsProForm.LabelWithInputNumberModel = LabelWithInputNumberModel;
+LegionsProForm.LabelWithSelectModel = LabelWithSelectModel;
+LegionsProForm.LabelWithHLSelectModel = LabelWithHLSelectModel;
+LegionsProForm.LabelWithRenderModel = LabelWithRenderModel;
+LegionsProForm.LabelWithDatePickerModel = LabelWithDatePickerModel;
+LegionsProForm.LabelWithMonthPickerModel = LabelWithMonthPickerModel;
+LegionsProForm.LabelWithRangePickerModel = LabelWithRangePickerModel;
+LegionsProForm.LabelWithUploadModel = LabelWithUploadModel;
+LegionsProForm.LabelWithSwitchModel = LabelWithSwitchModel;
+LegionsProForm.LabelWithRadioButtonModel = LabelWithRadioButtonModel;
+LegionsProForm.LabelWithTextModel = LabelWithTextModel;
+LegionsProForm.LabelWithInputModel = LabelWithInputModel;
 
 /* @bind({ store: HLFormStore })
 @observer

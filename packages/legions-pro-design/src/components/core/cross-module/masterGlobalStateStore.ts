@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-05 13:57:53
- * @LastEditTime: 2021-01-06 13:56:31
+ * @LastEditTime: 2021-01-08 11:06:04
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/core/cross-module/masterGlobalStateStore.ts
@@ -11,7 +11,8 @@ import { initGlobalState } from 'legions-micro-service';
 import { IframePostMessage, masterEventScopes, subscribeLegionsProGlobal } from './globalStateEven';
 import { IGlobalStates, IResource, typeOpenPaneParames } from '../../interface';
 import { StoreModules } from 'legions/store';
-import StoreBase, { IStoreBaseMeta } from '../../store/StoreBase';
+import { StoreBase } from '../../store';
+import { IStoreBaseMeta } from '../../store/interface'
 import { MicroAppStateActions } from 'legions-micro-service/types/interfaces';
 import { MenuEntity } from '../../models/pro.menu.model';
 interface IContext{
@@ -30,22 +31,26 @@ export class MasterGlobalStateStore extends StoreBase<IContext>{
     static meta :IStoreBaseMeta={
         ...StoreBase.meta,
     }
+    //@ts-ignore
     private onGlobalStateChange: (callback:(value:IGlobalStates,prev:IGlobalStates,event:IIGlobalStateEvent)=>void,options:Parameters<MicroAppStateActions['onGlobalStateChange']>[1])=>void = null;
+     //@ts-ignore
+     setGlobalState: (state: IGlobalStates,event: IIGlobalStateEvent) => void = null;
+     openTabPane: (pane: typeOpenPaneParames) => void=()=>{}
+     removeTablePane: (targetKey: string | string[]) => void=()=>{};
+     menuList: MenuEntity[] = [];
+     /** 订阅子应用iframe挂载在全局的变量 */
+     iframePostMessage = IframePostMessage;
+     masterEventScopes = masterEventScopes;
     constructor(context:IContext){
         super(context);
         const { onGlobalStateChange, setGlobalState,offGlobalStateChange } = initGlobalState({
             user: null,
         })
+        //@ts-ignore
         this.onGlobalStateChange = onGlobalStateChange;
         this.setGlobalState = setGlobalState;
     }
-    setGlobalState: (state: IGlobalStates,event: IIGlobalStateEvent) => void = null;
-    openTabPane: (pane: typeOpenPaneParames) => void=()=>{}
-    removeTablePane: (targetKey: string | string[]) => void;
-    menuList: MenuEntity[] = [];
-    /** 订阅子应用iframe挂载在全局的变量 */
-    iframePostMessage = IframePostMessage;
-    masterEventScopes = masterEventScopes;
+   
     listeningGlobalStateChange(options: {
         /** 监听事件队列数据 */
         eventScopes: IResource[],

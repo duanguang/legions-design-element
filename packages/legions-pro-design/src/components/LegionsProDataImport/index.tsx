@@ -18,7 +18,7 @@ import LegionsProTable from '../LegionsProTable';
 import {IProTableProps} from '../LegionsProTable/interface';
 import LegionsProUpload from '../LegionsProUpload';
 import {IProUploadProps} from '../LegionsProUpload/interface'
-import styles from './index.modules.less';
+import styles from './style/index.modules.less';
 
 
 type Proxify<T> = {

@@ -1,9 +1,10 @@
 /**
-  *  legions-pro-echarts v0.0.7
-  * (c) 2020 duanguang
+  *  legions-pro-design v0.0.7
+  * (c) 2021 duanguang
   * @license MIT
   */
 import React, { Component } from 'react';
+import styles from './style/index.modules.less';
 import { Tooltip } from 'antd';
 
 /*! *****************************************************************************
@@ -41,7 +42,10 @@ var LegionsProLineOverflow = /** @class */ (function (_super) {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     LegionsProLineOverflow.prototype.render = function () {
-        return (React.createElement(Tooltip, { placement: "leftTop", title: this.props.text ? this.props.text : '' }, this.props.children));
+        return (React.createElement(Tooltip, { placement: "leftTop", title: this.props.text ? this.props.text : '' },
+            React.createElement("div", { className: styles.hlTableCell },
+                React.createElement("div", { className: styles.hlTableTooltipRel },
+                    React.createElement("span", { className: styles.hlTableCellTooltipContent }, this.props.text)))));
     };
     LegionsProLineOverflow.defaultProps = {
         text: '',
