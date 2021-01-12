@@ -1,4 +1,5 @@
 import React from 'react';
+import { bind, observer } from 'legions/store-react';
 import { Row,Col,Breadcrumb } from 'antd';
 import './style/index.less';
 const baseCls = `legions-pro-design-breadcrumb`
@@ -9,6 +10,7 @@ interface IValue{
     name:string
     url?:string
 }
+@observer
 export default class LegionsProBreadcrumb extends React.Component<IProps>{
    renderCrumbItem(){
        let value = this.props.value||[]

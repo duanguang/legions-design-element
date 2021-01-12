@@ -2400,7 +2400,7 @@ var HLForm = /** @class */ (function (_super) {
                     React.createElement("ul", null, this.state.groupEntity.map(function (entity, index) {
                         if (entity.active) {
                             return React.createElement("li", { key: index },
-                                entity.active && React.createElement("img", { src: require('../../public/images/u586.png') }),
+                                entity.active && React.createElement("img", { src: 'https://gitee.com/duanguang/figure-bed/raw/master/oss/u586.png' }),
                                 React.createElement("span", { style: { paddingLeft: "10px", color: "rgb(39, 140, 222)" }, onClick: _this.handlePositioning.bind(_this, entity.name) }, entity.name));
                         }
                         return React.createElement("li", { key: index },

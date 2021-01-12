@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-08 12:00:22
- * @LastEditTime: 2021-01-08 12:04:05
+ * @LastEditTime: 2021-01-11 17:33:19
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProQueryConditions/interface/index.ts
@@ -10,6 +10,20 @@
 import { ProQueryConditionStore } from '../../store/pro.query.conditions';
 import { IViewQueryConditionStore,ISelectAutoQuery } from '../../store/pro.query.conditions/interface';
 import { HlLabeledValue } from 'legions-lunar/model';
+import { Weaken } from '../../interface'
+import {
+    InputProps,
+    SelectProps,
+    DatePickerProps,
+    RangePickerProps,
+    InputNumberProps,
+    RadioGroupProps,
+    RadioButtonProps,
+    TextAreaProps,
+    CheckboxGroupProps,
+    CheckboxProps,
+} from '../../interface/antd';
+import {IProSelectProps} from '../../LegionsProSelect/interface'
 export interface ISelectProps {
     value: string
     key: string
@@ -97,4 +111,93 @@ export interface IQueryConditionsInstance<Query = {}> {
      * @memberof InstanceHlTable
      */
     methods?: IMethods
+}
+interface IJsonProperty {
+    name: string
+
+    /**
+     * 废弃属性，请勿使用
+     *
+     * @type {(string|[]|any[])}
+     * @memberof IJsonProperty
+     */
+    value?: string | [] | any[],
+    queryPrams: string,
+    uuid?: string;
+}
+export interface IQuery {
+    container: {
+        width?: number;
+        span?: number;
+        position: 'left' | 'content' | 'right';
+        component: IComponent;
+    };
+}
+interface IEmit {
+    name: 'onChange' | 'onEnter' | 'onSearch' | 'onReset' | 'onResize' | 'onToggle' | 'onRefresh'
+    handle: (value,viewEntity?: IViewQueryConditionStore) => any
+}
+interface IComponent {
+    type?: 'daterange' | 'text' | 'number' | 'select' | 'checkBox' | 'date' | 'daterange' | 'radioButton' | 'textArea'
+    props?: IQueryTextProps | IQuerySelectProps | IQueryDateProps | IQueryRangePickerProps | IQueryTextNumberProps | IQueryRadioButtonProps | IQueryTextAreaProps
+    JsonProperty?: IJsonProperty
+    data?: Array<ISelectProps> | Array<IRadioButtonProps>
+    label?: string
+    defaultValue?: any
+    hooks?: Array<IEmit>
+    render?: Function,
+    regex?: RegExp
+}
+interface IQueryTextProps extends IQueryProps,InputProps {
+
+}
+interface IQueryTextAreaProps extends Weaken<IQueryProps,'maxlength'>,TextAreaProps {
+    maxlength?: number
+}
+interface IQueryRadioButtonProps extends IQueryProps,RadioGroupProps {
+}
+interface IQueryTextNumberProps extends IQueryProps,InputNumberProps {
+}
+interface IQuerySelectProps extends IQueryProps,IProSelectProps {
+    multiple: boolean,
+    loading?: boolean,
+    /** 自动托管下拉数据请求，在下拉框组件中使用,只支持一次性查询全部数据
+     * 不支持远程根据关键词搜索
+     */
+    autoQuery?: ISelectAutoQuery
+}
+interface IQueryDateProps extends IQueryProps,DatePickerProps {
+    format: 'YYYY-MM-DD HH:mm:ss' | 'YYYY-MM-DD' | 'YYYY-MM-DD HH:mm'
+    showTime: boolean | { format: 'HH:mm' }
+}
+interface IQueryRangePickerProps extends RangePickerProps,Weaken<IQueryProps,'placeholder'> {
+    placeholder?: [string,string]
+}
+
+interface IRadioButtonProps {
+    value: string
+    label: string,
+    disabled?: boolean
+}
+export interface IQueryProps {
+    width: number
+    span?: number
+    title?: string
+    maxlength?: string,
+    placeholder?: string
+    /**
+     *是否允许重置 TRUE 不重置
+     *
+     * @type {boolean}
+     * @memberof IQueryProps
+     */
+    isNotReset?: boolean;
+
+    /**
+     *
+     * 自定义重置方法,返回一个新值
+     * @memberof IQueryProps
+     */
+    onReset?: <T extends {}>(fieldName: string,vlaue: T) => T;
+    onPaste?: (event) => void;
 }

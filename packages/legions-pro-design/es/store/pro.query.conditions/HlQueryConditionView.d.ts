@@ -87,7 +87,7 @@ export declare class HlQueryConditionView<Query = {}> {
      * @memberof HlQueryConditionView
      */
     get computedRightComponent(): JSX.Element;
-    get computedSize(): "default" | "small";
+    get computedSize(): "small" | "default";
     /**
      *  更新数据模型
      *

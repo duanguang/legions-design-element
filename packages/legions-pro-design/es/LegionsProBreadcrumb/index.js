@@ -4,6 +4,7 @@
   * @license MIT
   */
 import React from 'react';
+import { observer } from 'legions/store-react';
 import { Breadcrumb, Row, Col } from 'antd';
 import './style/index.less';
 
@@ -36,6 +37,13 @@ function __extends(d, b) {
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 }
 
+function __decorate(decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+}
+
 var baseCls = "legions-pro-design-breadcrumb";
 var LegionsProBreadcrumb = /** @class */ (function (_super) {
     __extends(LegionsProBreadcrumb, _super);
@@ -55,6 +63,9 @@ var LegionsProBreadcrumb = /** @class */ (function (_super) {
                     React.createElement("div", { className: "system" },
                         React.createElement(Breadcrumb, null, this.renderCrumbItem()))))));
     };
+    LegionsProBreadcrumb = __decorate([
+        observer
+    ], LegionsProBreadcrumb);
     return LegionsProBreadcrumb;
 }(React.Component));
 

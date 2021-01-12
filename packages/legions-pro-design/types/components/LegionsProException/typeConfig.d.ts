@@ -1,16 +1,16 @@
 declare const config: {
     403: {
-        img: any;
+        img: string;
         title: string;
         desc: string;
     };
     404: {
-        img: any;
+        img: string;
         title: string;
         desc: string;
     };
     500: {
-        img: any;
+        img: string;
         title: string;
         desc: string;
     };

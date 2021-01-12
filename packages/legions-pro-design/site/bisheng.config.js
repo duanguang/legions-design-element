@@ -1,10 +1,10 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-23 10:55:09
- * @LastEditTime: 2020-12-25 11:33:38
+ * @LastEditTime: 2021-01-12 12:10:07
  * @LastEditors: duanguang
  * @Description: 
- * @FilePath: /legions-design-element/packages/legions-pro-echarts/site/bisheng.config.js
+ * @FilePath: /legions-design-element/packages/legions-pro-design/site/bisheng.config.js
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
 const path = require('path');
@@ -65,7 +65,7 @@ module.exports = {
   },
   webpackConfig(config) {
       config.resolve.alias = {
-        'legions-pro-echarts': path.join(process.cwd(), 'src/components/index'),
+        'legions-pro-design': path.join(process.cwd(), 'es/index'),
         /* 'antd/lib': path.join(process.cwd(), 'components'),
         'antd/es': path.join(process.cwd(), 'components'),
         antd: path.join(process.cwd(), 'index'), */
@@ -92,6 +92,7 @@ module.exports = {
       }); */
 
     /* config.plugins.push(new CSSSplitWebpackPlugin({ size: 4000 })); */
+    /* config.plugins.push(['@babel/plugin-proposal-decorators', { legacy: true }]); */
 
     return config;
   },

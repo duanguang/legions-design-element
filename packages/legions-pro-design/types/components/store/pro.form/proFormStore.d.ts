@@ -1,4 +1,4 @@
-/// <reference types="react" />
+import React from 'react';
 import { StoreBase } from '../index';
 import { IStoreBaseMeta } from '../interface';
 import { ViewModel } from 'brain-store-utils';
@@ -113,7 +113,7 @@ export declare class HlFormView {
      * @readonly
      * @memberof HlFormView
      */
-    get styleSize(): "default" | "small" | "table";
+    get styleSize(): "small" | "table" | "default";
     /**
      *
      * 表单状态数据

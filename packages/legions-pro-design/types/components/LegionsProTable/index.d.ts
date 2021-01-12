@@ -1,7 +1,7 @@
 import React from 'react';
 import './style/index.less';
 import { TableColumnConfig } from 'antd/lib/table/Table';
-import { IViewModelProTableStore, ITableAutoQuery } from '../store/pro.table/interface';
+import { IViewModelProTableStore } from '../store/pro.table/interface';
 import { SelectionDecorator } from '../interface/antd';
 import { ITableColumnConfig, IExportCsv, IProTableProps } from './interface';
 import { ISchedule } from '../store/interface';
@@ -60,67 +60,8 @@ export default class LegionsProTable<TableRow = {}, Model = {}> extends React.Co
         pageSizeOptions: string[];
     };
     constructor(props: any);
-    get getViewStore(): import("brain-store-utils").ViewModel<import("../store/pro.table/ProTableView").ProTableView> & {
-        userInfo: {
-            userName: string;
-            userUid: string;
-            companyName?: string;
-            companyUid?: string;
-        };
-        readonly computedUid: string;
-        pageIndex: number;
-        pageSize: number;
-        selectedRows: any[];
-        expandRow?: string;
-        type?: "radio" | "checkbox";
-        rowSelectionClickType?: "radio" | "check";
-        columns?: (TableColumnConfig<{}> & import("../store/pro.table/interface").ITableColumnConfig)[];
-        obTableListCustom: import("../models").TableColumnsContainerEntity;
-        tableBodyDomClientHeight: number;
-        bodyExternalContainer: import("../store/pro.table/interface").IObservableMap<string, {
-            height: number;
-        }>;
-        isAdaptiveHeight: boolean;
-        scroll: import("../store/pro.table/interface").IScroll;
-        bodyStyle: React.CSSProperties;
-        tempDynamicAddData: any[];
-        bodyContainerHeight: number;
-        pagination: boolean;
-        bodyExternalHeight: number;
-        renderData: any[];
-        queryParams: any;
-        isOpenRowChange: boolean;
-        isOpenRowSelection: boolean;
-        _tableContainerWidth: number;
-        readonly calculateBody: {};
-        readonly computedShowColumns: import("../store/pro.table/interface").IShowColumns[];
-        readonly computedUnShowColumns: import("../store/pro.table/interface").IShowColumns[];
-        readonly computedStorageShowColumnsKeys: string;
-        readonly computedRenderColumns: (TableColumnConfig<{}> & import("../store/pro.table/interface").ITableColumnConfig)[];
-        readonly tableXAutoWidth: string | number;
-        readonly computedTotal: number;
-        filterColumns: () => void;
-        moveRightShowColumns: (Columns: string[]) => void;
-        moveLeftShowColumns: (Columns: string[]) => void;
-        orderSortRightShowColumns: (Columns: string[]) => void;
-        orderSortLeftShowColumns: (Columns: string[]) => void;
-        setLocalStorageShowColumnsKeys: (modulesName?: string) => void;
-        getLocalStorageShowColumns: () => import("../store/pro.table/interface").IShowColumns[];
-        setLocalStorageShowColumns: (url: string) => void;
-        editTableColumns: (modulesUid: string, customColumns: import("../models").TableListColumns[], url: any) => Promise<void>;
-        queryTableColumns: (modulesUid: string, url: any) => Promise<void>;
-        setTableModulesName: (tableModulesName: string) => void;
-        setTotal: (total: number) => void;
-        updateOpenRowChange: (isOpenRowChange: boolean) => void;
-    };
-    get getLocalViewStore(): import("brain-store-utils").ViewModel<import("../store/pro.table/ProTableLocalView").ProTableLocalView> & {
-        obState: import("brain-store-utils").observablePromise.PramsResult<any>;
-        loading: boolean;
-        dispatchRequest: (autoQuery: ITableAutoQuery<{}>, options: {
-            pageIndex: number;
-            pageSize: number;
-        }) => void;
-    };
+    get getViewStore(): any;
+    get getLocalViewStore(): any;
     consoleLog(type: Parameters<typeof LoggerManager['report']>[0]['type'], logObj?: Object): void;
     logger(type: Parameters<LegionsProTable['consoleLog']>[0], logObj?: Object): void;
     search(options?: {

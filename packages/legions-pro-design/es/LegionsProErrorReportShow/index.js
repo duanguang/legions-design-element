@@ -52,12 +52,6 @@ function __metadata(metadataKey, metadataValue) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(metadataKey, metadataValue);
 }
 
-/* 错误信息展示组件 主要是表单组件场景
- * @Author: duanguang
- * @Date: 2019-07-09 17:36:01
- * @Last Modified by: duanguang
- * @Last Modified time: 2020-11-02 19:08:54
- */
 var LegionsProErrorReportShow = /** @class */ (function (_super) {
     __extends(LegionsProErrorReportShow, _super);
     function LegionsProErrorReportShow(props) {

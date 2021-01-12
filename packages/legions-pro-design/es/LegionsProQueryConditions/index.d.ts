@@ -141,13 +141,13 @@ export default class LegionsProQueryConditions<Query = {}> extends React.Compone
         readonly computedLeftComponent: JSX.Element;
         readonly computedContentComponent: JSX.Element;
         readonly computedRightComponent: JSX.Element;
-        readonly computedSize: "default" | "small";
+        readonly computedSize: "small" | "default";
         setVmModel: (model: Object) => void;
         setLeftComponent: (left?: JSX.Element) => void;
         setRightComponent: (right?: JSX.Element) => void;
         setContentComponent: (content?: JSX.Element) => void;
         setQuery: (query: Query) => void;
-        setSize: (size: "default" | "small") => void;
+        setSize: (size: "small" | "default") => void;
         dispatchRequest: (name: string, autoQuery: ISelectAutoQuery<{}>, options?: {
             pageIndex: number;
             pageSize?: number;

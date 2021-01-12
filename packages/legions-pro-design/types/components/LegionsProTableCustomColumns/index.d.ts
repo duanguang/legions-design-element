@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { InstanceLegionsProModal } from '../LegionsProModal/interface';
 import { ProTableStore } from '../store/pro.table';
 interface IProps {
@@ -34,59 +34,7 @@ export default class LegionsProTableCustomColumns extends Component<IProps, ISta
     modalRef: InstanceLegionsProModal;
     constructor(props: any);
     componentDidMount(): void;
-    get viewStore(): import("brain-store-utils").ViewModel<import("../store/pro.table/ProTableView").ProTableView> & {
-        userInfo: {
-            userName: string;
-            userUid: string;
-            companyName?: string;
-            companyUid?: string;
-        };
-        readonly computedUid: string;
-        pageIndex: number;
-        pageSize: number;
-        selectedRows: any[];
-        expandRow?: string;
-        type?: "radio" | "checkbox";
-        rowSelectionClickType?: "radio" | "check";
-        columns?: (import("antd/lib/table/Table").TableColumnConfig<{}> & import("../store/pro.table/interface").ITableColumnConfig)[];
-        obTableListCustom: import("../models").TableColumnsContainerEntity;
-        tableBodyDomClientHeight: number;
-        bodyExternalContainer: import("../store/pro.table/interface").IObservableMap<string, {
-            height: number;
-        }>;
-        isAdaptiveHeight: boolean;
-        scroll: import("../store/pro.table/interface").IScroll;
-        bodyStyle: React.CSSProperties;
-        tempDynamicAddData: any[];
-        bodyContainerHeight: number;
-        pagination: boolean;
-        bodyExternalHeight: number;
-        renderData: any[];
-        queryParams: any;
-        isOpenRowChange: boolean;
-        isOpenRowSelection: boolean;
-        _tableContainerWidth: number;
-        readonly calculateBody: {};
-        readonly computedShowColumns: import("../store/pro.table/interface").IShowColumns[];
-        readonly computedUnShowColumns: import("../store/pro.table/interface").IShowColumns[];
-        readonly computedStorageShowColumnsKeys: string;
-        readonly computedRenderColumns: (import("antd/lib/table/Table").TableColumnConfig<{}> & import("../store/pro.table/interface").ITableColumnConfig)[];
-        readonly tableXAutoWidth: string | number;
-        readonly computedTotal: number;
-        filterColumns: () => void;
-        moveRightShowColumns: (Columns: string[]) => void;
-        moveLeftShowColumns: (Columns: string[]) => void;
-        orderSortRightShowColumns: (Columns: string[]) => void;
-        orderSortLeftShowColumns: (Columns: string[]) => void;
-        setLocalStorageShowColumnsKeys: (modulesName?: string) => void;
-        getLocalStorageShowColumns: () => import("../store/pro.table/interface").IShowColumns[];
-        setLocalStorageShowColumns: (url: string) => void;
-        editTableColumns: (modulesUid: string, customColumns: import("../models").TableListColumns[], url: any) => Promise<void>;
-        queryTableColumns: (modulesUid: string, url: any) => Promise<void>;
-        setTableModulesName: (tableModulesName: string) => void;
-        setTotal: (total: number) => void;
-        updateOpenRowChange: (isOpenRowChange: boolean) => void;
-    };
+    get viewStore(): any;
     render(): JSX.Element;
 }
 export {};

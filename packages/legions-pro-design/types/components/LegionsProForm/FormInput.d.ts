@@ -81,9 +81,9 @@ export default class FormInput extends AbstractForm<IFormWithInputProps> {
         }>;
         readonly computedAllElementList: string[];
         readonly computedErrorListView: IErrorView[];
-        readonly styleSize: "default" | "small" | "table";
+        readonly styleSize: "small" | "table" | "default";
         readonly computedFormState: import("../store/pro.form/interface").IObservableMap<string, import("../store/pro.form/proFormStore").IFormState>;
-        updateStyleSize: (size: "default" | "small" | "table") => void;
+        updateStyleSize: (size: "small" | "table" | "default") => void;
         collectErrorReactNode: (componentCode: string, errorUid: string) => void;
         setErrorErrorReactNodeList: (componentCode: string, errorListView: IErrorView[]) => void;
         handleIgnore: (componentCode: string, id: number) => void;

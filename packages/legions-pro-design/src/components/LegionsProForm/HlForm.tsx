@@ -987,7 +987,7 @@ class HLForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
 
                                 this.state.groupEntity.map((entity,index) => {
                                     if (entity.active) {
-                                        return <li key={index}>{entity.active && <img src={require('../../public/images/u586.png')} />}
+                                        return <li key={index}>{entity.active && <img src={'https://gitee.com/duanguang/figure-bed/raw/master/oss/u586.png'} />}
                                             <span
                                                 style={{ paddingLeft: `10px`,color: `rgb(39, 140, 222)` }}
                                                 onClick={this.handlePositioning.bind(this,entity.name)}

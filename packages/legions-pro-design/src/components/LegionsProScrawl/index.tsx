@@ -8,10 +8,10 @@ import { Icon,Popover,Slider,message } from 'antd';
 import { bind,observer } from 'legions/store-react'
 import { observableViewModel } from 'legions/store-utils';
 import { observable,computed } from 'mobx';
-const redoSrc = require('../assets/images/redo.png')
-const redo1Src = require('../assets/images/redo-1.png')
-const undoSrc = require('../assets/images/undo1.png')
-const PickcolorSrc = require('../assets/images/Pickcolor.png')
+const redoSrc = 'https://gitee.com/duanguang/figure-bed/raw/master/oss/redo.png';
+const redo1Src = 'https://gitee.com/duanguang/figure-bed/raw/master/oss/redo-1.png';
+const undoSrc = 'https://gitee.com/duanguang/figure-bed/raw/master/oss/undo1.png';
+const PickcolorSrc = 'https://gitee.com/duanguang/figure-bed/raw/master/oss/Pickcolor.png';
 import { legionsThirdpartyPlugin } from 'legions-thirdparty-plugin';
 const ua = navigator.userAgent.toLowerCase();
 const isMobile = /iphone|ipad|ipod|Android/.test(ua);

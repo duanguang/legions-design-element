@@ -64,8 +64,8 @@ function __metadata(metadataKey, metadataValue) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(metadataKey, metadataValue);
 }
 
-var maximizeSrc = require('../assets/images/maximize.png');
-var undoSrc = require('../assets/images/images/undo.png');
+const maximizeSrc = 'https://gitee.com/duanguang/figure-bed/raw/master/oss/maximize.png'
+const undoSrc = 'https://gitee.com/duanguang/figure-bed/raw/master/oss/undo.png'
 var antPrefix = 'ant';
 var placement = {
     right: {

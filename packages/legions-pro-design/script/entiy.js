@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-10 16:14:09
- * @LastEditTime: 2021-01-11 16:13:14
+ * @LastEditTime: 2021-01-12 12:03:43
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/script/entiy.js
@@ -15,7 +15,7 @@ const array_components1 = ['models',
 /* 'db', */
 /* 'services' */]
 const array_componentsStore = [/* 'store', */,
-/* 'store/pro.form' */,
+'store/pro.form',
 /* 'store/pro.layout' */,
 /* 'store/pro.modal' */,
 /* 'store/pro.query.conditions', */
@@ -23,7 +23,7 @@ const array_componentsStore = [/* 'store', */,
 ]
 const array_component = [
 /*   'LegionsProBaiduMap', */
-/* 'LegionsProBreadcrumb', */
+'LegionsProBreadcrumb',
 /* 'LegionsProDataImport', */
 /* 'LegionsProDragger', */
 /* 'LegionsProErrorReportShow', */
@@ -48,7 +48,7 @@ const array_component = [
 /* 'LegionsProUEditor', */
   /* 'LegionsProUpload', */
 /* 'LegionsProVirtualTable', */
-  'LgeionsProVirtualList',
+  /* 'LgeionsProVirtualList', */
 ]
 const browser = [
   {
@@ -74,7 +74,7 @@ const umd = [
   },
 ];
 const es = [
-  ...array_components.map((item) => {
+  ...array_component.map((item) => {
     let input = '';
     let file = '';
     if (item === 'index') {

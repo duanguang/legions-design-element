@@ -131,29 +131,7 @@ export default class LegionsProQueryConditions<Query = {}> extends React.Compone
     timeId: number;
     uid: string;
     constructor(props: any);
-    get viewStore(): import("brain-store-utils").ViewModel<import("../store/pro.query.conditions/HlQueryConditionView").HlQueryConditionView<Query>> & {
-        tranQuery: Query;
-        domHeight: number;
-        widthContainer: number;
-        selectOptions: import("../store/pro.query.conditions/interface").IObservableMap<string, import("../store/pro.query.conditions/interface").ISelectOptions>;
-        readonly computedQuery: Query;
-        readonly computedVmModel: any;
-        readonly computedLeftComponent: JSX.Element;
-        readonly computedContentComponent: JSX.Element;
-        readonly computedRightComponent: JSX.Element;
-        readonly computedSize: "default" | "small";
-        setVmModel: (model: Object) => void;
-        setLeftComponent: (left?: JSX.Element) => void;
-        setRightComponent: (right?: JSX.Element) => void;
-        setContentComponent: (content?: JSX.Element) => void;
-        setQuery: (query: Query) => void;
-        setSize: (size: "default" | "small") => void;
-        dispatchRequest: (name: string, autoQuery: ISelectAutoQuery<{}>, options?: {
-            pageIndex: number;
-            pageSize?: number;
-            keyWords?: string;
-        }) => void;
-    };
+    get viewStore(): any;
     static defaultProps: {
         size: string;
         defaultToggle: boolean;

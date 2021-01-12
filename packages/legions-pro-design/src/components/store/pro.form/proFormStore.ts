@@ -1,13 +1,13 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-29 10:18:01
- * @LastEditTime: 2021-01-07 17:45:29
+ * @LastEditTime: 2021-01-12 11:49:26
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/store/pro.form/proFormStore.ts
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
-
+import React from 'react';
 import {StoreBase} from '../index';
 import {IStoreBaseMeta} from '../interface';
 import { observable, action, StoreModules } from 'legions/store';
@@ -454,6 +454,7 @@ export class HLFormLocalView {
     let oldList = new Map();
     let total = 0;
     for (let i = 1; i <= item.obData.size; i++) {
+       //@ts-ignore
       const data = item.obData.get(i.toString());
       if (data && data.isResolved) {
         const tranObj = autoQuery.transform(data);
@@ -519,6 +520,7 @@ export class HLFormLocalView {
       dbBase = new SelectDatabaseDB(options.tableNameDb);
       if (dbBase && dbBase.selectItem) {
         for (let i = 1; i <= item.obData.size; i++) {
+          //@ts-ignore
           const data = item.obData.get(i.toString());
           if (data && data.isResolved) {
             const tranObj = options.autoQuery.transform(data);
@@ -618,6 +620,7 @@ export class HLFormLocalView {
           item = data.find(entity => entity.keywords === keyWords);
         }
         if (item) {
+           //@ts-ignore
           if (item.obData.has(options.pageIndex.toString())) {
             /** 如果输入关键词存在历史搜索数据，先调出历史数据加载，提升加载速度
              * 加载完历史搜索记录，再去请求数据更新替换历史数据，用户界面无感知刷新数据
@@ -628,6 +631,7 @@ export class HLFormLocalView {
               const hisDbData = this.tranSelectOptions(item, autoQuery);
               for (let i = 1; i <= hisDbData.data.size; i++) {
                 currValue.currValue.data.set(
+                   //@ts-ignore
                   i.toString(),
                   hisDbData.data.get(i.toString())
                 );
@@ -648,8 +652,10 @@ export class HLFormLocalView {
                       runInAction(() => {
                         const newCurrValue = this.selectView.get(name);
                         for (let i = 1; i <= dbData.data.size; i++) {
+                           //@ts-ignore
                           if (!newCurrValue.currValue.data.has(i.toString())) {
                             newCurrValue.currValue.data.set(
+                               //@ts-ignore
                               i.toString(),
                               dbData.data.get(i.toString())
                             );
@@ -669,6 +675,7 @@ export class HLFormLocalView {
             currValue.keywords = options.keyWords;
           }
           /** 输入关键词有无历史搜索数据，都会去请求接口，存在历史数据线调取历史数据 */
+           //@ts-ignore
           let store = extendObservable({
             keyWords: keyWords,
             // @ts-ignore
@@ -680,8 +687,10 @@ export class HLFormLocalView {
             /**
              * 调出输入关键词历史搜索数据
              */
+             //@ts-ignore
             const newData = item.obData.get(i.toString());
             if (newData && newData.isResolved) {
+               //@ts-ignore
               store.data.set(i.toString(), newData);
             }
           }
@@ -692,7 +701,9 @@ export class HLFormLocalView {
             mapItemKeys: options.pageIndex.toString(),
             callback: value => {
               item.obData.set(
+                 //@ts-ignore
                 options.pageIndex.toString(),
+                 //@ts-ignore
                 value.data.get(options.pageIndex.toString())
               );
               item.keywords = keyWords;
@@ -701,6 +712,7 @@ export class HLFormLocalView {
                   const newsCurrValue = this.tranSelectOptions(item, autoQuery);
                   for (let i = 1; i <= newsCurrValue.data.size; i++) {
                     currValue.currValue.data.set(
+                       //@ts-ignore
                       i.toString(),
                       newsCurrValue.data.get(i.toString())
                     );

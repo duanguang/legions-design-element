@@ -75,10 +75,10 @@ function __spread() {
     return ar;
 }
 
-var redoSrc = require('../assets/images/redo.png');
-var redo1Src = require('../assets/images/redo-1.png');
-var undoSrc = require('../assets/images/undo1.png');
-var PickcolorSrc = require('../assets/images/Pickcolor.png');
+var redoSrc = 'https://gitee.com/duanguang/figure-bed/raw/master/oss/redo.png';
+var redo1Src = 'https://gitee.com/duanguang/figure-bed/raw/master/oss/redo-1.png';
+var undoSrc = 'https://gitee.com/duanguang/figure-bed/raw/master/oss/undo1.png';
+var PickcolorSrc = 'https://gitee.com/duanguang/figure-bed/raw/master/oss/Pickcolor.png';
 var ua = navigator.userAgent.toLowerCase();
 var isMobile = /iphone|ipad|ipod|Android/.test(ua);
 var ViewModel = /** @class */ (function () {

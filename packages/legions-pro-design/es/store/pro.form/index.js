@@ -3,11 +3,12 @@
   * (c) 2021 duanguang
   * @license MIT
   */
+import React from 'react';
 import { StoreBase } from '../index';
 import { observable, action, StoreModules } from 'legions/store';
 import { observableViewModel } from 'legions/store-utils';
 import { computed, runInAction, extendObservable } from 'mobx';
-import { get, post } from 'legions/fetch';
+import { LegionsFetch } from '../../core';
 import { pagingQueryProcessing } from 'legions-lunar';
 import { cloneDeep } from 'lodash';
 import { SelectDatabaseDB } from '../../db';
@@ -87,60 +88,6 @@ function __values(o) {
     throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
 }
 
-var LegionsFetch = /** @class */ (function () {
-    function LegionsFetch() {
-    }
-    LegionsFetch.prototype.setHeaders = function (url, option) {
-        var options = {
-            headers: {
-                'api-target': url,
-                'api-cookie': '',
-                'Cache-Control': 'no-cache',
-                'Content-Type': 'application/json',
-                'Pragma': 'no-cache',
-            },
-        };
-        if (option) {
-            options.headers = __assign(__assign({}, options.headers), option);
-        }
-        return options;
-    };
-    LegionsFetch.prototype.get = function (options) {
-        var headerOptions = this.setHeaders(options.url, options.headers);
-        // @ts-ignore
-        return get(options.url, options.parameter || null, headerOptions)
-            .then(function (result) {
-            // @ts-ignore
-            return new options.model(result);
-        })
-            .catch(function (err) {
-            options.catch && options.catch(err);
-        });
-    };
-    LegionsFetch.prototype.post = function (options) {
-        var headerOptions = this.setHeaders(options.url, options.headers);
-        // @ts-ignore
-        return post(options.url, options.parameter || null, headerOptions)
-            .then(function (result) {
-            // @ts-ignore
-            return new options.model(result);
-        })
-            .catch(function (err) {
-            options.catch && options.catch(err);
-        });
-    };
-    return LegionsFetch;
-}());
-
-/*
- * @Author: duanguang
- * @Date: 2020-12-29 10:18:01
- * @LastEditTime: 2021-01-07 17:45:29
- * @LastEditors: duanguang
- * @Description:
- * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/store/pro.form/proFormStore.ts
- * @「扫去窗上的尘埃，才可以看到窗外的美景。」
- */
 var HlFormView = /** @class */ (function () {
     function HlFormView() {
         /**
@@ -608,6 +555,7 @@ var HLFormLocalView = /** @class */ (function () {
         var oldList = new Map();
         var total = 0;
         for (var i = 1; i <= item.obData.size; i++) {
+            //@ts-ignore
             var data = item.obData.get(i.toString());
             if (data && data.isResolved) {
                 var tranObj = autoQuery.transform(data);
@@ -670,6 +618,7 @@ var HLFormLocalView = /** @class */ (function () {
             dbBase = new SelectDatabaseDB(options.tableNameDb);
             if (dbBase && dbBase.selectItem) {
                 var _loop_1 = function (i) {
+                    //@ts-ignore
                     var data = item.obData.get(i.toString());
                     if (data && data.isResolved) {
                         var tranObj_1 = options.autoQuery.transform(data);
@@ -756,6 +705,7 @@ var HLFormLocalView = /** @class */ (function () {
                     item_1 = data.find(function (entity) { return entity.keywords === keyWords_1; });
                 }
                 if (item_1) {
+                    //@ts-ignore
                     if (item_1.obData.has(options.pageIndex.toString())) {
                         /** 如果输入关键词存在历史搜索数据，先调出历史数据加载，提升加载速度
                          * 加载完历史搜索记录，再去请求数据更新替换历史数据，用户界面无感知刷新数据
@@ -765,7 +715,9 @@ var HLFormLocalView = /** @class */ (function () {
                             // currValue.currValue= this.tranSelectOptions(item,autoQuery)
                             var hisDbData = this.tranSelectOptions(item_1, autoQuery);
                             for (var i = 1; i <= hisDbData.data.size; i++) {
-                                currValue_1.currValue.data.set(i.toString(), hisDbData.data.get(i.toString()));
+                                currValue_1.currValue.data.set(
+                                //@ts-ignore
+                                i.toString(), hisDbData.data.get(i.toString()));
                             }
                             currValue_1.currValue.total = hisDbData.total;
                         }
@@ -784,8 +736,11 @@ var HLFormLocalView = /** @class */ (function () {
                                             runInAction(function () {
                                                 var newCurrValue = _this.selectView.get(name);
                                                 for (var i = 1; i <= dbData_1.data.size; i++) {
+                                                    //@ts-ignore
                                                     if (!newCurrValue.currValue.data.has(i.toString())) {
-                                                        newCurrValue.currValue.data.set(i.toString(), dbData_1.data.get(i.toString()));
+                                                        newCurrValue.currValue.data.set(
+                                                        //@ts-ignore
+                                                        i.toString(), dbData_1.data.get(i.toString()));
                                                     }
                                                 }
                                                 newCurrValue.currValue.total = dbData_1.total;
@@ -802,6 +757,7 @@ var HLFormLocalView = /** @class */ (function () {
                         currValue_1.keywords = options.keyWords;
                     }
                     /** 输入关键词有无历史搜索数据，都会去请求接口，存在历史数据线调取历史数据 */
+                    //@ts-ignore
                     var store = extendObservable({
                         keyWords: keyWords_1,
                         // @ts-ignore
@@ -811,8 +767,10 @@ var HLFormLocalView = /** @class */ (function () {
                         /**
                          * 调出输入关键词历史搜索数据
                          */
+                        //@ts-ignore
                         var newData = item_1.obData.get(i.toString());
                         if (newData && newData.isResolved) {
+                            //@ts-ignore
                             store.data.set(i.toString(), newData);
                         }
                     }
@@ -822,13 +780,19 @@ var HLFormLocalView = /** @class */ (function () {
                         keyWords: keyWords_1,
                         mapItemKeys: options.pageIndex.toString(),
                         callback: function (value) {
-                            item_1.obData.set(options.pageIndex.toString(), value.data.get(options.pageIndex.toString()));
+                            item_1.obData.set(
+                            //@ts-ignore
+                            options.pageIndex.toString(), 
+                            //@ts-ignore
+                            value.data.get(options.pageIndex.toString()));
                             item_1.keywords = keyWords_1;
                             if (autoQuery.transform) {
                                 if (currValue_1) {
                                     var newsCurrValue = _this.tranSelectOptions(item_1, autoQuery);
                                     for (var i = 1; i <= newsCurrValue.data.size; i++) {
-                                        currValue_1.currValue.data.set(i.toString(), newsCurrValue.data.get(i.toString()));
+                                        currValue_1.currValue.data.set(
+                                        //@ts-ignore
+                                        i.toString(), newsCurrValue.data.get(i.toString()));
                                     }
                                     currValue_1.currValue.total = newsCurrValue.total;
                                     _this.syncSelectDataDbBase(item_1, {

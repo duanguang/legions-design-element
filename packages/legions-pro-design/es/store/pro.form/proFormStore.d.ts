@@ -113,7 +113,7 @@ export declare class HlFormView {
      * @readonly
      * @memberof HlFormView
      */
-    get styleSize(): "default" | "small" | "table";
+    get styleSize(): "small" | "table" | "default";
     /**
      *
      * 表单状态数据

@@ -1,5 +1,5 @@
 import React from 'react'
-import styles from './style/index.modules.less';
+import './style/index.less';
 interface IProps{
 
    /**
@@ -30,15 +30,15 @@ interface IProps{
 /**  常规区块组件*/
 const LegionsProPageContainer = (props:IProps) => {
     return(
-        <div className={`${styles['ListPageContainer']} ${styles.pageWrap}`}>
+        <div className={`legions-pro-pagecontainer legions-pro-pagecontainer-pageWrap`}>
             <div>
-                {props.query&&<div className={styles['ListPageQuery']}>
+                {props.query&&<div className={'ListPageQuery'}>
                     {props.query}
                 </div>}
-                {props.operation&&<div className={`${styles['ListPageOperation']}`} style={{margin: '0 13px'}}>
+                {props.operation&&<div className={`ListPageOperation`} style={{margin: '0 13px'}}>
                     {props.operation}
                 </div>}
-                <div className={`${styles['ListPageContent']}`}>
+                <div className={`ListPageContent`}>
                     {props.content}
                 </div>
             </div>

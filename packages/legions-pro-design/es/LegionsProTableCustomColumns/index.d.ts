@@ -71,7 +71,7 @@ export default class LegionsProTableCustomColumns extends Component<IProps, ISta
         readonly computedUnShowColumns: import("../store/pro.table/interface").IShowColumns[];
         readonly computedStorageShowColumnsKeys: string;
         readonly computedRenderColumns: (import("antd/lib/table/Table").TableColumnConfig<{}> & import("../store/pro.table/interface").ITableColumnConfig)[];
-        readonly tableXAutoWidth: string | number;
+        readonly tableXAutoWidth: React.ReactText;
         readonly computedTotal: number;
         filterColumns: () => void;
         moveRightShowColumns: (Columns: string[]) => void;

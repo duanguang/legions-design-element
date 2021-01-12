@@ -74,7 +74,7 @@ export default class ComponentDoc extends React.Component {
       );
     });
 
-    const { title, subtitle, filename } = meta;
+    const { title,subtitle,filename } = meta;
     return (
       <DocumentTitle title={`${subtitle || ''} ${title[locale] || title} - Ant Design`}>
         <article>

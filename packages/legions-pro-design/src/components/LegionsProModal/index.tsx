@@ -11,8 +11,8 @@ import { shortHash } from 'legions-lunar/object-hash';
 import styles from './style/index.modules.less';
 import './style/index.less';
 import { runInAction } from 'mobx';
-const maximizeSrc = require('../assets/images/maximize.png')
-const undoSrc = require('../assets/images/images/undo.png')
+const maximizeSrc = 'https://gitee.com/duanguang/figure-bed/raw/master/oss/maximize.png'
+const undoSrc = 'https://gitee.com/duanguang/figure-bed/raw/master/oss/undo.png'
 const antPrefix = 'ant';
 
 interface IdraggableOptions {

@@ -3,7 +3,7 @@
       /* "declaration": true, */
      /*  "declarationDir": "./types", */
       /* "module": "esnext", */
-      "types": [ "jest","echarts","node"],
+      "types": [ "jest","node"],
       /* "typeRoots": ["./node_modules/@types"], */
       /*  "noImplicitAny": true, */
       "outDir": "./dist",
@@ -37,14 +37,14 @@
       "stripInternal": true,
       "emitDecoratorMetadata": true,
       "experimentalDecorators": true,
-      "strictPropertyInitialization": true,
+      "strictPropertyInitialization": false,
       /* "typeRoots": ["./types"], */
       "importHelpers": true,
       "sourceMap": true,
-      "strictNullChecks": true,
+      /* "strictNullChecks": true,
       "strictFunctionTypes": true,
       "noImplicitThis": true,
-      "alwaysStrict": true
+      "alwaysStrict": true */
     },
     "include": ["src/**/*"],
     "exclude": [

@@ -15,7 +15,7 @@
   "peerDependencies": {},
   "dependencies": {
     "legions-utils-tool": "^0.0.10",
-    "legions": "^0.1.24-rc.2",
+    "legions": "^1.0.9-rc.2",
     "legions-thirdparty-plugin": "^0.0.8",
     "legions-lunar": "^0.0.5-rc.1",
     "legions-decorator": "^0.0.4",
