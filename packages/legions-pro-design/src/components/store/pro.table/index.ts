@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-26 11:35:17
- * @LastEditTime: 2021-01-07 17:24:37
+ * @LastEditTime: 2021-01-13 10:27:04
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/store/pro.table/index.ts
@@ -23,13 +23,12 @@ import { shortHash } from 'legions-lunar/object-hash';
 import { ProTableView } from './ProTableView';
 import { ProTableLocalView } from './ProTableLocalView';
 import {IStoreBaseMeta} from '../interface';
-
+import { ObservableMap } from 'mobx';
 
 type Proxify<T> = {
   [P in keyof T]: T[P];
   //[P in keyof T]: Proxy<T[P]>;
 };
-
 @StoreModules
 export  class ProTableStore extends StoreBase {
   static meta: IStoreBaseMeta = {
@@ -49,7 +48,7 @@ export  class ProTableStore extends StoreBase {
    *
    * @memberof HLTableStore
    */
-  @observable HlTableContainer = observable.map<
+  @observable HlTableContainer = observable.map<string,
     ViewModel<ProTableView> & Proxify<ProTableView>
   >();
   @observable HlTableContainerModules = observable.map<string>();
@@ -59,7 +58,7 @@ export  class ProTableStore extends StoreBase {
    *  数据生命周期，应用重新数据前有效
    * @memberof HLTableStore
    */
-  @observable HlTableLocalStateContainer = observable.map<
+  @observable HlTableLocalStateContainer = observable.map<string,
     ViewModel<ProTableLocalView> & Proxify<ProTableLocalView>
   >();
   @action add(uid: string, modulesName: string, timeuid: string) {

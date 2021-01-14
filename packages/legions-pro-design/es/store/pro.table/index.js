@@ -12,6 +12,7 @@ import { TableColumnsContainerEntity } from '../../models';
 import { editTableColumns, queryTableColumns } from '../../services';
 import { LegionsFetch } from '../../core';
 import { cloneDeep } from 'lodash';
+import LegionsProTable from '../../LegionsProTable';
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -272,6 +273,7 @@ var ProTableView = /** @class */ (function () {
                         // @ts-ignore
                         var total = _this.bodyExternalContainer
                             .values()
+                            //@ts-ignore
                             .reduce(function (total, currentValue) {
                             return {
                                 height: total.height + currentValue.height,
@@ -976,23 +978,22 @@ var ProTableLocalView = /** @class */ (function () {
             //@ts-ignore
             var apiServer = function () {
                 var params = cloneDeep(autoQuery.params(options.pageIndex, options.pageSize));
+                var model = {
+                    //@ts-ignore
+                    model: LegionsProTable.ProTableBaseClass.pageListEntity,
+                    onBeforTranform: function (value) {
+                        var tranformData = {};
+                        if (autoQuery.modelConfig.tranformData) {
+                            tranformData = { tranformData: autoQuery.modelConfig.tranformData };
+                        }
+                        return __assign({ model: autoQuery.modelConfig.model, responseData: value, filtersListData: autoQuery.modelConfig.filtersListData }, tranformData);
+                    }
+                };
                 if (autoQuery.method === 'post') {
-                    return server_1.post({
-                        url: autoQuery.ApiUrl,
-                        parameter: params,
-                        headers: __assign(__assign({}, autoQuery.options), { 'api-cookie': autoQuery.token }),
-                        //@ts-ignore
-                        model: autoQuery.model,
-                    });
+                    return server_1.post(__assign({ url: autoQuery.ApiUrl, parameter: params, headers: __assign(__assign({}, autoQuery.options), { 'api-cookie': autoQuery.token }) }, model));
                 }
                 else if (autoQuery.method === 'get') {
-                    return server_1.get({
-                        url: autoQuery.ApiUrl,
-                        parameter: params,
-                        headerOption: __assign(__assign({}, autoQuery.options), { 'api-cookie': autoQuery.token }),
-                        //@ts-ignore
-                        model: autoQuery.model,
-                    });
+                    return server_1.get(__assign({ url: autoQuery.ApiUrl, parameter: params, headers: __assign(__assign({}, autoQuery.options), { 'api-cookie': autoQuery.token }) }, model));
                 }
             };
             // @ts-ignore
@@ -1019,7 +1020,7 @@ var ProTableLocalView = /** @class */ (function () {
 /*
  * @Author: duanguang
  * @Date: 2020-12-26 11:35:17
- * @LastEditTime: 2021-01-07 17:24:37
+ * @LastEditTime: 2021-01-13 10:27:04
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/store/pro.table/index.ts

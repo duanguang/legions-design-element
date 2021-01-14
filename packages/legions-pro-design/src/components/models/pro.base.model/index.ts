@@ -1,7 +1,7 @@
 import { MapperEntity } from 'json-mapper-object';
 
 export class BaseEntity<T> {
-  constructor(fromJson) {}
+  constructor() {}
   /**
    *操作结果
    *
@@ -51,7 +51,7 @@ export class BaseEntity<T> {
 export class ContainerEntity<T> extends BaseEntity<T> {
   // tslint:disable-next-line: typedef
   constructor(fromService?) {
-    super(fromService);
+    super();
 
     if (fromService && typeof fromService === 'object') {
       this.code = fromService.status || '';

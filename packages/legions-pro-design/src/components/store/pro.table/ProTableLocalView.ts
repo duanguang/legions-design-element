@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-07 17:21:19
- * @LastEditTime: 2021-01-07 18:04:38
+ * @LastEditTime: 2021-01-14 14:26:57
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/store/pro.table/ProTableLocalView.ts
@@ -12,13 +12,16 @@ import { LegionsFetch } from '../../core';
 import { cloneDeep } from 'lodash';
 import { observableViewModel, observablePromise } from 'legions/store-utils';
 import { ITableAutoQuery } from './interface';
+import  LegionsProTable  from '../../LegionsProTable';
+import { PageListEntity } from '../../LegionsProTable/pageListEntity';
+
 export class ProTableLocalView {
   /**
    *
    * 表格接口数据
    * @memberof HLTableLocalView
    */
-  @observable obState = observablePromise<any>();
+  @observable obState = observablePromise<PageListEntity<any>>();
 
   @observable loading = false;
   @action dispatchRequest(
@@ -35,24 +38,38 @@ export class ProTableLocalView {
         let params = cloneDeep(
           autoQuery.params(options.pageIndex, options.pageSize)
         );
+        const model = {
+          //@ts-ignore
+          model: LegionsProTable.ProTableBaseClass.pageListEntity,
+          onBeforTranform: (value) => {
+            let tranformData = {};
+            if (autoQuery.modelConfig.tranformData) {
+              tranformData={tranformData:autoQuery.modelConfig.tranformData}
+            }
+            return {
+              model: autoQuery.modelConfig.model,
+              responseData: value,
+              filtersListData: autoQuery.modelConfig.filtersListData,
+              ...tranformData
+            }
+          }
+        }
         if (autoQuery.method === 'post') {
-          return server.post<typeof autoQuery.model, any>({
+          return server.post<PageListEntity<any>, any>({
             url: autoQuery.ApiUrl,
             parameter: params,
             headers: { ...autoQuery.options, 'api-cookie': autoQuery.token },
-            //@ts-ignore
-            model: autoQuery.model,
+            ...model,
           });
         } else if (autoQuery.method === 'get') {
-          return server.get<typeof autoQuery.model, any>({
+          return server.get<PageListEntity<any>, any>({
             url: autoQuery.ApiUrl,
             parameter: params,
-            headerOption: {
+            headers: {
               ...autoQuery.options,
               'api-cookie': autoQuery.token,
             },
-            //@ts-ignore
-            model: autoQuery.model,
+            ...model,
           });
         }
       };

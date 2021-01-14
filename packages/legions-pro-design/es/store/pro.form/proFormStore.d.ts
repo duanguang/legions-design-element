@@ -1,4 +1,4 @@
-/// <reference types="react" />
+import React from 'react';
 import { StoreBase } from '../index';
 import { IStoreBaseMeta } from '../interface';
 import { ViewModel } from 'brain-store-utils';

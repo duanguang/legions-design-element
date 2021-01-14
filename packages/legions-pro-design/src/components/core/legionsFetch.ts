@@ -1,16 +1,23 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-14 16:26:10
- * @LastEditTime: 2020-12-26 14:30:55
+ * @LastEditTime: 2021-01-14 14:53:18
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/core/legionsFetch.ts
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
 import { ClassOf } from 'legions-lunar/types/api/typescript';
-import { get,post } from 'legions/fetch';
+import { get,post,legionFetch } from 'legions/fetch';
 import { request } from 'legions/request';
-
+let legionFetchInstance = legionFetch.create();
+legionFetchInstance.register({ 
+    request: (configs) => { 
+        /* const credential:'same-origin'|'include'|'omit'='include' */
+        const { credentials,...props } = configs;
+        return { ...props, /* ...{ mode: 'no-cors' } */ };
+    }
+})
 interface options<Parameter, Model> {
     url: string;
     parameter: Parameter;
@@ -24,6 +31,17 @@ interface options<Parameter, Model> {
      */
     model:  Model;
     catch?: (err: any) => void;
+    onBeforTranform?:(response:any)=>{
+        model: any,
+        /** 服务端数据 */
+        responseData: any;
+        /** 从服务端数据信息筛选出最终绑定的列表数据 */
+        filtersListData: (responseData: any) => any;
+        /** 转换服务端其他数据(非列表数据项数据)
+         * 当数据结构不统一时使用
+         */
+        tranformData?: (that: any,responseData:any) => void;
+    }
 }
 export class LegionsFetch{
     private setHeaders(url: string, option?: request.HeadersPrams) {
@@ -42,12 +60,16 @@ export class LegionsFetch{
         return options;
     }
     get<Model, Parameter>(options: options<Parameter, ClassOf<Model>>): Promise<Model> {
-        const headerOptions = this.setHeaders(options.url, options.headers);
+        const headerOptions = this.setHeaders(options.url,options.headers);
         // @ts-ignore
-        return get(options.url,options.parameter || null,headerOptions)
+        return legionFetchInstance.get(options.url,options.parameter || null,headerOptions)
             .then(result => {
+                let newResult = result;
+                if (typeof options.onBeforTranform === 'function') {
+                    newResult=options.onBeforTranform(result)
+                }
                 // @ts-ignore
-                return new options.model(result);
+                return new options.model(newResult);
             })
             .catch(err => {
                 options.catch && options.catch(err);
@@ -56,10 +78,14 @@ export class LegionsFetch{
     post<Model, Parameter>(options: options<Parameter, ClassOf<Model>>): Promise<Model> {
         const headerOptions = this.setHeaders(options.url,options.headers);
         // @ts-ignore
-        return post(options.url, options.parameter || null, headerOptions)
+        return legionFetchInstance.post(options.url, options.parameter || null, headerOptions)
             .then(result => {
+                let newResult = result;
+                if (typeof options.onBeforTranform === 'function') {
+                    newResult=options.onBeforTranform(result)
+                }
                 // @ts-ignore
-                return new options.model(result);
+                return new options.model(newResult);
             })
             .catch(err => {
                 options.catch && options.catch(err);

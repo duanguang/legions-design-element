@@ -3,7 +3,7 @@
   * (c) 2021 duanguang
   * @license MIT
   */
-import { get, post } from 'legions/fetch';
+import { legionFetch } from 'legions/fetch';
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -31,6 +31,26 @@ var __assign = function() {
     return __assign.apply(this, arguments);
 };
 
+function __rest(s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+}
+
+var legionFetchInstance = legionFetch.create();
+legionFetchInstance.register({
+    request: function (configs) {
+        /* const credential:'same-origin'|'include'|'omit'='include' */
+        var credentials = configs.credentials, props = __rest(configs, ["credentials"]);
+        return __assign({}, props);
+    }
+});
 var LegionsFetch = /** @class */ (function () {
     function LegionsFetch() {
     }
@@ -52,10 +72,14 @@ var LegionsFetch = /** @class */ (function () {
     LegionsFetch.prototype.get = function (options) {
         var headerOptions = this.setHeaders(options.url, options.headers);
         // @ts-ignore
-        return get(options.url, options.parameter || null, headerOptions)
+        return legionFetchInstance.get(options.url, options.parameter || null, headerOptions)
             .then(function (result) {
+            var newResult = result;
+            if (typeof options.onBeforTranform === 'function') {
+                newResult = options.onBeforTranform(result);
+            }
             // @ts-ignore
-            return new options.model(result);
+            return new options.model(newResult);
         })
             .catch(function (err) {
             options.catch && options.catch(err);
@@ -64,10 +88,14 @@ var LegionsFetch = /** @class */ (function () {
     LegionsFetch.prototype.post = function (options) {
         var headerOptions = this.setHeaders(options.url, options.headers);
         // @ts-ignore
-        return post(options.url, options.parameter || null, headerOptions)
+        return legionFetchInstance.post(options.url, options.parameter || null, headerOptions)
             .then(function (result) {
+            var newResult = result;
+            if (typeof options.onBeforTranform === 'function') {
+                newResult = options.onBeforTranform(result);
+            }
             // @ts-ignore
-            return new options.model(result);
+            return new options.model(newResult);
         })
             .catch(function (err) {
             options.catch && options.catch(err);

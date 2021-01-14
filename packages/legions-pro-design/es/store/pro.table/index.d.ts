@@ -21,19 +21,19 @@ export declare class ProTableStore extends StoreBase {
      *
      * @memberof HLTableStore
      */
-    HlTableContainer: import("mobx").ObservableMap<ViewModel<ProTableView> & Proxify<ProTableView>>;
-    HlTableContainerModules: import("mobx").ObservableMap<string>;
+    HlTableContainer: import("mobx").ObservableMap<ViewModel<ProTableView> & Proxify<ProTableView>, any>;
+    HlTableContainerModules: import("mobx").ObservableMap<string, any>;
     /**
      *
      *  数据生命周期，应用重新数据前有效
      * @memberof HLTableStore
      */
-    HlTableLocalStateContainer: import("mobx").ObservableMap<ViewModel<ProTableLocalView> & Proxify<ProTableLocalView>>;
+    HlTableLocalStateContainer: import("mobx").ObservableMap<ViewModel<ProTableLocalView> & Proxify<ProTableLocalView>, any>;
     add(uid: string, modulesName: string, timeuid: string): void;
     init(uid: string, options: ProTableView): void;
     delete(uid: string): void;
     deleteTableModules(modulesName: string): void;
-    get(uid: string): ViewModel<ProTableView> & Proxify<ProTableView>;
+    get(uid: string): any;
     addContainerModules(modulesName: string): void;
     /**
      * 添加本地数据
@@ -44,6 +44,6 @@ export declare class ProTableStore extends StoreBase {
      */
     _addLocalState(uid: string): void;
     _deleteLocalState(uid: string): void;
-    getLocalState(uid: string): ViewModel<ProTableLocalView> & Proxify<ProTableLocalView>;
+    getLocalState(uid: string): any;
 }
 export {};

@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-07 17:16:35
- * @LastEditTime: 2021-01-07 17:20:35
+ * @LastEditTime: 2021-01-13 10:26:17
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/store/pro.table/ProTableView.ts
@@ -42,6 +42,7 @@ export class ProTableView {
             // @ts-ignore
             const total = this.bodyExternalContainer
               .values()
+              //@ts-ignore
               .reduce((total, currentValue) => {
                 return {
                   height: total.height + currentValue.height,

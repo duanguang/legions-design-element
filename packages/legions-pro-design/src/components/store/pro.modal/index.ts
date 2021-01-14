@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-04 16:30:32
- * @LastEditTime: 2021-01-07 17:15:16
+ * @LastEditTime: 2021-01-13 10:27:47
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/store/pro.modal/index.ts
@@ -25,7 +25,7 @@ export  class ProModalStore extends StoreBase {
   constructor(context) {
     super(context);
   }
-  @observable ModalContainer = observable.map<
+  @observable ModalContainer = observable.map<string,
     ViewModel<ModalView> & Proxify<ModalView>
   >();
   /**

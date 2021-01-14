@@ -17,11 +17,13 @@ import moment from 'moment';
 import LegionsProTableCustomColumns from '../LegionsProTableCustomColumns';
 import LegionsProLineOverflow from '../LegionsProLineOverflow';
 import LegionsProModal from '../LegionsProModal';
-import { observable, toJS, isObservable, runInAction } from 'mobx';
+import { useStrict, configure, toJS, observable as observable$1, isObservable, runInAction } from 'mobx';
 import { observableViewModel } from 'legions/store-utils';
 import { legionsThirdpartyPlugin } from 'legions-thirdparty-plugin';
 import { LoggerManager } from 'legions-lunar/legion.plugin.sdk';
 import { cloneDeep } from 'lodash';
+import { observable, action } from 'legions/store';
+import { BaseEntity } from '../models';
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -147,6 +149,237 @@ function __spread() {
     return ar;
 }
 
+/** 列表页数据模型类*/
+var PageListEntity = /** @class */ (function (_super) {
+    __extends(PageListEntity, _super);
+    function PageListEntity(options) {
+        var _this = _super.call(this) || this;
+        _this.total = 0;
+        _this.current = 1;
+        _this.pageSize = 10;
+        if (options && typeof options.responseData === 'object') {
+            if (options.tranformData && typeof options.tranformData === 'function') {
+                options.tranformData(_this, options.responseData);
+            }
+            else {
+                _this.message = options.responseData.msg || '查询成功';
+                _this.success = options.responseData.ok ? true : false;
+                _this.code = options.responseData.status || '';
+                _this.total = options.responseData.total || 0;
+                _this.current = options.responseData.current || 1;
+                _this.pageSize = options.responseData.pageSize || 10;
+            }
+            if (options.filtersListData &&
+                typeof options.filtersListData === 'function') {
+                _this.result = _super.prototype.transformArray.call(_this, options.filtersListData(options.responseData), options.model);
+            }
+            else {
+                _this.result = [];
+            }
+        }
+        else {
+            _this.result = [];
+        }
+        return _this;
+    }
+    return PageListEntity;
+}(BaseEntity));
+
+/**
+ * 列表组件基类
+ *
+ * 包含常用方法，例如搜索，重置，搜索条件，列表列配置数据等
+ * @export
+ * @class ProTableBaseClass
+ * @extends {React.Component<P, S>}
+ * @template P props 类型约束
+ * @template S state 类型约束
+ * @template Columns 列配置类型约束
+ * @template QueryParams 搜索条件对象类型约束结构 默认any类型
+ */
+var ProTableBaseClass = /** @class */ (function (_super) {
+    __extends(ProTableBaseClass, _super);
+    function ProTableBaseClass(props) {
+        var _this = _super.call(this, props) || this;
+        _this.tableRef = null;
+        //@ts-ignore
+        _this.queryPrams = {};
+        _this.queryDataMap = observable.map();
+        _this.columnsDataMap = observable.map();
+        _this.queryData = [];
+        _this.columnsData = [];
+        /**
+         * 搜索查询
+         * @param value
+         * @param options
+         */
+        _this.handleSearch = function (value, options) {
+            var val = value;
+            if (options) {
+                if (typeof options.onBeforeSearch === 'function') {
+                    val = options.onBeforeSearch(val);
+                }
+            }
+            _this.queryPrams = __assign(__assign({}, _this.queryPrams), val);
+            _this.tableRef.methods.onSearch();
+        };
+        /**
+         *  重置搜索结果
+         *
+         * @memberof ProTableBaseClass
+         */
+        _this.handleReset = function (value, options) {
+            var val = value;
+            if (options) {
+                if (typeof options.onBeforeReset === 'function') {
+                    val = options.onBeforeReset(val);
+                }
+            }
+            _this.handleSearch(val);
+        };
+        _this.onOpenCustomColumns = function () {
+            _this.tableRef.methods.openCustomColumns();
+        };
+        _this.queryDataMap.observe(function (chan) {
+            if (useStrict) {
+                // @ts-ignore
+                if (_this.queryDataMap.values().length) {
+                    //@ts-ignore
+                    _this.queryData = _this.queryDataMap.values();
+                }
+            }
+            else if (configure) {
+                var values_1 = [];
+                _this.queryDataMap.forEach(function (item, key) {
+                    values_1.push(item);
+                });
+                _this.queryData = values_1;
+            }
+        });
+        _this.columnsDataMap.observe(function (chan) {
+            if (useStrict) {
+                // @ts-ignore
+                if (_this.columnsDataMap.values().length) {
+                    //@ts-ignore
+                    _this.columnsData = toJS(_this.columnsDataMap.values());
+                }
+            }
+            else if (configure) {
+                var values_2 = [];
+                _this.columnsDataMap.forEach(function (item, key) {
+                    values_2.push(item);
+                });
+                _this.columnsData = toJS(values_2);
+            }
+        });
+        return _this;
+    }
+    /**
+     * 添加表格列数据
+     *
+     * 主要在初始化列数据时使用
+     *
+     * @param {string} key column.dataIndex 或者 column.key
+     * @memberof ProTableBaseClass
+     */
+    ProTableBaseClass.prototype.pushColumns = function (key, column) {
+        if (!this.columnsDataMap.has(key)) {
+            if (!column['key']) {
+                column['key'] = key;
+            }
+            if (!column['dataIndex']) {
+                column['dataIndex'] = key;
+            }
+            this.columnsDataMap.set(key, column);
+        }
+    };
+    /**
+     * 更新表格列数据信息
+     *
+     * @param {string} key
+     * @param {TableColumnConfig<Columns>} column
+     * @memberof ProTableBaseClass
+     */
+    ProTableBaseClass.prototype.updateColumns = function (key, column) {
+        if (this.columnsDataMap.has(key)) {
+            var old = this.columnsDataMap.get(key);
+            this.columnsDataMap.set(key, __assign(__assign({}, old), column));
+        }
+    };
+    ProTableBaseClass.prototype.pushQuery = function (key, query) {
+        if (!this.queryDataMap.has(key)) {
+            this.queryDataMap.set(key, query);
+        }
+    };
+    ProTableBaseClass.prototype.updateQuery = function (key, query) {
+        if (this.queryDataMap.has(key)) {
+            var old = this.queryDataMap.get(key);
+            this.queryDataMap.set(key, __assign(__assign({}, old), query));
+        }
+    };
+    /**
+     * 刷新表格项数据
+     *
+     * 主要应用于表格列配置项自定义render需要更新时，需要强刷表格
+     * @param columnKey  指定刷新表格项字段
+     * @param callback 执行某个数据更新后，需要刷新表格项
+     */
+    ProTableBaseClass.prototype.refreshColumns = function (columnKey, callback) {
+        if (typeof callback === 'function') {
+            callback();
+            this.updateColumns(columnKey, {});
+        }
+    };
+    ProTableBaseClass.pageListEntity = PageListEntity;
+    __decorate([
+        observable,
+        __metadata("design:type", Object)
+    ], ProTableBaseClass.prototype, "queryDataMap", void 0);
+    __decorate([
+        observable,
+        __metadata("design:type", Object)
+    ], ProTableBaseClass.prototype, "columnsDataMap", void 0);
+    __decorate([
+        observable,
+        __metadata("design:type", Array)
+    ], ProTableBaseClass.prototype, "queryData", void 0);
+    __decorate([
+        observable,
+        __metadata("design:type", Array)
+    ], ProTableBaseClass.prototype, "columnsData", void 0);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [String, Object]),
+        __metadata("design:returntype", void 0)
+    ], ProTableBaseClass.prototype, "pushColumns", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [String, Object]),
+        __metadata("design:returntype", void 0)
+    ], ProTableBaseClass.prototype, "updateColumns", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [String, Object]),
+        __metadata("design:returntype", void 0)
+    ], ProTableBaseClass.prototype, "pushQuery", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [String, Object]),
+        __metadata("design:returntype", void 0)
+    ], ProTableBaseClass.prototype, "updateQuery", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [String, Function]),
+        __metadata("design:returntype", void 0)
+    ], ProTableBaseClass.prototype, "refreshColumns", null);
+    return ProTableBaseClass;
+}(React.Component));
+
 var serialize = require('serialize-javascript');
 var baseCls = "legions-pro-table";
 /* class Calculate{
@@ -164,7 +397,7 @@ var ViewUI = /** @class */ (function () {
         this.taskName = '';
     }
     __decorate([
-        observable,
+        observable$1,
         __metadata("design:type", Object)
     ], ViewUI.prototype, "taskName", void 0);
     return ViewUI;
@@ -299,6 +532,13 @@ var LegionsProTable = /** @class */ (function (_super) {
         _this.consoleLog('hlTable-constructor');
         return _this;
     }
+    /** 创建查询条件配置 */
+    LegionsProTable.createQueryConfig = function (config) {
+        return config;
+    };
+    LegionsProTable.createColumnsConfig = function (config) {
+        return config;
+    };
     Object.defineProperty(LegionsProTable.prototype, "getViewStore", {
         get: function () {
             return this.props.store.HlTableContainer.get(this.freezeuid);
@@ -1112,6 +1352,19 @@ var LegionsProTable = /** @class */ (function (_super) {
         isOpenCustomColumns: true,
         pageSizeOptions: ['5', '10', '20', '40', '60', '80', '100', '200', '500'],
     };
+    /**
+     * 列表组件基类
+     *
+     * 包含常用方法，例如搜索，重置，搜索条件，列表列配置数据等
+     * @export
+     * @class ProTableBaseClass
+     * @extends {React.Component<P, S>}
+     * @template P props 类型约束
+     * @template S state 类型约束
+     * @template Columns 列配置类型约束
+     * @template QueryParams 搜索条件对象类型约束结构 默认any类型
+     */
+    LegionsProTable.ProTableBaseClass = ProTableBaseClass;
     LegionsProTable = __decorate([
         bind({ store: ProTableStore }),
         observer,

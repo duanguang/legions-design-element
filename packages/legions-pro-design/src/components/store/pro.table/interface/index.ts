@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-07 17:17:41
- * @LastEditTime: 2021-01-07 17:24:03
+ * @LastEditTime: 2021-01-14 14:19:04
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/store/pro.table/interface/index.ts
@@ -12,6 +12,9 @@ import { observableViewModel,observablePromise } from 'legions/store-utils';
 import { ViewModel } from 'brain-store-utils';
 import { ProTableView } from '../ProTableView';
 import { ProTableLocalView } from '../ProTableLocalView';
+import { PageListEntity } from '../../../LegionsProTable/pageListEntity';
+import { request } from 'legions/request';
+import { ClassOf } from 'legions-lunar/types/api/typescript';
 export interface ITableColumnConfig {
   /** 当传入的title不为string类型时，可传label作为checkbox的label展示 */
   label?: string;
@@ -66,7 +69,7 @@ export interface ITableAutoQuery<Model = {}> {
    * @type {(HeadersPrams & Object)}
    * @memberof IAutoQuery
    */
-  options?: HeadersPrams & { [key: string]: string };
+  options?: HeadersPrams & { [key: string]: string }&request.HeadersPrams;
 
   /**
    * 数据模型
@@ -74,7 +77,15 @@ export interface ITableAutoQuery<Model = {}> {
    * @type {Model}
    * @memberof IAutoQuery
    */
-  model: Model;
+  modelConfig: {
+    model: ClassOf<Model>,
+    /** 过滤出需要映射赋值的最终数据 */
+    filtersListData: (responseData: any) => any;
+    /** 转换服务端其他数据(非列表数据项数据)
+         * 当数据结构不统一时使用
+         */
+    tranformData?: (that: PageListEntity<Model>,responseData:any) => void;
+  };
 
   /**
    *
@@ -90,7 +101,7 @@ export interface ITableAutoQuery<Model = {}> {
    * @memberof IAutoQuery
    */
   transform: (
-    value: observablePromise.PramsResult<any>
+    value: observablePromise.PramsResult<PageListEntity<Model>>
   ) => {
     total: number;
     data: Array<any>;

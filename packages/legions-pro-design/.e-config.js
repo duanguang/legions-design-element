@@ -71,6 +71,13 @@ module.exports = function (configs) {
                   bindings: ['StoreModules'],
                 },
               ]),
+              createTransformerReactJsxProps({
+                components: [
+                  { name: 'LegionsProTable', props: 'uniqueUid', value: '' },
+                  { name: 'HLFormContainer', props: 'uniqueUid' },
+                  { name: 'QueryConditions', props: 'uniqueUid' },
+                ],
+              }),
             ],
           }),
         },

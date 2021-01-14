@@ -44,7 +44,7 @@ declare class ViewModels {
         uid: string;
         tabkey: string;
         isAddContextmenu: boolean;
-    }>;
+    }, any>;
 }
 interface IState {
 }

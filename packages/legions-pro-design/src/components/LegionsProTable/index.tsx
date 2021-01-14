@@ -10,15 +10,16 @@ import {
     compare,
 } from 'legions-utils-tool/object.utils';
 import { warning,warningOnce } from 'legions-utils-tool';
-import { shortHash } from 'legions-lunar/object-hash'
-import { findDOMNode,unstable_renderSubtreeIntoContainer,unmountComponentAtNode } from 'react-dom'
-import { debounce } from 'legions-utils-tool/debounce'
+import { shortHash } from 'legions-lunar/object-hash';
+import { findDOMNode,unstable_renderSubtreeIntoContainer,unmountComponentAtNode } from 'react-dom';
+import { debounce } from 'legions-utils-tool/debounce';
 import {
     SelectionDecorator,
     PaginationProps
 } from '../interface/antd';
 import { ITableColumnConfig,IExportCsv, IProTableProps } from './interface';
-import {ISchedule} from '../store/interface'
+import { ISchedule } from '../store/interface';
+import { IQuery} from '../LegionsProQueryConditions/interface';
 import moment from 'moment';
 import LegionsProTableCustomColumns from '../LegionsProTableCustomColumns';
 import LegionsProLineOverflow from '../LegionsProLineOverflow';
@@ -32,6 +33,7 @@ import { legionsThirdpartyPlugin } from 'legions-thirdparty-plugin';
 import { legionsPlugins,LoggerManager } from 'legions-lunar/legion.plugin.sdk';
 import { cloneDeep } from 'lodash';
 import { InstanceProTable } from './interface';
+import { ProTableBaseClass } from './ProTableBaseClass';
 const serialize = require('serialize-javascript');
 const baseCls = `legions-pro-table`
 
@@ -66,6 +68,7 @@ const errorMessage = {
     uniqueKey: 'Each record in table should have a unique `uniqueKey` prop,' + 'or set `uniqueKey` to an unique primary key.',
     Repeat: 'uniqueKey[接口数据作为唯一字段不可靠，建议前端自己生成唯一字段。开发环境检测，如果用的接口数据字段作为唯一值，也请确保绝对唯一]:存在相同数据,请认真检查数据是否绝对唯一，否则会引发部分功能异常'
 }
+
 @bind({ store: ProTableStore })
 @observer
 export default class LegionsProTable<TableRow = {},Model = {}> extends React.Component<IProTableProps<TableRow,Model>,IState>{
@@ -161,6 +164,26 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
         isOpenCustomColumns: true,
         pageSizeOptions: ['5','10','20','40','60','80','100','200','500'],
     }
+    /** 创建查询条件配置 */
+    static createQueryConfig(config:Array<IQuery>) {
+        return config;
+    }
+    static createColumnsConfig<T = {}>(config:TableColumnConfig<T>[]) {
+        return config;
+    }
+    /**
+     * 列表组件基类
+     *
+     * 包含常用方法，例如搜索，重置，搜索条件，列表列配置数据等
+     * @export
+     * @class ProTableBaseClass
+     * @extends {React.Component<P, S>}
+     * @template P props 类型约束
+     * @template S state 类型约束
+     * @template Columns 列配置类型约束
+     * @template QueryParams 搜索条件对象类型约束结构 默认any类型
+     */
+    static ProTableBaseClass = ProTableBaseClass;
     constructor(props) {
         super(props)
         this.state = {

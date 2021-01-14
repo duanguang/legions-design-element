@@ -4,7 +4,7 @@ export declare class TabPaneUIView {
      *
      * @memberof TabPaneUIView
      */
-    tabPanesTimestamp: import("mobx").ObservableMap<number>;
+    tabPanesTimestamp: import("mobx").ObservableMap<number, any>;
     /**
      *
      * 更新相关页签时间戳信息
