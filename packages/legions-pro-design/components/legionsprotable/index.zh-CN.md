@@ -15,22 +15,24 @@ ProTable 的诞生是为了解决项目中需要写很多 table 的样板代码�
 
 ## API
 
-通过设置 Button 的属性来产生不同的按钮样式，推荐顺序为：`type` -> `shape` -> `size` -> `loading` -> `disabled`
+ProTable 在 antd 的 Table 上进行了一层封装，支持了一些预设，并且封装了一些行为。这里只列出与 antd Table 不同的 api。
 
 按钮的属性说明如下：
 
 | 属性 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| ghost | 幽灵属性，使按钮背景透明，版本 2.7 中增加 | boolean | false |
-| htmlType | 设置 `button` 原生的 `type` 值，可选值请参考 [HTML 标准](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button#attr-type) | string | `button` |
-| icon | 设置按钮的图标类型 | string | - |
-| loading | 设置按钮载入状态 | boolean \| { delay: number } | `false` |
-| shape | 设置按钮形状，可选值为 `circle` 或者不设 | string | - |
+| uniqueKey | 	表格行 key 的取值，可以是字符串| string | "id" |
+| rowSelectionClickType | 行单击选中方式 | 'radio' \| 'check' | `radio` |
+| type | 行选中方式 | 'radio' \| 'check' |`check` |
+| tableModulesName | table 模块名称，如果设置此值，请保持绝对唯一 | string| - |
+| displayType | 大数据量表格还是小量数据 | 'smallData' \| 'bigData' | `smallData` |
 | size | 设置按钮大小，可选值为 `small` `large` 或者不设 | string | `default` |
-| type | 设置按钮类型，可选值为 `primary` `dashed` `danger`(版本 2.7 中增加) 或者不设 | string | - |
-| onClick | `click` 事件的 handler | function | - |
+| isOpenCustomColumns | 是否开启自定义列设置 | boolean | false |
+| isOpenRowChange | 是否开启行单击选中 | boolean | false |
+| isOpenRowSelection | 是否开启行选中,只在初始化执行一次 | boolean | false |
 
-`<Button>Hello world!</Button>` 最终会被渲染为 `<button><span>Hello world!</span></button>`，并且除了上表中的属性，其它属性都会直接传到 `<button></button>`。
+### tableModulesName
+> 如果不设置，则系统自动生成，系统生成缺陷，当列配置顺序，值发生变化，之前缓存的信息就会自动失效.要求唯一原因，会根据此名称生成hash用作自定义列缓存信息键名
 
 <style>
 [id^="components-legionsproecharts-demo-"] .ant-btn {

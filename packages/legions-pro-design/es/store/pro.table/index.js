@@ -978,17 +978,23 @@ var ProTableLocalView = /** @class */ (function () {
             //@ts-ignore
             var apiServer = function () {
                 var params = cloneDeep(autoQuery.params(options.pageIndex, options.pageSize));
-                var model = {
-                    //@ts-ignore
-                    model: LegionsProTable.ProTableBaseClass.pageListEntity,
-                    onBeforTranform: function (value) {
-                        var tranformData = {};
-                        if (autoQuery.modelConfig.tranformData) {
-                            tranformData = { tranformData: autoQuery.modelConfig.tranformData };
+                // @ts-ignore
+                var model = {};
+                if (typeof autoQuery.model === 'object') {
+                    model = {
+                        //@ts-ignore
+                        model: LegionsProTable.ProTableBaseClass.pageListEntity,
+                        onBeforTranform: function (value) {
+                            return {
+                                responseData: value,
+                                mappingEntity: autoQuery.model['mappingEntity'],
+                            };
                         }
-                        return __assign({ model: autoQuery.modelConfig.model, responseData: value, filtersListData: autoQuery.modelConfig.filtersListData }, tranformData);
-                    }
-                };
+                    };
+                }
+                else {
+                    model = { model: autoQuery.model };
+                }
                 if (autoQuery.method === 'post') {
                     return server_1.post(__assign({ url: autoQuery.ApiUrl, parameter: params, headers: __assign(__assign({}, autoQuery.options), { 'api-cookie': autoQuery.token }) }, model));
                 }

@@ -1,5 +1,5 @@
 ---
-order: 2
+order: 4
 title:
   zh-CN: 表格尺寸
   en-US: Size
@@ -137,7 +137,7 @@ class ProTableDemo extends LegionsProTable.ProTableBaseClass<IProps,IState,{},{}
         pagination={true}
         columns={this.columnsData}
         /* 真实环境中会自动生成，演示专用*/
-        uniqueUid="demo/table/size"
+        uniqueUid="demo/table/dynamic"
         uniqueKey="name"
         isOpenRowChange={false}></LegionsProTable>
         </Row>

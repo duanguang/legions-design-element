@@ -13,31 +13,24 @@ title:
 
 ```jsx
 import create from '../../render.tsx';
+import { JsonProperty } from 'json-mapper-object';
 import { Button, Row } from 'antd';
 import React from 'react';
 import { bind, observer } from 'legions/store-react';
 import { LegionsProTable, LegionsProPageContainer } from 'legions-pro-design';
 
-const data = [
-  {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-  },
-  {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-  },
-];
+
+
+ class ResponseVModelNameDataEntity {
+  @JsonProperty('key')
+  key = void 0;
+  @JsonProperty('name')
+  name = void 0;
+  @JsonProperty('age')
+  age = void 0;
+  @JsonProperty('address')
+  address = void 0;
+}
 interface IProps {}
 class ProTableDemo extends LegionsProTable.ProTableBaseClass<IProps,{},{},{}> {
   constructor(props: IProps) {
@@ -61,6 +54,7 @@ class ProTableDemo extends LegionsProTable.ProTableBaseClass<IProps,{},{},{}> {
   render() {
     return (
       <LegionsProTable
+      <{},ResponseVModelNameDataEntity>
         onReady={value => {
           this.tableRef = value;
           this.tableRef.viewModel.isAdaptiveHeight = false;
@@ -81,9 +75,41 @@ class ProTableDemo extends LegionsProTable.ProTableBaseClass<IProps,{},{},{}> {
           x: this.tableRef && this.tableRef.viewModel.tableXAutoWidth,
           y: 300,
         }}
-        data={data}
+        autoQuery={{
+            params: (pageIndex,pageSize) => {
+              return {
+                size: pageSize,
+                current: pageIndex,
+                ...this.queryPrams,
+              };
+            },
+            transform: (value) => {
+              if (value && !value.isPending && value.value) {
+                const { result,current,pageSize,total } = value.value;
+                return {
+                  data: result.map((item,index) => {
+                    item['key'] = index + 1 + (current - 1) * pageSize;
+                    return item;
+                  }),
+                  total: total,
+                };
+              }
+              return {
+                total: 0,
+                data: [],
+              };
+            },
+            method: 'get',
+            ApiUrl: 'http://192.168.200.171:3001/mock/115/getUsers',
+            model: {
+              mappingEntity: (that,res) => {
+                that.result = that.transformRows(res['data'],ResponseVModelNameDataEntity)
+              }
+            },
+        }}
         pagination={true}
         columns={this.columnsData}
+        uniqueUid="mock/115/getUsers"
         uniqueKey="name"
         isOpenRowChange={false}></LegionsProTable>
     );

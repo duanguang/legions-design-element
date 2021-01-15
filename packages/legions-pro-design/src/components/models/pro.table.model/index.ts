@@ -35,7 +35,7 @@ export class TableColumnsContainerEntity extends BaseEntity<
   TableColumnsEntity
 > {
   constructor(fromJson?: ITableColumnsEntity) {
-    super(fromJson);
+    super();
     if (fromJson) {
       this.message = fromJson.message || '操作成功';
       this.success = fromJson.success || true;

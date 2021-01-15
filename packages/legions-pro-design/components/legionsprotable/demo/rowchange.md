@@ -1,15 +1,15 @@
 ---
-order: 2
+order: 3
 title:
-  zh-CN: 表格尺寸
-  en-US: Size
+  zh-CN: 行操作
+  en-US: 行操作
 ---
 
 ## zh-CN
 
-表格有正常，中，迷你三种尺寸。
+表格行展示交互动态操作
 
-通过设置 `size` 为 `default` `small` `middle` 分别把按钮设为大、小尺寸。若不设置 `size`，则尺寸为正常。
+可控制行选中样式，行选中方式等
 
 ## en-US
 
@@ -38,7 +38,9 @@ import { LegionsProTable, LegionsProPageContainer } from 'legions-pro-design';
 }
 interface IProps {}
 interface IState{
-  size:'default'|'small'
+  size:'checkbox'|'radio',
+  isOpenRowSelection:boolean,
+  rowSelectionClickType:'checkbox'|'radio',
 }
 class ProTableDemo extends LegionsProTable.ProTableBaseClass<IProps,IState,{},{}> {
   constructor(props: IProps) {
@@ -59,30 +61,63 @@ class ProTableDemo extends LegionsProTable.ProTableBaseClass<IProps,IState,{},{}
       sorter: true,
     });
     this.state={
-      size: 'default',
+      type: 'checkbox',
+      isOpenRowSelection:false,
+      isOpenRowChange:false,
+      rowSelectionClickType:'radio',
     }
   }
-  handleSizeChange = (e) => {
-    this.setState({ size: e.target.value });
+  handleTypeChange = (e) => {
+    this.setState({ type: e.target.value });
+  }
+  handleOpenRowSelectionChange = (e) => {
+    this.tableRef.viewModel.isOpenRowSelection=e.target.value
+    this.setState({ isOpenRowSelection: e.target.value });
+  }
+  handleisOpenRowChange = (e) => {
+    this.tableRef.viewModel.isOpenRowChange=e.target.value
+    this.setState({ isOpenRowChange: e.target.value });
+  }
+  handleisRowSelectionChange = (e) => {
+    this.setState({ rowSelectionClickType: e.target.value });
   }
   render() {
     return (
       <Row>
         <Row>
         <Form layout="inline">
-            <FormItem label="Size">
-              <Radio.Group size="default" value={this.state.size} onChange={this.handleSizeChange}>
-                <Radio.Button value="default">Default</Radio.Button>
-                <Radio.Button value="middle">Middle</Radio.Button>
-                <Radio.Button value="small">Small</Radio.Button>
+            <FormItem label="多选/单选">
+              <Radio.Group size="checkbox" value={this.state.type} onChange={this.handleTypeChange}>
+                <Radio.Button value="checkbox">多选</Radio.Button>
+                <Radio.Button value="radio">单选</Radio.Button>
+              </Radio.Group>
+            </FormItem>
+            <FormItem label="行选中启/关">
+              <Radio.Group size={false} value={this.state.isOpenRowSelection} onChange={this.handleOpenRowSelectionChange}>
+                <Radio.Button value={true}>是</Radio.Button>
+                <Radio.Button value={false}>否</Radio.Button>
+              </Radio.Group>
+            </FormItem>
+            <FormItem label="单击行选中启/关">
+              <Radio.Group size={false} value={this.state.isOpenRowChange} onChange={this.handleisOpenRowChange}>
+                <Radio.Button value={true}>是</Radio.Button>
+                <Radio.Button value={false}>否</Radio.Button>
+              </Radio.Group>
+            </FormItem>
+             <FormItem label="单击行多选/单选">
+              <Radio.Group size="checkbox" value={this.state.rowSelectionClickType} onChange={this.handleisRowSelectionChange}>
+                <Radio.Button value="checkbox">多选</Radio.Button>
+                <Radio.Button value="radio">单选</Radio.Button>
               </Radio.Group>
             </FormItem>
           </Form>
         </Row>
       <LegionsProTable
       <{},ResponseVModelNameDataEntity>
-      {...this.state}
-        onReady={value => {
+        {...this.state}
+        isOpenRowSelection={false}
+         isOpenRowChange={false}
+         onReady={value => {
           this.tableRef = value;
           this.tableRef.viewModel.isAdaptiveHeight = false;
 
@@ -137,9 +172,9 @@ class ProTableDemo extends LegionsProTable.ProTableBaseClass<IProps,IState,{},{}
         pagination={true}
         columns={this.columnsData}
         /* 真实环境中会自动生成，演示专用*/
-        uniqueUid="demo/table/size"
+        uniqueUid="demo/table/rowchange"
         uniqueKey="name"
-        isOpenRowChange={false}></LegionsProTable>
+         ></LegionsProTable>
         </Row>
     );
   }

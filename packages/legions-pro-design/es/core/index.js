@@ -77,7 +77,7 @@ var LegionsFetch = /** @class */ (function () {
             var newResult = result;
             if (typeof options.onBeforTranform === 'function') {
                 newResult = options.onBeforTranform(result);
-            }
+                }
             // @ts-ignore
             return new options.model(newResult);
         })

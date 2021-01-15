@@ -157,28 +157,18 @@ var PageListEntity = /** @class */ (function (_super) {
         _this.total = 0;
         _this.current = 1;
         _this.pageSize = 10;
+        _this.result = [];
         if (options && typeof options.responseData === 'object') {
-            if (options.tranformData && typeof options.tranformData === 'function') {
-                options.tranformData(_this, options.responseData);
+            _this.message = options.responseData.msg || '查询成功';
+            _this.success = options.responseData.ok ? true : false;
+            _this.code = options.responseData.status || '';
+            _this.total = options.responseData.total || 0;
+            _this.current = options.responseData.current || 1;
+            _this.pageSize = options.responseData.pageSize || 10;
+            if (options.mappingEntity &&
+                typeof options.mappingEntity === 'function') {
+                options.mappingEntity(_this, options.responseData);
             }
-            else {
-                _this.message = options.responseData.msg || '查询成功';
-                _this.success = options.responseData.ok ? true : false;
-                _this.code = options.responseData.status || '';
-                _this.total = options.responseData.total || 0;
-                _this.current = options.responseData.current || 1;
-                _this.pageSize = options.responseData.pageSize || 10;
-            }
-            if (options.filtersListData &&
-                typeof options.filtersListData === 'function') {
-                _this.result = _super.prototype.transformArray.call(_this, options.filtersListData(options.responseData), options.model);
-            }
-            else {
-                _this.result = [];
-            }
-        }
-        else {
-            _this.result = [];
         }
         return _this;
     }
@@ -532,13 +522,7 @@ var LegionsProTable = /** @class */ (function (_super) {
         _this.consoleLog('hlTable-constructor');
         return _this;
     }
-    /** 创建查询条件配置 */
-    LegionsProTable.createQueryConfig = function (config) {
-        return config;
-    };
-    LegionsProTable.createColumnsConfig = function (config) {
-        return config;
-    };
+    LegionsProTable_1 = LegionsProTable;
     Object.defineProperty(LegionsProTable.prototype, "getViewStore", {
         get: function () {
             return this.props.store.HlTableContainer.get(this.freezeuid);
@@ -799,7 +783,8 @@ var LegionsProTable = /** @class */ (function (_super) {
                             this.setTabletBody();
                         }
                         this.getViewStore.columns = this.tranMapColumns();
-                        if (!(this.props.tableModulesName && this.props.isOpenCustomColumns)) return [3 /*break*/, 4];
+                        if (!(this.props.tableModulesName && this.props.isOpenCustomColumns)) return [3 /*break*/, 5];
+                        if (!(LegionsProTable_1.customColumnsConfig.editApi && LegionsProTable_1.customColumnsConfig.queryApi)) return [3 /*break*/, 4];
                         this.viewModel.setLocalStorageShowColumnsKeys(this.props.tableModulesName);
                         return [4 /*yield*/, this.viewModel.queryTableColumns(this.viewModel.computedStorageShowColumnsKeys, this.props.customColumnsConfig.queryApi)];
                     case 1:
@@ -824,8 +809,11 @@ var LegionsProTable = /** @class */ (function (_super) {
                             });
                         }
                         this.getViewStore.filterColumns();
-                        _a.label = 4;
+                        return [3 /*break*/, 5];
                     case 4:
+                        console.error('请配置自定义列数据同步及查询接口信息');
+                        _a.label = 5;
+                    case 5:
                         if (this.props.visibleExportLoacl) {
                             this.selections.push({
                                 key: 'export-excel',
@@ -1205,7 +1193,7 @@ var LegionsProTable = /** @class */ (function (_super) {
         }
         this.consoleLog('hlTable-render');
         //@ts-ignore
-        var rowSelection = (this.getViewStore.isOpenRowSelection) && __assign(__assign({}, this.props.rowSelection), { selectedRowKeys: selectedRowKeys, hideDefaultSelections: true, type: this.props.type, selections: this.selections, onChange: this.onSelectChange.bind(this), onSelectAll: function (selected, selectedRows, changeRows) {
+        var rowSelection = (this.getViewStore.isOpenRowSelection) ? __assign(__assign({}, this.props.rowSelection), { selectedRowKeys: selectedRowKeys, hideDefaultSelections: true, type: this.props.type, selections: this.selections, onChange: this.onSelectChange.bind(this), onSelectAll: function (selected, selectedRows, changeRows) {
                 if (_this.getViewStore.renderData.length <= _this.props.data.length) { // 主要用于大数据table 性能问题，每次只加载部分数据，这时全选时自动选择全部数据
                     if (selected) {
                         var newData_1 = _this.props.data.filter(function (item) {
@@ -1230,7 +1218,7 @@ var LegionsProTable = /** @class */ (function (_super) {
                 _this.setState({ selectedRowKeys: [] }, function () {
                     _this.getViewStore.selectedRows = [];
                 });
-            } });
+            } }) : null;
         var paginationProps = this.props.pagination;
         var pagination = {
             pageSizeOptions: this.props.pageSizeOptions,
@@ -1310,6 +1298,7 @@ var LegionsProTable = /** @class */ (function (_super) {
                     _this.customColumnsModalRef = value;
                 } }));
     };
+    var LegionsProTable_1;
     /* lodaMore = debounce(() => {
         const end = this.getViewStore.flag + 100;
         const data = this.props.data.slice(this.getViewStore.flag,end);
@@ -1352,6 +1341,11 @@ var LegionsProTable = /** @class */ (function (_super) {
         isOpenCustomColumns: true,
         pageSizeOptions: ['5', '10', '20', '40', '60', '80', '100', '200', '500'],
     };
+    /** 开启自定义列，同步数据到服务端所需要的查询和保存接口地址信息 */
+    LegionsProTable.customColumnsConfig = {
+        editApi: '',
+        queryApi: '',
+    };
     /**
      * 列表组件基类
      *
@@ -1365,7 +1359,7 @@ var LegionsProTable = /** @class */ (function (_super) {
      * @template QueryParams 搜索条件对象类型约束结构 默认any类型
      */
     LegionsProTable.ProTableBaseClass = ProTableBaseClass;
-    LegionsProTable = __decorate([
+    LegionsProTable = LegionsProTable_1 = __decorate([
         bind({ store: ProTableStore }),
         observer,
         __metadata("design:paramtypes", [Object])

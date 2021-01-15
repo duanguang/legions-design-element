@@ -5,4 +5,5 @@ export const HttpConfigDev={
     domainTms: 'https://tmsqa.hoolinks.com/',
     /* domainTms: 'http://192.168.100.132:8088/', */
     domain3pl: 'https://qa3pl.hoolinks.com/',
+    bffService: 'https://test-bff.hoolinks.com',
 }

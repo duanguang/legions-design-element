@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-07 17:17:41
- * @LastEditTime: 2021-01-14 14:19:04
+ * @LastEditTime: 2021-01-14 15:39:46
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/store/pro.table/interface/index.ts
@@ -72,20 +72,17 @@ export interface ITableAutoQuery<Model = {}> {
   options?: HeadersPrams & { [key: string]: string }&request.HeadersPrams;
 
   /**
-   * 数据模型
+   * 数据模型配置
    *
    * @type {Model}
    * @memberof IAutoQuery
    */
-  modelConfig: {
-    model: ClassOf<Model>,
-    /** 过滤出需要映射赋值的最终数据 */
-    filtersListData: (responseData: any) => any;
-    /** 转换服务端其他数据(非列表数据项数据)
-         * 当数据结构不统一时使用
-         */
-    tranformData?: (that: PageListEntity<Model>,responseData:any) => void;
-  };
+  model: {
+    /** 埋点配置项，暂时不用 */
+    model?: ClassOf<Model>,
+    /** 映射数据至===>result */
+    mappingEntity: (that: PageListEntity<Model>,responseData: any) => void;
+  }|Model;
 
   /**
    *

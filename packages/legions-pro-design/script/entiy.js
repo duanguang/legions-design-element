@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-10 16:14:09
- * @LastEditTime: 2021-01-14 14:55:40
+ * @LastEditTime: 2021-01-14 15:50:41
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/script/entiy.js
@@ -74,7 +74,7 @@ const umd = [
   },
 ];
 const es = [
-  ...array_components.map((item) => {
+  ...array_component.map((item) => {
     let input = '';
     let file = '';
     if (item === 'index') {

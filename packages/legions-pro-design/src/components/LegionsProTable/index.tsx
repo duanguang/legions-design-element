@@ -164,12 +164,15 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
         isOpenCustomColumns: true,
         pageSizeOptions: ['5','10','20','40','60','80','100','200','500'],
     }
-    /** 创建查询条件配置 */
-    static createQueryConfig(config:Array<IQuery>) {
-        return config;
-    }
-    static createColumnsConfig<T = {}>(config:TableColumnConfig<T>[]) {
-        return config;
+    /** 开启自定义列，同步数据到服务端所需要的查询和保存接口地址信息 */
+    static customColumnsConfig: {
+        /** 编辑自定义信息同步到服务端接口地址 */
+        editApi: string;
+        /** 从服务端查询自定义列信息接口地址 */
+        queryApi: string;
+    } = {
+        editApi: '',
+        queryApi:'',
     }
     /**
      * 列表组件基类
@@ -479,26 +482,31 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
         }
         this.getViewStore.columns = this.tranMapColumns();
         if (this.props.tableModulesName && this.props.isOpenCustomColumns) {
-            this.viewModel.setLocalStorageShowColumnsKeys(this.props.tableModulesName)
-            await this.viewModel.queryTableColumns(this.viewModel.computedStorageShowColumnsKeys,this.props.customColumnsConfig.queryApi)
-            if (!this.viewModel.obTableListCustom.result || (this.viewModel.obTableListCustom.result && this.viewModel.obTableListCustom.result.customColumns.length === 0)) {
-                this.getViewStore.filterColumns();
-                const body = this.viewModel.computedShowColumns.map((item) => {
-                    return { dataIndex: item.dataIndex,title: item.title }
-                })
-                if (body.length) {
-                    await this.viewModel.editTableColumns(this.viewModel.computedStorageShowColumnsKeys,body,this.props.customColumnsConfig.editApi)
+            if (LegionsProTable.customColumnsConfig.editApi && LegionsProTable.customColumnsConfig.queryApi) {
+                this.viewModel.setLocalStorageShowColumnsKeys(this.props.tableModulesName)
+                await this.viewModel.queryTableColumns(this.viewModel.computedStorageShowColumnsKeys,this.props.customColumnsConfig.queryApi)
+                if (!this.viewModel.obTableListCustom.result || (this.viewModel.obTableListCustom.result && this.viewModel.obTableListCustom.result.customColumns.length === 0)) {
+                    this.getViewStore.filterColumns();
+                    const body = this.viewModel.computedShowColumns.map((item) => {
+                        return { dataIndex: item.dataIndex,title: item.title }
+                    })
+                    if (body.length) {
+                        await this.viewModel.editTableColumns(this.viewModel.computedStorageShowColumnsKeys,body,this.props.customColumnsConfig.editApi)
+                    }
                 }
+                if (this.props.isOpenCustomColumns) {
+                    this.selections.push({
+                        key: 'custom-columns',
+                        text: this.renderButtonCusttomColumns(),
+                        onSelect: (changeableRowKeys) => {
+                        },
+                    })
+                }
+                this.getViewStore.filterColumns();
+            } else {
+                console.error('请配置自定义列数据同步及查询接口信息')
             }
-            if (this.props.isOpenCustomColumns) {
-                this.selections.push({
-                    key: 'custom-columns',
-                    text: this.renderButtonCusttomColumns(),
-                    onSelect: (changeableRowKeys) => {
-                    },
-                })
-            }
-            this.getViewStore.filterColumns();
+            
         }
         if (this.props.visibleExportLoacl) {
             this.selections.push({
@@ -922,7 +930,7 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
         }
         this.consoleLog('hlTable-render');
         //@ts-ignore
-        const rowSelection: TableRowSelection<{}> = (this.getViewStore.isOpenRowSelection) && {
+        const rowSelection: TableRowSelection<{}> = (this.getViewStore.isOpenRowSelection) ? {
             ...this.props.rowSelection,
             selectedRowKeys,
             hideDefaultSelections: true,
@@ -956,7 +964,7 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
                     this.getViewStore.selectedRows = []
                 })
             },
-        };
+        }:null;
         const paginationProps: PaginationProps | boolean = this.props.pagination
         const pagination: PaginationProps | boolean = {
             pageSizeOptions: this.props.pageSizeOptions,

@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-14 16:26:10
- * @LastEditTime: 2021-01-14 14:53:18
+ * @LastEditTime: 2021-01-14 15:37:04
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/core/legionsFetch.ts
@@ -32,15 +32,11 @@ interface options<Parameter, Model> {
     model:  Model;
     catch?: (err: any) => void;
     onBeforTranform?:(response:any)=>{
-        model: any,
+        model?: any,
         /** 服务端数据 */
         responseData: any;
-        /** 从服务端数据信息筛选出最终绑定的列表数据 */
-        filtersListData: (responseData: any) => any;
-        /** 转换服务端其他数据(非列表数据项数据)
-         * 当数据结构不统一时使用
-         */
-        tranformData?: (that: any,responseData:any) => void;
+        /** 映射数据至===>result */
+        mappingEntity: (that: any,responseData: any) => void;
     }
 }
 export class LegionsFetch{

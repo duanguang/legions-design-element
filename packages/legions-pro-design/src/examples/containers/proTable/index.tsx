@@ -7,7 +7,9 @@ import { observablePromise } from 'legions/store-utils';
 import { ResponseVModelNameDataEntity } from './model';
 import { observable } from 'legions/store';
 import { runInAction } from 'mobx'
-
+import { HttpConfig } from '../../constants/httpConfig';
+LegionsProTable.customColumnsConfig.editApi = `${HttpConfig.bffService}/table/edit`;
+LegionsProTable.customColumnsConfig.queryApi = `${HttpConfig.bffService}/table/query`;
 interface IProps { }
 @observer
 export class ProTable extends LegionsProTable.ProTableBaseClass<IProps,{},{},{}> {
@@ -72,7 +74,7 @@ export class ProTable extends LegionsProTable.ProTableBaseClass<IProps,{},{},{}>
             pagination={true}
             columns={this.columnsData}
             uniqueKey='name'
-            tableModulesName=''
+            tableModulesName='demo/proTable'
             isOpenCustomColumns={true}
             isOpenRowChange={true}
             autoQuery={{
@@ -86,7 +88,6 @@ export class ProTable extends LegionsProTable.ProTableBaseClass<IProps,{},{},{}>
               transform: (value) => {
                 if (value && !value.isPending && value.value) {
                   const { result,current,pageSize,total } = value.value;
-                  value.value.result.map((item) => item)
                   return {
                     data: result.map((item,index) => {
                       item['key'] = index + 1 + (current - 1) * pageSize;
@@ -110,11 +111,10 @@ export class ProTable extends LegionsProTable.ProTableBaseClass<IProps,{},{},{}>
 
               method: 'get',
               ApiUrl: 'http://192.168.200.171:3001/mock/115/getUsers',
-              modelConfig: {
-                model: ResponseVModelNameDataEntity,
-                filtersListData: (value) => {
-                  return value['data']
-                },
+              model: {
+                mappingEntity: (that,res) => {
+                  that.result = that.transformRows(res['data'],ResponseVModelNameDataEntity)
+                }
               },
             }}
 

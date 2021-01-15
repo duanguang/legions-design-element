@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-26 17:07:34
- * @LastEditTime: 2021-01-07 17:26:59
+ * @LastEditTime: 2021-01-15 11:11:34
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProTable/interface.ts
@@ -365,7 +365,7 @@ export interface IProTableProps<TableRow = {},Model = {}> extends TableProps<Tab
    */
   isOpenRowChange?: boolean;
 
-  /** 是否开启行选中 */
+  /** 是否开启行选中,只在初始化执行一次 */
   isOpenRowSelection?: boolean;
 
   /**

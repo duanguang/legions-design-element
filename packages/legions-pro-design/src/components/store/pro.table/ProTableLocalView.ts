@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-07 17:21:19
- * @LastEditTime: 2021-01-14 14:26:57
+ * @LastEditTime: 2021-01-14 15:47:50
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/store/pro.table/ProTableLocalView.ts
@@ -38,21 +38,21 @@ export class ProTableLocalView {
         let params = cloneDeep(
           autoQuery.params(options.pageIndex, options.pageSize)
         );
-        const model = {
-          //@ts-ignore
-          model: LegionsProTable.ProTableBaseClass.pageListEntity,
-          onBeforTranform: (value) => {
-            let tranformData = {};
-            if (autoQuery.modelConfig.tranformData) {
-              tranformData={tranformData:autoQuery.modelConfig.tranformData}
-            }
-            return {
-              model: autoQuery.modelConfig.model,
-              responseData: value,
-              filtersListData: autoQuery.modelConfig.filtersListData,
-              ...tranformData
+        // @ts-ignore
+        let model: any = {};
+        if (typeof autoQuery.model === 'object') {
+          model = {
+            //@ts-ignore
+            model: LegionsProTable.ProTableBaseClass.pageListEntity,
+            onBeforTranform: (value) => {
+              return {
+                responseData: value,
+                mappingEntity:autoQuery.model['mappingEntity'],
+              }
             }
           }
+        } else {
+          model= {model:autoQuery.model}
         }
         if (autoQuery.method === 'post') {
           return server.post<PageListEntity<any>, any>({
