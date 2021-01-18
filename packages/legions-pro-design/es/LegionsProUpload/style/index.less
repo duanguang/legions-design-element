@@ -1,0 +1,118 @@
+.legions-pro-upload-dragger{
+    .ant-upload.ant-upload-drag{
+        background-color: #fafafa;
+        .ant-upload-drag-container{
+            padding: 30px 20px;
+            box-sizing: border-box;
+        }
+        p.ant-upload-drag-icon{
+            background: url('https://gitee.com/duanguang/figure-bed/raw/master/oss/upload-icon01.png') center bottom / 71px no-repeat;
+            margin-bottom: 20px;
+            height: 50px;
+        }
+    }
+}
+
+.legions-pro-upload-file-list{
+    .legions-pro-upload-file-list-item{
+        position: relative;
+        margin-top: 14px;
+        height: 37px;
+        overflow: hidden;
+    }
+    .legions-pro-upload-file-list-icon {
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: inline-block;
+        width: 31px;
+        height: 100%;
+        vertical-align: middle;
+        background: url('https://gitee.com/duanguang/figure-bed/raw/master/oss/upload-icon02.png') center / 100% no-repeat;
+        &[data-file-type='ppt']{
+            background-image: url('https://gitee.com/duanguang/figure-bed/raw/master/oss/upload-icon03.png');
+        }
+        &[data-file-type='png'],
+        &[data-file-type='jpg']{
+            background-image: url('https://gitee.com/duanguang/figure-bed/raw/master/oss/upload-icon04.png');
+        }
+        &[data-file-type='html']{
+            background-image: url('https://gitee.com/duanguang/figure-bed/raw/master/oss/upload-icon05.png');
+        }
+        &[data-file-type='doc'],
+        &[data-file-type='docx']{
+            background-image: url('https://gitee.com/duanguang/figure-bed/raw/master/oss/upload-icon06.png');
+        }
+        &[data-file-type='xlsx'],
+        &[data-file-type='xls']{
+            background-image: url('https://gitee.com/duanguang/figure-bed/raw/master/oss/upload-icon07.png');
+        }
+        &[data-file-type='pdf']{
+            background-image: url('https://gitee.com/duanguang/figure-bed/raw/master/oss/upload-icon08.png');
+        }
+        &[data-file-type='psd']{
+            background-image: url('https://gitee.com/duanguang/figure-bed/raw/master/oss/upload-icon09.png');
+        }
+    }
+    .legions-pro-upload-file-list-name {
+        position: relative;
+        display: block;
+        font-size: 14px;
+        color: #989898;
+        height: 100%;
+        padding-left: 45px;
+        padding-right: 45px;
+        line-height: 30px;
+        box-sizing: border-box;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        .ant-progress{
+            position: absolute;
+            top: 13px;
+            left: 45px;
+        }
+        .ant-progress-status-success .ant-progress-bg{
+            background-color: #0f8de9;
+        }
+    }
+    .legions-pro-upload-file-list-btn{
+        display: block;
+        position: absolute;
+        top: 50%;
+        right: 0;
+        margin-top: -10px;
+        line-height: normal;
+        .anticon{
+            color: #989898;
+            vertical-align: middle;
+            font-size: 14px;
+            cursor: pointer;
+            &.anticon{
+                margin-left: 5px;
+            }
+        }
+    }
+}
+
+/* 迷你版文件列表样式 */
+.legions-pro-upload-file-list.legions-pro-upload-file-list-mini{
+    .legions-pro-upload-file-list-item{
+        margin-top: 10px;
+        height: 28px;
+    }
+    .legions-pro-upload-file-list-icon {
+        width: 23px;
+    }
+    .legions-pro-upload-file-list-name {
+        padding-left: 31px;
+        line-height: 20px;
+        .ant-progress{
+            top: 13px;
+            left: 31px;
+        }
+    }
+    .legions-pro-upload-file-list-btn{
+        margin-top: -10px;
+    }
+}

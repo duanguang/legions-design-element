@@ -1,0 +1,17 @@
+const docx={type:'application/vnd.openxmlformats-officedocument.wordprocessingml.document',name:'docx'};
+const doc={type:'application/msword',name:'doc'};
+const xlsx={type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',name:'xlsx'};
+const xls={type:'application/vnd.ms-excel',name:'xls'};
+const pdf={type:'application/pdf',name:'pdf'};
+const zip={type:'application/zip',name:'zip'};
+const bmp={type:'image/bmp',name:'bmp'};
+const png={type:'image/png',name:'png'};
+const jpeg={type:'image/jpeg',name:'jpeg'};
+const jpg={type:'image/jpeg',name:'jpg'};
+export const UploadType=[xlsx.type,pdf.type,'image/jpeg','image/png',doc.type,xls.type, docx.type,zip.type,bmp.type]
+export const FileTypeList = [doc,docx,xlsx,xls,pdf,zip,bmp,png,jpeg,jpg];
+export const UploadFileTypeName = ['docx','doc','xlsx','xls','pdf','zip','bmp','png','jpeg','jpg'] as const; 
+export const XlsType = xls.type;
+export const XlsxType = xlsx.type;
+type  SuitTuple = typeof UploadFileTypeName; 
+export type IAccept = SuitTuple[number];

@@ -1,0 +1,131 @@
+.legions-pro-modal-drawerPositionY .ant-modal-content {
+    position: relative ;
+    background-color: #fff ;
+    border: 0 ;
+    height: 100% ;
+    border-radius: 4px;
+    background-clip: padding-box;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+.legions-pro-modal-body-autoOverflow{
+    overflow: auto !important;
+}
+.legions-pro-modal-content-drag{
+    /** 方案一二样式*/
+    pointer-events:none; /** 支持多个弹窗在页面可以拖拽移动*/
+    .ant-modal-content{
+        pointer-events: auto;
+        position: relative;
+        background-color: #fff;
+        border: 0;
+        border-radius: 4px;
+        background-clip: padding-box;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+    /** 方案一样式*/
+    .ant-modal {
+        position: relative;
+        width: auto;
+        margin: 0;
+        display: flow-root;
+        top: 100px;
+        padding-bottom: 24px;
+    }
+    .ant-modal-header {
+        cursor: move;
+    }
+    /* .ant-modal-body {
+        cursor: move;
+    } */
+}
+.legions-pro-modal-ns-resizable{
+   
+    .ant-modal-content{
+        cursor:ns-resize;
+    }
+}
+.legions-pro-modal-ew-resizable{
+    cursor:ew-resize;
+    z-index: 9999;
+}
+.legions-pro-modal-nwse-resizable{
+    cursor:nwse-resize;
+}
+.legions-pro-modal-nesw-resizable{
+    cursor:nesw-resize;
+}
+/** 方案二样式*/
+.ant-modal-content-drag{
+    position: fixed;
+}
+.legions-pro-modal-content-dragging{
+    /** 方案一二样式*/
+    .ant-modal-content{
+        position: relative;
+        background-color: #fff;
+        border: 0;
+        border-radius: 4px;
+        background-clip: padding-box;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        -webkit-user-select: none;
+         -moz-user-select: none;
+        user-select: none;
+    }
+    /** 方案一样式*/
+    .ant-modal {
+        position: relative;
+        width: auto;
+        margin: 0;
+        display: flow-root;
+        top: 100px;
+        padding-bottom: 24px;
+    }
+    
+}
+.legions-pro-modal-drawerPositionY .ant-modal-footer {
+    border-top: 1px solid #e9e9e9;
+    padding: 10px 16px 10px 10px;
+    text-align: right;
+    border-radius: 0 0 4px 4px;
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+}
+.legions-pro-modal-DrawerPositionX .ant-modal-content {
+    position: relative ;
+    background-color: #fff ;
+    border: 0 ;
+    height: 100% ;
+    border-radius: 4px;
+    background-clip: padding-box;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+.legions-pro-modal-DrawerPositionX .ant-modal-footer {
+    border-top: 1px solid #e9e9e9;
+    padding: 10px 16px 10px 10px;
+    text-align: right;
+    border-radius: 0 0 4px 4px;
+}
+
+.legions-pro-modal-DrawerPositionBottom .ant-modal-footer {
+    border-top: 1px solid #e9e9e9;
+    padding: 10px 16px 10px 10px;
+    text-align: right;
+    border-radius: 0 0 4px 4px;
+}
+.legions-pro-modal-DrawerPositionBottom .ant-modal-content {
+    position: relative ;
+    background-color: #fff ;
+    border: 0 ;
+    height: 100% ;
+    border-radius: 4px;
+    background-clip: padding-box;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+.legions-pro-modal-DrawerPositionBottom .ant-modal {
+    position: relative;
+    width: auto;
+    margin: 0 auto;
+    top: auto;
+    padding-bottom: 24px;
+}

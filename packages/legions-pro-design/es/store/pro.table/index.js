@@ -1,0 +1,1177 @@
+/**
+  *  legions-pro-design v0.0.7
+  * (c) 2021 duanguang
+  * @license MIT
+  */
+import { StoreBase } from '../index';
+import { observable, action, StoreModules } from 'legions/store';
+import { observablePromise, observableViewModel } from 'legions/store-utils';
+import { shortHash } from 'legions-lunar/object-hash';
+import { computed, runInAction, useStrict, configure } from 'mobx';
+import { TableColumnsContainerEntity } from '../../models';
+import { editTableColumns, queryTableColumns } from '../../services';
+import { LegionsFetch } from '../../core';
+import { cloneDeep } from 'lodash';
+import LegionsProTable from '../../LegionsProTable';
+
+/*! *****************************************************************************
+Copyright (c) Microsoft Corporation.
+
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.
+***************************************************************************** */
+/* global Reflect, Promise */
+
+var extendStatics = function(d, b) {
+    extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return extendStatics(d, b);
+};
+
+function __extends(d, b) {
+    extendStatics(d, b);
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+}
+
+var __assign = function() {
+    __assign = Object.assign || function __assign(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+
+function __decorate(decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+}
+
+function __metadata(metadataKey, metadataValue) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(metadataKey, metadataValue);
+}
+
+function __awaiter(thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+}
+
+function __generator(thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+}
+
+var ProTableView = /** @class */ (function () {
+    function ProTableView(modulesName, uid, user) {
+        var _this = this;
+        this.userInfo = null;
+        this.uid = '';
+        /**
+         * table 页码
+         *
+         * @memberof ProTableView
+         */
+        this.pageIndex = 1;
+        /**
+         * table 页大小
+         *
+         * @memberof ProTableView
+         */
+        this.pageSize = 20;
+        /**
+         * 行选中数据
+         *
+         * @memberof ProTableView
+         */
+        this.selectedRows = [];
+        /**
+         *
+         * 展开行数据
+         * @memberof ProTableView
+         */
+        this.expandRow = '';
+        /**
+         *
+         * 表格行选中方式
+         * @memberof ProTableView
+         */
+        this.type = null;
+        /**
+         * 表格行单击选中方式
+         *
+         * @memberof ProTableView
+         */
+        this.rowSelectionClickType = null;
+        /**
+         * 表格列配置
+         *
+         * @memberof ModalView
+         */
+        this.columns = null;
+        /**
+         * 用于显示列信息列表  table组件内部处理，外部请勿修改数据
+         *
+         * @type {IShowColumns[]}
+         * @memberof ProTableView
+         */
+        this.showColumns = [];
+        /**
+         * 隐藏的列信息 ，不显示
+         *
+         * @private
+         * @type {IShowColumns[]}
+         * @memberof ProTableView
+         */
+        this.unShowColumns = [];
+        /**
+         * 显示列缓存键名
+         *
+         * @private
+         * @memberof ProTableView
+         */
+        this.localStorageShowColumnsKeys = '';
+        /**
+         * 服务端存储列设置信息
+         *
+         * @private
+         * @memberof ProTableView
+         */
+        this.obTableListCustom = new TableColumnsContainerEntity();
+        /**
+         *
+         * table 模块名称，如果设置此值，请保持绝对唯一
+         * 要求唯一原因，会根据此名称生成hash用作自定义列缓存信息键名
+         * @type {string}
+         * @memberof ProTableView
+         */
+        this.tableModulesName = '';
+        /**
+         * table 列表数据渲染后的dom 高度，这个数据时根据真实数据得到，请勿人为修改
+         *
+         * @memberof ProTableView
+         */
+        this.tableBodyDomClientHeight = 0;
+        /**
+         * 当外部组件跟table 处于同一容器组件，存储每个组件高度值
+         *
+         * @memberof ProTableView
+         */
+        // @ts-ignore
+        this.bodyExternalContainer = observable.map();
+        /**
+         * table 高度是否自适应
+         *
+         * @memberof ProTableView
+         */
+        this.isAdaptiveHeight = false;
+        /**
+         *
+         * 横向或纵向支持滚动，也可用于指定滚动区域的宽高度
+         * @type {IScroll}
+         * @memberof ProTableView
+         */
+        this.scroll = { x: true, y: 300 };
+        /**
+         * 存储动态添加表格行的数据
+         *
+         * @type {any[]}
+         * @memberof ProTableView
+         */
+        this.tempDynamicAddData = [];
+        /**
+         * 需要圈定的table 容器 高度 ，默认document.body.clientHeight 取，可以动态设置
+         *
+         * @memberof ProTableView
+         */
+        this.bodyContainerHeight = document.body.clientHeight;
+        /**
+         * 内部判定使用，私有变量，外部请勿修改
+         *
+         * @type {boolean}
+         * @memberof ProTableView
+         */
+        this.pagination = true;
+        /**
+         * 外部容器需要扣除的
+         *
+         * @memberof ProTableView
+         */
+        this.bodyExternalHeight = 0;
+        /**
+         * 用于渲染的表格数据,私有变量，外部请勿操作
+         *
+         * @memberof ProTableView
+         */
+        this.renderData = [];
+        this.total = 0;
+        /**
+         * 查询条件
+         * @memberof ProTableView
+         */
+        this.queryParams = null;
+        /**
+         *
+         * 是否开启行单击选中数据，内部私有数据，请勿调用
+         * @memberof ProTableView
+         */
+        this.isOpenRowChange = true;
+        /** 是否开启行选中功能，比如开启checkbox ，radio */
+        this.isOpenRowSelection = true;
+        /**
+         * 表格容器宽度,私有变量
+         *
+         * @memberof ProTableView
+         */
+        this._tableContainerWidth = 0;
+        this.bodyExternalContainer.observe(function (chan) {
+            runInAction(function () {
+                if (useStrict) {
+                    // @ts-ignore
+                    if (_this.bodyExternalContainer.values().length) {
+                        // @ts-ignore
+                        var total = _this.bodyExternalContainer
+                            .values()
+                            //@ts-ignore
+                            .reduce(function (total, currentValue) {
+                            return {
+                                height: total.height + currentValue.height,
+                            };
+                        });
+                        _this.bodyExternalHeight = total.height;
+                    }
+                }
+                else if (configure) {
+                    var values_1 = [];
+                    _this.bodyExternalContainer.forEach(function (item, key) {
+                        values_1.push(item);
+                    });
+                    if (values_1.length) {
+                        var total = values_1.reduce(function (total, currentValue) {
+                            return {
+                                height: total.height + currentValue.height,
+                            };
+                        });
+                        _this.bodyExternalHeight = total.height;
+                    }
+                }
+            });
+        });
+        runInAction(function () {
+            _this.tableModulesName = modulesName || '';
+            _this.uid = uid;
+            _this.userInfo = user;
+        });
+        /* autorun(() => {
+                console.log(this.obTableListCustom.state,'this.obTableListCustom')
+             })() */
+    }
+    Object.defineProperty(ProTableView.prototype, "computedUid", {
+        get: function () {
+            return this.uid;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(ProTableView.prototype, "calculateBody", {
+        get: function () {
+            var bodyStyle = {};
+            var paginationHeight = this.pagination ? 64 : 0;
+            var maxHeight = this.bodyContainerHeight - this.bodyExternalHeight - paginationHeight;
+            if (bodyStyle['maxHeight']) {
+                if (bodyStyle['maxHeight'] !== maxHeight) {
+                    bodyStyle['maxHeight'] = maxHeight.toString() + "px";
+                    bodyStyle['minHeight'] = maxHeight.toString() + "px";
+                    bodyStyle = Object.assign({}, bodyStyle);
+                }
+            }
+            else {
+                bodyStyle['maxHeight'] = maxHeight.toString() + "px";
+                bodyStyle['minHeight'] = maxHeight.toString() + "px";
+                bodyStyle = Object.assign({}, bodyStyle);
+            }
+            return bodyStyle;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(ProTableView.prototype, "computedShowColumns", {
+        /**
+         * 显示列
+         *
+         * @readonly
+         * @memberof ProTableView
+         */
+        get: function () {
+            return this.showColumns;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(ProTableView.prototype, "computedUnShowColumns", {
+        /**
+         * 隐藏列
+         *
+         * @readonly
+         * @memberof ProTableView
+         */
+        get: function () {
+            return this.unShowColumns;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(ProTableView.prototype, "computedStorageShowColumnsKeys", {
+        /**
+         *
+         * 显示列缓存键名
+         * @readonly
+         * @memberof ProTableView
+         */
+        get: function () {
+            return this.localStorageShowColumnsKeys;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(ProTableView.prototype, "computedRenderColumns", {
+        /**
+         * 需要显示的table 列信息
+         *
+         * @readonly
+         * @memberof ProTableView
+         */
+        get: function () {
+            var _this = this;
+            var setTableContainerWidth = function () {
+                var table = document.querySelector("." + _this.uid);
+                if (table && table.getElementsByClassName('ant-table-body')) {
+                    var tableBody = table.getElementsByClassName('ant-table-body');
+                    if (tableBody &&
+                        tableBody instanceof HTMLCollection &&
+                        tableBody.length) {
+                        var width_1 = tableBody[0].clientWidth;
+                        return width_1;
+                    }
+                }
+                return 0;
+            };
+            if (this.computedShowColumns.length) {
+                var renderColumns_1 = [];
+                this.computedShowColumns.map(function (item) {
+                    var entity = _this.columns.find(function (m) { return m.dataIndex === item.dataIndex; });
+                    if (entity) {
+                        renderColumns_1.push(entity);
+                    }
+                });
+                var res_1 = renderColumns_1.reduce(function (total, currentValue) {
+                    return {
+                        width: parseInt(total.width, 10) +
+                            parseInt(currentValue.width, 10),
+                    };
+                }, { width: 0 });
+                if (this._tableContainerWidth > res_1['width']) {
+                    // 当前分辨率如果足够放下表格列信息，则不需要固定列，删除固定列配置
+                    renderColumns_1 = [];
+                    this.computedShowColumns.map(function (item) {
+                        var entity = _this.columns.find(function (m) { return m.dataIndex === item.dataIndex; });
+                        if (entity) {
+                            var newEntity = __assign({}, entity);
+                            delete newEntity['fixed'];
+                            renderColumns_1.push(newEntity);
+                        }
+                    });
+                }
+                return renderColumns_1;
+            }
+            var columns = this.columns
+                ? this.columns.filter(function (item) { return !item.noChecked; })
+                : [];
+            var res = columns.reduce(function (total, currentValue) {
+                return {
+                    width: parseInt(total.width, 10) +
+                        parseInt(currentValue.width, 10),
+                };
+            }, { width: 0 });
+            var width = this._tableContainerWidth || setTableContainerWidth();
+            if (width >= res['width']) {
+                return columns.map(function (item) {
+                    delete item['fixed'];
+                    return item;
+                });
+            }
+            return columns;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(ProTableView.prototype, "tableXAutoWidth", {
+        /**
+         * 表格x轴长度计算 scroll{x:计算}
+         *
+         * @readonly
+         * @memberof ProTableView
+         */
+        get: function () {
+            if (this.computedRenderColumns) {
+                var res = this.computedRenderColumns.reduce(function (total, currentValue) {
+                    return {
+                        width: parseInt(total.width, 10) +
+                            parseInt(currentValue.width, 10),
+                    };
+                }, { width: 0 });
+                return res.width;
+            }
+            return 0;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(ProTableView.prototype, "computedTotal", {
+        get: function () {
+            return this.total;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    /**
+     *
+     * 根据源数据对显示和隐藏列进行过滤
+     * @memberof ProTableView
+     */
+    ProTableView.prototype.filterColumns = function () {
+        var _this = this;
+        this.unShowColumns = [];
+        if (this.obTableListCustom.success &&
+            this.obTableListCustom.result &&
+            this.obTableListCustom.result.modulesUid ===
+                this.computedStorageShowColumnsKeys &&
+            this.obTableListCustom.result.customColumns.length) {
+            localStorage.setItem(this.computedStorageShowColumnsKeys, JSON.stringify(this.obTableListCustom.result.customColumns)); // 同步服务端列配置数据到缓存
+        }
+        this.showColumns =
+            JSON.parse(localStorage.getItem(this.computedStorageShowColumnsKeys)) ||
+                [];
+        if (this.showColumns.length === 0) {
+            this.columns.map(function (item) {
+                if (!item.noChecked) {
+                    var index = _this.showColumns.findIndex(function (entity) { return entity.dataIndex === item.dataIndex; });
+                    if (index < 0) {
+                        _this.showColumns.push({
+                            dataIndex: item.dataIndex,
+                            title: item.label || item.title,
+                        });
+                        localStorage.setItem(_this.computedStorageShowColumnsKeys, JSON.stringify(_this.showColumns));
+                    }
+                }
+                _this.unShowColumns.push({
+                    dataIndex: item.dataIndex,
+                    title: item.label || item.title,
+                }); // 全部列
+                /* else {
+                              this.unShowColumns.push({dataIndex:item.dataIndex,title:(item.label||item.title as string)})
+                          } */
+            });
+        }
+        else {
+            /* this.columns.map((item) => {
+                        const index = this.showColumns.findIndex((entity) => entity.dataIndex === item.dataIndex)
+                        if (!item.noChecked&&index>-1 ) {
+                            this.showColumns.splice(index,1);
+                            localStorage.setItem(this.computedStorageShowColumnsKeys,JSON.stringify(this.showColumns));
+                        }
+                    }) */
+            this.columns.map(function (item) {
+                _this.unShowColumns.push({
+                    dataIndex: item.dataIndex,
+                    title: item.label || item.title,
+                }); // 全部列
+            });
+        }
+    };
+    /**
+     * 从显示列移除
+     *
+     * @param {string[]} Columns
+     * @memberof ProTableView
+     */
+    ProTableView.prototype.moveRightShowColumns = function (Columns) {
+        var _this = this;
+        // const newColumns = this.columns.filter(v => Columns.includes(v.dataIndex)).map((item) => { return { dataIndex: item.dataIndex,title: (item.label || item.title as string) } })
+        this.showColumns = [];
+        Columns.map(function (item) {
+            var entity = _this.columns.find(function (model) { return model.dataIndex === item; });
+            if (entity) {
+                _this.showColumns.push({
+                    dataIndex: entity.dataIndex,
+                    title: entity.label || entity.title,
+                });
+            }
+        });
+    };
+    /**
+     * 从显示列接收移除的列
+     *
+     * @param {string[]} Columns
+     * @memberof ProTableView
+     */
+    ProTableView.prototype.moveLeftShowColumns = function (Columns) {
+        var _this = this;
+        // const newColumns = this.columns.filter(v => Columns.includes(v.dataIndex)).map((item) => { return { dataIndex: item.dataIndex,title: (item.label || item.title as string) } })
+        this.unShowColumns = [];
+        Columns.map(function (item) {
+            var entity = _this.columns.find(function (model) { return model.dataIndex === item; });
+            if (entity) {
+                _this.unShowColumns.push({
+                    dataIndex: entity.dataIndex,
+                    title: entity.label || entity.title,
+                });
+            }
+        });
+    };
+    /**
+     * 对显示列进行排序
+     *
+     * @param {*} Columns
+     * @memberof ProTableView
+     */
+    ProTableView.prototype.orderSortRightShowColumns = function (Columns) {
+        var _this = this;
+        // const newColumns = this.columns.filter(v => Columns.includes(v.dataIndex)).map((item) => { return { dataIndex: item.dataIndex,title: (item.label || item.title as string) } })
+        this.showColumns = [];
+        Columns.map(function (item) {
+            var entity = _this.columns.find(function (model) { return model.dataIndex === item; });
+            if (entity) {
+                _this.showColumns.push({
+                    dataIndex: entity.dataIndex,
+                    title: entity.label || entity.title,
+                });
+            }
+        });
+    };
+    /**
+     *
+     * 对隐藏列排序
+     * @param {string[]} Columns
+     * @memberof ProTableView
+     */
+    ProTableView.prototype.orderSortLeftShowColumns = function (Columns) {
+        var _this = this;
+        this.unShowColumns = [];
+        Columns.map(function (item) {
+            var entity = _this.columns.find(function (model) { return model.dataIndex === item; });
+            if (entity) {
+                _this.unShowColumns.push({
+                    dataIndex: entity.dataIndex,
+                    title: entity.label || entity.title,
+                });
+            }
+        });
+    };
+    ProTableView.prototype.setLocalStorageShowColumnsKeys = function (modulesName) {
+        if (modulesName) {
+            // 如果自定义了模块名称，则使用自定义的
+            var userUid = '';
+            try {
+                if (this.userInfo && this.userInfo.userUid) {
+                    userUid = this.userInfo.userUid;
+                }
+            }
+            catch (e) { }
+            this.localStorageShowColumnsKeys = "" + shortHash("" + modulesName + userUid);
+            this.tableModulesName = "" + modulesName;
+        }
+        /* else {
+                  if (!this.localStorageShowColumnsKeys) {
+                      const obj = this.columns.map((item) => {
+                           return {dataIndex:item.dataIndex}
+                      })
+                      if (obj.length) {
+                         this.localStorageShowColumnsKeys =  `${shortHash(obj)}`
+                      } else {
+                          console.warn('表格列配置数据为空，似乎无法列数据生成唯一hash')
+                      }
+                  }
+              } */
+    };
+    /**
+     * 获取显示列缓存信息
+     *
+     * @memberof ProTableView
+     */
+    ProTableView.prototype.getLocalStorageShowColumns = function () {
+        var order = localStorage.getItem(this.computedStorageShowColumnsKeys);
+        if (order) {
+            return JSON.parse(order);
+        }
+        return [];
+    };
+    /**
+     *
+     * 设置显示列缓存信息并同步到服务端
+     * @memberof ProTableView
+     */
+    ProTableView.prototype.setLocalStorageShowColumns = function (url) {
+        if (this.computedStorageShowColumnsKeys) {
+            localStorage.setItem(this.computedStorageShowColumnsKeys, JSON.stringify(this.computedShowColumns));
+            var body = this.computedShowColumns.map(function (item) {
+                return { dataIndex: item.dataIndex, title: item.title };
+            });
+            this.editTableColumns(this.computedStorageShowColumnsKeys, body, url);
+        }
+    };
+    /**
+     * 同步自定义列信息到服务端
+     *
+     * @param {string} modulesUid
+     * @param {Parameters<typeof editTableColumns>[1]} customColumns
+     * @memberof ProTableView
+     */
+    ProTableView.prototype.editTableColumns = function (modulesUid, customColumns, url) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _a;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _a = this;
+                        return [4 /*yield*/, editTableColumns(modulesUid, customColumns, url)];
+                    case 1:
+                        _a.obTableListCustom = _b.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    /**
+     * 查询自定义列配置数据
+     *
+     * @param {string} modulesUid
+     * @memberof ProTableView
+     */
+    ProTableView.prototype.queryTableColumns = function (modulesUid, url) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _a;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _a = this;
+                        return [4 /*yield*/, queryTableColumns(modulesUid, url)];
+                    case 1:
+                        _a.obTableListCustom = _b.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    /**
+     * 设置表格模块唯一名称
+     *
+     * @param {string} tableModulesName
+     * @memberof ProTableView
+     */
+    ProTableView.prototype.setTableModulesName = function (tableModulesName) {
+        this.tableModulesName = tableModulesName;
+    };
+    ProTableView.prototype.setTotal = function (total) {
+        this.total = total;
+    };
+    /**
+     *
+     * 控制开启或者取消行选中
+     * @param {boolean} isOpenRowChange
+     * @memberof ProTableView
+     */
+    ProTableView.prototype.updateOpenRowChange = function (isOpenRowChange) {
+        this.isOpenRowChange = isOpenRowChange;
+    };
+    __decorate([
+        observable,
+        __metadata("design:type", Object)
+    ], ProTableView.prototype, "userInfo", void 0);
+    __decorate([
+        observable,
+        __metadata("design:type", Object)
+    ], ProTableView.prototype, "uid", void 0);
+    __decorate([
+        computed,
+        __metadata("design:type", Object),
+        __metadata("design:paramtypes", [])
+    ], ProTableView.prototype, "computedUid", null);
+    __decorate([
+        observable,
+        __metadata("design:type", Object)
+    ], ProTableView.prototype, "pageIndex", void 0);
+    __decorate([
+        observable,
+        __metadata("design:type", Object)
+    ], ProTableView.prototype, "pageSize", void 0);
+    __decorate([
+        observable,
+        __metadata("design:type", Object)
+    ], ProTableView.prototype, "selectedRows", void 0);
+    __decorate([
+        observable,
+        __metadata("design:type", Object)
+    ], ProTableView.prototype, "expandRow", void 0);
+    __decorate([
+        observable,
+        __metadata("design:type", String)
+    ], ProTableView.prototype, "type", void 0);
+    __decorate([
+        observable,
+        __metadata("design:type", String)
+    ], ProTableView.prototype, "rowSelectionClickType", void 0);
+    __decorate([
+        observable,
+        __metadata("design:type", Array)
+    ], ProTableView.prototype, "columns", void 0);
+    __decorate([
+        observable,
+        __metadata("design:type", Array)
+    ], ProTableView.prototype, "showColumns", void 0);
+    __decorate([
+        observable,
+        __metadata("design:type", Array)
+    ], ProTableView.prototype, "unShowColumns", void 0);
+    __decorate([
+        observable,
+        __metadata("design:type", Object)
+    ], ProTableView.prototype, "localStorageShowColumnsKeys", void 0);
+    __decorate([
+        observable,
+        __metadata("design:type", TableColumnsContainerEntity)
+    ], ProTableView.prototype, "obTableListCustom", void 0);
+    __decorate([
+        observable,
+        __metadata("design:type", String)
+    ], ProTableView.prototype, "tableModulesName", void 0);
+    __decorate([
+        observable,
+        __metadata("design:type", Object)
+    ], ProTableView.prototype, "tableBodyDomClientHeight", void 0);
+    __decorate([
+        observable,
+        __metadata("design:type", Object)
+    ], ProTableView.prototype, "bodyExternalContainer", void 0);
+    __decorate([
+        observable,
+        __metadata("design:type", Object)
+    ], ProTableView.prototype, "isAdaptiveHeight", void 0);
+    __decorate([
+        observable,
+        __metadata("design:type", Object)
+    ], ProTableView.prototype, "scroll", void 0);
+    __decorate([
+        observable.ref,
+        __metadata("design:type", Object)
+    ], ProTableView.prototype, "bodyStyle", void 0);
+    __decorate([
+        observable,
+        __metadata("design:type", Array)
+    ], ProTableView.prototype, "tempDynamicAddData", void 0);
+    __decorate([
+        observable,
+        __metadata("design:type", Object)
+    ], ProTableView.prototype, "bodyContainerHeight", void 0);
+    __decorate([
+        observable,
+        __metadata("design:type", Boolean)
+    ], ProTableView.prototype, "pagination", void 0);
+    __decorate([
+        observable,
+        __metadata("design:type", Object)
+    ], ProTableView.prototype, "bodyExternalHeight", void 0);
+    __decorate([
+        observable,
+        __metadata("design:type", Object)
+    ], ProTableView.prototype, "renderData", void 0);
+    __decorate([
+        observable,
+        __metadata("design:type", Object)
+    ], ProTableView.prototype, "total", void 0);
+    __decorate([
+        observable,
+        __metadata("design:type", Object)
+    ], ProTableView.prototype, "queryParams", void 0);
+    __decorate([
+        observable,
+        __metadata("design:type", Object)
+    ], ProTableView.prototype, "isOpenRowChange", void 0);
+    __decorate([
+        observable,
+        __metadata("design:type", Object)
+    ], ProTableView.prototype, "isOpenRowSelection", void 0);
+    __decorate([
+        observable,
+        __metadata("design:type", Object)
+    ], ProTableView.prototype, "_tableContainerWidth", void 0);
+    __decorate([
+        computed,
+        __metadata("design:type", Object),
+        __metadata("design:paramtypes", [])
+    ], ProTableView.prototype, "calculateBody", null);
+    __decorate([
+        computed,
+        __metadata("design:type", Object),
+        __metadata("design:paramtypes", [])
+    ], ProTableView.prototype, "computedShowColumns", null);
+    __decorate([
+        computed,
+        __metadata("design:type", Object),
+        __metadata("design:paramtypes", [])
+    ], ProTableView.prototype, "computedUnShowColumns", null);
+    __decorate([
+        computed,
+        __metadata("design:type", Object),
+        __metadata("design:paramtypes", [])
+    ], ProTableView.prototype, "computedStorageShowColumnsKeys", null);
+    __decorate([
+        computed,
+        __metadata("design:type", Array),
+        __metadata("design:paramtypes", [])
+    ], ProTableView.prototype, "computedRenderColumns", null);
+    __decorate([
+        computed,
+        __metadata("design:type", Object),
+        __metadata("design:paramtypes", [])
+    ], ProTableView.prototype, "tableXAutoWidth", null);
+    __decorate([
+        computed,
+        __metadata("design:type", Object),
+        __metadata("design:paramtypes", [])
+    ], ProTableView.prototype, "computedTotal", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], ProTableView.prototype, "filterColumns", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [Array]),
+        __metadata("design:returntype", void 0)
+    ], ProTableView.prototype, "moveRightShowColumns", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [Array]),
+        __metadata("design:returntype", void 0)
+    ], ProTableView.prototype, "moveLeftShowColumns", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [Array]),
+        __metadata("design:returntype", void 0)
+    ], ProTableView.prototype, "orderSortRightShowColumns", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [Array]),
+        __metadata("design:returntype", void 0)
+    ], ProTableView.prototype, "orderSortLeftShowColumns", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [String]),
+        __metadata("design:returntype", void 0)
+    ], ProTableView.prototype, "setLocalStorageShowColumnsKeys", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", Array)
+    ], ProTableView.prototype, "getLocalStorageShowColumns", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [String]),
+        __metadata("design:returntype", void 0)
+    ], ProTableView.prototype, "setLocalStorageShowColumns", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [String, Object, Object]),
+        __metadata("design:returntype", Promise)
+    ], ProTableView.prototype, "editTableColumns", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [String, Object]),
+        __metadata("design:returntype", Promise)
+    ], ProTableView.prototype, "queryTableColumns", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [String]),
+        __metadata("design:returntype", void 0)
+    ], ProTableView.prototype, "setTableModulesName", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [Number]),
+        __metadata("design:returntype", void 0)
+    ], ProTableView.prototype, "setTotal", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [Boolean]),
+        __metadata("design:returntype", void 0)
+    ], ProTableView.prototype, "updateOpenRowChange", null);
+    return ProTableView;
+}());
+
+var ProTableLocalView = /** @class */ (function () {
+    function ProTableLocalView() {
+        /**
+         *
+         * 表格接口数据
+         * @memberof HLTableLocalView
+         */
+        this.obState = observablePromise();
+        this.loading = false;
+    }
+    ProTableLocalView.prototype.dispatchRequest = function (autoQuery, options) {
+        if (autoQuery) {
+            var server_1 = new LegionsFetch();
+            //@ts-ignore
+            var apiServer = function () {
+                var params = cloneDeep(autoQuery.params(options.pageIndex, options.pageSize));
+                // @ts-ignore
+                var model = {};
+                if (typeof autoQuery.model === 'object') {
+                    model = {
+                        //@ts-ignore
+                        model: LegionsProTable.ProTableBaseClass.pageListEntity,
+                        onBeforTranform: function (value) {
+                            return {
+                                responseData: value,
+                                mappingEntity: autoQuery.model['mappingEntity'],
+                            };
+                        }
+                    };
+                }
+                else {
+                    model = { model: autoQuery.model };
+                }
+                if (autoQuery.method === 'post') {
+                    return server_1.post(__assign({ url: autoQuery.ApiUrl, parameter: params, headers: __assign(__assign({}, autoQuery.options), { 'api-cookie': autoQuery.token }) }, model));
+                }
+                else if (autoQuery.method === 'get') {
+                    return server_1.get(__assign({ url: autoQuery.ApiUrl, parameter: params, headers: __assign(__assign({}, autoQuery.options), { 'api-cookie': autoQuery.token }) }, model));
+                }
+            };
+            // @ts-ignore
+            this.obState = observablePromise(apiServer());
+        }
+    };
+    __decorate([
+        observable,
+        __metadata("design:type", Object)
+    ], ProTableLocalView.prototype, "obState", void 0);
+    __decorate([
+        observable,
+        __metadata("design:type", Object)
+    ], ProTableLocalView.prototype, "loading", void 0);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [Object, Object]),
+        __metadata("design:returntype", void 0)
+    ], ProTableLocalView.prototype, "dispatchRequest", null);
+    return ProTableLocalView;
+}());
+
+/*
+ * @Author: duanguang
+ * @Date: 2020-12-26 11:35:17
+ * @LastEditTime: 2021-01-13 10:27:04
+ * @LastEditors: duanguang
+ * @Description:
+ * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/store/pro.table/index.ts
+ * @「扫去窗上的尘埃，才可以看到窗外的美景。」
+ */
+var ProTableStore = /** @class */ (function (_super) {
+    __extends(ProTableStore, _super);
+    function ProTableStore(context) {
+        var _this = _super.call(this, context) || this;
+        _this.userInfo = null;
+        /**
+         * 数据生命周期，表格组件卸载之前
+         *
+         * @memberof HLTableStore
+         */
+        _this.HlTableContainer = observable.map();
+        _this.HlTableContainerModules = observable.map();
+        /**
+         *
+         *  数据生命周期，应用重新数据前有效
+         * @memberof HLTableStore
+         */
+        _this.HlTableLocalStateContainer = observable.map();
+        return _this;
+    }
+    ProTableStore.prototype.add = function (uid, modulesName, timeuid) {
+        /* this.HlTableContainer.set(uid,observableViewModel<ProTableView>(new ProTableView())) */
+        var view = new ProTableView(modulesName, timeuid, this.userInfo);
+        this.addContainerModules(modulesName);
+        this.HlTableContainer.set(uid, observableViewModel(view));
+    };
+    ProTableStore.prototype.init = function (uid, options) {
+        var store = this.HlTableContainer.get(uid);
+        store.pageIndex = options.pageIndex || 1;
+        store.pageSize = options.pageSize || 20;
+        store.selectedRows = options.selectedRows || [];
+        if (options.isAdaptiveHeight !== void 0) {
+            store.isAdaptiveHeight = options.isAdaptiveHeight;
+        }
+    };
+    ProTableStore.prototype.delete = function (uid) {
+        this.HlTableContainer.delete(uid);
+    };
+    ProTableStore.prototype.deleteTableModules = function (modulesName) {
+        this.HlTableContainerModules.delete(modulesName);
+    };
+    ProTableStore.prototype.get = function (uid) {
+        return this.HlTableContainer.get(uid);
+    };
+    ProTableStore.prototype.addContainerModules = function (modulesName) {
+        if (modulesName) {
+            if (!this.HlTableContainerModules.has(modulesName)) {
+                this.HlTableContainerModules.set(modulesName, "" + shortHash(modulesName));
+            }
+        }
+    };
+    /**
+     * 添加本地数据
+     *
+     *  内部方法，外部请勿使用
+     * @param {string} uid
+     * @memberof HLTableStore
+     */
+    ProTableStore.prototype._addLocalState = function (uid) {
+        var view = new ProTableLocalView();
+        this.HlTableLocalStateContainer.set(uid, observableViewModel(view));
+    };
+    ProTableStore.prototype._deleteLocalState = function (uid) {
+        this.HlTableLocalStateContainer.delete(uid);
+    };
+    ProTableStore.prototype.getLocalState = function (uid) {
+        return this.HlTableLocalStateContainer.get(uid);
+    };
+    ProTableStore.meta = __assign({}, StoreBase.meta);
+    __decorate([
+        observable,
+        __metadata("design:type", Object)
+    ], ProTableStore.prototype, "HlTableContainer", void 0);
+    __decorate([
+        observable,
+        __metadata("design:type", Object)
+    ], ProTableStore.prototype, "HlTableContainerModules", void 0);
+    __decorate([
+        observable,
+        __metadata("design:type", Object)
+    ], ProTableStore.prototype, "HlTableLocalStateContainer", void 0);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [String, String, String]),
+        __metadata("design:returntype", void 0)
+    ], ProTableStore.prototype, "add", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [String, ProTableView]),
+        __metadata("design:returntype", void 0)
+    ], ProTableStore.prototype, "init", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [String]),
+        __metadata("design:returntype", void 0)
+    ], ProTableStore.prototype, "delete", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [String]),
+        __metadata("design:returntype", void 0)
+    ], ProTableStore.prototype, "deleteTableModules", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [String]),
+        __metadata("design:returntype", void 0)
+    ], ProTableStore.prototype, "get", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [String]),
+        __metadata("design:returntype", void 0)
+    ], ProTableStore.prototype, "addContainerModules", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [String]),
+        __metadata("design:returntype", void 0)
+    ], ProTableStore.prototype, "_addLocalState", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [String]),
+        __metadata("design:returntype", void 0)
+    ], ProTableStore.prototype, "_deleteLocalState", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [String]),
+        __metadata("design:returntype", void 0)
+    ], ProTableStore.prototype, "getLocalState", null);
+    ProTableStore = __decorate([
+        StoreModules,
+        __metadata("design:paramtypes", [Object])
+    ], ProTableStore);
+    return ProTableStore;
+}(StoreBase));
+
+export { ProTableStore };
