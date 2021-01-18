@@ -17,8 +17,10 @@ export class LegionsProEchartsChartPieDemo extends React.Component {
     chartsRef: echarts.ECharts = null;
     //@ts-ignore
     lineAutoRef:echarts.ECharts = null;
-     //@ts-ignore
+    //@ts-ignore
     lineAutoMethod:IExtendsOption = null;
+    // @ts-ignore
+    pieMethod:IExtendsOption = null;
     liquidFillValue=0.6
     lineOptions: echarts.EChartOption = {
         legend: {
@@ -114,9 +116,7 @@ export class LegionsProEchartsChartPieDemo extends React.Component {
     render() {
         return <LegionsProEchartsLayout>
             <Button onClick={()=>{
-                /* this.lineAutoRef.methods.onSearch() */
-                console.log(this.lineAutoRef.getWidth(),'lineAutoRef')
-                this.lineAutoMethod.methods.onSearch()
+                this.pieMethod.methods.onSearch({pageSize:10})
             }}>test</Button>
             <LegionsProEchartsCol xs={{
                 span:24
@@ -151,7 +151,7 @@ export class LegionsProEchartsChartPieDemo extends React.Component {
             }} sm={6} md={8} lg={5} xl={5} >
                 <LegionsProEchartsBox
                     style={{ height: '240px',paddingBottom: 10,paddingTop: 5 }}
-                    title="饼图自动托管">
+                    title="饼图数据自动托管">
                     <LegionsProEchartsChartPie
                         option={{
                             legend: {
@@ -164,8 +164,9 @@ export class LegionsProEchartsChartPieDemo extends React.Component {
                                 center: ['50%','40%'],
                             }],
                         }}
-                        onChartReady={(instance) => {
+                        onChartReady={(instance,methodRef) => {
                             this.chartsRef = instance;
+                            this.pieMethod = methodRef
                         }}
                         autoQuery={{
                             model: StockModeContainerEntity,
@@ -206,7 +207,7 @@ export class LegionsProEchartsChartPieDemo extends React.Component {
                         }}}
                         onChartReady={(instance,extendsOption)=>{
                             this.lineAutoRef = instance
-                            this.lineAutoMethod = extendsOption!
+                            this.lineAutoMethod = extendsOption
                         }}
                         autoQuery={{
                             model: StockModeContainerEntity,

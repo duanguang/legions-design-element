@@ -10,7 +10,7 @@
 module.exports = {
   preset: 'ts-jest',
   // 测试目录
-  roots: [/* '<rootDir>/__tests__', */'<rootDir>/src/components'],
+  roots: ['<rootDir>/__tests__','<rootDir>/src/components'],
   // 对 ts tsx 文件使用 ts-jest 进行运行测试
   transform: {
     '.(ts|tsx)': 'ts-jest',

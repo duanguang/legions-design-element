@@ -87,7 +87,7 @@ export default class LegionsProEchartsCore<P = {}> extends Component<LegionsProE
 
         const echartObj = this.renderEchartDom();
         this.bindEvents(echartObj,onEvents || {});
-        // on chart ready
+        // @ts-ignore on chart ready
         if (typeof onChartReady === 'function' && this.props.onChartReady) this.props.onChartReady(echartObj);
         // on resize
         if (this.echartsElement) {
