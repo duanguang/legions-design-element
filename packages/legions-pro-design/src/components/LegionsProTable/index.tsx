@@ -1059,7 +1059,10 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
                 }}></Input>
             </LegionsProModal>
             {this.props.isOpenCustomColumns && <LegionsProTableCustomColumns
-                customColumnsConfig={this.props.customColumnsConfig}
+                customColumnsConfig={{
+                    queryApi: LegionsProTable.customColumnsConfig.queryApi,
+                    editApi:LegionsProTable.customColumnsConfig.editApi,
+                }}
                 tableUid={this.freezeuid}
                 onReady={(value) => {
                     this.customColumnsModalRef = value;

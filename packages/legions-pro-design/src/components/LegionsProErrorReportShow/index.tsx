@@ -1,11 +1,3 @@
-/* 错误信息展示组件 主要是表单组件场景
- * @Author: duanguang
- * @Date: 2019-07-09 17:36:01
- * @Last Modified by: duanguang
- * @Last Modified time: 2020-11-02 19:08:54
- */
-
-
 import React,{ Component } from 'react'
 import { bind,observer } from 'legions/store-react'
 import {ProFormStore} from '../store/pro.form';

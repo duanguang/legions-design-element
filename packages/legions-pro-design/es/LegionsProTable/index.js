@@ -1294,7 +1294,10 @@ var LegionsProTable = /** @class */ (function (_super) {
                 React.createElement(Input, { value: this.viewUI.taskName, placeholder: "\u8BF7\u8F93\u5165\u4EFB\u52A1\u540D\u79F0", onChange: function (value) {
                         _this.viewUI.taskName = value.target.value;
                     } })),
-            this.props.isOpenCustomColumns && React.createElement(LegionsProTableCustomColumns, { customColumnsConfig: this.props.customColumnsConfig, tableUid: this.freezeuid, onReady: function (value) {
+            this.props.isOpenCustomColumns && React.createElement(LegionsProTableCustomColumns, { customColumnsConfig: {
+                    queryApi: LegionsProTable_1.customColumnsConfig.queryApi,
+                    editApi: LegionsProTable_1.customColumnsConfig.editApi,
+                }, tableUid: this.freezeuid, onReady: function (value) {
                     _this.customColumnsModalRef = value;
                 } }));
     };

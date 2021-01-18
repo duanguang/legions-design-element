@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-25 18:42:42
- * @LastEditTime: 2021-01-18 15:35:03
+ * @LastEditTime: 2021-01-18 15:44:38
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/index.ts
@@ -14,8 +14,9 @@ export { default as LegionsProBreadcrumb } from './LegionsProBreadcrumb';
 export { default as LegionsProDataImport } from './LegionsProDataImport';
 export { default as LegionsProDragger } from './LegionsProDragger';
 export { default as LegionsProException } from './LegionsProException';
-export { default as LegionsProForm } from './LegionsProForm';
 export { default as LegionsProErrorReportShow } from './LegionsProErrorReportShow';
+export { default as LegionsProForm } from './LegionsProForm';
+
 export { default as LegionsProIframe } from './LegionsProIframe';
 export { default as LegionsProInput } from './LegionsProInput';
 export { default as LegionsProLayout } from './LegionsProLayout';
