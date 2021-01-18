@@ -786,7 +786,7 @@ var LegionsProTable = /** @class */ (function (_super) {
                         if (!(this.props.tableModulesName && this.props.isOpenCustomColumns)) return [3 /*break*/, 5];
                         if (!(LegionsProTable_1.customColumnsConfig.editApi && LegionsProTable_1.customColumnsConfig.queryApi)) return [3 /*break*/, 4];
                         this.viewModel.setLocalStorageShowColumnsKeys(this.props.tableModulesName);
-                        return [4 /*yield*/, this.viewModel.queryTableColumns(this.viewModel.computedStorageShowColumnsKeys, this.props.customColumnsConfig.queryApi)];
+                        return [4 /*yield*/, this.viewModel.queryTableColumns(this.viewModel.computedStorageShowColumnsKeys, LegionsProTable_1.customColumnsConfig.queryApi)];
                     case 1:
                         _a.sent();
                         if (!(!this.viewModel.obTableListCustom.result || (this.viewModel.obTableListCustom.result && this.viewModel.obTableListCustom.result.customColumns.length === 0))) return [3 /*break*/, 3];
@@ -795,7 +795,7 @@ var LegionsProTable = /** @class */ (function (_super) {
                             return { dataIndex: item.dataIndex, title: item.title };
                         });
                         if (!body.length) return [3 /*break*/, 3];
-                        return [4 /*yield*/, this.viewModel.editTableColumns(this.viewModel.computedStorageShowColumnsKeys, body, this.props.customColumnsConfig.editApi)];
+                        return [4 /*yield*/, this.viewModel.editTableColumns(this.viewModel.computedStorageShowColumnsKeys, body, LegionsProTable_1.customColumnsConfig.editApi)];
                     case 2:
                         _a.sent();
                         _a.label = 3;

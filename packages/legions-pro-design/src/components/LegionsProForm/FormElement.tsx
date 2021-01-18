@@ -1,14 +1,14 @@
 import React from 'react'
 import { Row } from 'antd';
 import { WrappedFormUtils, IAntdFormItemProps, IAntdRule } from '../interface/antd';
-import AbstractForm from './AbstractForm';
+/* import AbstractForm from './AbstractForm'; */
 import { shortHash } from 'legions-lunar/object-hash';
-import {ProFormStore} from '../store/pro.form';
-import { bind,observer } from 'legions/store-react'
-import { findDOMNode } from 'react-dom'
+import { bind,observer } from 'legions/store-react';
+import { findDOMNode } from 'react-dom';
 import { InstanceFormElement } from './interface/formElement';
 import { inject } from 'legions/store';
-
+import { ProFormStore } from '../store/pro.form';
+console.log(ProFormStore,'ProFormStore','sssss');
 export interface IFormElementProps{
     form: WrappedFormUtils;
     elementKey: string;
@@ -72,19 +72,19 @@ enum KeydownEnum{
  */
 @bind({store:ProFormStore})
 @observer
-export default class FormElement extends React.Component<IFormElementProps>{
-    
+export default class FormElement extends React.Component<IFormElementProps,{}>{
+    /* @inject(ProFormStore)
+    proFormStore:ProFormStore */
     static defaultProps ={
         elType: 'input',
         nextElementKey:'',
     }
-    /* @inject(ProFormStore) */
-    proFormStore:ProFormStore 
+   
     timeId = new Date().getTime()
     uid = ''
     constructor(props) {
         super(props)
-        console.log(this.proFormStore,ProFormStore,'this.props');
+        console.log(ProFormStore,'this.props');
         this.uid=`element${this.props.elementKey}${shortHash(this.timeId)}`
     }
     /**  注册元素键盘行为代理事件*/

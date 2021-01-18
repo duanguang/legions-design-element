@@ -10,8 +10,8 @@ import { HttpConfig } from '../../constants/httpConfig';
 import {InstanceForm} from '../../../components/LegionsProForm/interface'
 import { FormFields } from './model';
 import { IProFormProps } from 'components/LegionsProForm/HlForm';
+import { ProFormUtils } from '../../../components/LegionsProForm/ProFormUtils';
 interface IProps { }
-
 @observer
 export class ProForm extends React.Component<IProps,{}> {
   formRef:InstanceForm
@@ -24,7 +24,7 @@ export class ProForm extends React.Component<IProps,{}> {
   }
   createConfig() {
       const rules = FormFields.initFormRules<FormFields,{}>(FormFields,{})
-      const formUtils = new LegionsProForm.ProFormUtils();
+      const formUtils = new ProFormUtils();
       formUtils.renderInputConfig({
           iAntdProps: formUtils.createAntdProps('uniqueKey',null),
           iFormProps: {
