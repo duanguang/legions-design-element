@@ -1,8 +1,8 @@
 import { Col,Row } from 'antd';
-import {LegionsProEchartsBoxList} from '../../../components/LegionsProEchartsBoxList';
-import {LegionsProEchartsLayout} from '../../../components/LegionsProEchartsLayout';
+import LegionsProEchartsBoxList from '../../../components/LegionsProEchartsBoxList';
+import LegionsProEchartsLayout from '../../../components/LegionsProEchartsLayout';
 import React from 'react';
-import {LegionsProEchartsBox} from '../../../components/LegionsProEchartsBox';
+import LegionsProEchartsBox from '../../../components/LegionsProEchartsBox';
 import './index.less';
 interface IDataSourceSingleRowList{
     name: string;
@@ -84,7 +84,7 @@ export class LegionsProEchartsBoxDemo extends React.Component {
                                 offset:1,
                                 className:'box-lit-progress-text',
                             },
-                            
+
                         ]
                     }
                     dataSource={[

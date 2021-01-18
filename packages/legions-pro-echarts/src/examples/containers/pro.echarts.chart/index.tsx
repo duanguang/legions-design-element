@@ -123,7 +123,7 @@ export class LegionsProEchartsChartPieDemo extends React.Component {
             }} sm={6} md={8} lg={5} xl={5} >
                 <LegionsProEchartsBox
                     style={{ height: '240px',paddingBottom: 10,paddingTop: 5 }}
-                    title="饼图1">
+                    title="饼图">
                     <LegionsProEchartsChartPie
                         option={{
                             legend: {
@@ -142,6 +142,48 @@ export class LegionsProEchartsChartPieDemo extends React.Component {
                         ]}
                         onChartReady={(instance) => {
                             this.chartsRef = instance;
+                        }}
+                    ></LegionsProEchartsChartPie>
+                </LegionsProEchartsBox>
+            </LegionsProEchartsCol>
+            <LegionsProEchartsCol xs={{
+                span:24
+            }} sm={6} md={8} lg={5} xl={5} >
+                <LegionsProEchartsBox
+                    style={{ height: '240px',paddingBottom: 10,paddingTop: 5 }}
+                    title="饼图自动托管">
+                    <LegionsProEchartsChartPie
+                        option={{
+                            legend: {
+                                bottom: 20,
+                                itemWidth: 12,
+                                itemHeight: 5,
+                            },
+                            series: [{
+                                radius: ['28%','40%'],
+                                center: ['50%','40%'],
+                            }],
+                        }}
+                        onChartReady={(instance) => {
+                            this.chartsRef = instance;
+                        }}
+                        autoQuery={{
+                            model: StockModeContainerEntity,
+                            url: 'https://gateway.hoolinks.com/api/gateway',
+                            method: 'post',
+                            params: { pageSize: 3000, pageNo: 1 },
+                            headerOption: {
+                                "api-target": 'https://uat-api.hoolinks.com/scmjg/dcl/exports-goods-model/list',
+                                "api-cookie": 'SESSION=7262ae70-61d1-4cb5-bd67-6e398123ea0b; HL-Access-Token=MGI0YTY1OTItZTM2OC00OGNhLWJlOGQtZWY0OTU2M2NkZmRk; UCTOKEN=MGI0YTY1OTItZTM2OC00OGNhLWJlOGQtZWY0OTU2M2NkZmRk;'
+                            },
+                            responseTransform: (response: observablePromise.PramsResult<StockModeContainerEntity>):echarts.EChartOption.SeriesLines.DataObject[] => {
+                                if (response.isResolved && response.value.success) {
+                                    return response.value.result.records.slice(0, 2).map((item, index) => {
+                                        return { value: item.id,name: item.bizopEtpsNm,selected: true,itemStyle: { color: '#407fcc' } }
+                                    })
+                                }
+                                return []
+                            }
                         }}
                     ></LegionsProEchartsChartPie>
                 </LegionsProEchartsBox>
@@ -173,7 +215,7 @@ export class LegionsProEchartsChartPieDemo extends React.Component {
                             params: { pageSize: 3000, pageNo: 1 },
                             headerOption: {
                                 "api-target": 'https://uat-api.hoolinks.com/scmjg/dcl/exports-goods-model/list',
-                                "api-cookie": 'SESSION=d2ef8c85-7e92-4fba-b1a8-8233cb7843c3; HL-Access-Token=YjMxYzlmOTQtZTVlOC00NTQ2LWE4ZjQtY2Q4N2VjMzBhNmRi; UCTOKEN=YjMxYzlmOTQtZTVlOC00NTQ2LWE4ZjQtY2Q4N2VjMzBhNmRi;'
+                                "api-cookie": 'SESSION=d2ef8c85-7e92-4fba-b1a8-8233cb7843c3; HL-Access-Token=MGI0YTY1OTItZTM2OC00OGNhLWJlOGQtZWY0OTU2M2NkZmRk; UCTOKEN=MGI0YTY1OTItZTM2OC00OGNhLWJlOGQtZWY0OTU2M2NkZmRk;'
                             },
                             responseTransform: (response: observablePromise.PramsResult<StockModeContainerEntity>):echarts.EChartOption.SeriesLines.DataObject[] => {
                                 if (response.isResolved && response.value.success) {

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1610948090882" clover="3.2.0">
-  <project timestamp="1610948090882" name="All files">
+<coverage generated="1610950524783" clover="3.2.0">
+  <project timestamp="1610950524783" name="All files">
     <metrics statements="100" coveredstatements="67" conditionals="43" coveredconditionals="12" methods="23" coveredmethods="14" elements="166" coveredelements="93" complexity="0" loc="100" ncloc="100" packages="3" files="3" classes="3"/>
     <package name="LegionsProEcharts">
       <metrics statements="12" coveredstatements="12" conditionals="2" coveredconditionals="1" methods="2" coveredmethods="2"/>

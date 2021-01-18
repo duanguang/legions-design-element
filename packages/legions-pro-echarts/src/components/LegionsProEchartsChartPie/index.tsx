@@ -17,6 +17,7 @@ import { observablePromise,observableViewModel } from 'brain-store-utils';
 import { observable } from 'mobx';
 import { LegionsFetch } from '../core';
 import { merge } from 'lodash';
+import { observer } from 'legions/store-react';
 
 export class LegionsProEchartsPieProps extends LegionsProEchartsPropsTypes {
     /** 数据 */
@@ -31,6 +32,7 @@ class ViewModel {
     @observable response = observablePromise<LegionsEchartsAutoQueryParams['model']>()
 }
 /** 饼图组件 */
+@observer
 export default class LegionsProEchartsChartPie extends React.Component<LegionsProEchartsPieProps>{
     static defaultProps: Readonly<LegionsProEchartsPieProps> = new LegionsProEchartsPieProps()
     viewModel = observableViewModel<ViewModel>(new ViewModel());
