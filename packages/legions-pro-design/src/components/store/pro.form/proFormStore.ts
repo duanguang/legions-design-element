@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-29 10:18:01
- * @LastEditTime: 2021-01-12 11:49:26
+ * @LastEditTime: 2021-01-18 16:10:38
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/store/pro.form/proFormStore.ts
@@ -833,7 +833,7 @@ export default class ProFormStore extends StoreBase {
   /**
    *
    *
-   * @param {FormElement} formElementUid  FormElement 组件生成的唯一uid
+   * @param  formElementUid  FormElement 组件生成的唯一uid
    * @param {string} formUid 表单UID
    * @param {string} [nextElementName] 下一个组件name
    * @memberof AbstractForm

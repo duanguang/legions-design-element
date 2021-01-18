@@ -1,11 +1,11 @@
 import React,{ Component } from 'react'
 import { bind,observer } from 'legions/store-react'
-import {ProFormStore} from '../store/pro.form';
+import { ProFormStore } from '../store/pro.form';
 import { shortHash } from 'legions-lunar/object-hash';
 import { Icon,Popover } from 'antd';
 import styles from './style/index.modules.less'
 import './style/index.less'
-import { IErrorView } from '../LegionsProForm/interface';
+import { IErrorView } from '../store/pro.form/interface';
 import { runInAction } from 'mobx';
 interface IProps {
     store?: ProFormStore;
@@ -27,7 +27,7 @@ interface IProps {
      * @memberof IProps
      */
     formUid: string;
-    onIgnoreError?: (item: IErrorView) => void
+    onIgnoreError?: (item: any) => void
 }
 interface IState {
 

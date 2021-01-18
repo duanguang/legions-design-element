@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-29 10:26:57
- * @LastEditTime: 2021-01-08 09:54:01
+ * @LastEditTime: 2021-01-18 16:14:02
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProForm/interface/form.ts
@@ -12,62 +12,10 @@ import { HlLabeledValue } from 'legions-lunar/model';
 import  {
   ILocalViewModelHlFormStore,
   IViewModelHlFormStore,
+  IErrorView,
 } from '../../store/pro.form/interface';
 import {ProFormStore} from '../../store/pro.form'
-export interface IErrorView {
-  /**
-   * 只读
-   * 设置此值关联错误信息到相应组件元素
-   *
-   * @type {(string | number)}
-   * @memberof IErrorView
-   */
-  key: string | number;
-
-  /**
-   * 只读
-   *  错误信息标题
-   *
-   * @type {string}
-   * @memberof IErrorView
-   */
-  title: string;
-
-  /**
-   * 只读
-   * 错误信息类型 分为可提交(canBeSubmit)和不可提交(doNotSubmit)
-   * @type {('canBeSubmit' | 'doNotSubmit')}
-   * @memberof IErrorView
-   */
-  type: 'canBeSubmit' | 'doNotSubmit';
-
-  /**
-   * 状态  eg:
-   * 0表示不可提交类型 无需忽略;
-   * 2表示可提交类型中未忽略状态，也就是还未转换为已忽略;
-   * 1表示 可提交类型中从忽略变更为已忽略;
-   *
-   * @type {(0|1|2)}
-   * @memberof IErrorView
-   */
-  status: 0 | 1 | 2;
-
-  /**
-   * 对应组件元素唯一编码 只读
-   *
-   * @type {string}
-   * @memberof IErrorView
-   */
-  componentCode: string;
-
-  /**
-   * 组件名称
-   *
-   * @type {string}
-   * @memberof IErrorView
-   */
-  componentLabel?: string;
-}
+export type {IErrorView}
 
 export interface InstanceForm {
   store: ProFormStore;

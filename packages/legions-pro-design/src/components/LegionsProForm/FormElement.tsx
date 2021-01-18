@@ -8,7 +8,6 @@ import { findDOMNode } from 'react-dom';
 import { InstanceFormElement } from './interface/formElement';
 import { inject } from 'legions/store';
 import { ProFormStore } from '../store/pro.form';
-console.log(ProFormStore,'ProFormStore','sssss');
 export interface IFormElementProps{
     form: WrappedFormUtils;
     elementKey: string;
@@ -73,8 +72,6 @@ enum KeydownEnum{
 @bind({store:ProFormStore})
 @observer
 export default class FormElement extends React.Component<IFormElementProps,{}>{
-    /* @inject(ProFormStore)
-    proFormStore:ProFormStore */
     static defaultProps ={
         elType: 'input',
         nextElementKey:'',
@@ -84,7 +81,6 @@ export default class FormElement extends React.Component<IFormElementProps,{}>{
     uid = ''
     constructor(props) {
         super(props)
-        console.log(ProFormStore,'this.props');
         this.uid=`element${this.props.elementKey}${shortHash(this.timeId)}`
     }
     /**  注册元素键盘行为代理事件*/
