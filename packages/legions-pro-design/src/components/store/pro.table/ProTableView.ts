@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-07 17:16:35
- * @LastEditTime: 2021-01-13 10:26:17
+ * @LastEditTime: 2021-01-18 14:22:59
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/store/pro.table/ProTableView.ts
@@ -644,7 +644,7 @@ export class ProTableView {
    * @memberof ProTableView
    */
   @action async queryTableColumns(modulesUid: string, url) {
-    this.obTableListCustom = await queryTableColumns(modulesUid, url);
+    this.obTableListCustom = await queryTableColumns(modulesUid,url);
   }
 
   /**

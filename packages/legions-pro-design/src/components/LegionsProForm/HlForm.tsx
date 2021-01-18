@@ -26,9 +26,9 @@ import LegionsProDragger from '../LegionsProDragger';
 import get from 'lodash/get'
 import { ValidateCallback } from 'antd/lib/form/Form';
 import { LabelWithCheckboxModel } from './FormCheckbox';
-import { HlLabeledValue } from 'legions-lunar/model';
+import { BaseFormFields, HlLabeledValue } from 'legions-lunar/model';
 import { legionsPlugins,LegionsPluginsExecute,LoggerManager } from 'legions-lunar/legion.plugin.sdk';
-import { ProFormUtils } from './ProFormUtils';
+import { ProFormFields, ProFormUtils } from './ProFormUtils';
 const baseCls = `legions-pro-form`
 const COMPONENT_TYPE = ['iFormInput','iFormText','iFormWithSelect','iFormDatePicker','iFormMonthPicker','iFormRangePicker','iFormWithRadioButton','iFormWithSwitch',]
 export interface IProFormProps<mapProps = {}> {
@@ -359,6 +359,7 @@ class HLForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
                     let optionItem = new HlLabeledValue();
                     if (selectView && selectView.currValue) {
                         for (let i = 1; i <= selectView.currValue.data.size; i++) {
+                             //@ts-ignore
                             const option = selectView.currValue.data.get(i.toString()).find((item) => item.key === optionKey)
                             if (option) {
                                 optionItem = {
@@ -539,6 +540,7 @@ class HLForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
         if (this.storeView) {
             const keys = this.storeView.elementList.keys()
             let entitys: IElementList & { keys: string } = null
+             //@ts-ignore
             keys.map((item) => {
                 const entity = this.storeView.elementList.get(item)
                 if (entity && entity.elementKey === ElementKey) {
@@ -582,11 +584,14 @@ class HLForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
         if (formStore && formStore.enableEnterSwitch) {
             /* e.stopPropagation() */
             const keys = formStore.elementList.keys()
+             //@ts-ignore
             if (keys.length > 0 && !formStore.focusUid) {
                 formStore.focusUid = keys[0];
             }
             if (keyCode === KeydownEnum.next || keyCode === KeydownEnum.enter) {
+                 //@ts-ignore
                 for (let i = 0; i < keys.length; i++) {
+                     //@ts-ignore
                     let index = keys.findIndex((item) => item === formStore.focusUid)
                     if (index > -1) {
                         let currUid = keys[index]
@@ -610,6 +615,7 @@ class HLForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
 
                         }
                         else {
+                             //@ts-ignore
                             if (nextIndex >= keys.length) {/**  当到达最后一个元素时，再次回车将回到第一个元素的焦点*/
                                 nextIndex = 0
                                 nextUid = keys[nextIndex]
@@ -652,12 +658,15 @@ class HLForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
                 }
             }
             if (keyCode === KeydownEnum.up) {
+                 //@ts-ignore
                 for (let i = 0; i < keys.length; i++) {
+                     //@ts-ignore
                     let index = keys.findIndex((item) => item === formStore.focusUid)
                     if (index > -1) {
                         let preIndex = index - 1
                         let nextUid = keys[preIndex]
                         if (preIndex < 0) {/**  当到达第一个一个元素时，再次按上键将回到最后一个元素的焦点*/
+                             //@ts-ignore
                             preIndex = keys.length - 1
                             nextUid = keys[preIndex]
                         }
@@ -838,7 +847,9 @@ class HLForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
                 if (view && view.currValue) {
                     let options = []
                     let total = 0;
+                    //@ts-ignore
                     if (view.currValue.data.get(view.pageIndex.toString())) {
+                         //@ts-ignore
                         options = view.currValue.data.get(view.pageIndex.toString())
                         total = view.currValue.total;
                     }
@@ -1061,6 +1072,8 @@ LegionsProForm.LabelWithSwitchModel = LabelWithSwitchModel;
 LegionsProForm.LabelWithRadioButtonModel = LabelWithRadioButtonModel;
 LegionsProForm.LabelWithTextModel = LabelWithTextModel;
 LegionsProForm.LabelWithInputModel = LabelWithInputModel;
+LegionsProForm.BaseFormFields = BaseFormFields
+LegionsProForm.ProFormFields = ProFormFields
 
 /* @bind({ store: HLFormStore })
 @observer

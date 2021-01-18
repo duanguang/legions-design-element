@@ -2,6 +2,7 @@ import { Route,Switch } from 'legions/router';
 import React from 'react';
 /* import '../assets/css/theme.less'; */
 import '../assets/css/theme.less'
+import { ProForm } from './proForm';
 /* import { LegionsProEchartsMapDemo } from './pro.echarts.map';
 import { LegionsProEchartsLayoutDemo } from './pro.echarts.layout'; */
 /* import { LegionsProEchartsBoxDemo } from './pro.echarts.box';
@@ -22,6 +23,7 @@ export default class App extends React.Component {
             <Switch>
  
                 <Route path="/table" component={ProTable}></Route>
+                <Route path="/form" component={ProForm}></Route>
                 {/* <Route path="/chart" component={LegionsProEchartsChartPieDemo}></Route> */}
                 {/* <Route component={() => {
                         return <div>hello world</div>

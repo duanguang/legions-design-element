@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-08 15:19:23
- * @LastEditTime: 2021-01-08 15:25:12
+ * @LastEditTime: 2021-01-15 18:53:50
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProForm/ProFormUtils.tsx
@@ -26,6 +26,9 @@ import FormUpload from './FormUpload';
 import FormSwitch from './FormSwitch';
 import FormRadioButton from './FormRadioButton';
 import FormText from './FormText';
+import { BaseFormFields } from 'legions-lunar/model';
+import { ClassOf } from 'legions-lunar/types/api/typescript';
+import { createFormRule } from 'legions-decorator/async.validator'; 
 interface IRenderComponentParams<T> {
 
     /**
@@ -329,5 +332,19 @@ export class ProFormUtils<Store,global = {}>{
         else {
             throw new Error(`HLFormUtils: Unknown control. control = ${JSON.stringify(control)}`);
         }
+    }
+}
+type IFormRules<FormRules> = {
+    [P in keyof FormRules]: IAntdRule[];
+}
+export class ProFormFields<T> extends BaseFormFields{
+    constructor(FormFields:ClassOf<T>,value:T) {
+        super();
+        FormFields['initMapPropsToFields'].call(this,value)
+    }
+    /** 初始化表单规则 */
+   static initFormRules<Form,P>(FormFields: ClassOf<Form>,props: P):IFormRules<Form> {
+    //@ts-ignore
+       return createFormRule(FormFields,new FormFields(),{props})
     }
 }

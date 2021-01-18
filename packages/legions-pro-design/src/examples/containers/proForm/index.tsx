@@ -1,55 +1,63 @@
 import { Button,Row } from 'antd';
 import React from 'react';
 import { bind,observer } from 'legions/store-react';
-import { LegionsProTable,LegionsProForm } from '../../../components';
+import { LegionsProForm,LegionsProPageContainer } from '../../../components';
 import { InstanceProTable } from '../../../components/LegionsProTable/interface';
 import { observablePromise } from 'legions/store-utils';
 import { observable } from 'legions/store';
 import { runInAction } from 'mobx'
 import { HttpConfig } from '../../constants/httpConfig';
-LegionsProTable.customColumnsConfig.editApi = `${HttpConfig.bffService}/table/edit`;
-LegionsProTable.customColumnsConfig.queryApi = `${HttpConfig.bffService}/table/query`;
+import {InstanceForm} from '../../../components/LegionsProForm/interface'
+import { FormFields } from './model';
+import { IProFormProps } from 'components/LegionsProForm/HlForm';
 interface IProps { }
-@observer
-export class ProForm extends LegionsProTable.ProTableBaseClass<IProps,{},{},{}> {
 
+@observer
+export class ProForm extends React.Component<IProps,{}> {
+  formRef:InstanceForm
   @observable status = {
     color: 'red'
   }
+  
   constructor(props: IProps) {
-    super(props)
-    this.pushColumns('name',{
-      title: '姓名',
-      width: '100px',
-      sorter: true,
-    })
-    this.pushColumns('age',{
-      title: '年龄',
-      width: '100px',
-      sorter: true,
-    })
-    this.pushColumns('address',{
-      title: '住址',
-      width: '100px',
-      sorter: true,
-      render: (text) => {
-        return <span style={{ color: `${this.status.color}` }}>{text}</span>
-      }
-    })
+      super(props)
+  }
+  createConfig() {
+      const rules = FormFields.initFormRules<FormFields,{}>(FormFields,{})
+      const formUtils = new LegionsProForm.ProFormUtils();
+      formUtils.renderInputConfig({
+          iAntdProps: formUtils.createAntdProps('uniqueKey',null),
+          iFormProps: {
+              ...formUtils.createLayout('文本框',5,7),
+              maxLength: '50',
+              type:'text',
+          },
+          rules:rules.uniqueKey
+      })
+      return [
+        formUtils.getFormConfig('uniqueKey')
+      ]
   }
   render() {
     return (<LegionsProPageContainer
       query={null}
       content={
         <Row>
-          <Button onClick={() => {
-            this.updateColumns('name',{ title: '姓名1' })
-          }}>改变列信息</Button>
-          <Button onClick={() => {
-            this.refreshColumns('name',() => {
-              this.status.color = 'blue';
-            })
-          }}>改变地址栏颜色</Button>
+              <LegionsProForm
+                <FormFields>
+                  {...this.formRef && this.formRef.viewModel.InputDataModel}
+                  InputDataModel={FormFields}
+                  onGetForm={(form,ref) => {
+                      this.formRef = Object.assign(ref,{ that: this });
+                  }}
+                  mapPropsToFields={(props) => {
+                    return new FormFields(props)
+                  }}
+                  onFieldsChange={(props,formFields) => {
+                      this.formRef.store.updateFormInputData(this.formRef.uid,formFields)
+                  }}
+                  controls={this.createConfig()}
+              ></LegionsProForm>
          
         </Row>
       }

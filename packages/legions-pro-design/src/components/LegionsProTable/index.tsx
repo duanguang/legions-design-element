@@ -484,14 +484,14 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
         if (this.props.tableModulesName && this.props.isOpenCustomColumns) {
             if (LegionsProTable.customColumnsConfig.editApi && LegionsProTable.customColumnsConfig.queryApi) {
                 this.viewModel.setLocalStorageShowColumnsKeys(this.props.tableModulesName)
-                await this.viewModel.queryTableColumns(this.viewModel.computedStorageShowColumnsKeys,this.props.customColumnsConfig.queryApi)
+                await this.viewModel.queryTableColumns(this.viewModel.computedStorageShowColumnsKeys,LegionsProTable.customColumnsConfig.queryApi)
                 if (!this.viewModel.obTableListCustom.result || (this.viewModel.obTableListCustom.result && this.viewModel.obTableListCustom.result.customColumns.length === 0)) {
                     this.getViewStore.filterColumns();
                     const body = this.viewModel.computedShowColumns.map((item) => {
                         return { dataIndex: item.dataIndex,title: item.title }
                     })
                     if (body.length) {
-                        await this.viewModel.editTableColumns(this.viewModel.computedStorageShowColumnsKeys,body,this.props.customColumnsConfig.editApi)
+                        await this.viewModel.editTableColumns(this.viewModel.computedStorageShowColumnsKeys,body,LegionsProTable.customColumnsConfig.editApi)
                     }
                 }
                 if (this.props.isOpenCustomColumns) {
@@ -548,6 +548,7 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
                 },
             })
         }
+        
         window.addEventListener && window.addEventListener('resize',this.resize.bind(this))
         if (findDOMNode(this).getElementsByClassName('ant-table-body')) {
             /* const refScroll = findDOMNode(this).getElementsByClassName('ant-table-body')[0];
@@ -599,7 +600,6 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
         } else {
             thead = table.querySelector('thead');
         }
-
         if (thead && this.selections.length) {
             const span = document.createElement('span');
             this.node = span;
