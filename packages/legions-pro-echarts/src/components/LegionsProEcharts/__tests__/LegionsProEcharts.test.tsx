@@ -5,7 +5,7 @@ import React from 'react';
 /* import 'jsdom-global/register';  */
 import echarts from 'echarts/lib/echarts';
 import { mount,render,shallow,configure } from 'enzyme';
-import { LegionsProEcharts } from '..';
+import LegionsProEcharts from '..';
 
 const barOptions = {
     title: {

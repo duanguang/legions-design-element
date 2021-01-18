@@ -8,7 +8,7 @@
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
 import React from 'react';
-import  {LegionsProEcharts} from '../LegionsProEcharts';
+import  LegionsProEcharts from '../LegionsProEcharts';
 import { LegionsEchartsAutoQueryParams, LegionsProEchartsPropsTypes } from '../interface/interface';
 import echarts from 'echarts/lib/echarts';
 import { HeadersPrams } from 'legions/fetch';
@@ -31,7 +31,7 @@ class ViewModel {
     @observable response = observablePromise<LegionsEchartsAutoQueryParams['model']>()
 }
 /** 饼图组件 */
-export class LegionsProEchartsChartPie extends React.Component<LegionsProEchartsPieProps>{
+export default class LegionsProEchartsChartPie extends React.Component<LegionsProEchartsPieProps>{
     static defaultProps: Readonly<LegionsProEchartsPieProps> = new LegionsProEchartsPieProps()
     viewModel = observableViewModel<ViewModel>(new ViewModel());
     /** 自动接管接口返回数据 */
@@ -96,7 +96,7 @@ export class LegionsProEchartsChartPie extends React.Component<LegionsProEcharts
                 this.viewModel.response = observablePromise(res)
             }
         }
-        
+
     }
     render() {
         const { option } = this.props;

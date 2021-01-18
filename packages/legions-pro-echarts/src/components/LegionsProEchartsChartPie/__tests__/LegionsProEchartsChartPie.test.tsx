@@ -4,7 +4,7 @@
 import React from 'react';
 /* import 'jsdom-global/register';  */
 import echarts from 'echarts/lib/echarts';
-import { LegionsProEchartsChartPie } from '..';
+import LegionsProEchartsChartPie from '..';
 import { mount,render,shallow, configure} from 'enzyme';
 
 /* import jsdom from 'jsdom'
@@ -54,7 +54,7 @@ class LegionsProEchartsChartPieMouter extends React.Component{
     }
 }
 
-describe('折线图',() => {
+describe('饼图',() => {
     /* const domMock = jest.spyOn(HTMLElement.prototype,'getBoundingClientRect');
     const classRect: Record<string, DOMRect> = {
         container: {
@@ -77,8 +77,8 @@ describe('折线图',() => {
     it('default props',() => {
         /* const wrapper = render(<LegionsProEchartsChartPieMouter></LegionsProEchartsChartPieMouter>); */
         const component = mount(<LegionsProEchartsChartPieMouter
-        ></LegionsProEchartsChartPieMouter>);
-        
+            ></LegionsProEchartsChartPieMouter>);
+
         expect(component.exists()).toBe(true);
         expect(component.find('div').length).toBe(1);
          // root tag
@@ -87,7 +87,7 @@ describe('折线图',() => {
         expect(component.getDOMNode().className).toBe('legions-pro-echarts echarts-for-react-root');
         // style
         expect(component.getDOMNode().style.height).toBe('100%');
-       
+
         // default props
         /* expect(component.props().option).toEqual(barOptions); */
         /* console.table(component) */

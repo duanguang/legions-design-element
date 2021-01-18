@@ -16,7 +16,7 @@ class IProps {
 }
 const proLayoutPrefix = 'legions-pro-echarts';
 /** 可视化界面容器盒子占位块 */
-export  class LegionsProEchartsBox extends React.Component<IProps> {
+export default class LegionsProEchartsBox extends React.Component<IProps> {
     static defaultProps: Readonly<IProps> = new IProps()
 
     render() {

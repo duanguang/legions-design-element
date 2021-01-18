@@ -13,7 +13,7 @@ const pick = (obj,keys) => {
     });
     return r;
 };
-export  class LegionsProEchartsCore<P = {}> extends Component<LegionsProEchartsPropsTypes & P> {
+export default class LegionsProEchartsCore<P = {}> extends Component<LegionsProEchartsPropsTypes & P> {
     static defaultProps: Readonly<LegionsProEchartsPropsTypes> = new LegionsProEchartsPropsTypes()
     echartsLib: typeof echarts;
     echartsElement: HTMLDivElement | HTMLCanvasElement;

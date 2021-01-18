@@ -24,7 +24,7 @@ export class LegionsProEchartsCardProps extends LegionsProEchartsPropsTypes {
     total?: number = 0;
 }
 /** 饼图组件 */
-export class LegionsProEchartsChartCard extends React.Component<LegionsProEchartsCardProps>{
+export default class LegionsProEchartsChartCard extends React.Component<LegionsProEchartsCardProps>{
     static defaultProps: Readonly<LegionsProEchartsCardProps> = new LegionsProEchartsCardProps()
     componentDidMount() {
     }

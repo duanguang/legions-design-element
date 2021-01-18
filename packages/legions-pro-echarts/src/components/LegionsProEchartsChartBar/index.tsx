@@ -1,6 +1,6 @@
 
 import React from 'react';
-import  {LegionsProEcharts} from '../LegionsProEcharts';
+import  LegionsProEcharts from '../LegionsProEcharts';
 import { LegionsEchartsAutoQueryParams, LegionsProEchartsPropsTypes } from '../interface/interface';
 import echarts from 'echarts/lib/echarts';
 import { HeadersPrams } from 'legions/fetch';
@@ -22,7 +22,7 @@ class ViewModel {
     /** 请求托管response */
     @observable response = observablePromise<LegionsEchartsAutoQueryParams['model']>()
 }
-export class LegionsProEchartsChartBar extends React.Component<LegionsProEchartsChartBarProps>{
+export default class LegionsProEchartsChartBar extends React.Component<LegionsProEchartsChartBarProps>{
     static defaultProps: Readonly<LegionsProEchartsChartBarProps> = new LegionsProEchartsChartBarProps()
     viewModel = observableViewModel<ViewModel>(new ViewModel());
     /** 自动接管接口返回数据 */
@@ -73,7 +73,7 @@ export class LegionsProEchartsChartBar extends React.Component<LegionsProEcharts
                     },
                     extraCssText: 'box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);' // 自定义的 CSS 样式
                 }
-                
+
             },
             xAxis: [{
                 type: 'category',

@@ -1,16 +1,14 @@
 import React from 'react';
 import echarts from 'echarts/lib/echarts';
-import { LegionsProEchartsChartPie } from '../../../components/LegionsProEchartsChartPie';
-import {LegionsProEchartsLayout} from '../../../components/LegionsProEchartsLayout';
-import { LegionsProEchartsChartLine } from '../../../components/LegionsProEchartsChartLine';
-import {LegionsProEchartsBox} from '../../../components/LegionsProEchartsBox';
-import { LegionsProEchartsChartBar } from '../../../components/LegionsProEchartsChartBar';
-import { LegionsProEchartsChartCard } from '../../../components/LegionsProEchartsChartCard';
+import LegionsProEchartsChartPie from '../../../components/LegionsProEchartsChartPie';
+import LegionsProEchartsLayout from '../../../components/LegionsProEchartsLayout';
+import LegionsProEchartsChartLine  from '../../../components/LegionsProEchartsChartLine';
+import LegionsProEchartsBox from '../../../components/LegionsProEchartsBox';
+import LegionsProEchartsChartBar from '../../../components/LegionsProEchartsChartBar';
+import LegionsProEchartsChartCard from '../../../components/LegionsProEchartsChartCard';
 import { Button, Col,Row } from 'antd';
 import { LegionsProEchartsCol } from '../../../components/LegionsProEchartsCol';
-import {
-    LegionsProEchartsLiquidFill
-} from '../../../components/LegionsProEchartsLiquidFill';
+import LegionsProEchartsLiquidFill from '../../../components/LegionsProEchartsLiquidFill';
 import { StockModeContainerEntity } from 'examples/models/mockEntity';
 import { observablePromise } from 'legions/store-utils';
 import { IExtendsOption } from 'components/interface/interface';

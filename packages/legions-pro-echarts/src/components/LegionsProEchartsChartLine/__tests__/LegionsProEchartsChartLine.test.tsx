@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { LegionsProEchartsChartLine } from '..';
+import LegionsProEchartsChartLine from '..';
 import { mount,render,shallow, configure} from 'enzyme';
 import { IExtendsOption, IMethods } from 'components/interface/interface';
 import { observablePromise } from 'legions/store-utils';
@@ -125,7 +125,7 @@ describe('折线图',() => {
         expect(component.instance()).not.toBe(null)
         expect(component.instance().lineRef.id.substring(0,3)).toBe('ec_')
     })
-    it('default props',()=>{
+    it('default props line',()=>{
         const component = mount(<LegionsProEchartsChartLineMouter></LegionsProEchartsChartLineMouter>)
         expect(component.exists()).toBe(true)
         expect(component.find('div').length).toBe(1)
