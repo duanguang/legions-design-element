@@ -5,12 +5,12 @@
 <head>
     <title>Code coverage report for core/legionsFetch.ts</title>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="../prettify.css" />
-    <link rel="stylesheet" href="../base.css" />
+    <link rel="stylesheet" href="..\prettify.css" />
+    <link rel="stylesheet" href="..\base.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style type='text/css'>
         .coverage-summary .sorter {
-            background-image: url(../sort-arrow-sprite.png);
+            background-image: url(..\sort-arrow-sprite.png);
         }
     </style>
 </head>
@@ -18,34 +18,34 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../index.html">All files</a> / <a href="index.html">core</a> legionsFetch.ts</h1>
+        <h1><a href="..\index.html">All files</a> / <a href="index.html">core</a> legionsFetch.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">36.84% </span>
+                <span class="strong">68.42% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>7/19</span>
+                <span class='fraction'>13/19</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">20% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/10</span>
+                <span class='fraction'>2/10</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">12.5% </span>
+                <span class="strong">37.5% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>1/8</span>
+                <span class='fraction'>3/8</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">33.33% </span>
+                <span class="strong">66.67% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>6/18</span>
+                <span class='fraction'>12/18</span>
             </div>
         
             
@@ -54,7 +54,7 @@
             Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
         </p>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line medium'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -150,7 +150,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -159,10 +159,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -177,9 +177,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -215,8 +215,8 @@ interface options&lt;Parameter, Model&gt; {
     catch?: (err: any) =&gt; void;
 }
 export class LegionsFetch{
-<span class="fstat-no" title="function not covered" >    private s</span>etHeaders(url: string, option?: request.HeadersPrams) {
-        let options = <span class="cstat-no" title="statement not covered" >{</span>
+    private setHeaders(url: string, option?: request.HeadersPrams) {
+        let options = {
             headers: {
                 'api-target': url,
                 'api-cookie': '',
@@ -225,10 +225,10 @@ export class LegionsFetch{
                 'Pragma':'no-cache',
             },
         };
-<span class="cstat-no" title="statement not covered" >        if (option) {</span>
-<span class="cstat-no" title="statement not covered" >            options.headers = { ...options.headers, ...option }</span>
+        <span class="missing-if-branch" title="else path not taken" >E</span>if (option) {
+            options.headers = { ...options.headers, ...option }
         }
-<span class="cstat-no" title="statement not covered" >        return options;</span>
+        return options;
     }
 <span class="fstat-no" title="function not covered" >    get&lt;</span>Model, Parameter&gt;(options: options&lt;Parameter, Model&gt;): Promise&lt;Model&gt; {
         const headerOptions = <span class="cstat-no" title="statement not covered" >this.setHeaders(options.url, options.headers);</span>
@@ -242,10 +242,10 @@ export class LegionsFetch{
 <span class="cstat-no" title="statement not covered" >                options.catch &amp;&amp; options.catch(err);</span>
             });
     }
-<span class="fstat-no" title="function not covered" >    post&lt;</span>Model, Parameter&gt;(options: options&lt;Parameter, Model&gt;): Promise&lt;Model&gt; {
-        const headerOptions = <span class="cstat-no" title="statement not covered" >this.setHeaders(options.url,options.headers);</span>
+    post&lt;Model, Parameter&gt;(options: options&lt;Parameter, Model&gt;): Promise&lt;Model&gt; {
+        const headerOptions = this.setHeaders(options.url,options.headers);
         // @ts-ignore
-<span class="cstat-no" title="statement not covered" >        return post(options.url, options.parameter || null, headerOptions)</span>
+        return post(options.url, options.parameter || <span class="branch-1 cbranch-no" title="branch not covered" >null,</span> headerOptions)
             .then(<span class="fstat-no" title="function not covered" >result </span>=&gt; {
                 // @ts-ignore
 <span class="cstat-no" title="statement not covered" >                return new options.model(result);</span>
@@ -261,17 +261,17 @@ export class LegionsFetch{
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Dec 22 2020 18:26:27 GMT+0800 (GMT+08:00)
+                at Mon Jan 18 2021 11:23:19 GMT+0800 (GMT+08:00)
             </div>
         </div>
-        <script src="../prettify.js"></script>
+        <script src="..\prettify.js"></script>
         <script>
             window.onload = function () {
                 prettyPrint();
             };
         </script>
-        <script src="../sorter.js"></script>
-        <script src="../block-navigation.js"></script>
+        <script src="..\sorter.js"></script>
+        <script src="..\block-navigation.js"></script>
     </body>
 </html>
     
