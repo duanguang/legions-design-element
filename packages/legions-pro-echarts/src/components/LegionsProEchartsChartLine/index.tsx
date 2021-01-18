@@ -1,5 +1,5 @@
 import React from 'react';
-import  {LegionsProEcharts} from '../LegionsProEcharts';
+import  LegionsProEcharts from '../LegionsProEcharts';
 import { LegionsEchartsAutoQueryParams, LegionsProEchartsPropsTypes } from '../interface/interface';
 import echarts from 'echarts/lib/echarts';
 import { HeadersPrams } from 'legions/fetch';
@@ -23,7 +23,7 @@ class ViewModel {
     @observable response = observablePromise<LegionsEchartsAutoQueryParams['model']>()
 }
 @observer
-export class LegionsProEchartsChartLine extends React.Component<LegionsProEchartsChartLineProps>{
+export default class LegionsProEchartsChartLine extends React.Component<LegionsProEchartsChartLineProps>{
     static defaultProps: Readonly<LegionsProEchartsChartLineProps> = new LegionsProEchartsChartLineProps()
     viewModel = observableViewModel<ViewModel>(new ViewModel());
     /** 自动接管接口返回数据 */

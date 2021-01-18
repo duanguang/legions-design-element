@@ -5,9 +5,9 @@ class IProps {
     style?: React.CSSProperties = {};
     className?: string = '';
     /** 是否只显示一屏
-     * 
+     *
      * false 超出出现滚动条
-     * 
+     *
      * true  铺满一屏
      */
     isFullScreen?: boolean = false;
@@ -16,7 +16,7 @@ class IProps {
     isFillFullScreen?: Boolean = true;
 }
 const proLayoutPrefix = 'legions-pro-echarts'
-export  class LegionsProEchartsLayout extends React.Component<IProps> {
+export default  class LegionsProEchartsLayout extends React.Component<IProps> {
     static defaultProps: Readonly<IProps> = new IProps()
 
     computedLayoutWrapStyles() {

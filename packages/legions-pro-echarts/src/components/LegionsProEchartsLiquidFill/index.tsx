@@ -8,7 +8,7 @@
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
 import React from 'react';
-import  {LegionsProEcharts} from '../LegionsProEcharts';
+import  LegionsProEcharts from '../LegionsProEcharts';
 import { LegionsEchartsAutoQueryParams, LegionsProEchartsPropsTypes, Weaken } from '../interface/interface';
 import echarts from 'echarts/lib/echarts';
 import { HeadersPrams } from 'legions/fetch';
@@ -29,14 +29,14 @@ interface IOptions extends  Omit<echarts.EChartOption,'series'>{
     series?:echarts.EChartOption.Series []
 }
 /* interface ISeries extends Weaken<echarts.EChartOption,'series'>{
-   
+
 } */
 class ViewModel {
     /** 请求托管response */
     @observable response = observablePromise<LegionsEchartsAutoQueryParams['model']>()
 }
 /** 水滴波纹组件 */
-export class LegionsProEchartsLiquidFill extends React.Component<LegionsProEchartsLiquidFillProps>{
+export default class LegionsProEchartsLiquidFill extends React.Component<LegionsProEchartsLiquidFillProps>{
     static defaultProps: Readonly<LegionsProEchartsLiquidFillProps> = new LegionsProEchartsLiquidFillProps()
     viewModel = observableViewModel<ViewModel>(new ViewModel());
     /** 自动接管接口返回数据 */
@@ -73,10 +73,10 @@ export class LegionsProEchartsLiquidFill extends React.Component<LegionsProEchar
                 x: 'center',
                 top:'33%',
             }],
-            
+
             series: [
                 {
-                    
+
                     type: 'liquidFill',
                     radius: '80%',
                     center: ['50%', '50%'],
@@ -85,7 +85,7 @@ export class LegionsProEchartsLiquidFill extends React.Component<LegionsProEchar
                         name: '流量统计',
                        value:0.2,
                     },0.2,0.2,0.2,],
-                    
+
                     label: {
                         show:true,
                         position: ['50%','60%'],
@@ -122,7 +122,7 @@ export class LegionsProEchartsLiquidFill extends React.Component<LegionsProEchar
                 this.viewModel.response = observablePromise(res)
             }
         }
-        
+
     }
     render() {
         const { option } = this.props;

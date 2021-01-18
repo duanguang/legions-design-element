@@ -1,7 +1,7 @@
 import 'echarts/lib/chart/map';
 import echarts from 'echarts/lib/echarts';
 import React from 'react';
-import  {LegionsProEcharts} from '../LegionsProEcharts';
+import  LegionsProEcharts from '../LegionsProEcharts';
 import { LegionsProEchartsPropsTypes } from '../interface/interface'
 import { merge } from 'lodash';
 const world = require('echarts/map/json/world.json');
@@ -21,7 +21,7 @@ export class LegionsProEchartsMapProps extends LegionsProEchartsPropsTypes{
 interface IState{
     data?:echarts.EChartOption.SeriesMap.DataObject[]
 }
-export class LegionsProEchartsMap extends React.Component<LegionsProEchartsMapProps,IState>{
+export default class LegionsProEchartsMap extends React.Component<LegionsProEchartsMapProps,IState>{
     static readonly initData = [
         //@ts-ignore
         ...Object.values(nameCN).map((name: string) => {
@@ -81,7 +81,7 @@ export class LegionsProEchartsMap extends React.Component<LegionsProEchartsMapPr
         this.timeId= setInterval(() => {
             this.timeAction && this.highlightSelect();
         },2000)
-        
+
     }
     componentWillReceiveProps(nextProps: LegionsProEchartsMapProps) {
         if (this.props.data !== nextProps.data) {
@@ -132,6 +132,6 @@ export class LegionsProEchartsMap extends React.Component<LegionsProEchartsMapPr
                     this.chartsRef = ref;
                 }}
             ></LegionsProEcharts>
-        ) 
+        )
     }
 }
