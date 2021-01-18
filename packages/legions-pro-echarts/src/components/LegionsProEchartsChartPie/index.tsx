@@ -76,7 +76,7 @@ export default class LegionsProEchartsChartPie extends React.Component<LegionsPr
         }
     }
     /** 获取数据 */
-    getData() {
+    getData(option?:Object) {
         const { autoQuery } = this.props;
         const server = new LegionsFetch()
         if (autoQuery) {
@@ -84,7 +84,7 @@ export default class LegionsProEchartsChartPie extends React.Component<LegionsPr
                 const res = server.post({
                     url: autoQuery.url as string,
                     model: autoQuery.model,
-                    parameter: autoQuery.params,
+                    parameter: option ? { ...autoQuery.params, ...option } : autoQuery.params,
                     headers: autoQuery.headerOption,
                 })
                 this.viewModel.response = observablePromise(res)
@@ -92,7 +92,7 @@ export default class LegionsProEchartsChartPie extends React.Component<LegionsPr
                 const res = server.get({
                     url: autoQuery.url as string,
                     model: autoQuery.model,
-                    parameter: autoQuery.params,
+                    parameter: option ? { ...autoQuery.params, ...option } : autoQuery.params,
                     headers: autoQuery.headerOption,
                 })
                 this.viewModel.response = observablePromise(res)
@@ -106,6 +106,17 @@ export default class LegionsProEchartsChartPie extends React.Component<LegionsPr
         return (
             <LegionsProEcharts
                 {...this.props}
+                onChartReady={(value)=>{
+                    if(this.props.onChartReady){
+                        this.props.onChartReady(value,{
+                            methods:{
+                                onSearch:(option?:Object)=>{
+                                    this.getData(option)
+                                }
+                            }
+                        })
+                    }
+                }}
                 loading={loading}
                 option={merge(this.option, option)}
             ></LegionsProEcharts>
