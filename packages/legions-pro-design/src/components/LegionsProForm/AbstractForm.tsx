@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { AbstractSelect } from '../LegionsProSelect';
 
-export default class AbstractForm<P,S={}> extends Component<P,S> {
+export default abstract class  AbstractForm<P,S={}> extends Component<P,S> {
     isFormHasError(getFieldsError: () => any) {
         let error = getFieldsError && getFieldsError()
         let has = false

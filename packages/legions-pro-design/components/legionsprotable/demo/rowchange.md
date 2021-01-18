@@ -41,6 +41,7 @@ interface IState{
   size:'checkbox'|'radio',
   isOpenRowSelection:boolean,
   rowSelectionClickType:'checkbox'|'radio',
+  isOpenCustomColumns:boolean
 }
 class ProTableDemo extends LegionsProTable.ProTableBaseClass<IProps,IState,{},{}> {
   constructor(props: IProps) {
@@ -62,9 +63,10 @@ class ProTableDemo extends LegionsProTable.ProTableBaseClass<IProps,IState,{},{}
     });
     this.state={
       type: 'checkbox',
-      isOpenRowSelection:false,
-      isOpenRowChange:false,
+      isOpenRowSelection:true,
+      isOpenRowChange:true,
       rowSelectionClickType:'radio',
+      isOpenCustomColumns:true,
     }
   }
   handleTypeChange = (e) => {
@@ -81,6 +83,9 @@ class ProTableDemo extends LegionsProTable.ProTableBaseClass<IProps,IState,{},{}
   handleisRowSelectionChange = (e) => {
     this.setState({ rowSelectionClickType: e.target.value });
   }
+  handleOpenCustomColumns=(e)=>{
+    this.setState({ isOpenCustomColumns: e.target.value });
+  }
   render() {
     return (
       <Row>
@@ -93,13 +98,13 @@ class ProTableDemo extends LegionsProTable.ProTableBaseClass<IProps,IState,{},{}
               </Radio.Group>
             </FormItem>
             <FormItem label="行选中启/关">
-              <Radio.Group size={false} value={this.state.isOpenRowSelection} onChange={this.handleOpenRowSelectionChange}>
+              <Radio.Group size={true} value={this.state.isOpenRowSelection} onChange={this.handleOpenRowSelectionChange}>
                 <Radio.Button value={true}>是</Radio.Button>
                 <Radio.Button value={false}>否</Radio.Button>
               </Radio.Group>
             </FormItem>
             <FormItem label="单击行选中启/关">
-              <Radio.Group size={false} value={this.state.isOpenRowChange} onChange={this.handleisOpenRowChange}>
+              <Radio.Group size={true} value={this.state.isOpenRowChange} onChange={this.handleisOpenRowChange}>
                 <Radio.Button value={true}>是</Radio.Button>
                 <Radio.Button value={false}>否</Radio.Button>
               </Radio.Group>
@@ -110,13 +115,19 @@ class ProTableDemo extends LegionsProTable.ProTableBaseClass<IProps,IState,{},{}
                 <Radio.Button value="radio">单选</Radio.Button>
               </Radio.Group>
             </FormItem>
+            <FormItem label="行选中启/关">
+              <Radio.Group size={true} value={this.state.isOpenCustomColumns} onChange={this.handleOpenCustomColumns}>
+                <Radio.Button value={true}>是</Radio.Button>
+                <Radio.Button value={false}>否</Radio.Button>
+              </Radio.Group>
+            </FormItem>
           </Form>
         </Row>
       <LegionsProTable
       <{},ResponseVModelNameDataEntity>
         {...this.state}
-        isOpenRowSelection={false}
-         isOpenRowChange={false}
+        isOpenRowSelection={true}
+         isOpenRowChange={true}
          onReady={value => {
           this.tableRef = value;
           this.tableRef.viewModel.isAdaptiveHeight = false;
@@ -169,6 +180,7 @@ class ProTableDemo extends LegionsProTable.ProTableBaseClass<IProps,IState,{},{}
               }
             },
         }}
+        tableModulesName="sss"
         pagination={true}
         columns={this.columnsData}
         /* 真实环境中会自动生成，演示专用*/
