@@ -104,6 +104,7 @@ export class LegionsProEchartsChartPieDemo extends React.Component {
     }
 
     render() {
+        console.log(...[{a:'a',b:[{c:'1'},{d:'2'}]}],'test')
         return <LegionsProEchartsLayout>
             <Button onClick={()=>{
                 this.pieMethod.methods.onSearch({pageSize:10})
@@ -206,7 +207,7 @@ export class LegionsProEchartsChartPieDemo extends React.Component {
                             params: { pageSize: 3000, pageNo: 1 },
                             headerOption: {
                                 "api-target": 'https://uat-api.hoolinks.com/scmjg/dcl/exports-goods-model/list',
-                                "api-cookie": 'SESSION=d2ef8c85-7e92-4fba-b1a8-8233cb7843c3; HL-Access-Token=MGI0YTY1OTItZTM2OC00OGNhLWJlOGQtZWY0OTU2M2NkZmRk; UCTOKEN=MGI0YTY1OTItZTM2OC00OGNhLWJlOGQtZWY0OTU2M2NkZmRk;'
+                                "api-cookie": 'SESSION=6d718a30-4dcb-41b9-99b7-3d2f1b0ffcbb; HL-Access-Token=NTgzMTEyY2MtY2I4NC00OGMzLWE1MjAtMzIwZTc3YzM1MTVl; UCTOKEN=NTgzMTEyY2MtY2I4NC00OGMzLWE1MjAtMzIwZTc3YzM1MTVl;'
                             },
                             responseTransform: (response: observablePromise.PramsResult<StockModeContainerEntity>):echarts.EChartOption.SeriesLines.DataObject[] => {
                                 if (response.isResolved && response.value.success) {
@@ -246,7 +247,52 @@ export class LegionsProEchartsChartPieDemo extends React.Component {
                 <LegionsProEchartsBox
                     style={{ height: '240px',paddingBottom: 5 }}
                     title="柱状图数据自动托管">
-                    <LegionsProEchartsChartBar option={this.barOptions}></LegionsProEchartsChartBar>
+                    <LegionsProEchartsChartBar
+                        option={{
+                            dataset: {
+                                source:[
+                                    ['product', '2012', '2013', '2014', '2015'],
+                                    ['Matcha Latte', 41.1, 30.4, 65.1, 53.3],
+                                    ['Milk Tea', 86.5, 92.1, 85.7, 83.1],
+                                    ['Cheese Cocoa', 24.1, 67.2, 79.5, 86.4]
+                                ]
+                            }
+                        }}
+                        autoQuery={{
+                            model: StockModeContainerEntity,
+                            url: 'https://gateway.hoolinks.com/api/gateway',
+                            method: 'post',
+                            params: { pageSize: 3000, pageNo: 1 },
+                            headerOption: {
+                                "api-target": 'https://uat-api.hoolinks.com/scmjg/dcl/exports-goods-model/list',
+                                "api-cookie": 'SESSION=6d718a30-4dcb-41b9-99b7-3d2f1b0ffcbb; HL-Access-Token=NTgzMTEyY2MtY2I4NC00OGMzLWE1MjAtMzIwZTc3YzM1MTVl; UCTOKEN=NTgzMTEyY2MtY2I4NC00OGMzLWE1MjAtMzIwZTc3YzM1MTVl;'
+                            },
+                            responseTransform: (response: observablePromise.PramsResult<StockModeContainerEntity>):echarts.EChartOption.SeriesLines.DataObject[] => {
+                                if (response.isResolved && response.value.success) {
+                                    // @ts-ignore
+                                    return response.value.result.records.slice(0, 1).map((item, index) => {
+                                        return {
+                                            series: [
+                                                {
+                                                    type: 'bar',
+                                                    barWidth: '10%',
+                                                    barGap: '0',
+                                                    barCategoryGap: '15px',
+                                                },
+                                                {
+                                                    type: 'bar',
+                                                    barWidth: '10%',
+                                                    barGap: '15%'
+                                                },
+                                                { type: 'bar',barWidth: '10%',barGap: '25%',barCategoryGap: '5%',},
+                                                { type: 'bar',barWidth: '10%',barGap: '25%',barCategoryGap: '5%',}
+                                            ]
+                                        }
+                                    })
+                                }
+                                return []
+                            }
+                        }}></LegionsProEchartsChartBar>
                 </LegionsProEchartsBox>
             </LegionsProEchartsCol>
 

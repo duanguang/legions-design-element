@@ -141,9 +141,8 @@ export default class LegionsProEchartsChartBar extends React.Component<LegionsPr
         }
     }
     render() {
-        const { option } = this.props;
         const loading = this.props.autoQuery ? this.viewModel.response.isPending : this.props.loading
-        console.log(merge(this.option,option))
+        const option = this.props.autoQuery ? merge(this.props.option,this.responseData[0]) : this.props.option
         return(
             <LegionsProEcharts
                 loading={loading}
