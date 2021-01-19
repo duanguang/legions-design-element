@@ -12,24 +12,17 @@ import { LegionsEchartsAutoQueryParams, LegionsProEchartsPropsTypes } from '../i
 import echarts from 'echarts/lib/echarts';
 import 'echarts/lib/chart/pie';
 
-export class LegionsProEchartsCardProps extends LegionsProEchartsPropsTypes {
-    /** 数据 */
-    data?: echarts.EChartOption.SeriesPie.DataObject[] = [{value: 100, name: 'demo'}];
-    /** 配置项 */
-    option?: echarts.EChartOption = {};
-    /** 请求托管 */
-    autoQuery?: LegionsEchartsAutoQueryParams
-
+export class LegionsProEchartsCardProps{
     title?: string = '';
     total?: number = 0;
 }
-/** 饼图组件 */
+/** 卡片组件 */
 export default class LegionsProEchartsChartCard extends React.Component<LegionsProEchartsCardProps>{
     static defaultProps: Readonly<LegionsProEchartsCardProps> = new LegionsProEchartsCardProps()
     componentDidMount() {
     }
     render() {
-        const { option,title,total } = this.props;
+        const { title,total } = this.props;
         return ( <div
                 style={{
                     height: '100%',

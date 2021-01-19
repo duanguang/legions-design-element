@@ -64,16 +64,6 @@ export class LegionsProEchartsChartPieDemo extends React.Component {
         ]
     }
     barOptions: echarts.EChartOption = {
-        /*  xAxis: {
-            data: ['10月', '11月', '12月', '01月', '02月', '03月', '04月', '05月', '06月', '07月', '08月', '09月'],
-        },
-        series: [
-            {
-                data: [500, 740, 880, 600, 180, 280, 380, 680, 530, 260, 380, 220],
-                type: 'bar',
-                barWidth:'10%'
-            },
-        ], */
         dataset: {
             dimensions: ['product','2015','2016','2017'],
             source: [
@@ -245,9 +235,21 @@ export class LegionsProEchartsChartPieDemo extends React.Component {
                 <LegionsProEchartsBox
                     style={{ height: '240px',paddingBottom: 5 }}
                     title="柱状图">
+                    <LegionsProEchartsChartBar option={{
+                        ...this.barOptions,
+                        toolbox:{ feature: {}},
+                    }}></LegionsProEchartsChartBar>
+                </LegionsProEchartsBox>
+            </LegionsProEchartsCol>
+
+            <LegionsProEchartsCol xs={24} sm={{span:8,offset:1}} md={{span:7,offset:1}} lg={{span:5,offset:1}} xl={{span:5,offset:1}}>
+                <LegionsProEchartsBox
+                    style={{ height: '240px',paddingBottom: 5 }}
+                    title="柱状图数据自动托管">
                     <LegionsProEchartsChartBar option={this.barOptions}></LegionsProEchartsChartBar>
                 </LegionsProEchartsBox>
             </LegionsProEchartsCol>
+
             <LegionsProEchartsCol xs={24} sm={{span:8}} md={{span:6}} lg={{span:5,offset:1}} xl={{span:5,offset:1}}>
                 <LegionsProEchartsBox
                     style={{ height: '240px',paddingBottom: 5 }}
