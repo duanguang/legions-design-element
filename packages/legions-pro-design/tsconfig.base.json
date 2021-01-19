@@ -20,10 +20,10 @@
         "ES2015.Promise"
       ],
       "allowJs": true,
-      /* "isolatedModules": false, */
+      "isolatedModules": false,
       "jsx": "react",
-      "resolveJsonModule": true,
-      "esModuleInterop": true,
+      /* "resolveJsonModule": true,
+      "esModuleInterop": true, */
       /*  "strict": true, */
       "pretty": true,
       /*  "noUnusedLocals": true,
@@ -33,8 +33,8 @@
       "noFallthroughCasesInSwitch": true,
       "noImplicitReturns": true,
       /* "skipLibCheck": true, */
-      "allowSyntheticDefaultImports": true,
-      "stripInternal": true,
+      /* "allowSyntheticDefaultImports": true, */
+      /* "stripInternal": true, */
       "emitDecoratorMetadata": true,
       "experimentalDecorators": true,
      /*  "strictPropertyInitialization": true, */

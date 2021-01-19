@@ -28,7 +28,7 @@ import { ValidateCallback } from 'antd/lib/form/Form';
 import { LabelWithCheckboxModel } from './FormCheckbox';
 import { BaseFormFields, HlLabeledValue } from 'legions-lunar/model';
 import { legionsPlugins,LegionsPluginsExecute,LoggerManager } from 'legions-lunar/legion.plugin.sdk';
-import { ProFormFields, ProFormUtils } from './ProFormUtils';
+import { ProFormFields,ProFormUtils } from './ProFormUtils';
 const baseCls = `legions-pro-form`
 const COMPONENT_TYPE = ['iFormInput','iFormText','iFormWithSelect','iFormDatePicker','iFormMonthPicker','iFormRangePicker','iFormWithRadioButton','iFormWithSwitch',]
 export interface IProFormProps<mapProps = {}> {

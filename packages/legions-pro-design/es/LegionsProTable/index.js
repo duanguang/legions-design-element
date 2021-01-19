@@ -786,7 +786,7 @@ var LegionsProTable = /** @class */ (function (_super) {
                         if (!(this.props.tableModulesName && this.props.isOpenCustomColumns)) return [3 /*break*/, 5];
                         if (!(LegionsProTable_1.customColumnsConfig.editApi && LegionsProTable_1.customColumnsConfig.queryApi)) return [3 /*break*/, 4];
                         this.viewModel.setLocalStorageShowColumnsKeys(this.props.tableModulesName);
-                        return [4 /*yield*/, this.viewModel.queryTableColumns(this.viewModel.computedStorageShowColumnsKeys, this.props.customColumnsConfig.queryApi)];
+                        return [4 /*yield*/, this.viewModel.queryTableColumns(this.viewModel.computedStorageShowColumnsKeys, LegionsProTable_1.customColumnsConfig.queryApi)];
                     case 1:
                         _a.sent();
                         if (!(!this.viewModel.obTableListCustom.result || (this.viewModel.obTableListCustom.result && this.viewModel.obTableListCustom.result.customColumns.length === 0))) return [3 /*break*/, 3];
@@ -795,7 +795,7 @@ var LegionsProTable = /** @class */ (function (_super) {
                             return { dataIndex: item.dataIndex, title: item.title };
                         });
                         if (!body.length) return [3 /*break*/, 3];
-                        return [4 /*yield*/, this.viewModel.editTableColumns(this.viewModel.computedStorageShowColumnsKeys, body, this.props.customColumnsConfig.editApi)];
+                        return [4 /*yield*/, this.viewModel.editTableColumns(this.viewModel.computedStorageShowColumnsKeys, body, LegionsProTable_1.customColumnsConfig.editApi)];
                     case 2:
                         _a.sent();
                         _a.label = 3;
@@ -1294,7 +1294,10 @@ var LegionsProTable = /** @class */ (function (_super) {
                 React.createElement(Input, { value: this.viewUI.taskName, placeholder: "\u8BF7\u8F93\u5165\u4EFB\u52A1\u540D\u79F0", onChange: function (value) {
                         _this.viewUI.taskName = value.target.value;
                     } })),
-            this.props.isOpenCustomColumns && React.createElement(LegionsProTableCustomColumns, { customColumnsConfig: this.props.customColumnsConfig, tableUid: this.freezeuid, onReady: function (value) {
+            this.props.isOpenCustomColumns && React.createElement(LegionsProTableCustomColumns, { customColumnsConfig: {
+                    queryApi: LegionsProTable_1.customColumnsConfig.queryApi,
+                    editApi: LegionsProTable_1.customColumnsConfig.editApi,
+                }, tableUid: this.freezeuid, onReady: function (value) {
                     _this.customColumnsModalRef = value;
                 } }));
     };
