@@ -1,27 +1,59 @@
-import { Button,Col,Row } from 'antd';
+---
+order: 0
+title:
+  zh-CN: 简单列表
+  en-US: 简单列表
+---
+
+## zh-CN
+
+一个简单列表绑定数据使用
+
+> 表单字段 [FormFields](#Model)
+
+## en-US
+
+```tsx
+import create from '../../render.tsx';
+import { JsonProperty } from 'json-mapper-object';
+import { Button, Row ,Col,Form} from 'antd';
 import React from 'react';
-import { bind,observer } from 'legions/store-react';
-import { LegionsProForm,LegionsProPageContainer } from '../../../components';
-import { observablePromise } from 'legions/store-utils';
-import { observable } from 'legions/store';
-import { HttpConfig } from '../../constants/httpConfig';
-import { InstanceForm } from '../../../components/LegionsProForm/interface'
-import { FormFields } from './model';
-interface IProps { }
-/* @observer */
-export class ProForm extends React.Component<IProps,{}> {
-    formRef: InstanceForm
-    constructor(props: IProps) {
-        super(props)
+import { bind, observer } from 'legions/store-react';
+import { LegionsProForm, LegionsProPageContainer } from 'legions-pro-design';
+import { UploadChangeParam } from 'antd/lib/upload/interface';
+import { FormRuleProperty } from 'legions-decorator/async.validator';
+import { IBaseFormFields,HlLabeledValue } from 'legions-lunar/model';
+import { ClassOf } from 'legions-lunar/types/api/typescript';
+import { legionsThirdpartyPlugin } from 'legions-thirdparty-plugin';
+import { legionsThirdpartyMap } from './constants/legionsConfig';
+const FormItem = Form.Item;
+import {FormFields} from '../model'; // 具体使用请看底部
+
+legionsThirdpartyPlugin.use([
+    {
+        name: 'dexie',
+        url:'https://qa-zy.hoolinks.com/static/plugin/dexie.min.js'
     }
-    createConfig() {
+]);
+interface IFormFieldUserRenderInput1{
+    currency:string,
+    number:number
+}
+
+interface IProps {}
+class ProFormDemo extends React.Component<IProps,{}> {
+  formRef: InstanceForm
+  constructor(props: IProps) {
+    super(props);
+  }
+  createConfig() {
         const rules = FormFields.initFormRules<FormFields,{}>(FormFields,{})
         const formUtils = new LegionsProForm.ProFormUtils();
-        console.log(rules);
+        console.log(rules,'rules');
         formUtils.renderInputConfig({
             iAntdProps: formUtils.createAntdProps('text',null),
             iFormProps: {
-                ...formUtils.createLayout('文本框',5,7),
+                ...formUtils.createLayout('文本框',5,15),
                 maxLength: '50',
                 type: 'text'
             },
@@ -30,7 +62,7 @@ export class ProForm extends React.Component<IProps,{}> {
         formUtils.renderInputConfig({
             iAntdProps: formUtils.createAntdProps('textarea',null),
             iFormProps: {
-                ...formUtils.createLayout('多行文本',5,7),
+                ...formUtils.createLayout('多行文本',5,15),
                 maxLength: '50',
                 type: 'textarea'
             },
@@ -39,7 +71,7 @@ export class ProForm extends React.Component<IProps,{}> {
         formUtils.renderInputConfig({
             iAntdProps: formUtils.createAntdProps('password',null),
             iFormProps: {
-                ...formUtils.createLayout('密码',5,7),
+                ...formUtils.createLayout('密码',5,15),
                 maxLength: '50',
                 type: 'password',
 
@@ -49,7 +81,7 @@ export class ProForm extends React.Component<IProps,{}> {
         formUtils.renderInputConfig({
             iAntdProps: formUtils.createAntdProps('numberText',null),
             iFormProps: {
-                ...formUtils.createLayout('数字文本',5,7),
+                ...formUtils.createLayout('数字文本',5,15),
                 maxLength: '50',
                 type: 'number',
 
@@ -59,7 +91,7 @@ export class ProForm extends React.Component<IProps,{}> {
         formUtils.renderInputNumberConfig({
             iAntdProps: formUtils.createAntdProps('numbers',null),
             iFormProps: {
-                ...formUtils.createLayout('数字',5,7),
+                ...formUtils.createLayout('数字',5,15),
 
             },
             rules: rules.numbers
@@ -67,7 +99,7 @@ export class ProForm extends React.Component<IProps,{}> {
         formUtils.renderSelectConfig({
             iAntdProps: formUtils.createAntdProps('selectedItem',null,'请选择'),
             iFormProps: {
-                ...formUtils.createLayout('普通下拉',5,1 * 7),
+                ...formUtils.createLayout('普通下拉',5,1 * 15),
                 options: [{
                     value: '订单',
                     label: '订单1',
@@ -88,7 +120,7 @@ export class ProForm extends React.Component<IProps,{}> {
         formUtils.renderSelectConfig({
             iAntdProps: formUtils.createAntdProps('selectedItemRemote',null,'请选择'),
             iFormProps: {
-                ...formUtils.createLayout('远程下拉',5,1 * 7),
+                ...formUtils.createLayout('远程下拉',5,1 * 15),
                 allowClear: true,
                 remote: true,
                 pageSize: 30,
@@ -144,7 +176,7 @@ export class ProForm extends React.Component<IProps,{}> {
         formUtils.renderSelectConfig({
             iAntdProps: formUtils.createAntdProps('selectedItemMultiple',1,'下拉多选'),
             iFormProps: {
-                ...formUtils.createLayout('下拉多选',5,1*7),
+                ...formUtils.createLayout('下拉多选',5,1*15),
                 allowClear: true,
                 options: [
                     {
@@ -169,7 +201,7 @@ export class ProForm extends React.Component<IProps,{}> {
         formUtils.renderUploadConfig({
             iAntdProps: formUtils.createAntdProps('upload',1,'文件上传'),
             iFormProps: {
-                ...formUtils.createLayout('文件上传',5,7),
+                ...formUtils.createLayout('文件上传',5,15),
                 maxFileCount: 1,
                 isDragger: true,
                 prompt: (<p>2222</p>),
@@ -185,7 +217,7 @@ export class ProForm extends React.Component<IProps,{}> {
                     const jsxInput = formUtils.renderInputConfig({
                         iAntdProps: formUtils.createAntdProps('customRenderInput1',null,'自定义文本组件'),
                         iFormProps: {
-                            ...formUtils.createLayout('自定义组件',5,7),
+                            ...formUtils.createLayout('自定义组件',5,15),
                             type: 'password',
                         },
                         rules:rules.customRenderInput1
@@ -204,7 +236,7 @@ export class ProForm extends React.Component<IProps,{}> {
                             className: antdProps.className,
                         },
                         iFormProps: {
-                            ...formUtils.createLayout('价格',10,2 * 7),
+                            ...formUtils.createLayout('价格',10,2 * 6),
                             options: [{ key: 'rmb',value: 'RMB' },{ key: 'dollar',value: 'Dollar' }],
                         },
                         rules: rules.priceType,
@@ -224,7 +256,7 @@ export class ProForm extends React.Component<IProps,{}> {
                                     formUtils.createFormComponent(JsxSelect,form,formRef.uid,formRef)
                                 }
                             </Col>
-                            <Col span={10} offset={1}>
+                            <Col span={7} offset={1}>
                                 {
                                     formUtils.createFormComponent(JsxInput,form,formRef.uid,formRef)
                                 }
@@ -248,32 +280,53 @@ export class ProForm extends React.Component<IProps,{}> {
             formUtils.getFormConfig('upload'),
         ]
     }
-    render() {
-        return (<LegionsProPageContainer
-            query={null}
-            content={
-                <Row>
-                    <LegionsProForm
-                        <FormFields>
-                        {...this.formRef && this.formRef.viewModel.InputDataModel}
-                        InputDataModel={FormFields}
-                        onGetForm={(form,ref) => {
-                            this.formRef = Object.assign(ref,{ that: this });
-                        }}
-                        mapPropsToFields={(props) => {
-                            return new FormFields(props)
-                        }}
-                        onFieldsChange={(props,formFields) => {
-                            this.formRef.store.updateFormInputData(this.formRef.uid,formFields)
-                            console.log(formFields,this.formRef.viewModel.InputDataModel);
-                        }}
-                        controls={this.createConfig()}
-                        colCount={1}
-                    ></LegionsProForm>
+  render() {
+    return (
+      <Row>
+        <Row>
+          <Form layout="inline">
+              <FormItem >
+                <Button onClick={()=>{
+                  this.formRef && this.formRef.viewModel.form.validateFields((err,values: FormFields) => {
 
-                </Row>
-            }
-        ></LegionsProPageContainer>)
-    }
+                        if (!err) {
+                            /*  console.log(values,this.props.store.obFormFields) */
+                        }
+                        else {
+                           
+                        }
+                        console.log(values,err,'values');
+                    })
+                }}> 提交</Button>
+              </FormItem>
+            </Form>
+        </Row>
+         <LegionsProForm
+          <FormFields>
+          {...this.formRef && this.formRef.viewModel.InputDataModel}
+          InputDataModel={FormFields}
+          onGetForm={(form,ref) => {
+              this.formRef = Object.assign(ref,{ that: this });
+          }}
+          mapPropsToFields={(props) => {
+              return new FormFields(props)
+          }}
+          onFieldsChange={(props,formFields) => {
+              this.formRef.store.updateFormInputData(this.formRef.uid,formFields)
+              console.log(formFields,this.formRef.viewModel.InputDataModel);
+          }}
+          controls={this.createConfig()}
+          uniqueUid="demo/proForm/one"
+          colCount={2}
+      ></LegionsProForm>
+      </Row>
+     
+    );
+  }
 }
-
+const root = props => {
+  return <ProFormDemo></ProFormDemo>;
+};
+const app = create();
+ReactDOM.render(React.createElement(app.start(root)), mountNode);
+```

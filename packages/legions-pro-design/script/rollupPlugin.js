@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-10 16:14:09
- * @LastEditTime: 2021-01-11 16:46:29
+ * @LastEditTime: 2021-01-19 16:44:43
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/script/rollupPlugin.js
@@ -84,6 +84,8 @@ const externalLib = [
   'lodash/has',
   'lodash/set',
   '../LegionsProForm/HlForm',
+  '../../../models',
+  'legions-decorator/async.validator',
   
   'react',
   './style/index.less',

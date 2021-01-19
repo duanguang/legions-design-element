@@ -12,6 +12,7 @@ import { LegionsFetch } from '../../core';
 import { pagingQueryProcessing } from 'legions-lunar';
 import { cloneDeep } from 'lodash';
 import { SelectDatabaseDB } from '../../db';
+import { SelectKeyValue } from '../../models';
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -670,23 +671,19 @@ var HLFormLocalView = /** @class */ (function () {
                 if (autoQuery.requestBeforeTransformParams) {
                     params = autoQuery.requestBeforeTransformParams(__assign(__assign({}, params), { pageIndex: options.pageIndex, pageSize: options.pageSize }));
                 }
+                var model = {
+                    onBeforTranform: function (value) {
+                        return {
+                            responseData: value,
+                            mappingEntity: autoQuery.mappingEntity,
+                        };
+                    },
+                };
                 if (autoQuery.method === 'post') {
-                    return server_1.post({
-                        url: autoQuery.ApiUrl,
-                        parameter: params,
-                        headerOption: __assign(__assign({}, autoQuery.options), { 'api-cookie': autoQuery.token }),
-                        //@ts-ignore
-                        model: autoQuery.model,
-                    });
+                    return server_1.post(__assign({ url: autoQuery.ApiUrl, parameter: params, headers: __assign(__assign({}, autoQuery.options), { 'api-cookie': autoQuery.token }), model: SelectKeyValue }, model));
                 }
                 else if (autoQuery.method === 'get') {
-                    return server_1.get({
-                        url: autoQuery.ApiUrl,
-                        parameter: params,
-                        headerOption: __assign(__assign({}, autoQuery.options), { 'api-cookie': autoQuery.token }),
-                        //@ts-ignore
-                        model: autoQuery.model,
-                    });
+                    return server_1.get(__assign({ url: autoQuery.ApiUrl, parameter: params, headers: __assign(__assign({}, autoQuery.options), { 'api-cookie': autoQuery.token }), model: SelectKeyValue }, model));
                 }
             };
             var data = this.selectOptions.get(name); // 查询指定下拉组件数据
@@ -757,12 +754,11 @@ var HLFormLocalView = /** @class */ (function () {
                         currValue_1.keywords = options.keyWords;
                     }
                     /** 输入关键词有无历史搜索数据，都会去请求接口，存在历史数据线调取历史数据 */
-                    //@ts-ignore
                     var store = extendObservable({
                         keyWords: keyWords_1,
                         // @ts-ignore
                         data: observable.map(),
-                    });
+                    }, {});
                     for (var i = 1; i <= item_1.obData.size; i++) {
                         /**
                          * 调出输入关键词历史搜索数据
@@ -949,7 +945,7 @@ var ProFormStore = /** @class */ (function (_super) {
     /**
      *
      *
-     * @param {FormElement} formElementUid  FormElement 组件生成的唯一uid
+     * @param  formElementUid  FormElement 组件生成的唯一uid
      * @param {string} formUid 表单UID
      * @param {string} [nextElementName] 下一个组件name
      * @memberof AbstractForm

@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-31 10:38:25
- * @LastEditTime: 2021-01-07 17:51:59
+ * @LastEditTime: 2021-01-19 16:39:40
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/models/pro.menu.model/index.ts
@@ -129,7 +129,7 @@ export class MenuContainerEntity<InterfaceMenuEntity> extends BaseEntity<
    * @memberof MenuContainerEntity  VMdel?:ClassOf<InterfaceMenuEntity>
    */
   constructor(fromJson: IMenuEntity) {
-    super(fromJson);
+    super();
     this.message = fromJson.msg || '查询成功';
     this.success = fromJson.ok || true;
     this.code = fromJson.status || '';

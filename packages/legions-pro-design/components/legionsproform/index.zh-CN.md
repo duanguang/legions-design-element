@@ -1,22 +1,44 @@
-/*
- * @Author: duanguang
- * @Date: 2021-01-15 15:42:07
- * @LastEditTime: 2021-01-19 16:23:22
- * @LastEditors: duanguang
- * @Description: 
- * @FilePath: /legions-design-element/packages/legions-pro-design/src/examples/containers/proForm/model.ts
- * @「扫去窗上的尘埃，才可以看到窗外的美景。」
- */
+---
+category: Components
+cols: 1
+type: 数据展示
+title: LegionsProForm
+subtitle: 高级表单
+---
+
+ProForm 的诞生是为了解决项目中需要写很多 form 的样板代码的问题，所以在其中做了封装了很多常用的逻辑。这些封装可以简单的分类为预设行为与预设逻辑。
+
+
+## 何时使用
+
+当你的表单需要与服务端进行交互，且比较表单相对大时，ProForm 是不二选择。
+
+## API
+
+ProTable 在 antd 的 Table 上进行了一层封装，支持了一些预设，并且封装了一些行为。这里只列出与 antd Table 不同的 api。
+
+按钮的属性说明如下：
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| uniqueKey | 	表格行 key 的取值，可以是字符串| string | "id" |
+| rowSelectionClickType | 行单击选中方式 | 'radio' \| 'check' | `radio` |
+| type | 行选中方式 | 'radio' \| 'check' |`check` |
+| tableModulesName | table 模块名称，如果设置此值，请保持绝对唯一 | string| - |
+| displayType | 大数据量表格还是小量数据 | 'smallData' \| 'bigData' | `smallData` |
+| size | 设置按钮大小，可选值为 `small` `large` 或者不设 | string | `default` |
+| isOpenCustomColumns | 是否开启自定义列设置 | boolean | false |
+| isOpenRowChange | 是否开启行单击选中 | boolean | false |
+| isOpenRowSelection | 是否开启行选中,只在初始化执行一次 | boolean | false |
+
+### Model
+```js
+import { LegionsProForm } from 'legions-pro-design';
 import { UploadChangeParam } from 'antd/lib/upload/interface';
 import { FormRuleProperty } from 'legions-decorator/async.validator';
 import { IBaseFormFields,HlLabeledValue } from 'legions-lunar/model';
 import { ClassOf } from 'legions-lunar/types/api/typescript';
-import { LegionsProForm } from '../../../components';
-interface IFormFieldUserRenderInput1{
-    currency:string,
-    number:number
-}
-export class FormFields extends LegionsProForm.ProFormFields<FormFields>{
+class FormFields extends LegionsProForm.ProFormFields<FormFields>{
     @FormRuleProperty({
 		required: true,
 		name: 'text',
@@ -67,6 +89,7 @@ export class FormFields extends LegionsProForm.ProFormFields<FormFields>{
     numbers: IBaseFormFields<number> = {
         value:void 0,
     }
+    
     @FormRuleProperty({
         required: true,
         name: 'selectedItem',
@@ -87,6 +110,7 @@ export class FormFields extends LegionsProForm.ProFormFields<FormFields>{
     selectedItemRemote: IBaseFormFields<HlLabeledValue> = {
         value:void 0,
     }
+
     @FormRuleProperty({
         required: true,
         name: 'selectedItemMultiple',
@@ -97,6 +121,7 @@ export class FormFields extends LegionsProForm.ProFormFields<FormFields>{
     selectedItemMultiple: IBaseFormFields<Array<HlLabeledValue>> = {
         value:void 0,
     }
+    
     @FormRuleProperty({
         required: true,
         name: 'upload',
@@ -186,3 +211,14 @@ export class FormFields extends LegionsProForm.ProFormFields<FormFields>{
         FormFields.initMapPropsToFields.call(this, form)
     }
 }
+```
+
+<style>
+[id^="components-legionsproecharts-demo-"] .ant-btn {
+  margin-right: 8px;
+  margin-bottom: 12px;
+}
+[id^="components-legionsproecharts-demo-"] .ant-btn-group > .ant-btn {
+  margin-right: 0;
+}
+</style>

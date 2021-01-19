@@ -71,10 +71,7 @@ export default class FormInputNumber extends AbstractForm<IFormWithInputNumberPr
                 >
                     {getFieldDecorator(iAntdProps.name, {
                         rules: rules,
-                        normalize: (value: number, prevValue, allValues) => {
-                            if (value !== void 0 && value !== null) {
-                                return value.toString()
-                            }
+                        normalize: (value: number,prevValue,allValues) => {
                             return value
                         },
                     })(

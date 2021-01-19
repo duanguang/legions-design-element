@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-10 16:14:09
- * @LastEditTime: 2021-01-14 15:50:41
+ * @LastEditTime: 2021-01-19 16:43:40
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/script/entiy.js
@@ -15,11 +15,11 @@ const array_components1 = ['models',
 /* 'db', */
 /* 'services' */]
 const array_componentsStore = [/* 'store', */,
-/* 'store/pro.form', */
+'store/pro.form',
 /* 'store/pro.layout' */,
 /* 'store/pro.modal' */,
 /* 'store/pro.query.conditions', */
-'store/pro.table',
+/* 'store/pro.table', */
 ]
 const array_component = [
 /*   'LegionsProBaiduMap', */
@@ -29,7 +29,7 @@ const array_component = [
 /* 'LegionsProErrorReportShow', */
 /* 'LegionsProException', */
 /*  'LegionsProIframe', */
-  /* 'LegionsProForm', */
+  'LegionsProForm',
 /*  'LegionsProInput', */
   /* 'LegionsProLayout', */
 /* 'LegionsProLineOverflow', */
@@ -41,7 +41,7 @@ const array_component = [
 /* 'LegionsProQueryConditions', */
   /* 'LegionsProScrawl', */
   /* 'LegionsProSelect', */
-  'LegionsProTable',
+  /* 'LegionsProTable', */
 /*  'LegionsProTableCustomColumns', */
 /* 'LegionsProTableForm', */
 /* 'LegionsProTextArea', */
@@ -74,7 +74,7 @@ const umd = [
   },
 ];
 const es = [
-  ...array_component.map((item) => {
+  ...array_componentsStore.map((item) => {
     let input = '';
     let file = '';
     if (item === 'index') {

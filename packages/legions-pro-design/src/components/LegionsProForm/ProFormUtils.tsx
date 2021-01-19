@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-08 15:19:23
- * @LastEditTime: 2021-01-15 18:53:50
+ * @LastEditTime: 2021-01-19 11:49:07
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProForm/ProFormUtils.tsx
@@ -111,46 +111,46 @@ export class ProFormUtils<Store,global = {}>{
             //console.warn(`【${key}】:Configuration information, will be covered`)
         }
     }
-    renderSelectConfig<T = {}>(options: IRenderComponentParams<IFormSelectProps & T>): LabelWithHLSelectModel {
+    renderSelectConfig(options: IRenderComponentParams<IFormSelectProps>): LabelWithHLSelectModel {
         this.chkRenderConfig(options.iAntdProps.id)
         this[options.iAntdProps.id] = new LabelWithHLSelectModel(options.iAntdProps,options.iFormProps,options.rules || [])
         return this[options.iAntdProps.id];
     }
-    renderInputConfig<T = {}>(options: IRenderComponentParams<IFormInputProps & T>): LabelWithInputModel {
+    renderInputConfig<T extends IFormInputProps>(options: IRenderComponentParams<T>): LabelWithInputModel {
         this.chkRenderConfig(options.iAntdProps.id)
         return this[options.iAntdProps.id] = new LabelWithInputModel(options.iAntdProps,options.iFormProps,options.rules || []);
     }
-    renderTextConfig<T = {}>(options: IRenderComponentParams<IFormTextProps & T>): LabelWithTextModel {
+    renderTextConfig<T extends IFormTextProps>(options: IRenderComponentParams<T>): LabelWithTextModel {
         this.chkRenderConfig(options.iAntdProps.id)
         this[options.iAntdProps.id] = new LabelWithTextModel(options.iAntdProps,options.iFormProps,options.rules || [])
         return this[options.iAntdProps.id];
     }
-    renderDatePickerConfig<T = {}>(options: IRenderComponentParams<IFormDatePickerProps & T>): LabelWithDatePickerModel {
+    renderDatePickerConfig(options: IRenderComponentParams<IFormDatePickerProps>): LabelWithDatePickerModel {
         this.chkRenderConfig(options.iAntdProps.id)
         this[options.iAntdProps.id] = new LabelWithDatePickerModel(options.iAntdProps,options.iFormProps,options.rules || [])
         return this[options.iAntdProps.id];
     }
-    renderMonthPickerConfig<T = {}>(options: IRenderComponentParams<IFormMonthPickerProps & T>): LabelWithMonthPickerModel {
+    renderMonthPickerConfig(options: IRenderComponentParams<IFormMonthPickerProps>): LabelWithMonthPickerModel {
         this.chkRenderConfig(options.iAntdProps.id)
         return this[options.iAntdProps.id] = new LabelWithMonthPickerModel(options.iAntdProps,options.iFormProps,options.rules || []);
     }
-    renderRangePickerConfig<T = {}>(options: IRenderComponentParams<IFormRangePickerProps & T>): LabelWithRangePickerModel {
+    renderRangePickerConfig(options: IRenderComponentParams<IFormRangePickerProps>): LabelWithRangePickerModel {
         this.chkRenderConfig(options.iAntdProps.id)
         return this[options.iAntdProps.id] = new LabelWithRangePickerModel(options.iAntdProps,options.iFormProps,options.rules || []);
     }
-    renderInputNumberConfig<T = {}>(options: IRenderComponentParams<IFormInputNumberProps & T>): LabelWithInputNumberModel {
+    renderInputNumberConfig(options: IRenderComponentParams<IFormInputNumberProps>): LabelWithInputNumberModel {
         this.chkRenderConfig(options.iAntdProps.id)
         return this[options.iAntdProps.id] = new LabelWithInputNumberModel(options.iAntdProps,options.iFormProps,options.rules || []);
     }
-    renderRadioButtonConfig<T = {}>(options: IRenderComponentParams<IFormRadioButtonProps & T>): LabelWithRadioButtonModel {
+    renderRadioButtonConfig(options: IRenderComponentParams<IFormRadioButtonProps>): LabelWithRadioButtonModel {
         this.chkRenderConfig(options.iAntdProps.id)
         return this[options.iAntdProps.id] = new LabelWithRadioButtonModel(options.iAntdProps,options.iFormProps,options.rules || []);
     }
-    renderSwitchConfig<T = {}>(options: IRenderComponentParams<IFormSwitchProps & T>): LabelWithSwitchModel {
+    renderSwitchConfig(options: IRenderComponentParams<IFormSwitchProps>): LabelWithSwitchModel {
         this.chkRenderConfig(options.iAntdProps.id)
         return this[options.iAntdProps.id] = new LabelWithSwitchModel(options.iAntdProps,options.iFormProps,options.rules || []);
     }
-    renderUploadConfig<T = {}>(options: IRenderComponentParams<IFormUploadProps & T>): LabelWithUploadModel {
+    renderUploadConfig(options: IRenderComponentParams<IFormUploadProps>): LabelWithUploadModel {
         this.chkRenderConfig(options.iAntdProps.id)
         return this[options.iAntdProps.id] = new LabelWithUploadModel(options.iAntdProps,options.iFormProps,options.rules || []);
     }
@@ -159,14 +159,14 @@ export class ProFormUtils<Store,global = {}>{
      * 自定义组件
      *
      * @template T
-     * @param {(IRenderComponentParams<IFormUploadProps & T>)} options
+     * @param {(IRenderComponentParams<IFormUploadProps>)} options
      * @memberof HLFormUtils
      */
-    renderCustomConfig<T = {}>(options: IRenderComponentParams<IFormRenderProps & T>): LabelWithRenderModel {
+    renderCustomConfig(options: IRenderComponentParams<IFormRenderProps>): LabelWithRenderModel {
         this.chkRenderConfig(options.iAntdProps.id)
         return this[options.iAntdProps.id] = new LabelWithRenderModel(options.iAntdProps,options.iFormProps,options.rules || []);
     }
-    renderCheckboxConfig<T = {}>(options: IRenderComponentParams<IFormCheckboxProps & T>): LabelWithCheckboxModel {
+    renderCheckboxConfig(options: IRenderComponentParams<IFormCheckboxProps>): LabelWithCheckboxModel {
         this.chkRenderConfig(options.iAntdProps.id)
         return this[options.iAntdProps.id] = new LabelWithCheckboxModel(options.iAntdProps,options.iFormProps,options.rules || []);
     }
@@ -338,9 +338,8 @@ type IFormRules<FormRules> = {
     [P in keyof FormRules]: IAntdRule[];
 }
 export class ProFormFields<T> extends BaseFormFields{
-    constructor(FormFields:ClassOf<T>,value:T) {
+    constructor() {
         super();
-        FormFields['initMapPropsToFields'].call(this,value)
     }
     /** 初始化表单规则 */
    static initFormRules<Form,P>(FormFields: ClassOf<Form>,props: P):IFormRules<Form> {

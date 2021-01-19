@@ -9,9 +9,9 @@ import LegionsProSelect, { AbstractSelect } from '../LegionsProSelect';
 import { getStringLen } from 'legions-utils-tool/format.string';
 import { debounce } from 'legions-utils-tool/debounce';
 import { shortHash } from 'legions-lunar/object-hash';
-import { ProFormStore } from '../store/pro.form';
 import { bind, observer } from 'legions/store-react';
 import { findDOMNode } from 'react-dom';
+import { ProFormStore } from '../store/pro.form';
 import LegionsProErrorReportShow from '../LegionsProErrorReportShow';
 import Styles from './style/index.modules.less';
 import classNames from 'classnames';
@@ -22,9 +22,10 @@ import './style/index.less';
 import { toJS, runInAction } from 'mobx';
 import LegionsProDragger from '../LegionsProDragger';
 import get from 'lodash/get';
-import { HlLabeledValue } from 'legions-lunar/model';
+import { BaseFormFields, HlLabeledValue } from 'legions-lunar/model';
 import { LoggerManager } from 'legions-lunar/legion.plugin.sdk';
 import { getInjector } from 'legions/store';
+import { createFormRule } from 'legions-decorator/async.validator';
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -325,11 +326,10 @@ var FormElement = /** @class */ (function (_super) {
             var selectDom = document.querySelector("." + this.uid);
             if (selectDom) {
                 var selectSelectionDom = selectDom.getElementsByClassName('ant-select-open');
-                var controlsOptiosn = [];
                 if (this.formStore) {
                     var controls = this.formStore.controls.find(function (item) { return item.iAntdProps.name === _this.props.elementKey; });
                     if (controls && controls.iFormWithSelect) {
-                        controlsOptiosn = controls.iFormWithSelect.options || [];
+                        controls.iFormWithSelect.options || [];
                     }
                 }
                 if (selectSelectionDom && selectSelectionDom.length <= 0) { // 当下拉框展开选项数据时，不拦截默认下拉回车选中行为
@@ -356,11 +356,10 @@ var FormElement = /** @class */ (function (_super) {
             var selectDom = document.querySelector("." + this.uid);
             if (selectDom) {
                 var selectSelectionDom = selectDom.getElementsByClassName('ant-select-open');
-                var controlsOptiosn = [];
                 if (this.formStore) {
                     var controls = this.formStore.controls.find(function (item) { return item.iAntdProps.name === _this.props.elementKey; });
                     if (controls && controls.iFormWithSelect) {
-                        controlsOptiosn = controls.iFormWithSelect.options || [];
+                        controls.iFormWithSelect.options || [];
                     }
                 }
                 if (selectSelectionDom && selectSelectionDom.length) { // 当下拉框展开选项数据时，不拦截默认下拉回车选中行为，回车选中数据
@@ -435,7 +434,7 @@ var FormElement = /** @class */ (function (_super) {
         __metadata("design:paramtypes", [Object])
     ], FormElement);
     return FormElement;
-}(AbstractForm));
+}(React.Component));
 
 var FormItem = Form.Item;
 var TextArea = Input.TextArea;
@@ -1102,9 +1101,6 @@ var FormInputNumber = /** @class */ (function (_super) {
                 getFieldDecorator(iAntdProps.name, {
                     rules: rules,
                     normalize: function (value, prevValue, allValues) {
-                        if (value !== void 0 && value !== null) {
-                            return value.toString();
-                        }
                         return value;
                     },
                 })(
@@ -1220,12 +1216,11 @@ var TooltipText = /** @class */ (function (_super) {
     TooltipText.prototype.render = function () {
         var _a;
         var _b = this.props, form = _b.form, FormTextRef = _b.FormTextRef, inputType = _b.inputType, props = __rest(_b, ["form", "FormTextRef", "inputType"]);
-        var isShowErrorView = false;
         if (FormTextRef && this.props.formUid) {
             var viewStore = FormTextRef.store.get(this.props.formUid);
             if (viewStore.computedErrorReactNodeList.has(this.props.formItemName)) {
                 var uid = viewStore.computedErrorReactNodeList.get(this.props.formItemName).uid;
-                isShowErrorView = viewStore.errorListView.has(uid);
+                viewStore.errorListView.has(uid);
             }
         }
         var getFieldDecorator = form.getFieldDecorator, getFieldsError = form.getFieldsError, setFieldsValue = form.setFieldsValue;
@@ -1525,7 +1520,7 @@ var ProFormUtils = /** @class */ (function () {
      * 自定义组件
      *
      * @template T
-     * @param {(IRenderComponentParams<IFormUploadProps & T>)} options
+     * @param {(IRenderComponentParams<IFormUploadProps>)} options
      * @memberof HLFormUtils
      */
     ProFormUtils.prototype.renderCustomConfig = function (options) {
@@ -1598,6 +1593,18 @@ var ProFormUtils = /** @class */ (function () {
     };
     return ProFormUtils;
 }());
+var ProFormFields = /** @class */ (function (_super) {
+    __extends(ProFormFields, _super);
+    function ProFormFields() {
+        return _super.call(this) || this;
+    }
+    /** 初始化表单规则 */
+    ProFormFields.initFormRules = function (FormFields, props) {
+        //@ts-ignore
+        return createFormRule(FormFields, new FormFields(), { props: props });
+    };
+    return ProFormFields;
+}(BaseFormFields));
 
 var Link = Anchor.Link;
 var FormItem$c = Form.Item;
@@ -1793,6 +1800,7 @@ var HLForm = /** @class */ (function (_super) {
                     var optionItem = new HlLabeledValue();
                     if (selectView && selectView.currValue) {
                         for (var i = 1; i <= selectView.currValue.data.size; i++) {
+                            //@ts-ignore
                             var option = selectView.currValue.data.get(i.toString()).find(function (item) { return item.key === optionKey; });
                             if (option) {
                                 optionItem = __assign(__assign({}, optionItem), option);
@@ -1966,6 +1974,7 @@ var HLForm = /** @class */ (function (_super) {
         if (this.storeView) {
             var keys = this.storeView.elementList.keys();
             var entitys_1 = null;
+            //@ts-ignore
             keys.map(function (item) {
                 var entity = _this.storeView.elementList.get(item);
                 if (entity && entity.elementKey === ElementKey) {
@@ -2019,11 +2028,13 @@ var HLForm = /** @class */ (function (_super) {
         if (formStore && formStore.enableEnterSwitch) {
             /* e.stopPropagation() */
             var keys = formStore.elementList.keys();
+            //@ts-ignore
             if (keys.length > 0 && !formStore.focusUid) {
                 formStore.focusUid = keys[0];
             }
             if (keyCode === KeydownEnum$1.next || keyCode === KeydownEnum$1.enter) {
                 var _loop_1 = function (i) {
+                    //@ts-ignore
                     var index = keys.findIndex(function (item) { return item === formStore.focusUid; });
                     if (index > -1) {
                         var currUid = keys[index];
@@ -2046,6 +2057,7 @@ var HLForm = /** @class */ (function (_super) {
                             }
                         }
                         else {
+                            //@ts-ignore
                             if (nextIndex >= keys.length) { /**  当到达最后一个元素时，再次回车将回到第一个元素的焦点*/
                                 nextIndex = 0;
                                 nextUid = keys[nextIndex];
@@ -2084,6 +2096,7 @@ var HLForm = /** @class */ (function (_super) {
                     }
                 };
                 var this_1 = this;
+                //@ts-ignore
                 for (var i = 0; i < keys.length; i++) {
                     var state_1 = _loop_1(i);
                     if (typeof state_1 === "object")
@@ -2092,11 +2105,13 @@ var HLForm = /** @class */ (function (_super) {
             }
             if (keyCode === KeydownEnum$1.up) {
                 var _loop_2 = function (i) {
+                    //@ts-ignore
                     var index = keys.findIndex(function (item) { return item === formStore.focusUid; });
                     if (index > -1) {
                         var preIndex = index - 1;
                         var nextUid = keys[preIndex];
                         if (preIndex < 0) { /**  当到达第一个一个元素时，再次按上键将回到最后一个元素的焦点*/
+                            //@ts-ignore
                             preIndex = keys.length - 1;
                             nextUid = keys[preIndex];
                         }
@@ -2127,6 +2142,7 @@ var HLForm = /** @class */ (function (_super) {
                         }
                     }
                 };
+                //@ts-ignore
                 for (var i = 0; i < keys.length; i++) {
                     var state_2 = _loop_2(i);
                     if (typeof state_2 === "object")
@@ -2279,7 +2295,9 @@ var HLForm = /** @class */ (function (_super) {
                 if (view_1 && view_1.currValue) {
                     var options = [];
                     var total = 0;
+                    //@ts-ignore
                     if (view_1.currValue.data.get(view_1.pageIndex.toString())) {
+                        //@ts-ignore
                         options = view_1.currValue.data.get(view_1.pageIndex.toString());
                         total = view_1.currValue.total;
                     }
@@ -2464,6 +2482,9 @@ LegionsProForm.LabelWithUploadModel = LabelWithUploadModel;
 LegionsProForm.LabelWithSwitchModel = LabelWithSwitchModel;
 LegionsProForm.LabelWithRadioButtonModel = LabelWithRadioButtonModel;
 LegionsProForm.LabelWithTextModel = LabelWithTextModel;
+LegionsProForm.LabelWithInputModel = LabelWithInputModel;
+LegionsProForm.BaseFormFields = BaseFormFields;
+LegionsProForm.ProFormFields = ProFormFields;
 /* @bind({ store: HLFormStore })
 @observer
 export class HLFormContainer<mapProps = {}> extends React.Component<IHLFormProps<mapProps>>{

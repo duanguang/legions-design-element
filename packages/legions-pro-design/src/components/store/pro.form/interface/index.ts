@@ -8,7 +8,8 @@ import {
   IAntdSelectOption,
 } from '../../../interface/antd';
 import {ProFormStore} from '..';
-import { HLFormLocalView, HlFormView, IOtherView } from '../proFormStore';
+import { HLFormLocalView,HlFormView,IOtherView } from '../proFormStore';
+import {SelectKeyValue,KeyValue} from '../../../models'
 export interface IErrorView {
   /**
    * 只读
@@ -201,14 +202,12 @@ export interface ISelectAutoQuery<Model = {}> {
   options?: HeadersPrams & Object;
 
   /**
-   *
-   * 数据模型
-   *
-   * 一般用于定义接口返回结构
-   * @type {Model}
-   * @memberof ISelectAutoQuery
-   */
-  model: Model;
+     * 转换服务端数据
+     *
+     * 
+     * 如果不想写model,则通过此函数先把数据转换成约定结构，在由底层固定model去转换
+     */
+    mappingEntity: (that: SelectKeyValue,responseData: any) => KeyValue[];
 
   /**
    * 下拉数据绑定前转换绑定数据结构

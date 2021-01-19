@@ -1,21 +1,17 @@
 /*
  * @Author: duanguang
- * @Date: 2021-01-15 15:42:07
- * @LastEditTime: 2021-01-19 16:23:22
+ * @Date: 2021-01-19 17:47:07
+ * @LastEditTime: 2021-01-19 17:47:58
  * @LastEditors: duanguang
  * @Description: 
- * @FilePath: /legions-design-element/packages/legions-pro-design/src/examples/containers/proForm/model.ts
+ * @FilePath: /legions-design-element/packages/legions-pro-design/components/legionsproform/model.ts
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
+import { LegionsProForm, LegionsProPageContainer } from 'legions-pro-design';
 import { UploadChangeParam } from 'antd/lib/upload/interface';
 import { FormRuleProperty } from 'legions-decorator/async.validator';
 import { IBaseFormFields,HlLabeledValue } from 'legions-lunar/model';
 import { ClassOf } from 'legions-lunar/types/api/typescript';
-import { LegionsProForm } from '../../../components';
-interface IFormFieldUserRenderInput1{
-    currency:string,
-    number:number
-}
 export class FormFields extends LegionsProForm.ProFormFields<FormFields>{
     @FormRuleProperty({
 		required: true,
@@ -67,6 +63,7 @@ export class FormFields extends LegionsProForm.ProFormFields<FormFields>{
     numbers: IBaseFormFields<number> = {
         value:void 0,
     }
+    
     @FormRuleProperty({
         required: true,
         name: 'selectedItem',
@@ -87,6 +84,7 @@ export class FormFields extends LegionsProForm.ProFormFields<FormFields>{
     selectedItemRemote: IBaseFormFields<HlLabeledValue> = {
         value:void 0,
     }
+
     @FormRuleProperty({
         required: true,
         name: 'selectedItemMultiple',
@@ -97,6 +95,7 @@ export class FormFields extends LegionsProForm.ProFormFields<FormFields>{
     selectedItemMultiple: IBaseFormFields<Array<HlLabeledValue>> = {
         value:void 0,
     }
+    
     @FormRuleProperty({
         required: true,
         name: 'upload',

@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-29 10:09:16
- * @LastEditTime: 2020-12-29 15:05:45
+ * @LastEditTime: 2021-01-19 15:50:06
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProForm/interface/select.ts
@@ -19,10 +19,13 @@ import {
     IAntdSelectOption
 } from '../../interface/antd';
 import { InstanceFormElement } from './formElement';
-import { IErrorView, InstanceForm } from './form';
+import { IErrorView,InstanceForm } from './form';
+import {SelectKeyValue,KeyValue} from '../../models'
+import { request } from 'legions/request';
 type HeadersPrams = {
     'Content-Type'?: 'application/json' | 'application/x-www-form-urlencoded'
 }
+//@ts-ignore
 export interface IFormSelectProps extends IProSelectProps,IAntdFormItemProps {
 
     /**
@@ -31,7 +34,7 @@ export interface IFormSelectProps extends IProSelectProps,IAntdFormItemProps {
      * @type {IAntdSelectOption[]}
      * @memberof IFormSelectProps
      */
-    options: IAntdSelectOption[]
+    options?: IAntdSelectOption[]
     optGroups?: Array<IOptGroupProps>
     firstActiveValue?: string[] | string
 
@@ -103,25 +106,22 @@ export interface ISelectAutoQuery<Model = {}> {
      * @type {(HeadersPrams & Object)}
      * @memberof ISelectAutoQuery
      */
-    options?: HeadersPrams & Object
+    options?: HeadersPrams & { [key: string]: string }&request.HeadersPrams;
 
     /**
+     * 转换服务端数据
      *
-     * 数据模型
      * 
-     * 一般用于定义接口返回结构
-     * @type {Model}
-     * @memberof ISelectAutoQuery
+     * 如果不想写model,则通过此函数先把数据转换成约定结构，在由底层固定model去转换
      */
-    model: Model
-
+    mappingEntity: (that: SelectKeyValue,responseData: any) => KeyValue[];
     /**
      * 下拉数据绑定前转换绑定数据结构
      * 
      * 当外部数据不确定时，此时我们需要一个适配器转换从接口中取到的数据，用于绑定下拉选项
      * @memberof ISelectAutoQuery
      */
-    transform: (value: observablePromise.PramsResult<Model>) => { total: number,data: IAntdSelectOption[] }
+    transform: (value: observablePromise.PramsResult<SelectKeyValue>) => { total: number,data: IAntdSelectOption[] }
     /**
      *
      * 授权信息令牌

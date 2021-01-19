@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-26 10:27:31
- * @LastEditTime: 2021-01-08 15:28:19
+ * @LastEditTime: 2021-01-19 11:42:23
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/interface/antd/index.ts
@@ -143,7 +143,7 @@ export interface IAntdSelectOption extends OptionProps {
      */
     value: string;
     key: string;
-  
+    keyValue?: any;
     /**
      * 分组信息
      *

@@ -185,7 +185,7 @@ var ExportTaskEntity = /** @class */ (function () {
 }());
 
 var BaseEntity = /** @class */ (function () {
-    function BaseEntity(fromJson) {
+    function BaseEntity() {
         /**
          *操作结果
          *
@@ -237,7 +237,7 @@ var ContainerEntity = /** @class */ (function (_super) {
     __extends(ContainerEntity, _super);
     // tslint:disable-next-line: typedef
     function ContainerEntity(fromService) {
-        var _this = _super.call(this, fromService) || this;
+        var _this = _super.call(this) || this;
         if (fromService && typeof fromService === 'object') {
             _this.code = fromService.status || '';
             _this.message = fromService.msg || '';
@@ -352,7 +352,7 @@ var MenuContainerEntity = /** @class */ (function (_super) {
      * @memberof MenuContainerEntity  VMdel?:ClassOf<InterfaceMenuEntity>
      */
     function MenuContainerEntity(fromJson) {
-        var _this = _super.call(this, fromJson) || this;
+        var _this = _super.call(this) || this;
         _this.message = fromJson.msg || '查询成功';
         _this.success = fromJson.ok || true;
         _this.code = fromJson.status || '';
@@ -411,7 +411,7 @@ var TableColumnsEntity = /** @class */ (function () {
 var TableColumnsContainerEntity = /** @class */ (function (_super) {
     __extends(TableColumnsContainerEntity, _super);
     function TableColumnsContainerEntity(fromJson) {
-        var _this = _super.call(this, fromJson) || this;
+        var _this = _super.call(this) || this;
         if (fromJson) {
             _this.message = fromJson.message || '操作成功';
             _this.success = fromJson.success || true;
@@ -426,4 +426,61 @@ var TableColumnsContainerEntity = /** @class */ (function (_super) {
     return TableColumnsContainerEntity;
 }(BaseEntity));
 
-export { BaseEntity, ContainerEntity, ExportTaskEntity, MenuContainerEntity, MenuEntity, TableColumnsContainerEntity, TableColumnsEntity, TableListColumns };
+var KeyValue = /** @class */ (function () {
+    function KeyValue() {
+        this.key = void 0;
+        this.value = void 0;
+        this.label = void 0;
+        this.title = void 0;
+        this.keyValue = void 0;
+    }
+    __decorate([
+        JsonProperty('key'),
+        __metadata("design:type", Object)
+    ], KeyValue.prototype, "key", void 0);
+    __decorate([
+        JsonProperty('value'),
+        __metadata("design:type", Object)
+    ], KeyValue.prototype, "value", void 0);
+    __decorate([
+        JsonProperty('label'),
+        __metadata("design:type", Object)
+    ], KeyValue.prototype, "label", void 0);
+    __decorate([
+        JsonProperty('title'),
+        __metadata("design:type", Object)
+    ], KeyValue.prototype, "title", void 0);
+    __decorate([
+        JsonProperty('keyValue'),
+        __metadata("design:type", Object)
+    ], KeyValue.prototype, "keyValue", void 0);
+    return KeyValue;
+}());
+/** 下拉列表数据模型*/
+var SelectKeyValue = /** @class */ (function (_super) {
+    __extends(SelectKeyValue, _super);
+    function SelectKeyValue(options) {
+        var _this = _super.call(this) || this;
+        _this.total = 0;
+        _this.current = 1;
+        _this.pageSize = 10;
+        _this.result = [];
+        if (options && typeof options.responseData === 'object') {
+            _this.message = options.responseData.msg || '查询成功';
+            _this.success = options.responseData.ok ? true : false;
+            _this.code = options.responseData.status || '';
+            _this.total = options.responseData.total || 0;
+            _this.current = options.responseData.current || 1;
+            _this.pageSize = options.responseData.pageSize || 10;
+            if (options.mappingEntity &&
+                typeof options.mappingEntity === 'function') {
+                var result = options.mappingEntity(_this, options.responseData);
+                _this.result = _this.transformRows(result, KeyValue);
+            }
+        }
+        return _this;
+    }
+    return SelectKeyValue;
+}(BaseEntity));
+
+export { BaseEntity, ContainerEntity, ExportTaskEntity, KeyValue, MenuContainerEntity, MenuEntity, SelectKeyValue, TableColumnsContainerEntity, TableColumnsEntity, TableListColumns };

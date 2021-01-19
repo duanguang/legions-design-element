@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-29 10:18:01
- * @LastEditTime: 2021-01-18 16:10:38
+ * @LastEditTime: 2021-01-19 15:46:55
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/store/pro.form/proFormStore.ts
@@ -24,6 +24,7 @@ import { pagingQueryProcessing } from 'legions-lunar';
 import { cloneDeep } from 'lodash';
 import { IElementList, IErrorView, ISelectAutoQuery, ISelectOptions,ISelectDatabaseDB, ISyncSelectDataBase,IObservableMap } from './interface';
 import { SelectDatabaseDB } from '../../db';
+import {SelectKeyValue} from '../../models'
 /* import { DexieUtils } from '../utils/dexie'; */
 
 type Proxify<T> = {
@@ -413,7 +414,7 @@ export class HLFormLocalView {
         keywords: '',
         // @ts-ignore
         obData: observable.map<
-          observablePromise.PramsResult<typeof autoQuery.model>
+          observablePromise.PramsResult<any>
         >(),
       },
     ]);
@@ -567,6 +568,7 @@ export class HLFormLocalView {
      /*  const server = new HttpService({ token: autoQuery.token }); */
       const server = new LegionsFetch();
       const keyWords = options.keyWords || '';
+      
       //@ts-ignore
       const apiServer = () => {
         const { pageIndex, pageSize, keyWords = '', ...props } = options;
@@ -583,27 +585,35 @@ export class HLFormLocalView {
             pageSize: options.pageSize,
           });
         }
+        let model = {
+          onBeforTranform: (value) => {
+            return {
+              responseData: value,
+              mappingEntity:autoQuery.mappingEntity,
+            }
+          },
+        }
+        
         if (autoQuery.method === 'post') {
-          return server.post<typeof autoQuery.model, any>({
+          return server.post<any, any>({
             url: autoQuery.ApiUrl,
             parameter: params,
-              headerOption: { ...autoQuery.options,'api-cookie': autoQuery.token },
-            //@ts-ignore
-            model: autoQuery.model,
+            headers: { ...autoQuery.options,'api-cookie': autoQuery.token },
+            model:SelectKeyValue,
+              ...model,
           });
         } else if (autoQuery.method === 'get') {
-          return server.get<typeof autoQuery.model, any>({
+          return server.get<any, any>({
             url: autoQuery.ApiUrl,
             parameter: params,
-            headerOption: { ...autoQuery.options,'api-cookie': autoQuery.token },
-            //@ts-ignore
-            model: autoQuery.model,
+            headers: { ...autoQuery.options,'api-cookie': autoQuery.token },
+            model:SelectKeyValue,
+            ...model,
           });
         }
       };
       const data = this.selectOptions.get(name); // 查询指定下拉组件数据
       const currValue = this.selectView.get(name);
-
       if (data) {
         // 如果数据存在
         let item = data.find(entity => entity.keywords === keyWords); // 查询指定下拉组件指定关键词数据
@@ -613,12 +623,13 @@ export class HLFormLocalView {
             keywords: keyWords,
             // @ts-ignore
             obData: observable.map<
-              observablePromise.PramsResult<typeof autoQuery.model>
+              observablePromise.PramsResult<any>
             >(),
           });
           this.selectOptions.set(name, data);
           item = data.find(entity => entity.keywords === keyWords);
         }
+        
         if (item) {
            //@ts-ignore
           if (item.obData.has(options.pageIndex.toString())) {
@@ -669,20 +680,22 @@ export class HLFormLocalView {
               });
             }
           }
+         
           if (currValue) {
             currValue.pageIndex = options.pageIndex;
             currValue.pageSize = options.pageSize;
             currValue.keywords = options.keyWords;
           }
+          
           /** 输入关键词有无历史搜索数据，都会去请求接口，存在历史数据线调取历史数据 */
-           //@ts-ignore
+
           let store = extendObservable({
             keyWords: keyWords,
             // @ts-ignore
             data: observable.map<
-              observablePromise.PramsResult<typeof autoQuery.model>
+              observablePromise.PramsResult<any>
             >(),
-          });
+          },{});
           for (let i = 1; i <= item.obData.size; i++) {
             /**
              * 调出输入关键词历史搜索数据
@@ -694,6 +707,7 @@ export class HLFormLocalView {
               store.data.set(i.toString(), newData);
             }
           }
+          
           store = pagingQueryProcessing<any>({
             store: store,
             servicePromise: apiServer,
