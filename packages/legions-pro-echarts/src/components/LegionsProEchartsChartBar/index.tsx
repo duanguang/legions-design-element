@@ -10,6 +10,7 @@ import { LegionsFetch,MORE_IOCN } from '../core';
 import { merge } from 'lodash';
 import 'echarts/lib/chart/bar';
 import 'echarts/lib/component/toolbox';
+import { observer } from 'legions/store-react';
 export class LegionsProEchartsChartBarProps extends LegionsProEchartsPropsTypes {
     /** 数据 */
     data?: echarts.EChartOption.SeriesPie.DataObject[] = [{value: 100, name: 'demo'}];
@@ -22,12 +23,13 @@ class ViewModel {
     /** 请求托管response */
     @observable response = observablePromise<LegionsEchartsAutoQueryParams['model']>()
 }
+@observer
 export default class LegionsProEchartsChartBar extends React.Component<LegionsProEchartsChartBarProps>{
     static defaultProps: Readonly<LegionsProEchartsChartBarProps> = new LegionsProEchartsChartBarProps()
     viewModel = observableViewModel<ViewModel>(new ViewModel());
     /** 自动接管接口返回数据 */
     get responseData() {
-        if (this.viewModel.response.isResolved&&this.props.autoQuery) {
+        if (this.viewModel.response.isResolved && this.props.autoQuery) {
             return this.props.autoQuery.responseTransform(this.viewModel.response)
         }
         return []
@@ -109,11 +111,53 @@ export default class LegionsProEchartsChartBar extends React.Component<LegionsPr
             series: [],
         };
     }
+    componentDidMount(){
+        if(this.props.autoQuery){
+            this.getData()
+        }
+    }
+    /** 获取数据 */
+    getData(option?:Object){
+        const {autoQuery} = this.props
+        const server = new LegionsFetch
+        if(autoQuery){
+            if(autoQuery.method === 'post'){
+                const res = server.post({
+                    url:autoQuery.url as string,
+                    model:autoQuery.model,
+                    parameter: option ? { ...autoQuery.params, ...option } : autoQuery.params,
+                    headers:autoQuery.headerOption,
+                })
+                this.viewModel.response = observablePromise(res)
+            }else{
+                const res = server.get({
+                    url:autoQuery.url as string,
+                    model:autoQuery.model,
+                    parameter: option ? { ...autoQuery.params, ...option } : autoQuery.params,
+                    headers:autoQuery.headerOption,
+                })
+                this.viewModel.response = observablePromise(res)
+            }
+        }
+    }
     render() {
-        const { option } = this.props;
+        const loading = this.props.autoQuery ? this.viewModel.response.isPending : this.props.loading
+        const option = this.props.autoQuery ? merge(this.props.option,this.responseData[0]) : this.props.option
         return(
             <LegionsProEcharts
-            option={merge(this.option, option)}
+                loading={loading}
+                option={merge(this.option, option)}
+                onChartReady={(value) => {
+                    if (this.props.onChartReady) {
+                        this.props.onChartReady(value, {
+                            methods: {
+                                onSearch: (option?: Object) => {
+                                    this.getData(option)
+                                }
+                            }
+                        })
+                    }
+                }}
             ></LegionsProEcharts>
         )
     }

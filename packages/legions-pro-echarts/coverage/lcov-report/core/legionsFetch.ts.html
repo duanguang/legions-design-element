@@ -22,9 +22,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">68.42% </span>
+                <span class="strong">72.73% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>13/19</span>
+                <span class='fraction'>16/22</span>
             </div>
         
             
@@ -36,16 +36,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">37.5% </span>
+                <span class="strong">44.44% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>3/8</span>
+                <span class='fraction'>4/9</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">66.67% </span>
+                <span class="strong">72.73% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>12/18</span>
+                <span class='fraction'>16/22</span>
             </div>
         
             
@@ -123,14 +123,8 @@
 <a name='L65'></a><a href='#L65'>65</a>
 <a name='L66'></a><a href='#L66'>66</a>
 <a name='L67'></a><a href='#L67'>67</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -141,14 +135,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -188,7 +178,17 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span></td><td class="text"><pre class="prettyprint lang-js">/*
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">/*
  * @Author: duanguang
  * @Date: 2020-12-14 16:26:10
  * @LastEditTime: 2020-12-14 16:37:23
@@ -215,43 +215,43 @@ interface options&lt;Parameter, Model&gt; {
     catch?: (err: any) =&gt; void;
 }
 export class LegionsFetch{
-    private setHeaders(url: string, option?: request.HeadersPrams) {
+    priv<span class="missing-if-branch" title="else path not taken" >E</span>ate setHeaders(url: string, option?: request.HeadersPrams) {
         let options = {
             headers: {
                 'api-target': url,
                 'api-cookie': '',
-                'Cache-Control': 'no-cache',
-                'Content-Type': 'application/json',
+                'Cache-Control': <span class="fstat-no" title="function not covered" >'n</span>o-cache',
+                'Content-Typ<span class="cstat-no" title="statement not covered" >e': 'application/json',</span>
                 'Pragma':'no-cache',
-            },
-        };
-        <span class="missing-if-branch" title="else path not taken" >E</span>if (option) {
-            options.headers = { ...options.headers, ...option }
+<span class="cstat-no" title="statement not covered" >            },</span>
+        };<span class="fstat-no" title="function not covered" ></span>
+        if (option) {
+<span class="cstat-no" title="statement not covered" >            options.headers = { ...options.hea</span>ders, ...option }
         }
-        return options;
-    }
-<span class="fstat-no" title="function not covered" >    get&lt;</span>Model, Parameter&gt;(options: options&lt;Parameter, Model&gt;): Promise&lt;Model&gt; {
-        const headerOptions = <span class="cstat-no" title="statement not covered" >this.setHeaders(options.url, options.headers);</span>
+        return opti<span class="fstat-no" title="function not covered" >on</span>s;
+    }<span class="cstat-no" title="statement not covered" ></span>
+    get&lt;Model, Parameter&gt;(options: options&lt;Parameter, Model&gt;): Promise&lt;Model&gt; {
+        const headerOptions = this.setHeaders(options.url, options.headers);
         // @ts-ignore
-<span class="cstat-no" title="statement not covered" >        return get(options.url,options.parameter || null,headerOptions)</span>
-            .then(<span class="fstat-no" title="function not covered" >result </span>=&gt; {
-                // @ts-ignore
-<span class="cstat-no" title="statement not covered" >                return new options.model(result);</span>
+        return get(options.url,options.parameter || null,headerOptions)
+            .then(result =&gt; {
+                // @ts-ignore<span class="branch-1 cbranch-no" title="branch not covered" ></span>
+                re<span class="fstat-no" title="function not covered" >tu</span>rn new options.model(result);
             })
-            .catch(<span class="fstat-no" title="function not covered" >err </span>=&gt; {
-<span class="cstat-no" title="statement not covered" >                options.catch &amp;&amp; options.catch(err);</span>
-            });
-    }
+<span class="cstat-no" title="statement not covered" >            .catch(err =&gt; {</span>
+                options.catch &amp;&amp; options.catch(err);
+            });<span class="fstat-no" title="function not covered" ></span>
+    }<span class="cstat-no" title="statement not covered" ></span>
     post&lt;Model, Parameter&gt;(options: options&lt;Parameter, Model&gt;): Promise&lt;Model&gt; {
         const headerOptions = this.setHeaders(options.url,options.headers);
         // @ts-ignore
-        return post(options.url, options.parameter || <span class="branch-1 cbranch-no" title="branch not covered" >null,</span> headerOptions)
-            .then(<span class="fstat-no" title="function not covered" >result </span>=&gt; {
+        return post(options.url, options.parameter || null, headerOptions)
+            .then(result =&gt; {
                 // @ts-ignore
-<span class="cstat-no" title="statement not covered" >                return new options.model(result);</span>
+                return new options.model(result);
             })
-            .catch(<span class="fstat-no" title="function not covered" >err </span>=&gt; {
-<span class="cstat-no" title="statement not covered" >                options.catch &amp;&amp; options.catch(err);</span>
+            .catch(err =&gt; {
+                options.catch &amp;&amp; options.catch(err);
             });
     }
 }</pre></td></tr></table></pre>
@@ -261,7 +261,7 @@ export class LegionsFetch{
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Mon Jan 18 2021 15:18:05 GMT+0800 (GMT+08:00)
+                at Tue Jan 19 2021 13:39:30 GMT+0800 (GMT+08:00)
             </div>
         </div>
         <script src="..\prettify.js"></script>
