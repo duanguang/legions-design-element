@@ -3,7 +3,7 @@
  * @Date: 2020-12-23 10:55:09
  * @LastEditTime: 2020-12-25 11:33:38
  * @LastEditors: duanguang
- * @Description: 
+ * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-echarts/site/bisheng.config.js
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
@@ -15,8 +15,9 @@ const usePreact = process.env.REACT_ENV === 'preact';
 
 module.exports = {
   port: 8001,
+  hot: true,
   source: {
-    components: './components',
+    components: './src/components',
     docs: './docs',
     changelog: [
       'CHANGELOG.zh-CN.md',
@@ -66,13 +67,8 @@ module.exports = {
   webpackConfig(config) {
       config.resolve.alias = {
         'legions-pro-echarts': path.join(process.cwd(), 'src/components/index'),
-        /* 'antd/lib': path.join(process.cwd(), 'components'),
-        'antd/es': path.join(process.cwd(), 'components'),
-        antd: path.join(process.cwd(), 'index'), */
-      /* site: path.join(process.cwd(), 'site'), */
-      'react-router': 'react-router/umd/ReactRouter',
+        'react-router': 'react-router/umd/ReactRouter',
     };
-
     config.externals = {
       'react-router-dom': 'ReactRouterDOM',
     };
