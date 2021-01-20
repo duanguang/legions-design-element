@@ -14,7 +14,7 @@ title:
 There are `primary` button, `default` button, `dashed` button and `danger` button in antd.
 
 ```jsx
-import { LegionsProEchartsBox 
+/* import { LegionsProEchartsBox
 ,LegionsProEchartsLiquidFill} from 'legions-pro-echarts';
 ReactDOM.render(
   <div>
@@ -46,5 +46,5 @@ ReactDOM.render(
     </LegionsProEchartsBox>
   </div>,
   mountNode
-);
+); */
 ```

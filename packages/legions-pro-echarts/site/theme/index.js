@@ -3,7 +3,7 @@
  * @Date: 2018-04-27 20:06:00
  * @LastEditTime: 2020-12-25 10:10:06
  * @LastEditors: duanguang
- * @Description: 
+ * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-echarts/site/theme/index.js
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
@@ -35,7 +35,7 @@ module.exports = {
   pick: {
     components(markdownData) {
       const { filename } = markdownData.meta;
-      if (!/^components/.test(filename) ||
+      if (!/^src\/components/.test(filename) ||
           /[/\\]demo$/.test(path.dirname(filename))) return;
 
       return {
