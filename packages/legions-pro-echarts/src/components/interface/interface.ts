@@ -57,7 +57,7 @@ export class LegionsEchartsAutoQueryParams {
   /** headers 参数 */
   headerOption?: HeadersPrams & Object;
   /** 返回结果转化 */
-  responseTransform: (response: observablePromise.PramsResult<any>) => echarts.EChartOption.SeriesPie.DataObject[] = () => [];
+  responseTransform: (response: observablePromise.PramsResult<any>) => echarts.EChartOption = () => echarts;
 }
 /**
  *  使用 typescript 有时候需要重写一个库提供的 interface 的某个属性，但是重写 interface 有可能会导致冲突：

@@ -61,7 +61,7 @@ export default class LegionsProEchartsChartPie extends React.Component<LegionsPr
                     radius: '40%',
                     center: ['50%', '40%'],
                     selectedOffset: 1.5,
-                    data: this.props.autoQuery ? this.responseData : this.props.data,
+                    data:[],
                     label: {
                         show: true,
                         formatter: '{b} \n{d}%',
@@ -101,8 +101,8 @@ export default class LegionsProEchartsChartPie extends React.Component<LegionsPr
 
     }
     render() {
-        const { option } = this.props;
         const loading = this.props.autoQuery ? this.viewModel.response.isPending : this.props.loading;
+        const option = this.props.autoQuery ? merge(this.props.option,this.responseData) : this.props.option
         return (
             <LegionsProEcharts
                 {...this.props}
