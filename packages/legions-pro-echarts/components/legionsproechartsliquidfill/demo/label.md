@@ -7,44 +7,39 @@ title:
 
 ## zh-CN
 
-当我们需要显示更多描述信息时，可设置 `series.label.show` 为 `true` 
+当我们需要显示更多描述信息时，可设置 `series.label.show` 为 `true`
 
 ## en-US
 
 
 
 ````jsx
-import { LegionsProEchartsBox 
+import { LegionsProEchartsBox
 ,LegionsProEchartsLiquidFill} from 'legions-pro-echarts';
+let liquidFillValue=0.6;
+let liquidFillOptions: echarts.EChartOption = {
+    title: [{
+        text:(liquidFillValue * 100).toFixed(0) + '{a|%}',
+    }],
+    series: [{
+        data: [{
+            name: '流量统计',
+            value:0.8,
+        },liquidFillValue,liquidFillValue,liquidFillValue],
+        label: {
+            show:true,
+        }
+    }]
+}
 ReactDOM.render(
-  <div>
-    <LegionsProEchartsBox style={{ height: '260px', paddingBottom: 5 }}>
-      <LegionsProEchartsLiquidFill
-        option={{
-          title: [
-            {
-              text: (0.2 * 100).toFixed(0) + '{a|%}',
-            },
-          ],
-          series: [
-            {
-              data: [
-                {
-                  name: '流量统计',
-                  value: 0.2,
-                },
-                0.2,
-                0.2,
-                0.2,
-              ],
-              label: {
-                show: true,
-              },
-            },
-          ],
-        }}></LegionsProEchartsLiquidFill>
-    </LegionsProEchartsBox>
-  </div>,
+    <div>
+        <LegionsProEchartsBox
+            style={{ height: '260px',paddingBottom: 5 }}
+        >
+            <LegionsProEchartsLiquidFill option={liquidFillOptions}>
+            </LegionsProEchartsLiquidFill>
+        </LegionsProEchartsBox>
+    </div>,
   mountNode
 );
 ````
