@@ -125,12 +125,12 @@ export class LegionsProEchartsChartPieDemo extends React.Component {
                             series: [{
                                 radius: ['28%','40%'],
                                 center: ['50%','40%'],
+                                data:[
+                                    { value: 5210,name: '保税跨境',selected: true,itemStyle: { color: '#407fcc' } },
+                                    { value: 9610,name: '跨境直邮',selected: true,itemStyle: { color: '#00D2FF' } },
+                                ]
                             }],
                         }}
-                        data={[
-                            { value: 5210,name: '保税跨境',selected: true,itemStyle: { color: '#407fcc' } },
-                            { value: 9610,name: '跨境直邮',selected: true,itemStyle: { color: '#00D2FF' } },
-                        ]}
                         onChartReady={(instance) => {
                             this.chartsRef = instance;
                         }}
@@ -150,10 +150,6 @@ export class LegionsProEchartsChartPieDemo extends React.Component {
                                 itemWidth: 12,
                                 itemHeight: 5,
                             },
-                            series: [{
-                                radius: ['28%','40%'],
-                                center: ['50%','40%'],
-                            }],
                         }}
                         onChartReady={(instance,methodRef) => {
                             this.chartsRef = instance;
@@ -166,15 +162,23 @@ export class LegionsProEchartsChartPieDemo extends React.Component {
                             params: { pageSize: 3000, pageNo: 1 },
                             headerOption: {
                                 "api-target": 'https://uat-api.hoolinks.com/scmjg/dcl/exports-goods-model/list',
-                                "api-cookie": 'SESSION=7262ae70-61d1-4cb5-bd67-6e398123ea0b; HL-Access-Token=MGI0YTY1OTItZTM2OC00OGNhLWJlOGQtZWY0OTU2M2NkZmRk; UCTOKEN=MGI0YTY1OTItZTM2OC00OGNhLWJlOGQtZWY0OTU2M2NkZmRk;'
+                                "api-cookie": 'SESSION=31c6b99d-a132-4dbf-9975-3b41160a340d; HL-Access-Token=YzMxMGM2MmMtYmU0NS00YzVjLWI0YzktM2QzNGNkZDczMWUx; UCTOKEN=YzMxMGM2MmMtYmU0NS00YzVjLWI0YzktM2QzNGNkZDczMWUx;'
                             },
-                            responseTransform: (response: observablePromise.PramsResult<StockModeContainerEntity>):echarts.EChartOption.SeriesLines.DataObject[] => {
+                            responseTransform: (response: observablePromise.PramsResult<StockModeContainerEntity>) => {
                                 if (response.isResolved && response.value.success) {
-                                    return response.value.result.records.slice(0, 2).map((item, index) => {
-                                        return { value: item.id,name: item.bizopEtpsNm,selected: true,itemStyle: { color: '#407fcc' } }
-                                    })
+                                    return {
+                                        series:[
+                                            {
+                                                radius: ['28%','40%'],
+                                                center: ['50%','40%'],
+                                                data:response.value.result.records.slice(0, 2).map((item, index) => {
+                                                    return { value: item.id,name: item.bizopEtpsNm,selected: true,itemStyle: { color: '#407fcc' } }
+                                                })
+                                            }
+                                        ]
+                                    }
                                 }
-                                return []
+                                return {}
                             }
                         }}
                     ></LegionsProEchartsChartPie>
@@ -207,27 +211,29 @@ export class LegionsProEchartsChartPieDemo extends React.Component {
                             params: { pageSize: 3000, pageNo: 1 },
                             headerOption: {
                                 "api-target": 'https://uat-api.hoolinks.com/scmjg/dcl/exports-goods-model/list',
-                                "api-cookie": 'SESSION=6d718a30-4dcb-41b9-99b7-3d2f1b0ffcbb; HL-Access-Token=NTgzMTEyY2MtY2I4NC00OGMzLWE1MjAtMzIwZTc3YzM1MTVl; UCTOKEN=NTgzMTEyY2MtY2I4NC00OGMzLWE1MjAtMzIwZTc3YzM1MTVl;'
+                                "api-cookie": 'SESSION=31c6b99d-a132-4dbf-9975-3b41160a340d; HL-Access-Token=YzMxMGM2MmMtYmU0NS00YzVjLWI0YzktM2QzNGNkZDczMWUx; UCTOKEN=YzMxMGM2MmMtYmU0NS00YzVjLWI0YzktM2QzNGNkZDczMWUx;'
                             },
-                            responseTransform: (response: observablePromise.PramsResult<StockModeContainerEntity>):echarts.EChartOption.SeriesLines.DataObject[] => {
+                            responseTransform: (response: observablePromise.PramsResult<StockModeContainerEntity>) => {
                                 if (response.isResolved && response.value.success) {
-                                    return response.value.result.records.slice(0, 2).map((item, index) => {
-                                        return {
-                                            name: item.id.toString(),
-                                            type: 'line',
-                                            stack: '总量',
-                                            symbolSize: 5,
-                                            // tslint:disable-next-line: no-magic-numbers
-                                            data: [10.32, 12.43, 26.45, 20.09, 34.42, 11.43, 13.58, 25.47, 38.45, 31.58].map(item => item + index),
-                                            itemStyle: {
-                                                normal: {
-                                                    label: { show: true },
+                                    return {
+                                        series:response.value.result.records.slice(0, 2).map((item, index) => {
+                                            return {
+                                                name: item.id.toString(),
+                                                type: 'line',
+                                                stack: '总量',
+                                                symbolSize: 5,
+                                                // tslint:disable-next-line: no-magic-numbers
+                                                data: [10.32, 12.43, 26.45, 20.09, 34.42, 11.43, 13.58, 25.47, 38.45, 31.58].map(item => item + index),
+                                                itemStyle: {
+                                                    normal: {
+                                                        label: { show: true },
+                                                    },
                                                 },
-                                            },
-                                        }
-                                    })
+                                            }
+                                        })
+                                    }
                                 }
-                                return []
+                                return {}
                             }
                         }}></LegionsProEchartsChartLine>
                 </LegionsProEchartsBox>
@@ -265,32 +271,29 @@ export class LegionsProEchartsChartPieDemo extends React.Component {
                             params: { pageSize: 3000, pageNo: 1 },
                             headerOption: {
                                 "api-target": 'https://uat-api.hoolinks.com/scmjg/dcl/exports-goods-model/list',
-                                "api-cookie": 'SESSION=6d718a30-4dcb-41b9-99b7-3d2f1b0ffcbb; HL-Access-Token=NTgzMTEyY2MtY2I4NC00OGMzLWE1MjAtMzIwZTc3YzM1MTVl; UCTOKEN=NTgzMTEyY2MtY2I4NC00OGMzLWE1MjAtMzIwZTc3YzM1MTVl;'
+                                "api-cookie": 'SESSION=31c6b99d-a132-4dbf-9975-3b41160a340d; HL-Access-Token=YzMxMGM2MmMtYmU0NS00YzVjLWI0YzktM2QzNGNkZDczMWUx; UCTOKEN=YzMxMGM2MmMtYmU0NS00YzVjLWI0YzktM2QzNGNkZDczMWUx;'
                             },
-                            responseTransform: (response: observablePromise.PramsResult<StockModeContainerEntity>):echarts.EChartOption.SeriesLines.DataObject[] => {
+                            responseTransform: (response: observablePromise.PramsResult<StockModeContainerEntity>) => {
                                 if (response.isResolved && response.value.success) {
-                                    // @ts-ignore
-                                    return response.value.result.records.slice(0, 1).map((item, index) => {
-                                        return {
-                                            series: [
-                                                {
-                                                    type: 'bar',
-                                                    barWidth: '10%',
-                                                    barGap: '0',
-                                                    barCategoryGap: '15px',
-                                                },
-                                                {
-                                                    type: 'bar',
-                                                    barWidth: '10%',
-                                                    barGap: '15%'
-                                                },
-                                                { type: 'bar',barWidth: '10%',barGap: '25%',barCategoryGap: '5%',},
-                                                { type: 'bar',barWidth: '10%',barGap: '25%',barCategoryGap: '5%',}
-                                            ]
-                                        }
-                                    })
+                                    return {
+                                        series: [
+                                            {
+                                                type: 'bar',
+                                                barWidth: '10%',
+                                                barGap: '0',
+                                                barCategoryGap: '15px',
+                                            },
+                                            {
+                                                type: 'bar',
+                                                barWidth: '10%',
+                                                barGap: '15%'
+                                            },
+                                            { type: 'bar',barWidth: '10%',barGap: '25%',barCategoryGap: '5%',},
+                                            { type: 'bar',barWidth: '10%',barGap: '25%',barCategoryGap: '5%',}
+                                        ]
+                                    }
                                 }
-                                return []
+                                return {}
                             }
                         }}></LegionsProEchartsChartBar>
                 </LegionsProEchartsBox>

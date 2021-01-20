@@ -91,25 +91,27 @@ class LegionsProEchartsChartLineAutoMouter extends React.Component{
                         "api-target": 'https://uat-api.hoolinks.com/scmjg/dcl/exports-goods-model/list',
                         "api-cookie": 'SESSION=d2ef8c85-7e92-4fba-b1a8-8233cb7843c3; HL-Access-Token=YjMxYzlmOTQtZTVlOC00NTQ2LWE4ZjQtY2Q4N2VjMzBhNmRi; UCTOKEN=YjMxYzlmOTQtZTVlOC00NTQ2LWE4ZjQtY2Q4N2VjMzBhNmRi;'
                     },
-                    responseTransform: (response: observablePromise.PramsResult<{}>): echarts.EChartOption.SeriesLines.DataObject[] => {
+                    responseTransform: (response: observablePromise.PramsResult<{}>) => {
                         if (true) {
-                            return [{id:'test1'},{id:'test2'}].map((item, index) => {
-                                return {
-                                    name: item.id.toString(),
-                                    type: 'line',
-                                    stack: '总量',
-                                    symbolSize: 5,
-                                    // tslint:disable-next-line: no-magic-numbers
-                                    data: [10.32, 12.43, 26.45, 20.09, 34.42, 11.43, 13.58, 25.47, 38.45, 31.58].map(item => item + index),
-                                    itemStyle: {
-                                        normal: {
-                                            label: { show: true },
+                            return {
+                                series:[{id:'test1'},{id:'test2'}].map((item, index) => {
+                                    return {
+                                        name: item.id.toString(),
+                                        type: 'line',
+                                        stack: '总量',
+                                        symbolSize: 5,
+                                        // tslint:disable-next-line: no-magic-numbers
+                                        data: [10.32, 12.43, 26.45, 20.09, 34.42, 11.43, 13.58, 25.47, 38.45, 31.58].map(item => item + index),
+                                        itemStyle: {
+                                            normal: {
+                                                label: { show: true },
+                                            },
                                         },
-                                    },
-                                }
-                            })
+                                    }
+                                })
+                            }
                         }
-                        return []
+                        return {}
                     }
                 }}></LegionsProEchartsChartLine>
         )

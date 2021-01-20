@@ -31,7 +31,7 @@ export default class LegionsProEchartsChartLine extends React.Component<LegionsP
         if (this.viewModel.response.isResolved && this.props.autoQuery) {
             return this.props.autoQuery.responseTransform(this.viewModel.response)
         }
-        return []
+        return {}
     }
     /** 配置项 */
     get option(): echarts.EChartOption {
@@ -106,7 +106,7 @@ export default class LegionsProEchartsChartLine extends React.Component<LegionsP
                 },
                 show:true,
             },
-            series: this.props.autoQuery ? this.responseData : this.props.option ? this.props.option.series : [],
+            series: [],
         };
     }
     componentDidMount(){
@@ -139,8 +139,8 @@ export default class LegionsProEchartsChartLine extends React.Component<LegionsP
         }
     }
     render() {
-        const { option } = this.props;
         const loading = this.props.autoQuery ? this.viewModel.response.isPending : this.props.loading
+        const option = this.props.autoQuery ? merge(this.props.option,this.responseData) : this.props.option
         return(
             <LegionsProEcharts
             {...this.props}

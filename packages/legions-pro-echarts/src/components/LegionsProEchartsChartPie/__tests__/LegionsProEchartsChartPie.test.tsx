@@ -25,6 +25,10 @@ const barOptions={
     series: [{
         radius: ['28%','40%'],
         center: ['50%','40%'],
+        data:[
+            { value: 5210, name: '保税跨境', selected: true, itemStyle: { color: '#407fcc' } },
+            { value: 9610, name: '跨境直邮', selected: true, itemStyle: { color: '#00D2FF' } },
+        ]
     }],
 }
 const events: Partial<Record<keyof HTMLElementEventMap, (ev: Partial<Event>) => void>> = {};
@@ -45,10 +49,6 @@ class LegionsProEchartsChartPieMouter extends React.Component{
         return <LegionsProEchartsChartPie
             option={barOptions}
             className="echarts-for-react-root"
-            data={[
-                { value: 5210, name: '保税跨境', selected: true, itemStyle: { color: '#407fcc' } },
-                { value: 9610, name: '跨境直邮', selected: true, itemStyle: { color: '#00D2FF' } },
-            ]}
             onChartReady={(instance: echarts.ECharts) => {
                 this.chartsRef = instance;
             }}
@@ -90,13 +90,19 @@ class LegionsProEchartsChartPieAutoMouter extends React.Component{
                     "api-target": 'https://uat-api.hoolinks.com/scmjg/dcl/exports-goods-model/list',
                     "api-cookie": 'SESSION=7262ae70-61d1-4cb5-bd67-6e398123ea0b; HL-Access-Token=MGI0YTY1OTItZTM2OC00OGNhLWJlOGQtZWY0OTU2M2NkZmRk; UCTOKEN=MGI0YTY1OTItZTM2OC00OGNhLWJlOGQtZWY0OTU2M2NkZmRk;'
                 },
-                responseTransform: (response: observablePromise.PramsResult<{}>):echarts.EChartOption.SeriesLines.DataObject[] => {
+                responseTransform: (response: observablePromise.PramsResult<{}>) => {
                     if (true) {
-                        return [{id:900,bizopEtpsNm:'昊链科技'},{id:100,bizopEtpsNm:'测试科技'}].map((item, index) => {
-                            return { value: item.id,name: item.bizopEtpsNm,selected: true,itemStyle: { color: '#407fcc' } }
-                        })
+                        return {
+                            series:[
+                                {
+                                    data:[{id:900,bizopEtpsNm:'昊链科技'},{id:100,bizopEtpsNm:'测试科技'}].map((item, index) => {
+                                        return { value: item.id,name: item.bizopEtpsNm,selected: true,itemStyle: { color: '#407fcc' } }
+                                    })
+                                }
+                            ]
+                        }
                     }
-                    return []
+                    return {}
                 }
             }}
         ></LegionsProEchartsChartPie>
