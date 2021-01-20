@@ -1,13 +1,13 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-29 10:08:53
- * @LastEditTime: 2021-01-08 09:54:39
+ * @LastEditTime: 2021-01-20 11:30:37
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProForm/interface/index.ts
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
-export type { IErrorView } from './form';
+export type { IErrorView,IFormState,IGroup } from './form';
 export type { IFormSelectProps } from './select';
 export  { LabelWithHLSelectModel } from './select';
 export type { IFormInputProps } from '../FormInput';

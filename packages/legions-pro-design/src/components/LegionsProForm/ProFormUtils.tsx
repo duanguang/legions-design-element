@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-08 15:19:23
- * @LastEditTime: 2021-01-19 11:49:07
+ * @LastEditTime: 2021-01-20 14:53:18
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProForm/ProFormUtils.tsx
@@ -15,7 +15,7 @@ import {
     WrappedFormUtils,
     ColProps
 } from '../interface/antd';
-import { IFormCheckboxProps, IFormDatePickerProps, IFormInputNumberProps, IFormInputProps, IFormMonthPickerProps, IFormRadioButtonProps, IFormRangePickerProps, IFormRenderProps, IFormSelectProps, IFormSwitchProps, IFormTextProps, IFormUploadProps, InstanceForm, LabelWithCheckboxModel, LabelWithDatePickerModel, LabelWithHLSelectModel, LabelWithInputModel, LabelWithInputNumberModel, LabelWithMonthPickerModel, LabelWithRadioButtonModel, LabelWithRangePickerModel, LabelWithRenderModel, LabelWithSwitchModel, LabelWithTextModel, LabelWithUploadModel } from './interface';
+import { IFormCheckboxProps, IFormDatePickerProps, IFormInputNumberProps, IFormInputProps, IFormMonthPickerProps, IFormRadioButtonProps, IFormRangePickerProps, IFormRenderProps, IFormSelectProps, IFormState, IFormSwitchProps, IFormTextProps, IFormUploadProps, InstanceForm, LabelWithCheckboxModel, LabelWithDatePickerModel, LabelWithHLSelectModel, LabelWithInputModel, LabelWithInputNumberModel, LabelWithMonthPickerModel, LabelWithRadioButtonModel, LabelWithRangePickerModel, LabelWithRenderModel, LabelWithSwitchModel, LabelWithTextModel, LabelWithUploadModel } from './interface';
 import FormInput from './FormInput';
 import FormInputNumber from './FormInputNumber';
 import FormHLSelect from './FormHLSelect';
@@ -53,13 +53,19 @@ interface IRenderComponentParams<T> {
      * @type {IAntdRule[]}
      * @memberof IRenderComponentParams
      */
-    rules?: IAntdRule[]
+    rules?: IAntdRule[];
+    /** 表单组件实例
+     * 
+     * 可选参数，在自定义表单组件时，需要传入此数据，用于初始化表单组件项数据
+     */
+    formRef?: InstanceForm;
 }
 interface IProFormUtils {
     componentModel: LabelWithInputModel | LabelWithInputNumberModel | LabelWithDatePickerModel | LabelWithMonthPickerModel |
     LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel |
     LabelWithRadioButtonModel | LabelWithTextModel | LabelWithHLSelectModel
 }
+export const COMPONENT_TYPE = ['iFormInput','iFormText','iFormWithSelect','iFormDatePicker','iFormMonthPicker','iFormRangePicker','iFormWithRadioButton','iFormWithSwitch',]
 export class ProFormUtils<Store,global = {}>{
     readonly global: global = null
     readonly mobxStore: Store = null
@@ -109,6 +115,24 @@ export class ProFormUtils<Store,global = {}>{
     private chkRenderConfig(key: string) {
         if (this[key]) {
             //console.warn(`【${key}】:Configuration information, will be covered`)
+        }
+    }
+    private initFromState(key: string,formRef: InstanceForm,iFormItemProps:IProFormUtils['componentModel']) {
+        if (formRef && key) {
+            const wc = COMPONENT_TYPE.find((cc) => iFormItemProps['hasOwnProperty'](cc))
+            let defaultValue: IFormState = null;
+            if (wc) {
+                const wItem = iFormItemProps[wc]
+                if (wItem['hasOwnProperty']('defaultVisible')) {
+                    defaultValue={visible:wItem['defaultVisible']}
+                }
+                if (wItem['hasOwnProperty']('disabled')) {
+                    defaultValue= defaultValue || {}
+                    defaultValue={...defaultValue,disabled:wItem['disabled']}
+                }
+            }
+            const storeView = formRef.store.get(formRef.uid);
+            storeView.initFormState(key,defaultValue);
         }
     }
     renderSelectConfig(options: IRenderComponentParams<IFormSelectProps>): LabelWithHLSelectModel {
@@ -186,8 +210,18 @@ export class ProFormUtils<Store,global = {}>{
         if (key === void 0) {
             key = control.iAntdProps.id
         }
+        const storeView = formRef.store.get(formRef.uid);
+        let formState=storeView.getFormState(control.iAntdProps.id)
+        if (!formState) {
+            this.initFromState(control.iAntdProps.id,formRef,control);
+            formState = storeView.getFormState(control.iAntdProps.id)
+        }
+        if (!formState.visible) {
+            return null;
+        }
         if (control instanceof LabelWithInputModel) {
             const { iAntdProps,iFormInput,rules } = control;
+            iFormInput['disabled'] = formState.disabled;
             return (
                 <FormInput iAntdProps={iAntdProps}
                     form={form}
@@ -202,6 +236,7 @@ export class ProFormUtils<Store,global = {}>{
         }
         else if (control instanceof LabelWithInputNumberModel) {
             const { iAntdProps,iFormInput,rules } = control;
+            iFormInput['disabled'] = formState.disabled;
             return (
                 <FormInputNumber iAntdProps={iAntdProps}
                     form={form}
@@ -216,6 +251,7 @@ export class ProFormUtils<Store,global = {}>{
         }
         else if (control instanceof LabelWithHLSelectModel) {
             let { iAntdProps,rules,iFormWithSelect } = control;
+            iFormWithSelect['disabled'] = formState.disabled;
             return (
                 <FormHLSelect
                     iAntdProps={iAntdProps}
@@ -232,6 +268,7 @@ export class ProFormUtils<Store,global = {}>{
         }
         else if (control instanceof LabelWithDatePickerModel) {
             let { iAntdProps,rules,iFormDatePicker } = control;
+            iFormDatePicker['disabled'] = formState.disabled;
             return (
                 <FormDatePicker iAntdProps={iAntdProps}
                     form={form}
@@ -245,6 +282,7 @@ export class ProFormUtils<Store,global = {}>{
         }
         else if (control instanceof LabelWithMonthPickerModel) {
             let { iAntdProps,rules,iFormMonthPicker } = control;
+            iFormMonthPicker['disabled'] = formState.disabled;
             return (
                 <FormMonthPicker iAntdProps={iAntdProps}
                     form={form}
@@ -258,6 +296,7 @@ export class ProFormUtils<Store,global = {}>{
         }
         else if (control instanceof LabelWithRangePickerModel) {
             let { iAntdProps,rules,iFormRangePicker } = control;
+            iFormRangePicker['disabled'] = formState.disabled;
             return (
                 <FormRangePicker iAntdProps={iAntdProps}
                     form={form}
@@ -271,6 +310,7 @@ export class ProFormUtils<Store,global = {}>{
         }
         else if (control instanceof LabelWithUploadModel) {
             let { iAntdProps,rules,iFormWithUpload } = control;
+            iFormWithUpload['disabled'] = formState.disabled;
             return (
                 <FormUpload
                     iAntdProps={iAntdProps}
@@ -286,6 +326,7 @@ export class ProFormUtils<Store,global = {}>{
         }
         else if (control instanceof LabelWithSwitchModel) {
             let { iAntdProps,rules,iFormWithSwitch } = control;
+            iFormWithSwitch['disabled'] = formState.disabled;
             return (
                 <FormSwitch
                     iAntdProps={iAntdProps}
@@ -301,6 +342,7 @@ export class ProFormUtils<Store,global = {}>{
         }
         else if (control instanceof LabelWithRadioButtonModel) {
             let { iAntdProps,rules,iFormWithRadioButton } = control;
+            iFormWithRadioButton['disabled'] = formState.disabled;
             return (
                 <FormRadioButton
                     iAntdProps={iAntdProps}

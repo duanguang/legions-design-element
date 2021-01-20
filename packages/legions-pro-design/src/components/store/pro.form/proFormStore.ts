@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-29 10:18:01
- * @LastEditTime: 2021-01-19 15:46:55
+ * @LastEditTime: 2021-01-20 11:25:33
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/store/pro.form/proFormStore.ts
@@ -39,7 +39,7 @@ export interface IFormState {
    * @type {Boolean}
    * @memberof IFormState
    */
-  visible?: Boolean;
+  visible?: boolean;
 
   /**
    *
@@ -48,7 +48,7 @@ export interface IFormState {
    * @type {Boolean}
    * @memberof IFormState
    */
-  display?: Boolean;
+  display?: boolean;
 
   /**
    * 组件可编辑状态 false 可编辑， 否则不可编辑
@@ -299,13 +299,17 @@ export class HlFormView {
    * @param {string} name
    * @memberof HlFormView
    */
-  @action initFormState(name: string) {
+  @action initFormState(name: string,defaultValue?:IFormState) {
     if (!this.formState.has(name)) {
-      this.formState.set(name, {
+      let value = {
         visible: true,
         display: true,
         disabled: false,
-      });
+      }
+      if (defaultValue) {
+        value={...value,...defaultValue}
+      }
+      this.formState.set(name, value);
     }
   }
 
@@ -326,6 +330,20 @@ export class HlFormView {
         disabled: false,
       };
       this.formState.set(name, Object.assign(defaultObject, state));
+    }
+  }
+  /**
+   *
+   * 设置表单组件状态
+   * @param {string} name
+   * @param {IFormState} state
+   * @memberof HlFormView
+   */
+  @action getFormState(name: string ): IFormState{
+    if (this.formState.has(name)) {
+      return this.formState.get(name)
+    } else {
+      return null;
     }
   }
 }

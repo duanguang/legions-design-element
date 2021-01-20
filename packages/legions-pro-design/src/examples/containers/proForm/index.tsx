@@ -8,11 +8,22 @@ import { HttpConfig } from '../../constants/httpConfig';
 import { InstanceForm } from '../../../components/LegionsProForm/interface'
 import { FormFields } from './model';
 interface IProps { }
+interface IState{
+    visible:boolean;
+    disabled:boolean;
+}
 /* @observer */
-export class ProForm extends React.Component<IProps,{}> {
+export class ProForm extends React.Component<IProps,IState> {
     formRef: InstanceForm
     constructor(props: IProps) {
         super(props)
+        this.state={
+            visible:true,
+            disabled:false
+        }
+    }
+    componentDidMount() {
+        /* this.formRef.viewModel.setFormState('price',{visible:false}) */
     }
     createConfig() {
         const rules = FormFields.initFormRules<FormFields,{}>(FormFields,{})
@@ -23,7 +34,8 @@ export class ProForm extends React.Component<IProps,{}> {
             iFormProps: {
                 ...formUtils.createLayout('文本框',5,7),
                 maxLength: '50',
-                type: 'text'
+                type: 'text',
+                defaultVisible:false,
             },
             rules: rules.text
         });
@@ -172,7 +184,7 @@ export class ProForm extends React.Component<IProps,{}> {
                 ...formUtils.createLayout('文件上传',5,7),
                 maxFileCount: 1,
                 isDragger: true,
-                prompt: (<p>2222</p>),
+                prompt: (<p>扫去窗上的尘埃，才可以看到窗外的美景</p>),
             },
             rules: rules.upload,
         })
@@ -213,6 +225,8 @@ export class ProForm extends React.Component<IProps,{}> {
                         iAntdProps: formUtils.createAntdProps('price',1,'价格'),
                         iFormProps: {
                             maxLength: '70',
+                            disabled: true,
+                            defaultVisible:true,
                         },
                         rules: rules.price,
                     })
@@ -253,11 +267,27 @@ export class ProForm extends React.Component<IProps,{}> {
             query={null}
             content={
                 <Row>
+                    <Button style={{marginLeft:'10px'}} type="primary" htmlType="submit" onClick={()=>{
+                  const visibleText=this.formRef.viewModel.getFormState('price').visible;
+                  console.log(this.formRef.viewModel.getFormState('price'));
+                  this.setState({
+                    visible:!visibleText
+                  })
+                  this.formRef.viewModel.setFormState('price',{visible:!visibleText})
+                    }}>{!this.state.visible ? '显示文本框' : '隐藏文本框'}</Button>
+                    <Button style={{marginLeft:'10px'}} type="primary" htmlType="submit" onClick={()=>{
+                  const visibleText=this.formRef.viewModel.getFormState('price').disabled;
+                  console.log(this.formRef.viewModel.getFormState('price'));
+                  this.setState({
+                    disabled:!visibleText
+                  })
+                  this.formRef.viewModel.setFormState('price',{disabled:!visibleText})
+                }}>{!this.state.disabled?'禁用文本框':'启用文本框'}</Button>     
                     <LegionsProForm
                         <FormFields>
                         {...this.formRef && this.formRef.viewModel.InputDataModel}
                         InputDataModel={FormFields}
-                        onGetForm={(form,ref) => {
+                        onReady={(form,ref) => {
                             this.formRef = Object.assign(ref,{ that: this });
                         }}
                         mapPropsToFields={(props) => {
@@ -265,7 +295,6 @@ export class ProForm extends React.Component<IProps,{}> {
                         }}
                         onFieldsChange={(props,formFields) => {
                             this.formRef.store.updateFormInputData(this.formRef.uid,formFields)
-                            console.log(formFields,this.formRef.viewModel.InputDataModel);
                         }}
                         controls={this.createConfig()}
                         colCount={1}

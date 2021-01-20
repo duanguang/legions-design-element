@@ -326,13 +326,17 @@ var HlFormView = /** @class */ (function () {
      * @param {string} name
      * @memberof HlFormView
      */
-    HlFormView.prototype.initFormState = function (name) {
+    HlFormView.prototype.initFormState = function (name, defaultValue) {
         if (!this.formState.has(name)) {
-            this.formState.set(name, {
+            var value = {
                 visible: true,
                 display: true,
                 disabled: false,
-            });
+            };
+            if (defaultValue) {
+                value = __assign(__assign({}, value), defaultValue);
+            }
+            this.formState.set(name, value);
         }
     };
     /**
@@ -353,6 +357,21 @@ var HlFormView = /** @class */ (function () {
                 disabled: false,
             };
             this.formState.set(name, Object.assign(defaultObject, state));
+        }
+    };
+    /**
+     *
+     * 设置表单组件状态
+     * @param {string} name
+     * @param {IFormState} state
+     * @memberof HlFormView
+     */
+    HlFormView.prototype.getFormState = function (name) {
+        if (this.formState.has(name)) {
+            return this.formState.get(name);
+        }
+        else {
+            return null;
         }
     };
     __decorate([
@@ -453,7 +472,7 @@ var HlFormView = /** @class */ (function () {
     __decorate([
         action,
         __metadata("design:type", Function),
-        __metadata("design:paramtypes", [String]),
+        __metadata("design:paramtypes", [String, Object]),
         __metadata("design:returntype", void 0)
     ], HlFormView.prototype, "initFormState", null);
     __decorate([
@@ -462,6 +481,12 @@ var HlFormView = /** @class */ (function () {
         __metadata("design:paramtypes", [String, Object]),
         __metadata("design:returntype", void 0)
     ], HlFormView.prototype, "setFormState", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [String]),
+        __metadata("design:returntype", Object)
+    ], HlFormView.prototype, "getFormState", null);
     return HlFormView;
 }());
 var ErrorViewModel = /** @class */ (function () {

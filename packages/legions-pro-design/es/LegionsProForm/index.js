@@ -1440,6 +1440,7 @@ var FormSelect = /** @class */ (function (_super) {
     return FormSelect;
 }(AbstractForm));
 
+var COMPONENT_TYPE = ['iFormInput', 'iFormText', 'iFormWithSelect', 'iFormDatePicker', 'iFormMonthPicker', 'iFormRangePicker', 'iFormWithRadioButton', 'iFormWithSwitch',];
 var ProFormUtils = /** @class */ (function () {
     function ProFormUtils(options) {
         this.global = null;
@@ -1472,6 +1473,24 @@ var ProFormUtils = /** @class */ (function () {
     };
     ProFormUtils.prototype.chkRenderConfig = function (key) {
         if (this[key]) ;
+    };
+    ProFormUtils.prototype.initFromState = function (key, formRef, iFormItemProps) {
+        if (formRef && key) {
+            var wc = COMPONENT_TYPE.find(function (cc) { return iFormItemProps['hasOwnProperty'](cc); });
+            var defaultValue = null;
+            if (wc) {
+                var wItem = iFormItemProps[wc];
+                if (wItem['hasOwnProperty']('defaultVisible')) {
+                    defaultValue = { visible: wItem['defaultVisible'] };
+                }
+                if (wItem['hasOwnProperty']('disabled')) {
+                    defaultValue = defaultValue || {};
+                    defaultValue = __assign(__assign({}, defaultValue), { disabled: wItem['disabled'] });
+                }
+            }
+            var storeView = formRef.store.get(formRef.uid);
+            storeView.initFormState(key, defaultValue);
+        }
     };
     ProFormUtils.prototype.renderSelectConfig = function (options) {
         this.chkRenderConfig(options.iAntdProps.id);
@@ -1547,40 +1566,58 @@ var ProFormUtils = /** @class */ (function () {
         if (key === void 0) {
             key = control.iAntdProps.id;
         }
+        var storeView = formRef.store.get(formRef.uid);
+        var formState = storeView.getFormState(control.iAntdProps.id);
+        if (!formState) {
+            this.initFromState(control.iAntdProps.id, formRef, control);
+            formState = storeView.getFormState(control.iAntdProps.id);
+        }
+        if (!formState.visible) {
+            return null;
+        }
         if (control instanceof LabelWithInputModel) {
             var iAntdProps = control.iAntdProps, iFormInput = control.iFormInput, rules = control.rules;
+            iFormInput['disabled'] = formState.disabled;
             return (React.createElement(FormInput, { iAntdProps: iAntdProps, form: form, key: key, rules: rules, formUid: formUid, formStore: formRef, iFormInput: iFormInput }));
         }
         else if (control instanceof LabelWithInputNumberModel) {
             var iAntdProps = control.iAntdProps, iFormInput = control.iFormInput, rules = control.rules;
+            iFormInput['disabled'] = formState.disabled;
             return (React.createElement(FormInputNumber, { iAntdProps: iAntdProps, form: form, key: key, rules: rules, formUid: formUid, iFormInput: iFormInput }));
         }
         else if (control instanceof LabelWithHLSelectModel) {
             var iAntdProps = control.iAntdProps, rules = control.rules, iFormWithSelect = control.iFormWithSelect;
+            iFormWithSelect['disabled'] = formState.disabled;
             return (React.createElement(FormHLSelect, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formStore: formRef, formUid: formUid, iFormWithSelect: iFormWithSelect }));
         }
         else if (control instanceof LabelWithDatePickerModel) {
             var iAntdProps = control.iAntdProps, rules = control.rules, iFormDatePicker = control.iFormDatePicker;
+            iFormDatePicker['disabled'] = formState.disabled;
             return (React.createElement(FormDatePicker, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formUid: formUid, iFormDatePicker: iFormDatePicker }));
         }
         else if (control instanceof LabelWithMonthPickerModel) {
             var iAntdProps = control.iAntdProps, rules = control.rules, iFormMonthPicker = control.iFormMonthPicker;
+            iFormMonthPicker['disabled'] = formState.disabled;
             return (React.createElement(FormMonthPicker, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formUid: formUid, iFormMonthPicker: iFormMonthPicker }));
         }
         else if (control instanceof LabelWithRangePickerModel) {
             var iAntdProps = control.iAntdProps, rules = control.rules, iFormRangePicker = control.iFormRangePicker;
+            iFormRangePicker['disabled'] = formState.disabled;
             return (React.createElement(FormRangePicker, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formUid: formUid, iFormRangePicker: iFormRangePicker }));
         }
         else if (control instanceof LabelWithUploadModel) {
             var iAntdProps = control.iAntdProps, rules = control.rules, iFormWithUpload = control.iFormWithUpload;
+            iFormWithUpload['disabled'] = formState.disabled;
             return (React.createElement(FormUpload, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formUid: formUid, iFormWithUpload: iFormWithUpload }));
         }
         else if (control instanceof LabelWithSwitchModel) {
             var iAntdProps = control.iAntdProps, rules = control.rules, iFormWithSwitch = control.iFormWithSwitch;
+            iFormWithSwitch['disabled'] = formState.disabled;
             return (React.createElement(FormSwitch, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formUid: formUid, iFormWithSwitch: iFormWithSwitch }));
         }
         else if (control instanceof LabelWithRadioButtonModel) {
             var iAntdProps = control.iAntdProps, rules = control.rules, iFormWithRadioButton = control.iFormWithRadioButton;
+            iFormWithRadioButton['disabled'] = formState.disabled;
             return (React.createElement(FormRadioButton, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formUid: formUid, iFormWithRadioButton: iFormWithRadioButton }));
         }
         else if (control instanceof LabelWithTextModel) {
@@ -1609,7 +1646,6 @@ var ProFormFields = /** @class */ (function (_super) {
 var Link = Anchor.Link;
 var FormItem$c = Form.Item;
 var baseCls = "legions-pro-form";
-var COMPONENT_TYPE = ['iFormInput', 'iFormText', 'iFormWithSelect', 'iFormDatePicker', 'iFormMonthPicker', 'iFormRangePicker', 'iFormWithRadioButton', 'iFormWithSwitch',];
 var KeydownEnum$1;
 (function (KeydownEnum) {
     /**键盘向上键 */
@@ -1731,7 +1767,7 @@ var HLForm = /** @class */ (function (_super) {
         if (this.state.groupEntity.length === 0 || (group && this.state.groupEntity.length !== group.length)) {
             var groupEntity_1 = [];
             group && group.map(function (item) {
-                groupEntity_1.push({ name: item.name, active: item.active, isFolding: item.isFolding, id: item.id, isShowFormSizeIcon: item.isShowFormSizeIcon });
+                groupEntity_1.push({ name: item.name, active: item.active, isFolding: item.isFolding, id: item.id, isShowSizeIcon: item.isShowSizeIcon });
             });
             this.setState({
                 groupEntity: groupEntity_1
@@ -1776,7 +1812,7 @@ var HLForm = /** @class */ (function (_super) {
         var group = this.props.group;
         var groupEntity = [];
         group && group.map(function (item) {
-            groupEntity.push({ name: item.name, active: item.active, isFolding: item.isFolding, id: item.id, isShowFormSizeIcon: item.isShowFormSizeIcon });
+            groupEntity.push({ name: item.name, active: item.active, isFolding: item.isFolding, id: item.id, isShowSizeIcon: item.isShowSizeIcon });
         });
         this.setState({
             groupEntity: groupEntity
@@ -1784,7 +1820,7 @@ var HLForm = /** @class */ (function (_super) {
         var view = this.props.store.HLFormContainer.get(this.uid);
         var localview = this.props.store.HLFormLocalDataContainer.get(this.freezeUid);
         view.controls = this.props.controls;
-        this.props.onGetForm && this.props.onGetForm(__assign(__assign({}, this.props.form), { validateFields: this.validateFields.bind(this) }), {
+        this.props.onReady && this.props.onReady(__assign(__assign({}, this.props.form), { validateFields: this.validateFields.bind(this) }), {
             store: this.props.store,
             uid: this.uid,
             viewModel: view,
@@ -1868,7 +1904,15 @@ var HLForm = /** @class */ (function (_super) {
         var _this = this;
         if (this.props.controls && Array.isArray(this.props.controls)) {
             this.props.controls.map(function (item) {
-                _this.storeView.initFormState(item.iAntdProps.name);
+                var wc = COMPONENT_TYPE.find(function (cc) { return item['hasOwnProperty'](cc); });
+                var defaultValue = null;
+                if (wc) {
+                    var wItem = item[wc];
+                    if (wItem['hasOwnProperty']('defaultVisible')) {
+                        defaultValue = { visible: wItem['defaultVisible'] };
+                    }
+                }
+                _this.storeView.initFormState(item.iAntdProps.name, defaultValue);
             });
         }
     };
@@ -1942,7 +1986,7 @@ var HLForm = /** @class */ (function (_super) {
                         else {
                             var propsDisabled = get(entity, c + ".disabled");
                             var nextPropsDisabled = get(item, c + ".disabled");
-                            if (propsDisabled !== void 0 && nextPropsDisabled !== void 0) {
+                            if (propsDisabled !== void 0 && nextPropsDisabled !== void 0 && propsDisabled !== nextPropsDisabled) {
                                 _this.storeView.setFormState(item.iAntdProps.name, { disabled: nextPropsDisabled });
                             }
                         }
@@ -2394,7 +2438,7 @@ var HLForm = /** @class */ (function (_super) {
                     React.createElement("div", { className: "title " + (item.className || ''), "data-id": "form-floor", "data-tab": item.name },
                         React.createElement("span", { className: "span-left" }, item.name),
                         React.createElement("span", { className: "span-right" },
-                            entity.isShowFormSizeIcon && React.createElement(Dropdown, { overlay: (React.createElement(Menu, { selectedKeys: [_this.storeView.styleSize], onClick: function (item) {
+                            entity.isShowSizeIcon && React.createElement(Dropdown, { overlay: (React.createElement(Menu, { selectedKeys: [_this.storeView.styleSize], onClick: function (item) {
                                         var size = item.key;
                                         _this.storeView.updateStyleSize(size);
                                         _this.props.onUpdateStyleSize && _this.props.onUpdateStyleSize(size);
