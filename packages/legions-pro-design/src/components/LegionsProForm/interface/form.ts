@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-29 10:26:57
- * @LastEditTime: 2021-01-18 16:14:02
+ * @LastEditTime: 2021-01-20 16:07:36
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProForm/interface/form.ts
@@ -108,4 +108,68 @@ interface IMethods {
     /** 下拉组件name值，对应container.component.JsonProperty.name */ name: string,
     /** 下拉选项key值*/ optionKey: string
   ) => { readonly option: HlLabeledValue };
+}
+export interface IFormState {
+  /**
+   *
+   * 组件是否可见，一般用来控制组件显隐，默认值true 可见，false不可见 组件移除
+   * @type {Boolean}
+   * @memberof IFormState
+   */
+  visible?: boolean;
+
+  /**
+   *
+   * 组件是否可见，一般用来控制组件显隐，默认值true 可见，false不可见
+   * 注意此隐藏只是隐藏dom 设置display:'none'，元素依然存在只是不可见，如果元素有附加验证规则，则
+   * @type {Boolean}
+   * @memberof IFormState
+   */
+  display?: boolean;
+
+  /**
+   * 组件可编辑状态 false 可编辑， 否则不可编辑
+   *
+   * @type {boolean}
+   * @memberof IFormState
+   */
+  disabled?: boolean;
+}
+export interface IGroup {
+
+  /**
+   * 分组名称
+   *
+   * @type {string}
+   * @memberof IGroup
+   */
+  name: string | React.ReactNode
+
+  /**
+   * 分组唯一标识ID
+   *
+   * @type {string}
+   * @memberof IGroup
+   */
+  id: number
+
+  active: boolean
+
+
+  /**
+   * 分组是否折叠
+   *
+   * @type {boolean}
+   * @memberof IGroup
+   */
+  isFolding: boolean;
+  className?: string;
+
+  /**
+   * 标题行是否显示设置主题风格图标 默认不显示 true 显示
+   *
+   * @type {boolean}
+   * @memberof IGroup
+   */
+  isShowSizeIcon?: boolean;
 }

@@ -1,13 +1,13 @@
 ---
 order: 0
 title:
-  zh-CN: 简单列表
-  en-US: 简单列表
+  zh-CN: 基础表单
+  en-US: 基础表单
 ---
 
 ## zh-CN
 
-一个简单列表绑定数据使用
+一个基础表单使用配置示例
 
 > 表单字段 [FormFields](#Model)
 
@@ -41,10 +41,20 @@ interface IFormFieldUserRenderInput1{
 }
 
 interface IProps {}
-class ProFormDemo extends React.Component<IProps,{}> {
+interface IState{
+  visibleText:boolean;
+  visible:boolean;
+  disabledText:boolean
+}
+class ProFormDemo extends React.Component<IProps,IState> {
   formRef: InstanceForm
   constructor(props: IProps) {
     super(props);
+    this.state={
+      visibleText: false,
+      disabledText:true,
+      visible:true,
+    }
   }
   createConfig() {
         const rules = FormFields.initFormRules<FormFields,{}>(FormFields,{})
@@ -55,7 +65,9 @@ class ProFormDemo extends React.Component<IProps,{}> {
             iFormProps: {
                 ...formUtils.createLayout('文本框',5,15),
                 maxLength: '50',
-                type: 'text'
+                type: 'text',
+                disabled: true,
+                defaultVisible:false,
             },
             rules: rules.text
         });
@@ -138,7 +150,7 @@ class ProFormDemo extends React.Component<IProps,{}> {
                     },
                     ApiUrl: 'https://gateway.hoolinks.com/api/gateway',
                     method: 'post',
-                    token: 'SESSION=09a88b98-211f-4b64-89e6-197d13aba31b;',
+                    token: 'SESSION=f53dcf36-ac05-4c78-8bda-9c11221c6aa8;',
                     options: {
                         'api-target':'https://qa-scm.hoolinks.com//jg/basic/cusinfo/search.json'
                     },
@@ -204,7 +216,7 @@ class ProFormDemo extends React.Component<IProps,{}> {
                 ...formUtils.createLayout('文件上传',5,15),
                 maxFileCount: 1,
                 isDragger: true,
-                prompt: (<p>2222</p>),
+                prompt: (<p>扫去窗上的尘埃，才可以看到窗外的美景</p>),
             },
             rules: rules.upload,
         })
@@ -283,29 +295,12 @@ class ProFormDemo extends React.Component<IProps,{}> {
   render() {
     return (
       <Row>
-        <Row>
-          <Form layout="inline">
-              <FormItem >
-                <Button onClick={()=>{
-                  this.formRef && this.formRef.viewModel.form.validateFields((err,values: FormFields) => {
-
-                        if (!err) {
-                            /*  console.log(values,this.props.store.obFormFields) */
-                        }
-                        else {
-                           
-                        }
-                        console.log(values,err,'values');
-                    })
-                }}> 提交</Button>
-              </FormItem>
-            </Form>
-        </Row>
+        
          <LegionsProForm
           <FormFields>
           {...this.formRef && this.formRef.viewModel.InputDataModel}
           InputDataModel={FormFields}
-          onGetForm={(form,ref) => {
+          onReady={(form,ref) => {
               this.formRef = Object.assign(ref,{ that: this });
           }}
           mapPropsToFields={(props) => {
@@ -319,6 +314,45 @@ class ProFormDemo extends React.Component<IProps,{}> {
           uniqueUid="demo/proForm/one"
           colCount={2}
       ></LegionsProForm>
+      <FormItem
+          wrapperCol={{ span: 12, offset: 1 }}
+        >
+          <Button type="primary" htmlType="submit" onClick={()=>{
+                  this.formRef && this.formRef.viewModel.form.validateFields((err,values: FormFields) => {
+
+                        if (!err) {
+                            /*  console.log(values,this.props.store.obFormFields) */
+                        }
+                        else {
+                           
+                        }
+                        console.log(values,err,'values');
+                    })
+                }}>提交</Button>
+          <Button style={{marginLeft:'10px'}} type="primary" htmlType="submit" onClick={()=>{
+                    const value=this.formRef.viewModel.getFormState('text').disabled;
+                    this.formRef.viewModel.setFormState('text',{
+                            disabled: !value,
+                    })
+                    this.setState({
+                      disabledText:!value
+                    })
+                }}>{!this.state.disabledText?'禁用文本框输入':'启用文本框输入'}</Button>
+         <Button style={{marginLeft:'10px'}} type="primary" htmlType="submit" onClick={()=>{
+                  const visibleText=this.formRef.viewModel.getFormState('text').visible;
+                  this.setState({
+                    visibleText:!visibleText
+                  })
+                  this.formRef.viewModel.setFormState('text',{visible:!visibleText})
+                }}>{!this.state.visibleText?'显示文本框':'隐藏文本框'}</Button>       
+         <Button style={{marginLeft:'10px'}} type="primary" htmlType="submit" onClick={()=>{
+                  const value=this.formRef.viewModel.getFormState('price').visible;
+                  this.setState({
+                    visible:!value
+                  })
+                  this.formRef.viewModel.setFormState('price',{visible:!value})
+                }}>{!this.state.visible?'显示价格文本框':'隐藏价格文本框'}</Button>       
+        </FormItem>
       </Row>
      
     );

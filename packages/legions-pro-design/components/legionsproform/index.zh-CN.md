@@ -6,7 +6,9 @@ title: LegionsProForm
 subtitle: 高级表单
 ---
 
-ProForm 的诞生是为了解决项目中需要写很多 form 的样板代码的问题，所以在其中做了封装了很多常用的逻辑。这些封装可以简单的分类为预设行为与预设逻辑。
+ProForm 在原来的 Form 的基础上增加一些语法糖和更多的布局设置，帮助我们快速的开发一个表单。同时添加一些默认行为，让我们的表单默认好用。
+
+分步表单，Modal 表单，Drawer 表单等多种 layout 可以覆盖大部分的使用场景，脱离复杂而且繁琐的表单布局工作，更少的代码完成更多的功能。
 
 
 ## 何时使用
@@ -15,23 +17,37 @@ ProForm 的诞生是为了解决项目中需要写很多 form 的样板代码的
 
 ## API
 
-ProTable 在 antd 的 Table 上进行了一层封装，支持了一些预设，并且封装了一些行为。这里只列出与 antd Table 不同的 api。
+ProForm 在 antd 的 antd Form 上进行了一层封装，支持了一些预设，并且封装了一些行为。这里只列出与 antd Form 不同的 api。
 
 按钮的属性说明如下：
 
 | 属性 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| uniqueKey | 	表格行 key 的取值，可以是字符串| string | "id" |
-| rowSelectionClickType | 行单击选中方式 | 'radio' \| 'check' | `radio` |
-| type | 行选中方式 | 'radio' \| 'check' |`check` |
-| tableModulesName | table 模块名称，如果设置此值，请保持绝对唯一 | string| - |
-| displayType | 大数据量表格还是小量数据 | 'smallData' \| 'bigData' | `smallData` |
-| size | 设置按钮大小，可选值为 `small` `large` 或者不设 | string | `default` |
-| isOpenCustomColumns | 是否开启自定义列设置 | boolean | false |
-| isOpenRowChange | 是否开启行单击选中 | boolean | false |
-| isOpenRowSelection | 是否开启行选中,只在初始化执行一次 | boolean | false |
+| group | 	表单信息分组展示| [IGroup](#IGroup)[] | [] |
+| controls | 表单元素配置项 | Array | [] |
+| InputDataModel | 表单输入数据模型,通常是一个类 |Function|-|
+| colCount | 等分栅格 默认2 | 1 \| 2 \| 3 \| 4| 2 |
+| size | 表单大小舒适,迷你,紧凑 | 'default' \| 'small'\|'table' | `default` |
+| uniqueKeys | 主要用于当父组件中存在多个表单组件时，标记key 来保证父级组件中表单组件唯一,可选 | string | - |
+| onUpdateStyleSize | 改变表单大小时触发 | Function(size:'default' \| 'small'\|'table') | - |
+| onReady | 获取表单数据模型 | Function((form: WrappedFormUtils,formRef: InstanceForm) | - |
+| onValuesChange | 任一表单域的值发生改变时的回调 | Function((props,values) | - |
+| onFieldsChange | 当 Form.Item 子节点的值发生改变时触发，可以把对应的值转存到 mobx store or redux store| Function(props: mapProps,fields) | - |
+| mapPropsToFields | *把父组件的属性映射到表单项上（可用于把 Redux store 中的值读出）| Function(props: mapProps) => any | - |
+| onIgnoreError | 忽略错误信息触发| Function((item: IErrorView) | - |
 
-### Model
+### IGroup
+分组功能配置信息
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| name | 	分组名称| string \| React.ReactNode | - |
+| id | 分组唯一标识 | number | - |
+| active | 活动分组 |boolean|-|
+| isFolding | 是否折叠 | boolean| - |
+| className | 分组样式名 | string | - |
+| isShowSizeIcon | 是否显示设置主题风格图标 默认不显示, true 显示 | boolean| - |
+## Model
 ```js
 import { LegionsProForm } from 'legions-pro-design';
 import { UploadChangeParam } from 'antd/lib/upload/interface';

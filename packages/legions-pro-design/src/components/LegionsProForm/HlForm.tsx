@@ -6,7 +6,7 @@ import CreateForm from './CreateForm';
 import { LabelWithInputModel } from './FormInput';
 import './style/index.less'
 import { WrappedFormUtils } from '../interface/antd';
-import { IErrorView } from './interface/form';
+import { IErrorView, IFormState, IGroup } from './interface/form';
 import { ISchedule } from '../store/interface';
 import {
     LabelWithHLSelectModel,LabelWithSelectModel,LabelWithRenderModel,LabelWithDatePickerModel,
@@ -28,9 +28,9 @@ import { ValidateCallback } from 'antd/lib/form/Form';
 import { LabelWithCheckboxModel } from './FormCheckbox';
 import { BaseFormFields, HlLabeledValue } from 'legions-lunar/model';
 import { legionsPlugins,LegionsPluginsExecute,LoggerManager } from 'legions-lunar/legion.plugin.sdk';
-import { ProFormFields,ProFormUtils } from './ProFormUtils';
+import { ProFormFields,ProFormUtils,COMPONENT_TYPE } from './ProFormUtils';
 const baseCls = `legions-pro-form`
-const COMPONENT_TYPE = ['iFormInput','iFormText','iFormWithSelect','iFormDatePicker','iFormMonthPicker','iFormRangePicker','iFormWithRadioButton','iFormWithSwitch',]
+
 export interface IProFormProps<mapProps = {}> {
     form?: WrappedFormUtils,
 
@@ -42,7 +42,7 @@ export interface IProFormProps<mapProps = {}> {
      * @type {Object}
      * @memberof IHLFormProps
      */
-    InputDataModel?: Function,
+    InputDataModel: Function,
     store?: ProFormStore,
     controls: Array<any>;
     group?: Array<IGroup>,
@@ -82,7 +82,7 @@ export interface IProFormProps<mapProps = {}> {
      *
      * @memberof IHLFormProps
      */
-    onGetForm?: (
+    onReady: (
         /**即将废弃，请formRef.viewModel.form 获取 */
         form: WrappedFormUtils,
         formRef?: InstanceForm) => void;
@@ -124,44 +124,7 @@ export interface IProFormProps<mapProps = {}> {
         browserEnvironment: string;
     }) => void
 }
-export interface IGroup {
 
-    /**
-     * 分组名称
-     *
-     * @type {string}
-     * @memberof IGroup
-     */
-    name: string | React.ReactNode
-
-    /**
-     * 分组唯一标识ID
-     *
-     * @type {string}
-     * @memberof IGroup
-     */
-    id: number
-
-    active: boolean
-
-
-    /**
-     * 分组是否折叠
-     *
-     * @type {boolean}
-     * @memberof IGroup
-     */
-    isFolding: boolean;
-    className?: string;
-
-    /**
-     * 标题行是否显示设置主题风格图标 默认不显示 true 显示
-     *
-     * @type {boolean}
-     * @memberof IGroup
-     */
-    isShowFormSizeIcon?: boolean;
-}
 interface IState {
     groupEntity: Array<IGroup>,
     activeName: string,
@@ -295,7 +258,7 @@ class HLForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
         if (this.state.groupEntity.length === 0 || (group && this.state.groupEntity.length !== group.length)) {
             let groupEntity: IGroup[] = []
             group && group.map((item) => {
-                groupEntity.push({ name: item.name,active: item.active,isFolding: item.isFolding,id: item.id,isShowFormSizeIcon: item.isShowFormSizeIcon })
+                groupEntity.push({ name: item.name,active: item.active,isFolding: item.isFolding,id: item.id,isShowSizeIcon: item.isShowSizeIcon })
             })
             this.setState({
                 groupEntity: groupEntity
@@ -334,7 +297,7 @@ class HLForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
         const group = this.props.group;
         let groupEntity: IGroup[] = []
         group && group.map((item) => {
-            groupEntity.push({ name: item.name,active: item.active,isFolding: item.isFolding,id: item.id,isShowFormSizeIcon: item.isShowFormSizeIcon })
+            groupEntity.push({ name: item.name,active: item.active,isFolding: item.isFolding,id: item.id,isShowSizeIcon: item.isShowSizeIcon })
         })
         this.setState({
             groupEntity: groupEntity
@@ -343,7 +306,7 @@ class HLForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
         const localview = this.props.store.HLFormLocalDataContainer.get(this.freezeUid);
         view.controls = this.props.controls;
 
-        this.props.onGetForm && this.props.onGetForm({ ...this.props.form,validateFields: this.validateFields.bind(this) },{
+        this.props.onReady && this.props.onReady({ ...this.props.form,validateFields: this.validateFields.bind(this) },{
             store: this.props.store,
             uid: this.uid,
             viewModel: view,
@@ -429,7 +392,15 @@ class HLForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
     initFromState() {
         if (this.props.controls && Array.isArray(this.props.controls)) {
             this.props.controls.map((item) => {
-                this.storeView.initFormState(item.iAntdProps.name)
+                const wc = COMPONENT_TYPE.find((cc) => item['hasOwnProperty'](cc))
+                let defaultValue:IFormState = null;
+                if (wc) {
+                    const wItem = item[wc]
+                    if (wItem['hasOwnProperty']('defaultVisible')) {
+                        defaultValue={visible:wItem['defaultVisible']}
+                    }
+                }
+                this.storeView.initFormState(item.iAntdProps.name,defaultValue)
             })
         }
     }
@@ -510,7 +481,7 @@ class HLForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
                         } else {
                             const propsDisabled = get(entity,`${c}.disabled`);
                             const nextPropsDisabled = get(item,`${c}.disabled`);
-                            if (propsDisabled !== void 0 && nextPropsDisabled !== void 0) {
+                            if (propsDisabled !== void 0 && nextPropsDisabled !== void 0&& propsDisabled !== nextPropsDisabled) {
                                 this.storeView.setFormState(item.iAntdProps.name,{ disabled: nextPropsDisabled })
                             }
                         }
@@ -958,7 +929,7 @@ class HLForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
                     <div className={`title ${item.className || ''}`} data-id="form-floor" data-tab={item.name}>
                         <span className="span-left" >{item.name}</span>
                         <span className="span-right" >
-                            {entity.isShowFormSizeIcon && <Dropdown overlay={(
+                            {entity.isShowSizeIcon && <Dropdown overlay={(
                                 <Menu selectedKeys={[this.storeView.styleSize]} onClick={(item) => {
                                     const size = item.key as IProFormProps['size']
                                     this.storeView.updateStyleSize(size)
