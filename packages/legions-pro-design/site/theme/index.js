@@ -1,10 +1,10 @@
 /*
  * @Author: duanguang
  * @Date: 2018-04-27 20:06:00
- * @LastEditTime: 2020-12-25 10:10:06
+ * @LastEditTime: 2021-01-20 17:52:55
  * @LastEditors: duanguang
  * @Description: 
- * @FilePath: /legions-design-element/packages/legions-pro-echarts/site/theme/index.js
+ * @FilePath: /legions-design-element/packages/legions-pro-design/site/theme/index.js
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
 const path = require('path');
@@ -35,7 +35,7 @@ module.exports = {
   pick: {
     components(markdownData) {
       const { filename } = markdownData.meta;
-      if (!/^components/.test(filename) ||
+      if (!/^src\/components/.test(filename) ||
           /[/\\]demo$/.test(path.dirname(filename))) return;
 
       return {

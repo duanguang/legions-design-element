@@ -247,9 +247,9 @@ export default class FormInput extends AbstractForm<IFormWithInputProps>{
                 >
                     {getFieldDecorator(iAntdProps.name,{
                         rules: rules,
-                        normalize: (value: any,prevValue,allValues) => {
+                        /* normalize: (value: any,prevValue,allValues) => {
                             return value && value.toString()
-                        },
+                        }, */
                     })(
                         iFormInput.type === 'textarea' ?
                             // @ts-ignore

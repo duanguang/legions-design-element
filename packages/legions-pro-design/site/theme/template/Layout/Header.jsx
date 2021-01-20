@@ -132,7 +132,8 @@ export default class Header extends React.Component {
     const options = components
       .filter(({ meta }) => !meta.filename.endsWith(excludedSuffix))
       .map(({ meta }) => {
-        const pathSnippet = meta.filename.split('/')[1];
+        /* const pathSnippet = meta.filename.split('/')[1]; */
+        const pathSnippet = meta.filename.split('/')[2];
         const url = `/components/${pathSnippet}`;
         const { subtitle } = meta;
         return (

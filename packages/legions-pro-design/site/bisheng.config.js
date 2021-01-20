@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-23 10:55:09
- * @LastEditTime: 2021-01-12 12:10:07
+ * @LastEditTime: 2021-01-20 17:47:19
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/site/bisheng.config.js
@@ -15,8 +15,16 @@ const usePreact = process.env.REACT_ENV === 'preact';
 
 module.exports = {
   port: 8001,
+  hot: true,
   source: {
-    components: './components',
+    components: './src/components',
+      /* src: {
+        components: {
+          LegionsProForm: {
+            components: './src/components'
+          }
+        }
+    }, */
     docs: './docs',
     changelog: [
       'CHANGELOG.zh-CN.md',
