@@ -2,7 +2,7 @@
 order: 0
 title:
   zh-CN: 显示百分比
-  en-US: Type
+  en-US: Show percentage
 ---
 
 ## zh-CN
@@ -11,40 +11,15 @@ title:
 
 ## en-US
 
-There are `primary` button, `default` button, `dashed` button and `danger` button in antd.
+Liquid fill display percentage
 
-```jsx
-/* import { LegionsProEchartsBox
-,LegionsProEchartsLiquidFill} from 'legions-pro-echarts';
+```tsx
+import { LegionsProEchartsBox } from 'legions-pro-echarts';
 ReactDOM.render(
   <div>
     <LegionsProEchartsBox style={{ height: '260px', paddingBottom: 5 }}>
-      <LegionsProEchartsLiquidFill
-        option={{
-          title: [
-            {
-              text: (0.2 * 100).toFixed(0) + '{a|%}',
-            },
-          ],
-          series: [
-            {
-              data: [
-                {
-                  name: '流量统计',
-                  value: 0.2,
-                },
-                0.2,
-                0.2,
-                0.2,
-              ],
-              label: {
-                show: false,
-              },
-            },
-          ],
-        }}></LegionsProEchartsLiquidFill>
     </LegionsProEchartsBox>
   </div>,
   mountNode
-); */
+);
 ```

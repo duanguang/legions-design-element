@@ -34,12 +34,8 @@ module.exports = {
     typeOrder: {
       General: 0,
       Layout: 1,
-      Navigation: 2,
-      'Data Entry': 3,
-      'Data Display': 4,
-      Feedback: 5,
-      Localization: 6,
-      Other: 7,
+      Charts: 2,
+      Other: 3,
     },
     docVersions: {
       '0.9.x': 'http://09x.ant.design',

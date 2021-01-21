@@ -1,6 +1,6 @@
 ---
 category: Components
-type: charts
+type: Charts
 title: Card
 subtitle: 卡片
 ---

@@ -126,7 +126,6 @@ export default class LegionsProEchartsLiquidFill extends React.Component<Legions
     }
     render() {
         const { option } = this.props;
-        console.log(echarts);
         const loading = this.props.autoQuery ? this.viewModel.response.isPending : this.props.loading;
         return (
             <LegionsProEcharts
