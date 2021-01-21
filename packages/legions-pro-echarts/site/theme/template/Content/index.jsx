@@ -9,10 +9,14 @@ function isChangelog(pathname) {
 export default collect(async (nextProps) => {
   const { pathname } = nextProps.location;
   const pageDataPath = pathname.replace('-cn', '').split('/');
-  /** 修复路由不匹配文件夹驼峰命名问题 */
-  for(let k in nextProps.data.components) {
-    nextProps.data.components[k.toLocaleLowerCase()] = nextProps.data.components[k]
+  if (nextProps.data.components['src']) {
+      nextProps.data.components = nextProps.data.components['src']['components']
+  } else {
+    for(let k in nextProps.data.components) {
+        nextProps.data.components[k.toLocaleLowerCase()] = nextProps.data.components[k]
+    }
   }
+  /** 修复路由不匹配文件夹驼峰命名问题 */
   const pageData = isChangelog(pathname) ?
     nextProps.data.changelog.CHANGELOG :
     nextProps.utils.get(nextProps.data, pageDataPath);
