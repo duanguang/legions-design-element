@@ -1,25 +1,29 @@
 ---
 order: 0
 title:
-  zh-CN: 显示百分比
-  en-US: Show percentage
+  zh-CN: 基础容器
+  en-US: base box
 ---
 
 ## zh-CN
 
-液体填充显示百分比数字
+通用基础容器
 
 ## en-US
 
-Liquid fill display percentage
+base box
 
-```tsx
-import { LegionsProEchartsBox } from 'legions-pro-echarts';
-ReactDOM.render(
-  <div>
-    <LegionsProEchartsBox style={{ height: '260px', paddingBottom: 5 }}>
-    </LegionsProEchartsBox>
-  </div>,
-  mountNode
-);
+```jsx
+import React from 'react';
+import { LegionsProEchartsBox, LegionsProEchartsChartPie } from 'legions-pro-echarts';
+
+export class Demo extends React.Component {
+    render() {
+        return (
+            <LegionsProEchartsBox height="260px"></LegionsProEchartsBox>
+        )
+    }
+}
+
+ReactDOM.render(<Demo/>, mountNode);
 ```

@@ -18,6 +18,13 @@ export interface IMethods{
 export interface IExtendsOption{
     methods:IMethods
 }
+
+/**
+ * echarts核心组件基础属性
+ * @export
+ * @class LegionsProEchartsPropsTypes
+ * @template EchartOption
+ */
 export class LegionsProEchartsPropsTypes<EchartOption= TEchartOption> {
     /** 配置项 */
     option?: TEchartOption = {};
@@ -45,6 +52,12 @@ export class LegionsProEchartsPropsTypes<EchartOption= TEchartOption> {
     /** echarts 实例化完成后执行并抛出实例 */
     onChartReady?: (instance: echarts.ECharts,extendsOption?:IExtendsOption) => void = () => {};
 }
+
+/**
+ * 请求自动托管参数
+ * @export
+ * @class LegionsEchartsAutoQueryParams
+ */
 export class LegionsEchartsAutoQueryParams {
     /** 数据模型 */
     model: any;
@@ -59,6 +72,7 @@ export class LegionsEchartsAutoQueryParams {
     /** 返回结果转化 */
     responseTransform: (response: observablePromise.PramsResult<any>) => echarts.EChartOption = () => echarts;
 }
+
 /**
  *  使用 typescript 有时候需要重写一个库提供的 interface 的某个属性，但是重写 interface 有可能会导致冲突：
  *  原理是，将 类型 T 的所有 K 属性置为 any，

@@ -25,6 +25,7 @@ interface ILegionsProEchartsColProps extends Weaken<ColProps,'xs'|'sm'>, ColProp
     xl: number | ColSize;
     children?: any;
 }
-export const LegionsProEchartsCol = (props:ILegionsProEchartsColProps) => {
+const LegionsProEchartsCol = (props:ILegionsProEchartsColProps) => {
     return <Col {...props}>{props.children}</Col>
 }
+export default LegionsProEchartsCol

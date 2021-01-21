@@ -1,6 +1,6 @@
 ---
 category: Components
-type: General
+type: Layout
 title: LineOverFlow
 subtitle: 行超出隐藏
 ---

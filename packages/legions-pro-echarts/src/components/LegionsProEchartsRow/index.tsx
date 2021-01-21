@@ -4,6 +4,7 @@ import {RowProps} from 'antd/lib/grid/row'
 interface ILegionsProEchartsRowProps extends RowProps{
 
 }
-export const LegionsProEchartsRow = (props:ILegionsProEchartsRowProps) => {
+const LegionsProEchartsRow = (props:ILegionsProEchartsRowProps) => {
     return <Row {...props}></Row>
 }
+export default LegionsProEchartsRow
