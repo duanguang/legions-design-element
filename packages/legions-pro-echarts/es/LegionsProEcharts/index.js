@@ -1,6 +1,6 @@
 /**
   *  legions-pro-echarts v0.0.7
-  * (c) 2020 duanguang
+  * (c) 2021 duanguang
   * @license MIT
   */
 import echarts from 'echarts/lib/echarts';
@@ -162,7 +162,7 @@ var LegionsProEchartsCore = /** @class */ (function (_super) {
             }
         };
         _this.echartsLib = props.echarts; // the echarts object.
-        // @ts-ignore 
+        // @ts-ignore
         _this.echartsElement = null; // echarts div element
         return _this;
     }

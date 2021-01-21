@@ -2,7 +2,7 @@
 category: Components
 cols: 1
 type: 数据展示
-title: LegionsProForm
+title: ProForm
 subtitle: 高级表单
 ---
 

@@ -73,7 +73,7 @@ module.exports = {
   },
   webpackConfig(config) {
       config.resolve.alias = {
-        'legions-pro-design': path.join(process.cwd(), 'es/index'),
+        'legions-pro-design': path.join(process.cwd(), 'src/components/index'),
         /* 'antd/lib': path.join(process.cwd(), 'components'),
         'antd/es': path.join(process.cwd(), 'components'),
         antd: path.join(process.cwd(), 'index'), */

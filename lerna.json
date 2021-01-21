@@ -1,6 +1,6 @@
 {
   "packages": [
-    
+    "packages/*"
   ],
   "command": {
     "publish": {
@@ -17,6 +17,11 @@
       "npmClientArgs": ["--no-package-lock"]
     }
   },
+  "useWorkspaces": true,
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
   "version": "independent",
   "npmClient": "yarn"
 }

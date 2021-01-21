@@ -119,12 +119,21 @@ module.exports = function (configs) {
           });
         }
         if (loaderType === 'StyleLoader' && transform) {
+          const nodeModulesPath=path.resolve('../../', 'node_modules')
           const newLoaders = [
             {
               test: /\.css$/,
               use: transform.execution(null, null, null),
               include: [path.join(process.cwd(), 'node_modules')],
             },
+            {
+              test: /\.less/,
+              use: transform.execution(null, {
+                  loader: 'less-loader',
+                  options: { javascriptEnabled: true },
+              }),
+              include: [path.resolve(nodeModulesPath, 'antd')],
+          },
             /* {
               test: new RegExp(`^(?!.*\\.modules).*\\.less`),
               use: transform.execution(null, {

@@ -37,7 +37,7 @@
       "stripInternal": true,
       "emitDecoratorMetadata": true,
       "experimentalDecorators": true,
-      "strictPropertyInitialization": false,
+      /* "strictPropertyInitialization": false, */
       /* "typeRoots": ["./types"], */
       "importHelpers": true,
       "sourceMap": true,

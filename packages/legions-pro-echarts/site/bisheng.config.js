@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-23 10:55:09
- * @LastEditTime: 2020-12-25 11:33:38
+ * @LastEditTime: 2021-01-21 11:34:10
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-echarts/site/bisheng.config.js
@@ -14,7 +14,7 @@ const isDev = process.env.NODE_ENV === 'development';
 const usePreact = process.env.REACT_ENV === 'preact';
 
 module.exports = {
-  port: 8001,
+  port: 8002,
   hot: true,
   source: {
     components: './src/components',

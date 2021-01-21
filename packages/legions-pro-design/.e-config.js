@@ -101,7 +101,8 @@ module.exports = function (configs) {
           exclude: /export .* was not found in/,
         }),
       ],
-      extend: (loaders, { isDev, loaderType, projectType, transform }) => {
+      extend: (loaders,{ isDev,loaderType,projectType,transform }) => {
+        const nodeModulesPath=path.resolve('../../', 'node_modules')
         if (loaderType === 'JsLoader') {
           loaders.push({
             test: /\.(jsx|js)?$/,
@@ -132,6 +133,14 @@ module.exports = function (configs) {
               use: transform.execution(null, null, null),
               include: [path.join(process.cwd(), 'node_modules')],
             },
+            {
+              test: /\.less/,
+              use: transform.execution(null, {
+                  loader: 'less-loader',
+                  options: { javascriptEnabled: true },
+              }),
+              include: [path.resolve(nodeModulesPath, 'antd')],
+          },
             /* {
               test: new RegExp(`^(?!.*\\.modules).*\\.less`),
               use: transform.execution(null, {
