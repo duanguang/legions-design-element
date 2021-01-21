@@ -7,31 +7,16 @@
  * @FilePath: /legions-design-element/packages/legions-pro-echarts/src/components/index.ts
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
-import LegionsProEchartsBox from './LegionsProEchartsBox'
-import LegionsProEcharts  from './LegionsProEcharts'
-import LegionsProEchartsCore  from './LegionsProEchartsCore';
-import LegionsProEchartsBoxList  from './LegionsProEchartsBoxList';
-import LegionsProEchartsChartBar  from './LegionsProEchartsChartBar';
-import LegionsProEchartsChartCard  from './LegionsProEchartsChartCard';
-import LegionsProEchartsChartLine  from './LegionsProEchartsChartLine';
-import LegionsProEchartsChartPie  from './LegionsProEchartsChartPie';
-
-import LegionsProEchartsLayout  from './LegionsProEchartsLayout';
-import LegionsProEchartsLiquidFill  from './LegionsProEchartsLiquidFill';
-import LegionsProEchartsMap  from './LegionsProEchartsMap';
-
-
-export {LegionsProEchartsBox,
-    LegionsProEcharts,
-    LegionsProEchartsCore,
-    LegionsProEchartsBoxList,
-    LegionsProEchartsChartBar,
-    LegionsProEchartsChartCard,
-    LegionsProEchartsChartLine,
-    LegionsProEchartsChartPie,
-    LegionsProEchartsLayout,
-    LegionsProEchartsLiquidFill,
-    LegionsProEchartsMap
-}
-export {LegionsProEchartsCol}  from './LegionsProEchartsCol';
-export {LegionsProEchartsRow}  from './LegionsProEchartsRow';
+export { default as LegionsProEchartsBox } from './LegionsProEchartsBox'
+export { default as LegionsProEcharts }  from './LegionsProEcharts'
+export { default as LegionsProEchartsCore }  from './LegionsProEchartsCore';
+export { default as LegionsProEchartsBoxList }  from './LegionsProEchartsBoxList';
+export { default as LegionsProEchartsChartBar }  from './LegionsProEchartsChartBar';
+export { default as LegionsProEchartsChartCard }  from './LegionsProEchartsChartCard';
+export { default as LegionsProEchartsChartLine }  from './LegionsProEchartsChartLine';
+export { default as LegionsProEchartsChartPie }  from './LegionsProEchartsChartPie';
+export { default as LegionsProEchartsLayout }  from './LegionsProEchartsLayout';
+export { default as LegionsProEchartsLiquidFill }  from './LegionsProEchartsLiquidFill';
+export { default as LegionsProEchartsMap }  from './LegionsProEchartsMap';
+export { default as LegionsProEchartsCol}  from './LegionsProEchartsCol';
+export { default as LegionsProEchartsRow}  from './LegionsProEchartsRow';

@@ -7,11 +7,11 @@ import LegionsProEchartsBox from '../../../components/LegionsProEchartsBox';
 import LegionsProEchartsChartBar from '../../../components/LegionsProEchartsChartBar';
 import LegionsProEchartsChartCard from '../../../components/LegionsProEchartsChartCard';
 import { Button, Col,Row } from 'antd';
-import { LegionsProEchartsCol } from '../../../components/LegionsProEchartsCol';
 import LegionsProEchartsLiquidFill from '../../../components/LegionsProEchartsLiquidFill';
 import { StockModeContainerEntity } from 'examples/models/mockEntity';
 import { observablePromise } from 'legions/store-utils';
 import { IExtendsOption } from 'components/interface/interface';
+import { LegionsProEchartsCol } from 'components';
 export class LegionsProEchartsChartPieDemo extends React.Component {
     //@ts-ignore
     chartsRef: echarts.ECharts = null;
@@ -153,7 +153,7 @@ export class LegionsProEchartsChartPieDemo extends React.Component {
                         }}
                         onChartReady={(instance,methodRef) => {
                             this.chartsRef = instance;
-                            this.pieMethod = methodRef
+                            this.pieMethod = methodRef!
                         }}
                         autoQuery={{
                             model: StockModeContainerEntity,
@@ -202,7 +202,7 @@ export class LegionsProEchartsChartPieDemo extends React.Component {
                         }}}
                         onChartReady={(instance,extendsOption)=>{
                             this.lineAutoRef = instance
-                            this.lineAutoMethod = extendsOption
+                            this.lineAutoMethod = extendsOption!
                         }}
                         autoQuery={{
                             model: StockModeContainerEntity,
