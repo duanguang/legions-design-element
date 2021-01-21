@@ -84,17 +84,13 @@
     "not ie <= 8"
   ],
   "scripts": {
-    "test": "jest --no-cache",
-    "test:proEhcarts": "jest --no-cache --watch /src/components/LegionsProEcharts/.*.ts",
-    "test:proEchartsLine": "jest --no-cache --watch /src/components/LegionsProEchartsChartLine/.*.ts",
-    "test:proEchartsPie": "jest --no-cache --watch /src/components/LegionsProEchartsChartPie/.*.ts",
-    "test1": "jest --watch /__tests__/legions-micro-service.*.ts",
     "site": "cross-env NODE_ENV=production bisheng build -c ./site/bisheng.config.js",
     "start": "rimraf _site && mkdir _site &&  cross-env NODE_ENV=development bisheng start -c ./site/bisheng.config.js",
     "build:b": "cross-env PACKAGE=browser lrpc rpc -c",
     "build:es": "cross-env PACKAGE=es lrpc rpc -c",
     "build:main": "node build/build.main.js",
     "copy:ts":"sh script/create.sh",
+    "test": "jest --no-cache",
     "start:react15": "cd examples/react15 && yarn dev",
     "dev": "brain-cli dev",
     "dll": "brain-cli dll",

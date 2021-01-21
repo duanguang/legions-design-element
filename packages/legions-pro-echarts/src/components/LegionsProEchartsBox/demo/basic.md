@@ -14,7 +14,7 @@ title:
 Liquid fill display percentage
 
 ```jsx
-import { LegionsProEchartsBox
+/* import { LegionsProEchartsBox
 ,LegionsProEchartsLiquidFill} from 'legions-pro-echarts';
 let liquidFillValue=0.6;
 let liquidFillOptions: echarts.EChartOption = {
@@ -41,5 +41,5 @@ ReactDOM.render(
         </LegionsProEchartsBox>
     </div>,
   mountNode
-);
+); */
 ```

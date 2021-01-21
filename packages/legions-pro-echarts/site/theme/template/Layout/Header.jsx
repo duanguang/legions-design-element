@@ -132,7 +132,7 @@ export default class Header extends React.Component {
     const options = components
       .filter(({ meta }) => !meta.filename.endsWith(excludedSuffix))
       .map(({ meta }) => {
-        const pathSnippet = meta.filename.split('/')[1];
+        const pathSnippet = meta.filename.split('/')[2];
         const url = `/components/${pathSnippet}`;
         const { subtitle } = meta;
         return (
@@ -175,7 +175,7 @@ export default class Header extends React.Component {
             <FormattedMessage id="app.header.menu.home" />
           </Link>
         </Menu.Item>
-       
+
         <Menu.Item key="docs/react">
           <Link to={utils.getLocalizedPathname('/docs/react/introduce', isZhCN)}>
             <FormattedMessage id="app.header.menu.components" />
