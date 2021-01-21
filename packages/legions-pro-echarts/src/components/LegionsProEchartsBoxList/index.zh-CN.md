@@ -1,6 +1,6 @@
 ---
 category: Components
-type: charts
+type: Charts
 title: List
 subtitle: 列表
 ---

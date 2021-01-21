@@ -1,6 +1,6 @@
 ---
 category: Components
-type: charts
+type: Charts
 title: Map
 subtitle: 地图
 ---
