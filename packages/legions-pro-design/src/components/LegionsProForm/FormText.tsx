@@ -18,6 +18,11 @@ export class LabelWithTextModel {
 
     }
 }
+export interface LabelWithTextPartialModel {
+    iAntdProps?: IAntdProps,
+         iFormText?: IFormTextProps,
+         rules?: IAntdRule[],//验证规则
+}
 export interface IFormTextProps extends IAntdFormItemProps {
     maxlen?: number
 }

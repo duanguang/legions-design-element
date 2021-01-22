@@ -14,6 +14,11 @@ export class LabelWithMonthPickerModel {
     ) {
     }
 }
+export interface LabelWithMonthPickerPartialModel {
+    iAntdProps?: IAntdProps,
+    iFormMonthPicker?: IFormMonthPickerProps,
+    rules?: IAntdRule[],//验证规则
+}
 export interface IFormMonthPickerProps extends MonthPickerProps, IAntdFormItemProps {
 }
 export interface IFormWithMonthPickerProps {

@@ -19,6 +19,11 @@ export class LabelWithUploadModel {
 
     }
 }
+export interface LabelWithUploadPartialModel {
+    iAntdProps?: IAntdProps,
+         iFormWithUpload?: IFormUploadProps,
+         rules?: IAntdRule[],
+}
 export interface IFormUploadProps extends IProUploadProps,IAntdFormItemProps {
 }
 

@@ -17,6 +17,11 @@ export class LabelWithSwitchModel {
 
     }
 }
+export interface LabelWithSwitchPartialModel {
+    iAntdProps?: IAntdProps,
+         iFormWithSwitch?: IFormSwitchProps,
+         rules?: IAntdRule[],
+}
 export interface IFormSwitchProps extends SwitchProps, IAntdFormItemProps {
 }
 

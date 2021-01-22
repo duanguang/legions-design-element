@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-29 10:18:01
- * @LastEditTime: 2021-01-20 11:25:33
+ * @LastEditTime: 2021-01-22 16:06:41
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/store/pro.form/proFormStore.ts
@@ -22,9 +22,10 @@ import { computed, extendObservable, runInAction, ObservableMap } from 'mobx';
 import { LegionsFetch } from '../../core';
 import { pagingQueryProcessing } from 'legions-lunar';
 import { cloneDeep } from 'lodash';
-import { IElementList, IErrorView, ISelectAutoQuery, ISelectOptions,ISelectDatabaseDB, ISyncSelectDataBase,IObservableMap } from './interface';
+import { IElementList, IErrorView, ISelectAutoQuery, ISelectOptions,ISelectDatabaseDB, ISyncSelectDataBase,IObservableMap, IProFormFields, IProUpdateFormFields } from './interface';
 import { SelectDatabaseDB } from '../../db';
-import {SelectKeyValue} from '../../models'
+import { SelectKeyValue } from '../../models';
+import { merge } from 'lodash';
 /* import { DexieUtils } from '../utils/dexie'; */
 
 type Proxify<T> = {
@@ -60,6 +61,10 @@ export interface IFormState {
 }
 
 export class HlFormView {
+  constructor() {
+    this.formfields.observe((chan) => {
+    })
+  }
   /**
    * 需要进行回车，上下键操作的组件钩子列表(不包含禁用的组件)
    *
@@ -77,6 +82,7 @@ export class HlFormView {
    * @memberof HlFormView
    */
   @observable focusUid = '';
+
 
   /**
    *
@@ -101,6 +107,24 @@ export class HlFormView {
    */
   @observable controls: any[] = [];
 
+  @observable formfields: IObservableMap<
+  string,
+  IProFormFields['componentModel']
+    > = observable.map();
+  
+  @observable customFormFields: IObservableMap<
+  string,
+  IProFormFields['componentModel']
+> = observable.map();
+
+  /** 待执行渲染的组件元素队列
+   * 
+   * 执行完后移出队列
+   */
+  @observable renderNodeQueue:IObservableMap<
+  string,
+  string
+> = observable.map();
   /**
    * 需要进行回车，上下键操作的组件钩子列表keys
    *
@@ -153,6 +177,23 @@ export class HlFormView {
     return this.allElementList;
   }
 
+  /** 表单元素配置项 */
+  @computed get computedFormFields():IProFormFields['componentModel'][] {
+    const value: IProFormFields['componentModel'][] = [];
+    console.log('computedFormFields');
+      for (let item of this.formfields.values()) {
+        value.push(item);
+      }
+      return value
+  }
+  /** 自定义组件表单元素配置项 */
+  @computed get computedCustomFormFields():IProFormFields['componentModel'][] {
+      const value: IProFormFields['componentModel'][]= [];
+      for (let item of this.customFormFields.values()) {
+        value.push(item);
+      }
+      return value
+  }
   /**
    * 获取全部错误信息
    *
@@ -946,9 +987,14 @@ export default class ProFormStore extends StoreBase {
         ...view.InputDataModel,
         ...formFields,
       });
-      if (parentRef && parentRef.forceUpdate) {
+      Object.keys(formFields).map((key) => {
+        if (!view.renderNodeQueue.has(key)) {
+          view.renderNodeQueue.set(key,key)
+        }
+      })
+      /* if (parentRef && parentRef.forceUpdate) {
         parentRef.forceUpdate();
-      }
+      } */
     }
   }
 }

@@ -14,6 +14,11 @@ export class LabelWithDatePickerModel {
     ) {
     }
 }
+export interface LabelWithDatePickerPartialModel {
+    iAntdProps?: IAntdProps,
+    iFormDatePicker?: IFormDatePickerProps,
+    rules?: IAntdRule[],//验证规则
+}
 export interface IFormDatePickerProps extends DatePickerProps, IAntdFormItemProps {
 }
 export interface IFormWithDatePickerProps {

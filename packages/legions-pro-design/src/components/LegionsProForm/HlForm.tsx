@@ -14,7 +14,7 @@ import {
 } from './interface';
 import { bind,observer } from 'legions/store-react'
 import {ProFormStore } from '../store/pro.form';
-import {IViewModelHlFormStore,IElementList} from '../store/pro.form/interface'
+import {IViewModelHlFormStore,IElementList, IProFormFields} from '../store/pro.form/interface'
 import { shortHash } from 'legions-lunar/object-hash';
 import { LabelWithSwitchModel } from './FormSwitch';
 import { LabelWithRadioButtonModel } from './FormRadioButton';
@@ -44,6 +44,7 @@ export interface IProFormProps<mapProps = {}> {
      */
     InputDataModel: Function,
     store?: ProFormStore,
+    /** 初始化执行一次 */
     controls: Array<any>;
     group?: Array<IGroup>,
 
@@ -199,9 +200,9 @@ class HLForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
             }])
         } */
         this.initFromState();
-        this.setFormItemStateDisabled({
+        /* this.setFormItemStateDisabled({
             props: this.props
-        });
+        }); */
         this.consoleLog('hlFormContainer-constructor');
     }
     watcher = (n) => {
@@ -293,6 +294,28 @@ class HLForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
         // @ts-ignore
         this.props.form.validateFields(...options)
     }
+    setFormStates(name: string,callback: (state: IProFormFields['componentModel']) => void) {
+        this.storeLocalView.dispatchAction(() => {
+            const insertRenderEle = () => {
+                if (!this.storeView.renderNodeQueue.has(name)) {
+                    this.storeView.renderNodeQueue.set(name,name)
+                }
+              }
+              if (this.storeView.formfields.has(name)) {
+                const state= this.storeView.formfields.get(name)
+                  callback && callback(state)
+                  if (state instanceof LegionsProForm.LabelWithHLSelectModel) {
+                    this.storeView.formfields.set(name,new LegionsProForm.LabelWithHLSelectModel(state.iAntdProps,state.iFormWithSelect,state.rules))
+                  }
+                  insertRenderEle()
+              }
+              else if (this.storeView.customFormFields.has(name)) {
+                  const state = this.storeView.customFormFields.get(name)
+                  callback&&callback(state)
+                    insertRenderEle();
+              }
+        })
+    }
     componentWillMount() {
         const group = this.props.group;
         let groupEntity: IGroup[] = []
@@ -337,6 +360,9 @@ class HLForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
                         option: optionItem,
                     }
                 },
+                setFormStates: (name: string,callback: (state) => void) => {
+                    this.setFormStates(name,callback)
+                }
             },
             validateFields: (callback: ValidateCallback) => {
                 view.form.validateFields(callback)
@@ -360,15 +386,12 @@ class HLForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
             this.props.store.clearAllElement(this.uid)
         }
         if (this.props.controls !== nextProps.controls) {
-            this.setFormItemStateDisabled({
+           /*  this.setFormItemStateDisabled({
                 props: this.props,nextProps
-            })
+            }) */
             this.storeView.controls = nextProps.controls;
             if (this.storeLocalView.dragSortState) {
                 this.storeLocalView.updateControlsSort(nextProps.controls.map(item => item.iAntdProps.name));
-            }
-            if (this.props['uniqueUid']) {
-                this.initSelectView(false,nextProps.controls);
             }
         }
         if (nextProps.size !== this.props.size) {
@@ -401,6 +424,11 @@ class HLForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
                     }
                 }
                 this.storeView.initFormState(item.iAntdProps.name,defaultValue)
+                const name = item['iAntdProps'].name
+                this.storeView.formfields.set(name,item)
+                if (!this.storeView.renderNodeQueue.has(name)) {
+                    this.storeView.renderNodeQueue.set(name,name)
+                }
             })
         }
     }
@@ -461,52 +489,7 @@ class HLForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
             });
         }
     }
-    /** 设置表单选项禁用和启用值 */
-    setFormItemStateDisabled(options: {
-        props: IProFormProps<mapProps>,nextProps?: IProFormProps<mapProps>
-    }) {
-        const nextProps = options.nextProps;
-        const props = options.props || this.props;
-        if (nextProps) {
-            nextProps.controls.map((item) => {
-                const entity = props.controls.find((w) => w.iAntdProps.name === item.iAntdProps.name)
-                if (entity) {
-                    COMPONENT_TYPE.map((c) => {
-                        if (c === 'iFormWithRadioButton') {
-                            const propsDisabled = get(entity,`${c}.radioGroup.disabled`);
-                            const nextPropsDisabled = get(item,`${c}.radioGroup.disabled`);
-                            if (propsDisabled !== void 0 && nextPropsDisabled !== void 0 && propsDisabled !== nextPropsDisabled) {
-                                this.storeView.setFormState(item.iAntdProps.name,{ disabled: nextPropsDisabled })
-                            }
-                        } else {
-                            const propsDisabled = get(entity,`${c}.disabled`);
-                            const nextPropsDisabled = get(item,`${c}.disabled`);
-                            if (propsDisabled !== void 0 && nextPropsDisabled !== void 0&& propsDisabled !== nextPropsDisabled) {
-                                this.storeView.setFormState(item.iAntdProps.name,{ disabled: nextPropsDisabled })
-                            }
-                        }
-                    })
-                }
-            })
-        }
-        else {
-            props.controls.map((item) => {
-                COMPONENT_TYPE.map((c) => {
-                    if (c === 'iFormWithRadioButton') {
-                        const propsDisabled = get(item,`${c}.radioGroup.disabled`);
-                        if (propsDisabled !== void 0) {
-                            this.storeView.setFormState(item.iAntdProps.name,{ disabled: propsDisabled })
-                        }
-                    } else {
-                        const propsDisabled = get(item,`${c}.disabled`);
-                        if (propsDisabled !== void 0) {
-                            this.storeView.setFormState(item.iAntdProps.name,{ disabled: propsDisabled })
-                        }
-                    }
-                })
-            })
-        }
-    }
+    
     queryElementItem(ElementKey: string): IElementList & { keys: string } {
         if (this.storeView) {
             const keys = this.storeView.elementList.keys()
@@ -757,13 +740,13 @@ class HLForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
                     control[item].paging = true
                 }
                 /* 防止表单动态增加的字段在表单状态集合中不存在而报错 */
-                if (this.storeView.computedFormState.has(control.iAntdProps.name)) { // 判断表单字段是否在表单状态数据集合中存在
+                /* if (this.storeView.computedFormState.has(control.iAntdProps.name)) { // 判断表单字段是否在表单状态数据集合中存在
                     if (item === 'iFormWithRadioButton' && control.iFormWithRadioButton['radioGroup']) {
                         control.iFormWithRadioButton['radioGroup']['disabled'] = this.storeView.computedFormState.get(control.iAntdProps.name).disabled
                     } else {
                         control[item]['disabled'] = this.storeView.computedFormState.get(control.iAntdProps.name).disabled
                     }
-                }
+                } */
             }
         })
         if (control.iAntdProps.className) {
@@ -917,8 +900,8 @@ class HLForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
     }
     renderGroup() {
         const group = this.props.group;
-        const controls = this.props.controls;
-    /* const controls = this.storeView.controls; */
+        /* const controls = this.props.controls; */
+        const controls = this.storeView.computedFormFields
         //@ts-ignore
         const groupComponent = group.map((item,index) => {
             let groupFormItem = controls.filter((entity) => entity.iAntdProps.groupId === item.id);
@@ -991,7 +974,9 @@ class HLForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
     }
     renderForm() {
         const group = this.props.group;
-        const controls = this.props.controls;
+    /* const controls = this.props.controls; */
+        const controls = this.storeView.computedFormFields;
+        console.log(controls,'controlscontrols');
         if (group && group instanceof Array && group.length) {
             return this.renderGroup()
         }
@@ -1001,6 +986,7 @@ class HLForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
     }
     render() {
         const { getFieldDecorator } = this.props.form;
+        console.log('HLForm');
         return (
             <Form className={`${baseCls} ${this.uid}`} /* key={this.props.controls.length} */>
                 {this.renderForm()}

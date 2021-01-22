@@ -9,6 +9,16 @@ import {
 } from '../../../interface/antd';
 import {ProFormStore} from '..';
 import { HLFormLocalView,HlFormView,IOtherView } from '../proFormStore';
+import {
+  LabelWithDatePickerModel,LabelWithHLSelectModel,
+  LabelWithInputModel,LabelWithInputNumberModel,LabelWithMonthPickerModel,
+  LabelWithRadioButtonModel,LabelWithRangePickerModel,LabelWithSwitchModel,
+  LabelWithTextModel,LabelWithUploadModel,
+  LabelWithDatePickerPartialModel,
+  LabelWithInputPartialModel,LabelWithInputNumberPartialModel,
+  LabelWithMonthPickerPartialModel,LabelWithRadioButtonPartialModel,LabelWithRangePickerPartialModel,
+  LabelWithSwitchPartialModel,LabelWithTextPartialModel,LabelWithUploadPartialModel,LabelWithSelectPartialModel
+} from '../../../LegionsProForm/interface'
 import {SelectKeyValue,KeyValue} from '../../../models'
 export interface IErrorView {
   /**
@@ -247,3 +257,15 @@ export declare type IViewModelHlFormStore = ViewModel<HlFormView> &
   IOtherView;
 export declare type ILocalViewModelHlFormStore = ViewModel<HLFormLocalView> &
   Proxify<HLFormLocalView>;
+
+export interface IProFormFields {
+    componentModel: LabelWithInputModel | LabelWithInputNumberModel | LabelWithDatePickerModel | LabelWithMonthPickerModel |
+    LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel |
+    LabelWithRadioButtonModel | LabelWithTextModel | LabelWithHLSelectModel
+}
+export interface IProUpdateFormFields {
+  componentModel: LabelWithInputPartialModel | LabelWithInputNumberPartialModel | LabelWithDatePickerPartialModel |
+  LabelWithMonthPickerPartialModel |
+    LabelWithRangePickerPartialModel | LabelWithUploadPartialModel | LabelWithSwitchPartialModel |
+    LabelWithRadioButtonPartialModel | LabelWithTextPartialModel |LabelWithSelectPartialModel
+}

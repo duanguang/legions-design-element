@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-29 10:26:57
- * @LastEditTime: 2021-01-20 16:07:36
+ * @LastEditTime: 2021-01-22 14:18:24
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProForm/interface/form.ts
@@ -13,6 +13,7 @@ import  {
   ILocalViewModelHlFormStore,
   IViewModelHlFormStore,
   IErrorView,
+  IProFormFields,
 } from '../../store/pro.form/interface';
 import {ProFormStore} from '../../store/pro.form'
 export type {IErrorView}
@@ -108,6 +109,8 @@ interface IMethods {
     /** 下拉组件name值，对应container.component.JsonProperty.name */ name: string,
     /** 下拉选项key值*/ optionKey: string
   ) => { readonly option: HlLabeledValue };
+
+  setFormStates: (name: string,callback: (state: IProFormFields['componentModel']) => void) => void
 }
 export interface IFormState {
   /**

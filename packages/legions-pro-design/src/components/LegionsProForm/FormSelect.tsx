@@ -22,6 +22,11 @@ export class LabelWithSelectModel {
 
     }
 }
+export interface LabelWithSelectPartialModel {
+    iAntdProps?: IAntdProps,
+         iFormWithSelect?: IFormSelectProps,
+         rules?: IAntdRule[]
+}
 
 export interface IFormSelectProps extends SelectProps, IAntdFormItemProps {
 
@@ -100,7 +105,7 @@ export default class FormSelect extends AbstractForm<IFormWithSelectProps>{
     public render() {
         const { form, iAntdProps, iFormWithSelect, children, rules } = this.props;
         const { getFieldDecorator, getFieldsError } = form;
-        const { label, labelCol, wrapperCol, ...props } = iFormWithSelect
+        const { label,labelCol,wrapperCol,...props } = iFormWithSelect
         return (
             <FormElement form={form} 
                 onReady={(value)=>{

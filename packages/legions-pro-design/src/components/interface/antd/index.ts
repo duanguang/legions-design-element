@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-26 10:27:31
- * @LastEditTime: 2021-01-20 11:13:07
+ * @LastEditTime: 2021-01-22 15:45:36
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/interface/antd/index.ts
@@ -63,10 +63,7 @@ export interface IAntdProps {
   id: string;
   name: string;
   placeholder: string;
-  type?: string;
-  value?: any;
   className?: string;
-  initialValue?: string | object[];
   /**
    *
    * 分组ID

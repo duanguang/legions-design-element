@@ -21,6 +21,11 @@ export class LabelWithCheckboxModel {
 
     }
 }
+export interface LabelWithCheckboxPartialModel {
+    iAntdProps?: IAntdProps,
+    iFormInput?: IFormCheckboxProps,
+    rules?: IAntdRule[],//验证规则
+}
 export interface IFormCheckboxProps extends Weaken<CheckboxGroupProps,'options'>,CheckboxGroupProps,IAntdFormItemProps {
     options: {
         label: string;

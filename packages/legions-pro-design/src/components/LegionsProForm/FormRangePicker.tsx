@@ -14,6 +14,11 @@ export class LabelWithRangePickerModel {
     ) {
     }
 }
+export interface LabelWithRangePickerPartialModel {
+    iAntdProps?: IAntdProps,
+     iFormRangePicker?: IFormRangePickerProps,
+     rules?: IAntdRule[],//验证规则
+}
 export interface IFormRangePickerProps extends RangePickerProps, IAntdFormItemProps {
 }
 export interface IFormWithRangePickerProps {

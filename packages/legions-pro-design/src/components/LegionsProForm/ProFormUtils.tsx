@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-08 15:19:23
- * @LastEditTime: 2021-01-20 14:53:18
+ * @LastEditTime: 2021-01-22 09:42:41
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProForm/ProFormUtils.tsx
@@ -15,7 +15,7 @@ import {
     WrappedFormUtils,
     ColProps
 } from '../interface/antd';
-import { IFormCheckboxProps, IFormDatePickerProps, IFormInputNumberProps, IFormInputProps, IFormMonthPickerProps, IFormRadioButtonProps, IFormRangePickerProps, IFormRenderProps, IFormSelectProps, IFormState, IFormSwitchProps, IFormTextProps, IFormUploadProps, InstanceForm, LabelWithCheckboxModel, LabelWithDatePickerModel, LabelWithHLSelectModel, LabelWithInputModel, LabelWithInputNumberModel, LabelWithMonthPickerModel, LabelWithRadioButtonModel, LabelWithRangePickerModel, LabelWithRenderModel, LabelWithSwitchModel, LabelWithTextModel, LabelWithUploadModel } from './interface';
+import { IFormCheckboxProps, IFormDatePickerProps, IFormInputNumberProps, IFormInputProps, IFormMonthPickerProps, IFormRadioButtonProps, IFormRangePickerProps, IFormRenderProps, IFormSelectProps, IFormState, IFormSwitchProps, IFormTextProps, IFormUploadProps, InstanceForm, LabelWithCheckboxModel, LabelWithDatePickerModel, LabelWithHLSelectModel, LabelWithInputModel, LabelWithInputNumberModel, LabelWithMonthPickerModel, LabelWithRadioButtonModel, LabelWithRangePickerModel, LabelWithRenderModel, LabelWithSelectModel, LabelWithSwitchModel, LabelWithTextModel, LabelWithUploadModel } from './interface';
 import FormInput from './FormInput';
 import FormInputNumber from './FormInputNumber';
 import FormHLSelect from './FormHLSelect';
@@ -67,6 +67,18 @@ interface IProFormUtils {
 }
 export const COMPONENT_TYPE = ['iFormInput','iFormText','iFormWithSelect','iFormDatePicker','iFormMonthPicker','iFormRangePicker','iFormWithRadioButton','iFormWithSwitch',]
 export class ProFormUtils<Store,global = {}>{
+    static LabelWithInputNumberModel = LabelWithInputNumberModel;
+    static LabelWithSelectModel = LabelWithSelectModel;
+    static LabelWithHLSelectModel = LabelWithHLSelectModel;
+    static LabelWithRenderModel = LabelWithRenderModel;
+    static LabelWithDatePickerModel = LabelWithDatePickerModel;
+    static LabelWithMonthPickerModel = LabelWithMonthPickerModel;
+    static LabelWithRangePickerModel = LabelWithRangePickerModel;
+    static LabelWithUploadModel = LabelWithUploadModel;
+    static LabelWithSwitchModel = LabelWithSwitchModel;
+    static LabelWithRadioButtonModel = LabelWithRadioButtonModel;
+    static LabelWithTextModel = LabelWithTextModel;
+    static LabelWithInputModel = LabelWithInputModel;
     readonly global: global = null
     readonly mobxStore: Store = null
     constructor(options?: {
@@ -133,6 +145,9 @@ export class ProFormUtils<Store,global = {}>{
             }
             const storeView = formRef.store.get(formRef.uid);
             storeView.initFormState(key,defaultValue);
+            storeView.dispatchAction(() => {
+                storeView.customFormFields.set(key,iFormItemProps)
+            })
         }
     }
     renderSelectConfig(options: IRenderComponentParams<IFormSelectProps>): LabelWithHLSelectModel {
@@ -376,6 +391,7 @@ export class ProFormUtils<Store,global = {}>{
         }
     }
 }
+
 type IFormRules<FormRules> = {
     [P in keyof FormRules]: IAntdRule[];
 }

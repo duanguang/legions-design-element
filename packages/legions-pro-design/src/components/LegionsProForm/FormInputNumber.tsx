@@ -13,6 +13,11 @@ export class LabelWithInputNumberModel {
 
     }
 }
+export interface LabelWithInputNumberPartialModel {
+    iAntdProps?: IAntdProps,
+     iFormInput?: IFormInputNumberProps,
+     rules?: IAntdRule[],//验证规则
+}
 export interface IFormInputNumberProps extends InputNumberProps, IAntdFormItemProps {
     render?: (form: WrappedFormUtils) => JSX.Element;
     onBlur?: () => void
@@ -44,6 +49,22 @@ export default class FormInputNumber extends AbstractForm<IFormWithInputNumberPr
         }
         this.props.iFormInput&&this.props.iFormInput.onFocus&&this.props.iFormInput.onFocus(e)
     }
+    componentDidMount() {
+        const viewStore = this.FormInputNumberRef.store.get(this.props.formUid)
+        if (viewStore.renderNodeQueue.has(this.props.iAntdProps.name)) {
+            viewStore.renderNodeQueue.delete(this.props.iAntdProps.name)
+        }
+    }
+    shouldComponentUpdate(nextProps:IFormWithInputNumberProps,nextState,context) {
+        if (this.FormInputNumberRef) {
+            const viewStore = this.FormInputNumberRef.store.get(this.props.formUid)
+            if (viewStore.renderNodeQueue.has(nextProps.iAntdProps.name)) {
+                viewStore.renderNodeQueue.delete(nextProps.iAntdProps.name)
+                return true
+            }
+        }
+        return false;
+    }
     render() {
         const { form, iAntdProps, iFormInput, children, rules } = this.props;
         const { getFieldDecorator, getFieldsError } = form;
@@ -52,6 +73,7 @@ export default class FormInputNumber extends AbstractForm<IFormWithInputNumberPr
         if ('colon' in props) {
             formItemProps['colon'] = props.colon;
         }
+        console.log(iAntdProps.name,'FormInputNumber');
         return (
             <FormElement form={form} 
                 onReady={(value)=>{

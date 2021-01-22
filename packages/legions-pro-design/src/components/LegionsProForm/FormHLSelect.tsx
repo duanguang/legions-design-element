@@ -254,6 +254,16 @@ export default class FormHLSelect extends AbstractSelectForm<IFormWithSelectProp
         }
         this.props.iFormWithSelect.onPagingQuery && this.props.iFormWithSelect.onPagingQuery(pageIndex,pageSize,value)
     }
+    shouldComponentUpdate(nextProps:IFormWithSelectProps,nextState,context) {
+        if (this.FormHLSelectRef) {
+            const viewStore = this.FormHLSelectRef.store.get(this.props.formUid)
+            if (viewStore.renderNodeQueue.has(nextProps.iAntdProps.name)) {
+                viewStore.renderNodeQueue.delete(nextProps.iAntdProps.name)
+                return true
+            }
+        }
+        return false;
+    }
     public render() {
         const { form,iAntdProps,iFormWithSelect,children,rules,formUid } = this.props;
         const { getFieldDecorator,getFieldsError } = form;
@@ -265,6 +275,7 @@ export default class FormHLSelect extends AbstractSelectForm<IFormWithSelectProp
         if ('colon' in props) {
             formItemProps['colon'] = props.colon;
         }
+        console.log(iAntdProps.name);
         return (
             <FormElement form={form}
                 elType={'input'}

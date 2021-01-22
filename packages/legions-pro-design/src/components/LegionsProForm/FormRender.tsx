@@ -30,6 +30,18 @@ export class LabelWithRenderModel {
 
     }
 }
+/**
+ * 使用Render模型自定义组件时，需要要主动用FormItem 包裹住自定义的组件
+ *
+ * @export
+ * @class LabelWithRenderModel
+ */
+export interface LabelWithRenderPartialModel {
+
+    iAntdProps?: IAntdProps,
+    iFormRender?: IFormRenderProps,
+    rules?: IAntdRule[],//验证规则
+}
 export interface IFormRenderProps extends IAntdFormItemProps {
     render: (
         form: WrappedFormUtils,

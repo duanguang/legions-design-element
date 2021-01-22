@@ -32,6 +32,11 @@ export class LabelWithInputModel {
 
     }
 }
+export interface LabelWithInputPartialModel {
+    iAntdProps?: IAntdProps,
+    iFormInput?: IFormInputProps,
+    rules?: IAntdRule[],//验证规则
+}
 export interface IFormInputProps extends Omit<InputProps,'onChange'>,TextAreaProps,IAntdFormItemProps {
     render?: (form: WrappedFormUtils,iAntdProps?: IAntdProps,
         rules?: IAntdRule[],
@@ -76,12 +81,17 @@ interface IForm {
     formUid: string;
     onIgnoreError?: (item: IErrorView) => void
 }
-export class TooltipInput extends React.Component<InputProps & TextAreaProps & TooltipProps & IForm,{ value: string }>{
+interface ITooltipInputProps extends InputProps, TextAreaProps , TooltipProps,IForm{}
+export class TooltipInput extends React.Component<ITooltipInputProps,{}>{
     constructor(props) {
         super(props)
-        this.state = {
-            value: this.props.form.getFieldValue(this.props.formItemName),
+        
+    }
+    get store() {
+        if (this.props.FormInputRef && this.props.formUid) {
+            return this.props.FormInputRef.store.get(this.props.formUid)
         }
+        return null
     }
     /* onChanges = (() => {
         let updb = this.props.onChange;
@@ -106,12 +116,10 @@ export class TooltipInput extends React.Component<InputProps & TextAreaProps & T
         this.onChanges(even,value);
     };
     componentWillReceiveProps(nextProps) {
-        if (this.props.value !== nextProps.value && typeof nextProps.value !== 'object') {
-            this.setState({ value: nextProps.value })
-        }
+        
     }
     render() {
-        const { form,name,valueLen,FormInputRef,inputType,type,...props } = this.props;
+        const { form,name,valueLen,FormInputRef,inputType,type,formUid,formItemName,onIgnoreError,...props } = this.props;
         let isShowErrorView = false;
         if (FormInputRef && this.props.formUid) {
             const viewStore = FormInputRef.store.get(this.props.formUid)
@@ -125,7 +133,6 @@ export class TooltipInput extends React.Component<InputProps & TextAreaProps & T
         isShowErrorView && (iconStyle = { marginRight: '18px' })
         const theProps = {
             ...props,
-            ...this.state,
         };
         theProps.onChange = this.handleOnChange.bind(this);
         const maxlen = parseInt(this.props.maxLength)
@@ -135,15 +142,15 @@ export class TooltipInput extends React.Component<InputProps & TextAreaProps & T
                 formUid={this.props.formUid}
                 onIgnoreError={this.props.onIgnoreError}
                 errorClassName={
-                    classNames({
-                        [`${Styles.tipIconInput}`]: true,
-                        [`${Styles['tipIcon-right-0']}`]: (this.state.value && !this.props.disabled) ? true : false,
-                    })}>
+                classNames({
+                    [`${Styles.tipIconInput}`]: true,
+                    [`${Styles['tipIcon-right-0']}`]: (this.props.value && !this.props.disabled) ? true : false,
+                })}>
                 {this.props.inputType === 'number' ? <LegionsProNumericInput
                     {...theProps}></LegionsProNumericInput> : <Tooltip
                         /* trigger={'click'} */
                         mouseEnterDelay={1}
-                        title={valueLen >= maxlen - 10 ? this.state.value : ''}
+                        title={valueLen >= maxlen - 10 ? this.props.value : ''}
                         placement="topLeft"
                         overlayStyle={{ wordWrap: 'break-word' }}
                     >
@@ -152,12 +159,9 @@ export class TooltipInput extends React.Component<InputProps & TextAreaProps & T
                             type={type}
                             suffix={(
                                 <div>
-                                    {(this.state.value && !this.props.disabled) && <Icon
+                                    {(this.props.value && !this.props.disabled) && <Icon
                                         style={iconStyle}
                                         type="close-circle" onClick={() => {
-                                            this.setState({
-                                                value: '',
-                                            })
                                             let fileName = {}
                                             fileName[this.props.formItemName] = ''
                                             setFieldsValue(fileName);
@@ -182,6 +186,12 @@ export default class FormInput extends AbstractForm<IFormWithInputProps>{
         }
         return null
     }
+    componentDidMount() {
+        const viewStore = this.FormInputRef.store.get(this.props.formUid)
+        if (viewStore.renderNodeQueue.has(this.props.iAntdProps.name)) {
+            viewStore.renderNodeQueue.delete(this.props.iAntdProps.name)
+        }
+    }
     onChange(even) {
         const value = typeof even === 'object' ? even.target.value : even;
         this.props.iFormInput.onChange && this.props.iFormInput.onChange(value)
@@ -202,6 +212,7 @@ export default class FormInput extends AbstractForm<IFormWithInputProps>{
         if (store) {
             store.focusUid = this.FormInputRef.uid
         }
+        console.log(store.focusUid,'store.focusUid');
         /* const el = document.querySelector(`.${this.FormInputRef.uid}`); */
         const even = e.target
         even.select()
@@ -214,13 +225,24 @@ export default class FormInput extends AbstractForm<IFormWithInputProps>{
         }
         this.props.iFormInput.onBlur && this.props.iFormInput.onBlur(even)
     }
+    shouldComponentUpdate(nextProps:IFormWithInputProps,nextState,context) {
+        if (this.FormInputRef && this.store) {
+            const viewStore = this.FormInputRef.store.get(this.props.formUid)
+            if (viewStore.renderNodeQueue.has(nextProps.iAntdProps.name)) {
+                viewStore.renderNodeQueue.delete(nextProps.iAntdProps.name)
+                
+                return true
+            }
+        }
+        return false;
+    }
     render() {
         const { form,iAntdProps,iFormInput,children,rules } = this.props;
         const { getFieldDecorator,getFieldsError,setFieldsValue } = form;
         let disabled = iFormInput && iFormInput.disabled;
         let addonAfter = iFormInput && iFormInput.addonAfter;
         let addonBefore = iFormInput && iFormInput.addonBefore;
-        const { label,labelCol,wrapperCol,render,...props } = iFormInput
+        const { label,labelCol,wrapperCol,defaultVisible,render,...props } = iFormInput
         const valueLen = getStringLen(form.getFieldValue(iAntdProps.name))
         const maxLength = iFormInput.maxLength ? parseInt(iFormInput.maxLength) : 50
         const placeholder = iAntdProps.placeholder || ''
@@ -228,11 +250,13 @@ export default class FormInput extends AbstractForm<IFormWithInputProps>{
         if ('colon' in props) {
             formItemProps['colon'] = props.colon;
         }
+        console.log('input',this.props.iAntdProps.name);
         return (
             <FormElement form={form}
                 onReady={(value) => {
                     this.FormInputRef = value
                 }}
+                key={`FormElement${iAntdProps.name}`}
                 elType={iFormInput.type === 'textarea' ? 'textarea' : 'input'}
                 elementKey={iAntdProps.name}
                 nextElementKey={iAntdProps.nextElementKey}
@@ -255,6 +279,7 @@ export default class FormInput extends AbstractForm<IFormWithInputProps>{
                             // @ts-ignore
                             <TextArea
                                 {...props}
+                                key={iAntdProps.name}
                                 autosize={iFormInput.autosize === void 0 ? { minRows: 1,maxRows: 2 } : iFormInput.autosize}
                                 onPressEnter={this.onPressEnter.bind(this)}
                                 title={form.getFieldValue(iAntdProps.name)}
@@ -262,16 +287,16 @@ export default class FormInput extends AbstractForm<IFormWithInputProps>{
                                 maxLength={iFormInput.maxLength ? parseInt(iFormInput.maxLength) : 200}
                                 placeholder={iFormInput.disabled ? '' : placeholder} /> :
                             <TooltipInput
-                                type={iAntdProps.type}
                                 {...props}
                                 onIgnoreError={this.props.formStore && this.props.formStore.onIgnoreError}
                                 formUid={this.props.formUid}
                                 FormInputRef={this.FormInputRef}
-                                value={form.getFieldValue(iAntdProps.name)}
+                                /* value={form.getFieldValue(iAntdProps.name)} */
                                 maxLength={maxLength.toString()}
                                 valueLen={valueLen}
                                 formItemName={iAntdProps.name}
                                 form={form}
+                                key={iAntdProps.name}
                                 inputType={iFormInput.type}
                                 onPressEnter={this.onPressEnter.bind(this)}
                                 disabled={disabled}

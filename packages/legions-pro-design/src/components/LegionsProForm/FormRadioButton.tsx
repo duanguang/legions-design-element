@@ -18,6 +18,11 @@ export class LabelWithRadioButtonModel {
 
     }
 }
+export interface LabelWithRadioButtonPartialModel {
+    iAntdProps?: IAntdProps,
+    iFormWithRadioButton?: IFormRadioButtonProps,
+    rules?: IAntdRule[],
+}
 export interface IFormRadioButtonProps extends IAntdFormItemProps {
     radioButton?: {
         options: ({ label: string, value: string } & RadioButtonProps)[]

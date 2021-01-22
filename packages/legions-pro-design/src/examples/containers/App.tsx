@@ -12,15 +12,14 @@ import { ProTable } from './proTable';
 
 
 export default class App extends React.Component {
-    unstable_handleError(e) {
+    /* unstable_handleError(e) {
         console.dir(e,'unstable_handleError');
-    }
-    constructor() {
-        super()
-    }
+    } */
+    
     render() {
         return (
             <Switch>
+                <React.Fragment>
  
                 <Route path="/table" component={ProTable}></Route>
                 <Route path="/form" component={ProForm}></Route>
@@ -29,7 +28,8 @@ export default class App extends React.Component {
                         return <div>hello world</div>
                     }}/> */}
                 {this.props.children}
-            </Switch>
+                </React.Fragment>
+                </Switch>
         );
     }
 }

@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-29 10:08:53
- * @LastEditTime: 2021-01-20 11:30:37
+ * @LastEditTime: 2021-01-21 23:00:34
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProForm/interface/index.ts
@@ -11,52 +11,57 @@ export type { IErrorView,IFormState,IGroup } from './form';
 export type { IFormSelectProps } from './select';
 export  { LabelWithHLSelectModel } from './select';
 export type { IFormInputProps } from '../FormInput';
-export  { LabelWithInputModel } from '../FormInput';
+export  { LabelWithInputModel,LabelWithInputPartialModel } from '../FormInput';
 export type { IFormTextProps } from '../FormText';
-export  { LabelWithTextModel } from '../FormText';
+export  { LabelWithTextModel,LabelWithTextPartialModel } from '../FormText';
 
 export type { IFormDatePickerProps } from '../FormDatePicker';
-export  { LabelWithDatePickerModel } from '../FormDatePicker';
+export  { LabelWithDatePickerModel,LabelWithDatePickerPartialModel } from '../FormDatePicker';
 
 export type {
     IFormMonthPickerProps
 } from '../FormMonthPicker';
 export  {
-    LabelWithMonthPickerModel
+    LabelWithMonthPickerModel,
+    LabelWithMonthPickerPartialModel
 } from '../FormMonthPicker';
 
 export type {
     IFormRangePickerProps,
 } from '../FormRangePicker';
 export {
-    LabelWithRangePickerModel
+    LabelWithRangePickerModel,
+    LabelWithRangePickerPartialModel
 } from '../FormRangePicker';
 
 export type{
     IFormInputNumberProps
 } from '../FormInputNumber';
 export {
-    LabelWithInputNumberModel
+    LabelWithInputNumberModel,
+    LabelWithInputNumberPartialModel
 } from '../FormInputNumber';
 
 export type {
     IFormRadioButtonProps
 } from '../FormRadioButton';
 export  {
-    LabelWithRadioButtonModel
+    LabelWithRadioButtonModel,
+    LabelWithRadioButtonPartialModel
 } from '../FormRadioButton';
 
 export type {IFormSwitchProps } from '../FormSwitch';
-export  { LabelWithSwitchModel } from '../FormSwitch';
+export  { LabelWithSwitchModel,LabelWithSwitchPartialModel } from '../FormSwitch';
 
 export type { IFormUploadProps } from '../FormUpload';
-export  { LabelWithUploadModel } from '../FormUpload';
+export  { LabelWithUploadModel,LabelWithUploadPartialModel } from '../FormUpload';
 
 export type { IFormRenderProps } from '../FormRender';
-export  { LabelWithRenderModel } from '../FormRender';
+export  { LabelWithRenderModel,LabelWithRenderPartialModel } from '../FormRender';
 
 export type { IFormCheckboxProps } from '../FormCheckbox';
-export  { LabelWithCheckboxModel } from '../FormCheckbox';
+export  { LabelWithCheckboxModel,LabelWithCheckboxPartialModel } from '../FormCheckbox';
 
-export { LabelWithSelectModel } from '../FormSelect';
-export {InstanceForm} from './form'
+export { LabelWithSelectModel,LabelWithSelectPartialModel } from '../FormSelect';
+export { InstanceForm } from './form'
+
