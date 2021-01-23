@@ -84,7 +84,7 @@ export default  class LegionsProEchartsLayout extends React.Component<LayoutProp
             if (!item) {
                 return null;
             }
-            if (item.props.children && deep < gutterDeep!) {
+            if (item.props && item.props.children && deep < gutterDeep!) {
                 item.props.children = this.computedChildren(item.props.children, deep + 1);
             }
             if (item.props && item.props.className && item.props.className.indexOf(`${proLayoutPrefix}-row`) > -1) {
