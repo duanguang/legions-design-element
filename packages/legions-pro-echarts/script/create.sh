@@ -38,9 +38,6 @@ cp -r -f types/components/LegionsProEchartsChartLine/*.d.ts lib/LegionsProEchart
 cp -r -f types/components/LegionsProEchartsChartPie/*.d.ts es/LegionsProEchartsChartPie/
 cp -r -f types/components/LegionsProEchartsChartPie/*.d.ts lib/LegionsProEchartsChartPie/
 
-cp -r -f types/components/LegionsProEchartsCol/*.d.ts es/LegionsProEchartsCol/
-cp -r -f types/components/LegionsProEchartsCol/*.d.ts lib/LegionsProEchartsCol/
-
 cp -r -f types/components/LegionsProEchartsCore/*.d.ts es/LegionsProEchartsCore/
 cp -r -f types/components/LegionsProEchartsCore/*.d.ts lib/LegionsProEchartsCore/
 
@@ -52,9 +49,6 @@ cp -r -f types/components/LegionsProEchartsLiquidFill/*.d.ts lib/LegionsProEchar
 
 cp -r -f types/components/LegionsProEchartsMap/*.d.ts es/LegionsProEchartsMap/
 cp -r -f types/components/LegionsProEchartsMap/*.d.ts lib/LegionsProEchartsMap/
-
-cp -r -f types/components/LegionsProEchartsRow/*.d.ts es/LegionsProEchartsRow/
-cp -r -f types/components/LegionsProEchartsRow/*.d.ts lib/LegionsProEchartsRow/
 
 cp -r -f types/components/LegionsProLineOverflow/*.d.ts es/LegionsProLineOverflow/
 cp -r -f types/components/LegionsProLineOverflow/*.d.ts lib/LegionsProLineOverflow/
