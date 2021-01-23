@@ -78,22 +78,31 @@ export default  class LegionsProEchartsLayout extends React.Component<LayoutProp
         return fullScreenStles;
     }
     /** 劫持子元素，设置元素间距 */
-    computedChildren(children: React.ReactElement<any>[], deep: number = 1){
-        const { gutter, gutterDeep } = this.props;
+    computedChildren(children: React.ReactElement<any>[], deep: number = 1) {
+        let { gutter, gutterDeep } = this.props;
+        let newChildren: React.ReactElement<any>[] = []
+        let newProps = {}
         return React.Children.map(children as React.ReactElement<any>[], (item: React.ReactElement<any>, index) => {
-            if (!item) {
-                return null;
+            try {
+                if (!item || !item.props || !gutter) {
+                    return item
+                }
+                /** 向下查找ProRow元素，直到深度大于gutterDeep为止 */
+                if (item.props.children && deep < gutterDeep!) {
+                    newChildren = this.computedChildren(item.props.children, deep + 1);
+                }
+                /** 遇到ProRow元素，设置gutter属性 */
+                if (item.props.className && item.props.className.indexOf(`${proLayoutPrefix}-row`) > -1) {
+                    newProps = {...newProps, gutter: item.props.gutter || gutter}
+                }
+                /** 深度deep === 1时，设置每一行的上下间距，除最后一行 */
+                if (index !== React.Children.count(children) - 1 && deep === 1) {
+                    newProps = {...newProps, style: {...item.props.style, paddingBottom: gutter}}
+                }
+            } catch (error) {
+                console.error(error)
             }
-            if (item.props && item.props.children && deep < gutterDeep!) {
-                item.props.children = this.computedChildren(item.props.children, deep + 1);
-            }
-            if (item.props && item.props.className && item.props.className.indexOf(`${proLayoutPrefix}-row`) > -1) {
-                item.props.gutter = item.props.gutter || gutter;
-            }
-            if (item.props && gutter! > 0 && index !== React.Children.count(children) - 1 && deep === 1) {
-                return React.cloneElement(item, {style: {...item.props.style, paddingBottom: gutter}});
-            }
-            return item;
+            return React.cloneElement(item, newProps, newChildren);
         })
     }
     render() {
