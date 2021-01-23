@@ -10,9 +10,10 @@ const { ProRow, ProCol } = LegionsProEchartsLayout;
 export class LayoutBaseDemo extends React.Component{
     render() {
         return <LegionsProEchartsLayout gutter={6}>
-            <ProRow gutter={6}>
+            {null}
+            <ProRow>
                 <ProCol span={12}>
-                    <ProRow gutter={6}>
+                    <ProRow>
                         <ProCol span={12}>
                             <LegionsProEchartsBox title="title" height="200px" style={{paddingBottom: 6}}></LegionsProEchartsBox>
                         </ProCol>
@@ -28,7 +29,7 @@ export class LayoutBaseDemo extends React.Component{
                     <LegionsProEchartsBox title="title" height="600px"></LegionsProEchartsBox>
                 </ProCol>
             </ProRow>
-            <ProRow gutter={6}>
+            <ProRow>
                 <ProCol span={8}>
                     <LegionsProEchartsBox title="title" height="300px"></LegionsProEchartsBox>
                 </ProCol>
@@ -39,7 +40,7 @@ export class LayoutBaseDemo extends React.Component{
                     <LegionsProEchartsBox title="title" height="300px"></LegionsProEchartsBox>
                 </ProCol>
             </ProRow>
-            <ProRow gutter={6}>
+            <ProRow>
                 <ProCol span={6}>
                     <LegionsProEchartsBox height="140px"></LegionsProEchartsBox>
                 </ProCol>
@@ -53,7 +54,7 @@ export class LayoutBaseDemo extends React.Component{
                     <LegionsProEchartsBox height="140px"></LegionsProEchartsBox>
                 </ProCol>
             </ProRow>
-            <ProRow gutter={6}>
+            <ProRow>
                 <ProCol span={12}>
                     <LegionsProEchartsBox title="title" height="600px"></LegionsProEchartsBox>
                 </ProCol>
@@ -61,12 +62,12 @@ export class LayoutBaseDemo extends React.Component{
                     <LegionsProEchartsBox title="title" height="600px"></LegionsProEchartsBox>
                 </ProCol>
             </ProRow>
-            <ProRow gutter={6}>
+            <ProRow>
                 <ProCol span={24}>
                     <LegionsProEchartsBox height="150px"></LegionsProEchartsBox>
                 </ProCol>
             </ProRow>
-            <ProRow gutter={6}>
+            <ProRow>
                 <ProCol span={18}>
                     <LegionsProEchartsBox title="title" height="400px"></LegionsProEchartsBox>
                 </ProCol>
@@ -74,7 +75,7 @@ export class LayoutBaseDemo extends React.Component{
                     <LegionsProEchartsBox title="title" height="400px"></LegionsProEchartsBox>
                 </ProCol>
             </ProRow>
-            <ProRow gutter={6}>
+            <ProRow>
                 <ProCol span={24}>
                     <LegionsProEchartsBox title="title" height="400px"></LegionsProEchartsBox>
                 </ProCol>
