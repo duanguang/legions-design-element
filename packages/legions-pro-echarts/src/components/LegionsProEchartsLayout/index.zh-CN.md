@@ -2,7 +2,7 @@
 category: Components
 type: Layout
 title: Layout
-subtitle: 布局
+subtitle: 页面容器
 ---
 
 球状液体填充通常用来表示百分比，比如流量使用占比，销售数据占比等
