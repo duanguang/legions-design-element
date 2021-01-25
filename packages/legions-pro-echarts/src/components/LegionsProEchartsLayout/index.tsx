@@ -21,11 +21,11 @@ class ProRowProps {
 class LayoutProps {
     style?: React.CSSProperties = {};
     className?: string = '';
-    /** 是否只显示一屏 false:超出出现滚动条, true:铺满一屏*/
+    /** 是否只显示一屏 false:超出出现滚动条, true:铺满一屏 */
     isFullScreen?: boolean = false;
     /** 背景色填满整个body */
     isFillFullScreen?: boolean = true;
-    /** 子元素上下间隔 */
+    /** 子元素上下左右间隔 */
     gutter?: number = 0;
     /** gutter遍历的深度，默认5级children */
     gutterDeep?: number = 5;

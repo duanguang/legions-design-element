@@ -14,13 +14,23 @@ subtitle: 页面容器
 
 ## API
 
-| 属性 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| option | 液体填充[配置对象](#option) | echarts.EChartOption | - |
-
-### option
+### LegionsProEchartsLayout
 
 | 属性 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| title | 标题文本 | `{text:string}[]` | - |
-| series | [系列列表](https://echarts.apache.org/zh/option.html#series) | `{data:[{name:string;value:string|number},number,number,number],label:{show:boolean}}[]` | - |
+| isFullScreen | 是否只显示一屏 false:超出出现滚动条, true:铺满一屏 | boolean | false |
+| isFillFullScreen | 背景色填满整个body | boolean | true |
+| gutter | 子元素上下左右间隔 | number | 0 |
+| gutterDeep | gutter遍历的深度，默认5级children | number | 5 |
+
+### ProCol
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| ySpan | 竖向栅格占位格数，仅在父窗口有固定高度的情况下生效 | number | 0
+
+### ProRow
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| ySpan | 竖向栅格占位格数，仅在父窗口有固定高度的情况下生效 | number | 0
