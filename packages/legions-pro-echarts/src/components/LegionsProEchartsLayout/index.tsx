@@ -84,7 +84,7 @@ export default  class LegionsProEchartsLayout extends React.Component<LayoutProp
         let newProps = {}
         return React.Children.map(children as React.ReactElement<any>[], (item: React.ReactElement<any>, index) => {
             try {
-                if (!item || !item.props || !gutter || deep < gutterDeep!) {
+                if (!item || !item.props || !gutter || deep > gutterDeep!) {
                     return item
                 }
                 /** 向下查找并处理ProRow元素 */
