@@ -9,6 +9,12 @@ subtitle: 容器
 
 ## API
 
+```jsx
+<LegionsProEchartsBox title="标题" height="260px"></LegionsProEchartsBox>
+```
+
+### LegionsProEchartsBox props
+
 | 属性 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | title | 标题 | React.ReactNode | - |

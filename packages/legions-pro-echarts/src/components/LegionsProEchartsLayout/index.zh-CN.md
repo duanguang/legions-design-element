@@ -14,6 +14,15 @@ subtitle: 页面容器
 
 ## API
 
+```jsx
+<LegionsProEchartsLayout gutter={6}>
+    <ProRow>
+        <ProCol span={12}></ProCol>
+        <ProCol span={12}></ProCol>
+    </ProRow>
+</LegionsProEchartsLayout>
+```
+
 ### LegionsProEchartsLayout
 
 | 属性 | 说明 | 类型 | 默认值 |
