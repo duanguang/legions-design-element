@@ -28,7 +28,7 @@ import { ValidateCallback } from 'antd/lib/form/Form';
 import { LabelWithCheckboxModel } from './FormCheckbox';
 import { BaseFormFields, HlLabeledValue } from 'legions-lunar/model';
 import { legionsPlugins,LegionsPluginsExecute,LoggerManager } from 'legions-lunar/legion.plugin.sdk';
-import { ProFormFields,ProFormUtils,COMPONENT_TYPE } from './ProFormUtils';
+import { ProFormFields,ProFormUtils } from './ProFormUtils';
 const baseCls = `legions-pro-form`
 
 export interface IProFormProps<mapProps = {}> {
@@ -297,20 +297,22 @@ class HLForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
                 if (!this.storeView.renderNodeQueue.has(name)) {
                     this.storeView.renderNodeQueue.set(name,name)
                 }
-              }
-              if (this.storeView.formfields.has(name)) {
-                const state= this.storeView.formfields.get(name)
-                  callback && callback(state)
-                  if (state instanceof LegionsProForm.LabelWithHLSelectModel) {
-                    this.storeView.formfields.set(name,new LegionsProForm.LabelWithHLSelectModel(state.iAntdProps,state.iFormProps,state.rules))
-                  }
-                  insertRenderEle()
-              }
-              else if (this.storeView.customFormFields.has(name)) {
-                  const state = this.storeView.customFormFields.get(name)
-                  callback&&callback(state)
+            }
+            const value = this.storeView.getFormItemField(name);
+            if (value) {
+                if (value.type === 'normal') {
+                    callback && callback(value.value)
+                    /* if (state instanceof LegionsProForm.LabelWithHLSelectModel) {
+                      this.storeView.formfields.set(name,new LegionsProForm.LabelWithHLSelectModel(state.iAntdProps,state.iFormProps,state.rules))
+                    } */
+                    insertRenderEle()
+                }
+                if (value.type === 'custom') {
+                    callback && callback(value.value)
                     insertRenderEle();
-              }
+                    this.forceUpdate()
+                }
+            }
         })
     }
     componentWillMount() {
@@ -412,16 +414,8 @@ class HLForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
     initFromState() {
         if (this.props.controls && Array.isArray(this.props.controls)) {
             this.props.controls.map((item) => {
-                const wc = COMPONENT_TYPE.find((cc) => item['hasOwnProperty'](cc))
-                let defaultValue:IFormState = null;
-                if (wc) {
-                    const wItem = item[wc]
-                    if (wItem['hasOwnProperty']('defaultVisible')) {
-                        defaultValue={visible:wItem['defaultVisible']}
-                    }
-                }
                 const name = item['iAntdProps'].name
-                this.storeView.formfields.set(name,item)
+                this.storeView._initFormItemField(name,item)
                 if (!this.storeView.renderNodeQueue.has(name)) {
                     this.storeView.renderNodeQueue.set(name,name)
                 }
@@ -744,16 +738,7 @@ class HLForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
             if (control[item].options && control[item].options.length >= 50 && !control[item].paging) { // 当下拉数据超过50项自动开启分页
                 control[item].paging = true
             }
-            /* 防止表单动态增加的字段在表单状态集合中不存在而报错 */
-            /* if (this.storeView.computedFormState.has(control.iAntdProps.name)) { // 判断表单字段是否在表单状态数据集合中存在
-                if (item === 'iFormWithRadioButton' && control.iFormWithRadioButton['radioGroup']) {
-                    control.iFormWithRadioButton['radioGroup']['disabled'] = this.storeView.computedFormState.get(control.iAntdProps.name).disabled
-                } else {
-                    control[item]['disabled'] = this.storeView.computedFormState.get(control.iAntdProps.name).disabled
-                }
-            } */
         }
-        
         if (control.iAntdProps.className) {
             control.iAntdProps.className = control.iAntdProps.className && control.iAntdProps.className.replace(size['table'].formItemLayOut,'').replace('table-error','').replace('table-not-error','').replace('hlform-table-row-height','')
             control.iAntdProps.className = control.iAntdProps.className && control.iAntdProps.className.replace(size['small'].formItemLayOut,'').replace('hlform-table-row-height','')
@@ -761,11 +746,10 @@ class HLForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
         }
         if (styleSize === 'table') {
             control.iAntdProps.className = `${control.iAntdProps.className || ''} ${size[styleSize].formItemLayOut} ${error ? 'table-error' : 'table-not-error'} hlform-table-row-height` /**  表单间距调小*/
-            COMPONENT_TYPE.map((item) => {
-                if (control[item]) {
-                    control[item].size = 'small'
-                }
-            })
+            if (!(control instanceof LegionsProForm.LabelWithRenderModel)) {
+                //@ts-ignore
+                control[item].size = 'small'
+            }
         }
         else if (styleSize === 'small') {
             control.iAntdProps.className = `${control.iAntdProps.className || ''} ${size[styleSize].formItemLayOut} hlform-table-row-height`

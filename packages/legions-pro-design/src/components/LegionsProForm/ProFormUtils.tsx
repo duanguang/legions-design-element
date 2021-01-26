@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-08 15:19:23
- * @LastEditTime: 2021-01-26 10:12:31
+ * @LastEditTime: 2021-01-26 15:15:25
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProForm/ProFormUtils.tsx
@@ -65,7 +65,6 @@ interface IProFormUtils {
     LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel |
     LabelWithRadioButtonModel | LabelWithTextModel | LabelWithHLSelectModel
 }
-export const COMPONENT_TYPE = ['iFormInput','iFormText','iFormWithSelect','iFormDatePicker','iFormMonthPicker','iFormRangePicker','iFormWithRadioButton','iFormWithSwitch',]
 export class ProFormUtils<Store,global = {}>{
     static LabelWithInputNumberModel = LabelWithInputNumberModel;
     static LabelWithHLSelectModel = LabelWithHLSelectModel;
@@ -131,9 +130,7 @@ export class ProFormUtils<Store,global = {}>{
     private initFromState(key: string,formRef: InstanceForm,iFormItemProps:IProFormUtils['componentModel']) {
         if (formRef && key) {
             const storeView = formRef.store.get(formRef.uid);
-            storeView.dispatchAction(() => {
-                storeView.customFormFields.set(key,iFormItemProps)
-            })
+            storeView._initFormItemField(key,iFormItemProps,'custom')
         }
     }
     renderSelectConfig(options: IRenderComponentParams<IFormSelectProps>): LabelWithHLSelectModel {
@@ -207,12 +204,21 @@ export class ProFormUtils<Store,global = {}>{
      * @returns
      * @memberof HLFormUtils
      */
-    createFormComponent(control: IProFormUtils['componentModel'],form: WrappedFormUtils,formUid: string,formRef: InstanceForm,key?: string | number) {
+    createFormComponent(controls: IProFormUtils['componentModel'],form: WrappedFormUtils,formUid: string,formRef: InstanceForm,key?: string | number) {
+        let control = controls;
         if (key === void 0) {
             key = control.iAntdProps.id
         }
-        const storeView = formRef.store.get(formRef.uid);
-        console.log(control,'controlcontrolcontrolcontrol');
+        this.initFromState(control.iAntdProps.id,formRef,controls)
+        if (formRef) {
+            const storeView = formRef.store.get(formRef.uid);
+            const item = storeView.getFormItemField(control.iAntdProps.id)
+            if (item) {
+                control = item.value
+            }
+        }
+        
+        /* console.log(control,'controlcus'); */
         if (control.iFormProps.visible===false) {
             return null;
         }

@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-29 10:18:01
- * @LastEditTime: 2021-01-26 10:07:03
+ * @LastEditTime: 2021-01-26 15:15:01
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/store/pro.form/proFormStore.ts
@@ -82,16 +82,16 @@ export class HlFormView {
    */
   @observable controls: any[] = [];
 
-  @observable formfields: IObservableMap<
+  @observable private formfields: IObservableMap<
   string,
   IProFormFields['componentModel']
     > = observable.map();
-  
-  @observable customFormFields: IObservableMap<
+  /** 自定义表单元素配置项 */
+  @observable private customFormFields: IObservableMap<
   string,
   IProFormFields['componentModel']
 > = observable.map();
-
+  
   /** 待执行渲染的组件元素队列
    * 
    * 执行完后移出队列
@@ -141,18 +141,24 @@ export class HlFormView {
     return this.allElementList;
   }
 
-  /** 表单元素配置项 */
+  /** 表单元素配置项
+   * 渲染formItem
+   */
   @computed get computedFormFields():IProFormFields['componentModel'][] {
-    const value: IProFormFields['componentModel'][] = [];
-    console.log('computedFormFields');
+      const value: IProFormFields['componentModel'][] = [];
       for (let item of this.formfields.values()) {
         value.push(item);
       }
       return value
   }
-  /** 自定义组件表单元素配置项 */
-  @computed get computedCustomFormFields():IProFormFields['componentModel'][] {
-      const value: IProFormFields['componentModel'][]= [];
+  /** 表单元素配置项
+   * 包含自定义render 里面子元素配置项
+   */
+  @computed get computedAllFormFields():IProFormFields['componentModel'][] {
+      const value: IProFormFields['componentModel'][] = [];
+      for (let item of this.formfields.values()) {
+        value.push(item);
+      }
       for (let item of this.customFormFields.values()) {
         value.push(item);
       }
@@ -172,11 +178,6 @@ export class HlFormView {
         data.push(entity);
       });
     }
-    /* keys.map((item) => {
-            this.errorListView.get(item).map((entity) => {
-                data.push(entity)
-            })
-        }) */
     return data;
   }
 
@@ -286,6 +287,35 @@ export class HlFormView {
     if (index < 0) {
       this.allElementList.push(keys);
       this.allElementList = this.allElementList.slice();
+    }
+  }
+  /** 查询表单元素字段配置信息 */
+  @action getFormItemField(key: string):{value:IProFormFields['componentModel'],type:'normal' | 'custom'} {
+    if (this.formfields.has(key)) {
+      return {
+        value: this.formfields.get(key),
+        type:'normal',
+      };   
+    }
+    else if (this.customFormFields.has(key)) {
+      return {
+        value: this.customFormFields.get(key),
+        type:'custom',
+      };
+    }
+    return null;
+  }
+  /** 初始化表单配置项元素 */
+  @action _initFormItemField(key: string,value: IProFormFields['componentModel'],type: 'normal' | 'custom'='normal') {
+    if (type === 'normal') {
+      if (!this.formfields.has(key)) {
+        this.formfields.set(key,value);
+      }
+    }
+    else if (type === 'custom') {
+      if (!this.customFormFields.has(key)) {
+        this.customFormFields.set(key,value);
+      }
     }
   }
 }
