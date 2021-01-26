@@ -3,9 +3,8 @@
  * @Date: 2021-01-22 14:23:11
  * @description: 全屏布局，只显示一屏，超出隐藏
  */
-import { LegionsProEchartsBox } from 'components';
+import { LegionsProEchartsBox, LegionsProEchartsLayout } from 'components';
 import React from 'react';
-import LegionsProEchartsLayout from '../../../components/LegionsProEchartsLayout';
 const { ProRow, ProCol } = LegionsProEchartsLayout;
 export class LayoutFullDemo extends React.Component{
     render() {

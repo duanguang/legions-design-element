@@ -2,18 +2,17 @@ import Row, { RowProps } from 'antd/lib/grid/row';
 import Col, { ColProps } from 'antd/lib/grid/col';
 import React from 'react';
 import './style/index.less';
-const proLayoutPrefix = 'legions-pro-echarts'
-
+import { prefixCls } from '../core';
 class ProColProps {
     style?: React.CSSProperties = {};
-    className?: string = '';
+    className?: string = `${prefixCls}-col`;
     /** 竖向栅格占位格数，仅在父窗口有固定高度的情况下生效 */
     ySpan?: number = 0;
 }
 
 class ProRowProps {
     style?: React.CSSProperties = {};
-    className?: string = `${proLayoutPrefix}-row`;
+    className?: string = `${prefixCls}-row`;
     /** 竖向栅格占位格数，仅在父窗口有固定高度的情况下生效 */
     ySpan?: number = 0;
 }
@@ -92,7 +91,7 @@ export default  class LegionsProEchartsLayout extends React.Component<LayoutProp
                     newChildren = this.computedChildren(item.props.children, deep + 1);
                 }
                 /** 遇到ProRow元素，设置gutter属性 */
-                if (item.props.className && item.props.className.indexOf(`${proLayoutPrefix}-row`) > -1) {
+                if (item.props.className && item.props.className.indexOf(`${prefixCls}-row`) > -1) {
                     newProps = {...newProps, gutter: item.props.gutter || gutter}
                 }
                 /** 深度deep === 1时，设置每一行的上下间距，除最后一行 */
@@ -108,7 +107,7 @@ export default  class LegionsProEchartsLayout extends React.Component<LayoutProp
     render() {
         const { className, children } = this.props
         return (
-            <div style={this.computedLayoutWrapStyles()} className={`${proLayoutPrefix}-layout ${className}`}>
+            <div style={this.computedLayoutWrapStyles()} className={`${prefixCls}-layout ${className}`}>
                 {this.computedChildren(children as React.ReactElement<any>[])}
             </div>
         )

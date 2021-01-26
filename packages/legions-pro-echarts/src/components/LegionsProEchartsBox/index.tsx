@@ -7,6 +7,7 @@
  * @FilePath: /legions-design-element/packages/legions-pro-echarts/src/components/LegionsProEchartsBox/index.tsx
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
+import { prefixCls } from '../core';
 import React from 'react';
 import './style/index.less';
 class IProps {
@@ -19,7 +20,6 @@ class IProps {
     style?: React.CSSProperties = {};
     className?: string = '';
 }
-const proLayoutPrefix = 'legions-pro-echarts';
 /** 可视化界面容器盒子占位块 */
 export default class LegionsProEchartsBox extends React.Component<IProps> {
     static defaultProps: Readonly<IProps> = new IProps()
@@ -32,11 +32,8 @@ export default class LegionsProEchartsBox extends React.Component<IProps> {
             ...style,
         }
         return (
-            <div style={mStyle} className={className}>
-                <div
-                    style={{height: '100%', paddingTop: title ? '36px' : void 0}}
-                    className={`${proLayoutPrefix}-box`}
-                >
+            <div style={mStyle} className={`${prefixCls}-box-wrap ${className}`}>
+                <div className={`${prefixCls}-box`} style={{height: '100%', paddingTop: title ? '36px' : void 0}}>
                     { title && <div className="pro-box-title" attr-title={title}></div> }
                     <div className="boxTopLeft"></div>
                     <div className="boxTopRight"></div>
