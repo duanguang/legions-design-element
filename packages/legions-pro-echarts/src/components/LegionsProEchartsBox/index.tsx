@@ -39,7 +39,7 @@ export default class LegionsProEchartsBox extends React.Component<IProps> {
                     <div className="pro-box-topRight"></div>
                     <div className="pro-box-botLeft"></div>
                     <div className="pro-box-botRight"></div>
-                    <div className="pro-box-Content">
+                    <div className="pro-box-content">
                         {this.props.children}
                     </div>
                 </div>
