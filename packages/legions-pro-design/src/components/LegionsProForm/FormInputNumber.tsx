@@ -7,7 +7,7 @@ import {InstanceFormElement} from './interface/formElement'
 const FormItem = Form.Item;
 export class LabelWithInputNumberModel {
     constructor(public iAntdProps: IAntdProps,
-        public iFormInput: IFormInputNumberProps,
+        public iFormProps: IFormInputNumberProps,
         public rules?: IAntdRule[],//验证规则
     ) {
 
@@ -50,25 +50,15 @@ export default class FormInputNumber extends AbstractForm<IFormWithInputNumberPr
         this.props.iFormInput&&this.props.iFormInput.onFocus&&this.props.iFormInput.onFocus(e)
     }
     componentDidMount() {
-        const viewStore = this.FormInputNumberRef.store.get(this.props.formUid)
-        if (viewStore.renderNodeQueue.has(this.props.iAntdProps.name)) {
-            viewStore.renderNodeQueue.delete(this.props.iAntdProps.name)
-        }
+        this.didMountClearNodeQueue(this.FormInputNumberRef,this.props.formUid,this.props.iAntdProps.name)
     }
     shouldComponentUpdate(nextProps:IFormWithInputNumberProps,nextState,context) {
-        if (this.FormInputNumberRef) {
-            const viewStore = this.FormInputNumberRef.store.get(this.props.formUid)
-            if (viewStore.renderNodeQueue.has(nextProps.iAntdProps.name)) {
-                viewStore.renderNodeQueue.delete(nextProps.iAntdProps.name)
-                return true
-            }
-        }
-        return false;
+        return this.isShouldComponentUpdate(this.FormInputNumberRef,this.props.formUid,nextProps.iAntdProps.name)
     }
     render() {
         const { form, iAntdProps, iFormInput, children, rules } = this.props;
         const { getFieldDecorator, getFieldsError } = form;
-        const { label,labelCol,wrapperCol,render,...props } = iFormInput
+        const { label,labelCol,wrapperCol,visible,render,...props } = iFormInput
         let formItemProps = {};
         if ('colon' in props) {
             formItemProps['colon'] = props.colon;

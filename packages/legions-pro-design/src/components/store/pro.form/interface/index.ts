@@ -17,7 +17,7 @@ import {
   LabelWithDatePickerPartialModel,
   LabelWithInputPartialModel,LabelWithInputNumberPartialModel,
   LabelWithMonthPickerPartialModel,LabelWithRadioButtonPartialModel,LabelWithRangePickerPartialModel,
-  LabelWithSwitchPartialModel,LabelWithTextPartialModel,LabelWithUploadPartialModel,LabelWithSelectPartialModel
+  LabelWithSwitchPartialModel,LabelWithTextPartialModel,LabelWithUploadPartialModel, LabelWithCheckboxModel
 } from '../../../LegionsProForm/interface'
 import {SelectKeyValue,KeyValue} from '../../../models'
 export interface IErrorView {
@@ -261,11 +261,11 @@ export declare type ILocalViewModelHlFormStore = ViewModel<HLFormLocalView> &
 export interface IProFormFields {
     componentModel: LabelWithInputModel | LabelWithInputNumberModel | LabelWithDatePickerModel | LabelWithMonthPickerModel |
     LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel |
-    LabelWithRadioButtonModel | LabelWithTextModel | LabelWithHLSelectModel
+    LabelWithRadioButtonModel | LabelWithTextModel | LabelWithHLSelectModel|LabelWithCheckboxModel
 }
 export interface IProUpdateFormFields {
   componentModel: LabelWithInputPartialModel | LabelWithInputNumberPartialModel | LabelWithDatePickerPartialModel |
   LabelWithMonthPickerPartialModel |
     LabelWithRangePickerPartialModel | LabelWithUploadPartialModel | LabelWithSwitchPartialModel |
-    LabelWithRadioButtonPartialModel | LabelWithTextPartialModel |LabelWithSelectPartialModel
+    LabelWithRadioButtonPartialModel | LabelWithTextPartialModel 
 }

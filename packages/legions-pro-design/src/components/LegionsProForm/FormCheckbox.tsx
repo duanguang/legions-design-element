@@ -15,7 +15,7 @@ import {InstanceFormElement} from './interface/formElement'
 const FormItem = Form.Item;
 export class LabelWithCheckboxModel {
     constructor(public iAntdProps: IAntdProps,
-        public iFormWithCheckbox: IFormCheckboxProps,
+        public iFormProps: IFormCheckboxProps,
         public rules?: IAntdRule[],
     ) {
 
@@ -56,6 +56,12 @@ export default class FormCheckbox extends AbstractForm<IFormWithCheckbox,ISate>{
         super(props);
         this.state = {
         }
+    }
+    componentDidMount() {
+        this.didMountClearNodeQueue(this.FormCheckboxRef,this.props.formUid,this.props.iAntdProps.name)
+    }
+    shouldComponentUpdate(nextProps:IFormWithCheckbox,nextState,context) {
+       return this.isShouldComponentUpdate(this.FormCheckboxRef,this.props.formUid,nextProps.iAntdProps.name)
     }
     public render() {
         const { form,iAntdProps,iFormWithCheckbox,children,rules } = this.props;

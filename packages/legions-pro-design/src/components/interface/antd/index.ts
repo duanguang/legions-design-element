@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-26 10:27:31
- * @LastEditTime: 2021-01-22 15:45:36
+ * @LastEditTime: 2021-01-26 10:00:09
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/interface/antd/index.ts
@@ -96,13 +96,17 @@ export interface IAntdFormItemProps extends FormItemProps {
    * @memberof IAntdFormItemProps
    */
   transformFormItem?: <T>(value) => T;
-  /** 默认是否显示隐藏 
-   * 
-   * 默认值true 可见，false不可见 组件移除
-   * 
-   * 只在初始化执行一次
+  /**组件是否可见，一般用来控制组件显隐，默认值true 可见，false不可见 组件移除 */
+  visible?: boolean;
+
+  /**
+   *
+   * 组件是否可见，一般用来控制组件显隐，默认值true 可见，false不可见
+   * 注意此隐藏只是隐藏dom 设置display:'none'，元素依然存在只是不可见，如果元素有附加验证规则，则
+   * @type {Boolean}
    */
-  defaultVisible?: boolean;
+  display?: boolean;
+  
 }
 
 export interface IAntdRule extends ValidationRule {

@@ -13,7 +13,7 @@ const FormItem = Form.Item;
 
 export class LabelWithUploadModel {
     constructor(public iAntdProps: IAntdProps,
-        public iFormWithUpload: IFormUploadProps,
+        public iFormProps: IFormUploadProps,
         public rules?: IAntdRule[],
     ) {
 
@@ -67,8 +67,11 @@ export default class FormUpload extends AbstractForm<IFormWithUpload,ISate>{
     handlePreview = (file) => {
 
     }
-    draggerThem() {
-
+    componentDidMount() {
+        this.didMountClearNodeQueue(this.FormUploadRef,this.props.formUid,this.props.iAntdProps.name)
+    }
+    shouldComponentUpdate(nextProps:IFormWithUpload,nextState,context) {
+       return this.isShouldComponentUpdate(this.FormUploadRef,this.props.formUid,nextProps.iAntdProps.name)
     }
     public render() {
         const { form,iAntdProps,iFormWithUpload,children,rules } = this.props;

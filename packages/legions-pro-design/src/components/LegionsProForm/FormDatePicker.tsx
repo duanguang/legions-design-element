@@ -8,7 +8,7 @@ const FormItem = Form.Item;
 
 export class LabelWithDatePickerModel {
     constructor(public iAntdProps: IAntdProps,
-        public iFormDatePicker: IFormDatePickerProps,
+        public iFormProps: IFormDatePickerProps,
         public rules?: IAntdRule[],//验证规则
 
     ) {
@@ -48,6 +48,12 @@ export default class FormDatePicker extends AbstractForm<IFormWithDatePickerProp
             }
         }
         this.props.iFormDatePicker&&this.props.iFormDatePicker.onOpenChange&&this.props.iFormDatePicker.onOpenChange(status)
+    }
+    componentDidMount() {
+        this.didMountClearNodeQueue(this.FormDatePickerRef,this.props.formUid,this.props.iAntdProps.name)
+    }
+    shouldComponentUpdate(nextProps:IFormWithDatePickerProps,nextState,context) {
+       return this.isShouldComponentUpdate(this.FormDatePickerRef,this.props.formUid,nextProps.iAntdProps.name)
     }
     render() {
         const { form, iAntdProps, iFormDatePicker, children, rules,formUid } = this.props;

@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-29 10:18:01
- * @LastEditTime: 2021-01-22 16:06:41
+ * @LastEditTime: 2021-01-26 10:07:03
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/store/pro.form/proFormStore.ts
@@ -33,32 +33,7 @@ type Proxify<T> = {
   //[P in keyof T]: Proxy<T[P]>;
 };
 
-export interface IFormState {
-  /**
-   *
-   * 组件是否可见，一般用来控制组件显隐，默认值true 可见，false不可见 组件移除
-   * @type {Boolean}
-   * @memberof IFormState
-   */
-  visible?: boolean;
 
-  /**
-   *
-   * 组件是否可见，一般用来控制组件显隐，默认值true 可见，false不可见
-   * 注意此隐藏只是隐藏dom 设置display:'none'，元素依然存在只是不可见，如果元素有附加验证规则，则
-   * @type {Boolean}
-   * @memberof IFormState
-   */
-  display?: boolean;
-
-  /**
-   * 组件可编辑状态 false 可编辑， 否则不可编辑
-   *
-   * @type {boolean}
-   * @memberof IFormState
-   */
-  disabled?: boolean;
-}
 
 export class HlFormView {
   constructor() {
@@ -153,17 +128,6 @@ export class HlFormView {
   > = observable.map();
 
   /**
-   *
-   * 表单数据状态
-   * @private
-   * @type {(ObservableMap<IFormState>| ObservableMap<string,IFormState>)}
-   * @memberof HlFormView
-   */
-  @observable private formState: IObservableMap<
-    string,
-    IFormState
-  > = observable.map();
-  /**
    * 错误信息组件节点集合 只读
    *
    * @returns
@@ -226,15 +190,6 @@ export class HlFormView {
     return this.size;
   }
 
-  /**
-   *
-   * 表单状态数据
-   * @readonly
-   * @memberof HlFormView
-   */
-  @computed get computedFormState() {
-    return this.formState;
-  }
 
   @action updateStyleSize(size: 'default' | 'small' | 'table') {
     this.size = size;
@@ -331,60 +286,6 @@ export class HlFormView {
     if (index < 0) {
       this.allElementList.push(keys);
       this.allElementList = this.allElementList.slice();
-    }
-  }
-
-  /**
-   * 初始化表单组件数据，组件内部方法，请勿调用
-   *
-   * @param {string} name
-   * @memberof HlFormView
-   */
-  @action initFormState(name: string,defaultValue?:IFormState) {
-    if (!this.formState.has(name)) {
-      let value = {
-        visible: true,
-        display: true,
-        disabled: false,
-      }
-      if (defaultValue) {
-        value={...value,...defaultValue}
-      }
-      this.formState.set(name, value);
-    }
-  }
-
-  /**
-   *
-   * 设置表单组件状态
-   * @param {string} name
-   * @param {IFormState} state
-   * @memberof HlFormView
-   */
-  @action setFormState(name: string, state: IFormState) {
-    if (this.formState.has(name)) {
-      this.formState.set(name, Object.assign(this.formState.get(name), state));
-    } else {
-      const defaultObject = {
-        visible: true,
-        display: true,
-        disabled: false,
-      };
-      this.formState.set(name, Object.assign(defaultObject, state));
-    }
-  }
-  /**
-   *
-   * 设置表单组件状态
-   * @param {string} name
-   * @param {IFormState} state
-   * @memberof HlFormView
-   */
-  @action getFormState(name: string ): IFormState{
-    if (this.formState.has(name)) {
-      return this.formState.get(name)
-    } else {
-      return null;
     }
   }
 }
@@ -621,6 +522,8 @@ export class HLFormLocalView {
       pageIndex: number;
       pageSize?: number;
       keyWords?: string;
+      /** 接口请求完成触发 */
+      callback?: (value:any) => void;
     } = { pageIndex: 1, pageSize: 30 }
   ) {
     if (autoQuery) {
@@ -646,6 +549,7 @@ export class HLFormLocalView {
         }
         let model = {
           onBeforTranform: (value) => {
+            options.callback && options.callback(value);
             return {
               responseData: value,
               mappingEntity:autoQuery.mappingEntity,

@@ -11,7 +11,7 @@ const FormItem = Form.Item;
 
 export class LabelWithSwitchModel {
     constructor(public iAntdProps: IAntdProps,
-        public iFormWithSwitch: IFormSwitchProps,
+        public iFormProps: IFormSwitchProps,
         public rules?: IAntdRule[],
     ) {
 
@@ -42,11 +42,17 @@ interface ISate {
 
 }
 export default class FormSwitch extends AbstractForm<IFormWithSwitch, ISate>{
-    FormUploadRef: InstanceFormElement = null
+    FormSwitchRef: InstanceFormElement = null
     constructor(props) {
         super(props);
         this.state = {
         }
+    }
+    componentDidMount() {
+        this.didMountClearNodeQueue(this.FormSwitchRef,this.props.formUid,this.props.iAntdProps.name)
+    }
+    shouldComponentUpdate(nextProps:IFormWithSwitch,nextState,context) {
+       return this.isShouldComponentUpdate(this.FormSwitchRef,this.props.formUid,nextProps.iAntdProps.name)
     }
     public render() {
         const { form, iAntdProps, iFormWithSwitch, children, rules } = this.props;
@@ -59,7 +65,7 @@ export default class FormSwitch extends AbstractForm<IFormWithSwitch, ISate>{
         return (
             <FormElement form={form}
                 onReady={(value) => {
-                    this.FormUploadRef = value
+                    this.FormSwitchRef = value
                 }}
                 nextElementKey={iAntdProps.nextElementKey}
                 elType="button"

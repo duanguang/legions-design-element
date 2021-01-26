@@ -26,7 +26,7 @@ import { TooltipProps } from 'antd/lib/tooltip'
 import { InstanceForm } from './interface/form';
 export class LabelWithInputModel {
     constructor(public iAntdProps: IAntdProps,
-        public iFormInput: IFormInputProps,
+        public iFormProps: IFormInputProps,
         public rules?: IAntdRule[],//验证规则
     ) {
 
@@ -105,19 +105,16 @@ export class TooltipInput extends React.Component<ITooltipInputProps,{}>{
         }
         return updb;
     })(); */
-    onChanges = debounce((even,value) => {
+    /* onChanges = debounce((even,value) => {
         // @ts-ignore
         this.props.onChange && this.props.onChange(value);
-    },200);
+    },200); */
     handleOnChange(even) {
         const { target: { value } } = even;
-        this.setState({ value });
+        this.props.onChange && this.props.onChange(value);
         //@ts-ignore
-        this.onChanges(even,value);
+        /* this.onChanges(even,value); */
     };
-    componentWillReceiveProps(nextProps) {
-        
-    }
     render() {
         const { form,name,valueLen,FormInputRef,inputType,type,formUid,formItemName,onIgnoreError,...props } = this.props;
         let isShowErrorView = false;
@@ -187,10 +184,7 @@ export default class FormInput extends AbstractForm<IFormWithInputProps>{
         return null
     }
     componentDidMount() {
-        const viewStore = this.FormInputRef.store.get(this.props.formUid)
-        if (viewStore.renderNodeQueue.has(this.props.iAntdProps.name)) {
-            viewStore.renderNodeQueue.delete(this.props.iAntdProps.name)
-        }
+        this.didMountClearNodeQueue(this.FormInputRef,this.props.formUid,this.props.iAntdProps.name)
     }
     onChange(even) {
         const value = typeof even === 'object' ? even.target.value : even;
@@ -225,16 +219,8 @@ export default class FormInput extends AbstractForm<IFormWithInputProps>{
         }
         this.props.iFormInput.onBlur && this.props.iFormInput.onBlur(even)
     }
-    shouldComponentUpdate(nextProps:IFormWithInputProps,nextState,context) {
-        if (this.FormInputRef && this.store) {
-            const viewStore = this.FormInputRef.store.get(this.props.formUid)
-            if (viewStore.renderNodeQueue.has(nextProps.iAntdProps.name)) {
-                viewStore.renderNodeQueue.delete(nextProps.iAntdProps.name)
-                
-                return true
-            }
-        }
-        return false;
+    shouldComponentUpdate(nextProps: IFormWithInputProps,nextState,context) {
+        return this.isShouldComponentUpdate(this.FormInputRef,this.props.formUid,nextProps.iAntdProps.name)
     }
     render() {
         const { form,iAntdProps,iFormInput,children,rules } = this.props;
@@ -242,7 +228,7 @@ export default class FormInput extends AbstractForm<IFormWithInputProps>{
         let disabled = iFormInput && iFormInput.disabled;
         let addonAfter = iFormInput && iFormInput.addonAfter;
         let addonBefore = iFormInput && iFormInput.addonBefore;
-        const { label,labelCol,wrapperCol,defaultVisible,render,...props } = iFormInput
+        const { label,labelCol,wrapperCol,visible,display,render,...props } = iFormInput
         const valueLen = getStringLen(form.getFieldValue(iAntdProps.name))
         const maxLength = iFormInput.maxLength ? parseInt(iFormInput.maxLength) : 50
         const placeholder = iAntdProps.placeholder || ''

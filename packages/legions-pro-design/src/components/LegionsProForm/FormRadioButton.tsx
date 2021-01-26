@@ -12,7 +12,7 @@ const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 export class LabelWithRadioButtonModel {
     constructor(public iAntdProps: IAntdProps,
-        public iFormWithRadioButton: IFormRadioButtonProps,
+        public iFormProps: IFormRadioButtonProps,
         public rules?: IAntdRule[],
     ) {
 
@@ -50,11 +50,17 @@ interface ISate {
 
 }
 export default class FormRadioButton extends AbstractForm<IFormWithRadioButton, ISate>{
-    FormUploadRef: InstanceFormElement = null
+    FormRadioButtonRef: InstanceFormElement = null
     constructor(props) {
         super(props);
         this.state = {
         }
+    }
+    componentDidMount() {
+        this.didMountClearNodeQueue(this.FormRadioButtonRef,this.props.formUid,this.props.iAntdProps.name)
+    }
+    shouldComponentUpdate(nextProps:IFormWithRadioButton,nextState,context) {
+       return this.isShouldComponentUpdate(this.FormRadioButtonRef,this.props.formUid,nextProps.iAntdProps.name)
     }
     public render() {
         const { form, iAntdProps, iFormWithRadioButton, children, rules } = this.props;
@@ -67,7 +73,7 @@ export default class FormRadioButton extends AbstractForm<IFormWithRadioButton, 
         return (
             <FormElement form={form}
                 onReady={(value) => {
-                    this.FormUploadRef = value
+                    this.FormRadioButtonRef = value
                 }}
                 elType="input"
                 nextElementKey={iAntdProps.nextElementKey}

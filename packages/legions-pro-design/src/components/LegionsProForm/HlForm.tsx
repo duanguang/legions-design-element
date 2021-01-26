@@ -9,7 +9,7 @@ import { WrappedFormUtils } from '../interface/antd';
 import { IErrorView, IFormState, IGroup } from './interface/form';
 import { ISchedule } from '../store/interface';
 import {
-    LabelWithHLSelectModel,LabelWithSelectModel,LabelWithRenderModel,LabelWithDatePickerModel,
+    LabelWithHLSelectModel,LabelWithRenderModel,LabelWithDatePickerModel,
     LabelWithMonthPickerModel,LabelWithRangePickerModel,LabelWithUploadModel,LabelWithInputNumberModel,
 } from './interface';
 import { bind,observer } from 'legions/store-react'
@@ -252,9 +252,6 @@ class HLForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
             },this.props.onLogRecord)
         }
     }
-    getFormItemState(name: string) {
-        return this.storeView.computedFormState.get(name)
-    }
     initGroup(group: IGroup[] = this.props.group) {
         if (this.state.groupEntity.length === 0 || (group && this.state.groupEntity.length !== group.length)) {
             let groupEntity: IGroup[] = []
@@ -305,7 +302,7 @@ class HLForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
                 const state= this.storeView.formfields.get(name)
                   callback && callback(state)
                   if (state instanceof LegionsProForm.LabelWithHLSelectModel) {
-                    this.storeView.formfields.set(name,new LegionsProForm.LabelWithHLSelectModel(state.iAntdProps,state.iFormWithSelect,state.rules))
+                    this.storeView.formfields.set(name,new LegionsProForm.LabelWithHLSelectModel(state.iAntdProps,state.iFormProps,state.rules))
                   }
                   insertRenderEle()
               }
@@ -423,7 +420,6 @@ class HLForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
                         defaultValue={visible:wItem['defaultVisible']}
                     }
                 }
-                this.storeView.initFormState(item.iAntdProps.name,defaultValue)
                 const name = item['iAntdProps'].name
                 this.storeView.formfields.set(name,item)
                 if (!this.storeView.renderNodeQueue.has(name)) {
@@ -443,30 +439,37 @@ class HLForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
     initSelectView(isDispatch: boolean = true,controls = this.props.controls) {
         if (controls && Array.isArray(this.props.controls)) {
             controls.map((item) => {
-                if (item instanceof LabelWithHLSelectModel && item.iFormWithSelect && item.iFormWithSelect.autoQuery)
+                if (item instanceof LabelWithHLSelectModel && item.iFormProps && item.iFormProps.autoQuery)
                     runInAction(() => {
                         if (this.storeLocalView && item.iAntdProps) {
-                            const pageSize = item.iFormWithSelect.pageSize || 30;
-                            const keywords = item.iFormWithSelect.autoQuery.params(1,pageSize,'').defaultKeyWords;
+                            const pageSize = item.iFormProps.pageSize || 30;
+                            const keywords = item.iFormProps.autoQuery.params(1,pageSize,'').defaultKeyWords;
                             if (!this.storeLocalView.selectView.has(item.iAntdProps.name)) {
-                                this.storeLocalView.initSelectView(item.iAntdProps.name,item.iFormWithSelect.autoQuery,{
-                                    paging: item.iFormWithSelect.paging === void 0 ? false : item.iFormWithSelect.paging,
-                                    remote: item.iFormWithSelect.remote === void 0 ? false : item.iFormWithSelect.remote,
+                                this.storeLocalView.initSelectView(item.iAntdProps.name,item.iFormProps.autoQuery,{
+                                    paging: item.iFormProps.paging === void 0 ? false : item.iFormProps.paging,
+                                    remote: item.iFormProps.remote === void 0 ? false : item.iFormProps.remote,
                                     pageSize: pageSize,
                                     tableNameDb: `${this.freezeUid}`,
-                                    keywords: item.iFormWithSelect.autoQuery.params(1,item.iFormWithSelect.pageSize || 30,'').defaultKeyWords
+                                    keywords: item.iFormProps.autoQuery.params(1,item.iFormProps.pageSize || 30,'').defaultKeyWords
                                 })
                             }
-                            if (item.iFormWithSelect.autoQuery) {
+                            if (item.iFormProps.autoQuery) {
                                 if (!this.storeLocalView.selectOptions.has(item.iAntdProps.name)) {
-                                    this.storeLocalView.initSelectOptions(item.iAntdProps.name,item.iFormWithSelect.autoQuery);
+                                    this.storeLocalView.initSelectOptions(item.iAntdProps.name,item.iFormProps.autoQuery);
                                 }
                                 if (isDispatch) {
-                                    this.storeLocalView.dispatchRequest(item.iAntdProps.name,item.iFormWithSelect.autoQuery,{
+                                    const name=item.iAntdProps.name
+                                    this.storeLocalView.dispatchRequest(item.iAntdProps.name,item.iFormProps.autoQuery,{
                                         pageIndex: 1,
                                         pageSize,
                                         keyWords: keywords,
+                                        callback: (value) => {
+                                            if (!this.storeView.renderNodeQueue.has(name)) {
+                                                this.storeView.renderNodeQueue.set(name,name)
+                                            }
+                                        }
                                     });
+                                    
                                 }
                             }
                         }
@@ -724,7 +727,7 @@ class HLForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
         }
         return has
     }
-    renderControl(control: any,key: number | string): JSX.Element {
+    renderControl(control: IProFormFields['componentModel'],key: number | string): JSX.Element {
         const form = this.props.form;
         const hasError = this.isFormHasError(form.getFieldsError)
         const error = form.getFieldError(control.iAntdProps.id)
@@ -732,23 +735,25 @@ class HLForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
         if (control.iAntdProps.className) {
             control.iAntdProps.className = control.iAntdProps.className.replace(size[styleSize]['formItemLayOut'],'')
         }
-
-        COMPONENT_TYPE.map((item) => {
-            if (control[item]) {
-                control[item].size = styleSize
-                if (item === 'iFormWithSelect' && control[item].options && control[item].options.length >= 50 && !control[item].paging) { // 当下拉数据超过50项自动开启分页
-                    control[item].paging = true
-                }
-                /* 防止表单动态增加的字段在表单状态集合中不存在而报错 */
-                /* if (this.storeView.computedFormState.has(control.iAntdProps.name)) { // 判断表单字段是否在表单状态数据集合中存在
-                    if (item === 'iFormWithRadioButton' && control.iFormWithRadioButton['radioGroup']) {
-                        control.iFormWithRadioButton['radioGroup']['disabled'] = this.storeView.computedFormState.get(control.iAntdProps.name).disabled
-                    } else {
-                        control[item]['disabled'] = this.storeView.computedFormState.get(control.iAntdProps.name).disabled
-                    }
-                } */
+        const item = 'iFormProps'
+        if (!(control instanceof LegionsProForm.LabelWithRenderModel)) {
+            //@ts-ignore
+            control[item].size = styleSize
+        }
+        if (control instanceof LegionsProForm.LabelWithHLSelectModel) {
+            if (control[item].options && control[item].options.length >= 50 && !control[item].paging) { // 当下拉数据超过50项自动开启分页
+                control[item].paging = true
             }
-        })
+            /* 防止表单动态增加的字段在表单状态集合中不存在而报错 */
+            /* if (this.storeView.computedFormState.has(control.iAntdProps.name)) { // 判断表单字段是否在表单状态数据集合中存在
+                if (item === 'iFormWithRadioButton' && control.iFormWithRadioButton['radioGroup']) {
+                    control.iFormWithRadioButton['radioGroup']['disabled'] = this.storeView.computedFormState.get(control.iAntdProps.name).disabled
+                } else {
+                    control[item]['disabled'] = this.storeView.computedFormState.get(control.iAntdProps.name).disabled
+                }
+            } */
+        }
+        
         if (control.iAntdProps.className) {
             control.iAntdProps.className = control.iAntdProps.className && control.iAntdProps.className.replace(size['table'].formItemLayOut,'').replace('table-error','').replace('table-not-error','').replace('hlform-table-row-height','')
             control.iAntdProps.className = control.iAntdProps.className && control.iAntdProps.className.replace(size['small'].formItemLayOut,'').replace('hlform-table-row-height','')
@@ -795,8 +800,8 @@ class HLForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
         else if (control instanceof LabelWithInputNumberModel) {
             return super.createFormInputNumber(key,control,form,this.uid,viewModel);
         }
-        else if (control instanceof LabelWithSelectModel || control instanceof LabelWithHLSelectModel) {
-            if (control instanceof LabelWithHLSelectModel && control.iFormWithSelect.autoQuery) {
+        else if (control instanceof LabelWithHLSelectModel) {
+            if (control instanceof LabelWithHLSelectModel && control.iFormProps.autoQuery) {
                 const view = localview.selectView.get(control.iAntdProps.name)
                 if (view && view.currValue) {
                     let options = []
@@ -805,10 +810,11 @@ class HLForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
                     if (view.currValue.data.get(view.pageIndex.toString())) {
                          //@ts-ignore
                         options = view.currValue.data.get(view.pageIndex.toString())
+                        const name = control.iAntdProps.name
                         total = view.currValue.total;
                     }
-                    control.iFormWithSelect.options = options;
-                    control.iFormWithSelect.total = total
+                    control.iFormProps.options = options;
+                    control.iFormProps.total = total
                 }
             }
             return super.createFormSelect(key,control,form,this.uid,viewModel);
@@ -845,7 +851,7 @@ class HLForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
             throw new Error(`ComponentClass: Unknown control. control = ${JSON.stringify(control)}`);
         }
     }
-    renderControls(controls: Array<any>) {
+    renderControls(controls: Array<IProFormFields['componentModel']>) {
         let colCount = this.props.colCount || 2;
         const form = this.props.form;
         let newcontrols = controls;
@@ -858,20 +864,17 @@ class HLForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
                 }
             })
         }
-        const rendercontrols = newcontrols.map((controls: any,key: number) => {
+        const rendercontrols = newcontrols.map((controls,key: number) => {
             let span = controls.iAntdProps.span || (24 / colCount)
             const name = controls.iAntdProps.name
             const keys = `col${name}`
-            const formItemState = this.getFormItemState(name);
             let visible: Boolean = true;
             let display = true;
-            if (formItemState) {
-                if (formItemState.visible === false) {
-                    visible = formItemState.visible
-                }
-                if (formItemState.display === false) {
-                    display = false
-                }
+            if (controls.iFormProps.visible !== void 0) {
+                visible = controls.iFormProps.visible
+            }
+            if (controls.iFormProps.display !== void 0) {
+                display = controls.iFormProps.display;
             }
             return (
                 (visible) ? <Col span={span} data-id={name} key={`col${keys}`} style={{ display: `${display ? 'block' : 'none'}` }}>
@@ -1018,7 +1021,6 @@ export function LegionsProForm<mapProps = {}>(props: IProFormProps<mapProps>) {
 LegionsProForm.CreateForm = CreateForm
 LegionsProForm.ProFormUtils = ProFormUtils;
 LegionsProForm.LabelWithInputNumberModel = LabelWithInputNumberModel;
-LegionsProForm.LabelWithSelectModel = LabelWithSelectModel;
 LegionsProForm.LabelWithHLSelectModel = LabelWithHLSelectModel;
 LegionsProForm.LabelWithRenderModel = LabelWithRenderModel;
 LegionsProForm.LabelWithDatePickerModel = LabelWithDatePickerModel;

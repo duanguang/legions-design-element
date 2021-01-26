@@ -8,7 +8,7 @@ const FormItem = Form.Item;
 const { MonthPicker } = DatePicker;
 export class LabelWithMonthPickerModel {
     constructor(public iAntdProps: IAntdProps,
-        public iFormMonthPicker: IFormMonthPickerProps,
+        public iFormProps: IFormMonthPickerProps,
         public rules?: IAntdRule[],//验证规则
 
     ) {
@@ -45,6 +45,12 @@ export default class FormMonthPicker extends AbstractForm<IFormWithMonthPickerPr
             store.focusUid = this.FormMonthPickerRef.uid
         }
         this.props.iFormMonthPicker&&this.props.iFormMonthPicker.onOpenChange&&this.props.iFormMonthPicker.onOpenChange(status)
+    }
+    componentDidMount() {
+        this.didMountClearNodeQueue(this.FormMonthPickerRef,this.props.formUid,this.props.iAntdProps.name)
+    }
+    shouldComponentUpdate(nextProps:IFormWithMonthPickerProps,nextState,context) {
+       return this.isShouldComponentUpdate(this.FormMonthPickerRef,this.props.formUid,nextProps.iAntdProps.name)
     }
     render() {
         const { form, iAntdProps, iFormMonthPicker, children, rules } = this.props;

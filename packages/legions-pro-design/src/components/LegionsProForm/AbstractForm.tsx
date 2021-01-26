@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { AbstractSelect } from '../LegionsProSelect';
+import { InstanceFormElement } from './interface/formElement';
 
 export default abstract class  AbstractForm<P,S={}> extends Component<P,S> {
     isFormHasError(getFieldsError: () => any) {
@@ -13,17 +14,23 @@ export default abstract class  AbstractForm<P,S={}> extends Component<P,S> {
         }
         return has
     }
-}
-export  class AbstractSelectForm<P,S={}> extends AbstractSelect<P,S> {
-    isFormHasError(getFieldsError: () => any) {
-        let error = getFieldsError && getFieldsError()
-        let has = false
-        for (let key in error) {
-            if (error[key]) {              
-                has = true
-                break;
+    didMountClearNodeQueue(formref: InstanceFormElement,uid: string,eleId: string) {
+        if (formref) {
+            const viewStore = formref.store.get(uid)
+            if (viewStore.renderNodeQueue.has(eleId)) {
+                viewStore.renderNodeQueue.delete(eleId)
             }
         }
-        return has
+    }
+    isShouldComponentUpdate(formref: InstanceFormElement,uid: string,eleId: string) {
+        if (formref) {
+            const viewStore = formref.store.get(uid)
+            if (viewStore.renderNodeQueue.has(eleId)) {
+                viewStore.renderNodeQueue.delete(eleId)
+                return true
+            }
+        }
+        return false;
     }
 }
+

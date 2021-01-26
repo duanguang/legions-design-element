@@ -8,7 +8,7 @@ const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 export class LabelWithRangePickerModel {
     constructor(public iAntdProps: IAntdProps,
-        public iFormRangePicker: IFormRangePickerProps,
+        public iFormProps: IFormRangePickerProps,
         public rules?: IAntdRule[],//验证规则
 
     ) {
@@ -45,6 +45,12 @@ export default class FormRangePicker extends AbstractForm<IFormWithRangePickerPr
             store.focusUid = this.FormRangePickerRef.uid
         }
         this.props.iFormRangePicker&&this.props.iFormRangePicker.onOpenChange&&this.props.iFormRangePicker.onOpenChange(status)
+    }
+    componentDidMount() {
+        this.didMountClearNodeQueue(this.FormRangePickerRef,this.props.formUid,this.props.iAntdProps.name)
+    }
+    shouldComponentUpdate(nextProps:IFormWithRangePickerProps,nextState,context) {
+       return this.isShouldComponentUpdate(this.FormRangePickerRef,this.props.formUid,nextProps.iAntdProps.name)
     }
     render() {
         const { form, iAntdProps, iFormRangePicker, children, rules } = this.props;

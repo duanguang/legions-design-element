@@ -6,7 +6,7 @@ const OptGroup = Select.OptGroup;
 
 import { IProSelectProps,LabeledValue } from '../LegionsProSelect/interface';
 import LegionsProSelect from '../LegionsProSelect'
-import AbstractForm,{ AbstractSelectForm } from './AbstractForm';
+import AbstractForm from './AbstractForm';
 import FormElement from './FormElement';
 import {InstanceFormElement} from './interface/formElement'
 import LegionsProErrorReportShow from '../LegionsProErrorReportShow'
@@ -65,7 +65,7 @@ interface IState {
      */
     styleClassFocus?: string;
 }
-export default class FormHLSelect extends AbstractSelectForm<IFormWithSelectProps,IState>{
+export default class FormHLSelect extends AbstractForm<IFormWithSelectProps,IState>{
     FormHLSelectRef: InstanceFormElement = null
     constructor(props) {
         super(props)
@@ -106,6 +106,7 @@ export default class FormHLSelect extends AbstractSelectForm<IFormWithSelectProp
     }
     componentDidMount() {
         this.bindCopyKeydown()
+        this.didMountClearNodeQueue(this.FormHLSelectRef,this.props.formUid,this.props.iAntdProps.name)
     }
     componentWillUnmount() {
         const el = document.querySelector(`.${this.FormHLSelectRef.uid}`);
@@ -255,14 +256,7 @@ export default class FormHLSelect extends AbstractSelectForm<IFormWithSelectProp
         this.props.iFormWithSelect.onPagingQuery && this.props.iFormWithSelect.onPagingQuery(pageIndex,pageSize,value)
     }
     shouldComponentUpdate(nextProps:IFormWithSelectProps,nextState,context) {
-        if (this.FormHLSelectRef) {
-            const viewStore = this.FormHLSelectRef.store.get(this.props.formUid)
-            if (viewStore.renderNodeQueue.has(nextProps.iAntdProps.name)) {
-                viewStore.renderNodeQueue.delete(nextProps.iAntdProps.name)
-                return true
-            }
-        }
-        return false;
+        return this.isShouldComponentUpdate(this.FormHLSelectRef,this.props.formUid,nextProps.iAntdProps.name)
     }
     public render() {
         const { form,iAntdProps,iFormWithSelect,children,rules,formUid } = this.props;

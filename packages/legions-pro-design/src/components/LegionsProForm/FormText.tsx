@@ -12,7 +12,7 @@ import { TooltipProps } from 'antd/lib/tooltip'
 /* import { debounce as debounces } from 'lodash' */
 export class LabelWithTextModel {
     constructor(public iAntdProps: IAntdProps,
-        public iFormText: IFormTextProps,
+        public iFormProps: IFormTextProps,
         public rules?: IAntdRule[],//验证规则
     ) {
 
@@ -94,6 +94,12 @@ export default class FormText extends AbstractForm<IFormWithTextProps>{
     constructor(props) {
         super(props)
     }
+    componentDidMount() {
+        this.didMountClearNodeQueue(this.FormTextRef,this.props.formUid,this.props.iAntdProps.name)
+    }
+    shouldComponentUpdate(nextProps:IFormWithTextProps,nextState,context) {
+       return this.isShouldComponentUpdate(this.FormTextRef,this.props.formUid,nextProps.iAntdProps.name)
+    }
     render() {
         const { form,iAntdProps,iFormText,children,rules } = this.props;
         const { getFieldDecorator,getFieldsError,setFieldsValue } = form;
@@ -103,6 +109,13 @@ export default class FormText extends AbstractForm<IFormWithTextProps>{
             formItemProps['colon'] = props.colon;
         }
         return (
+            <FormElement form={form} 
+                onReady={(value)=>{
+                    this.FormTextRef = value
+                }}
+                nextElementKey={iAntdProps.nextElementKey}
+                elementKey={iAntdProps.name} 
+                formUid={this.props.formUid}>
             <FormItem
                 {...formItemProps}
                 extra={iFormText.extra}
@@ -130,7 +143,7 @@ export default class FormText extends AbstractForm<IFormWithTextProps>{
                 )}
                 {children}
             </FormItem>
-
+            </FormElement>
         )
     }
 }

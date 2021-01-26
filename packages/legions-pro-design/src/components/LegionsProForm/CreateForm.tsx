@@ -1,7 +1,6 @@
 import React from 'react'
 import FormInput, { LabelWithInputModel } from './FormInput';
 import { WrappedFormUtils } from '../interface/antd';
-import FormSelect, { LabelWithSelectModel, IFormSelectProps } from './FormSelect';
 import FormRender, { IFormRenderProps, LabelWithRenderModel } from './FormRender';
 import FormDatePicker, { LabelWithDatePickerModel, IFormDatePickerProps } from './FormDatePicker';
 import FormMonthPicker, { LabelWithMonthPickerModel } from './FormMonthPicker';
@@ -18,7 +17,7 @@ import FormText,{ LabelWithTextModel } from './FormText';
 import FormCheckbox, { LabelWithCheckboxModel } from './FormCheckbox';
 export default abstract class CreateForm<Props, State> extends React.Component<Props, State> {
     protected createFormInput(key: number|string, control: LabelWithInputModel, form: WrappedFormUtils, formUid: string,formRef: InstanceForm) {
-        const { iAntdProps,iFormInput,rules } = control;
+        const { iAntdProps,iFormProps,rules } = control;
         return (
             <FormInput iAntdProps={iAntdProps}
                 form={form}
@@ -26,28 +25,28 @@ export default abstract class CreateForm<Props, State> extends React.Component<P
                 rules={rules}
                 formUid={formUid}
                 formStore={formRef}
-                iFormInput={iFormInput}
+                iFormInput={iFormProps}
             >
 
             </FormInput>
         );
     }
     protected createFormInputNumber(key: number|string, control: LabelWithInputNumberModel, form: WrappedFormUtils, formUid: string,formRef: InstanceForm) {
-        const { iAntdProps, iFormInput, rules } = control;
+        const { iAntdProps, iFormProps, rules } = control;
         return (
             <FormInputNumber iAntdProps={iAntdProps}
                 form={form}
                 key={key}
                 rules={rules}
                 formUid={formUid}
-                iFormInput={iFormInput}
+                iFormInput={iFormProps}
             >
 
             </FormInputNumber>
         );
     }
-    protected createFormSelect(key: number|string, control: LabelWithSelectModel|LabelWithHLSelectModel, form: WrappedFormUtils, formUid: string,formRef: InstanceForm) {
-        let { iAntdProps,rules,iFormWithSelect } = control;
+    protected createFormSelect(key: number|string, control: LabelWithHLSelectModel, form: WrappedFormUtils, formUid: string,formRef: InstanceForm) {
+        let { iAntdProps,rules,iFormProps } = control;
         return (
             <FormHLSelect
                 iAntdProps={iAntdProps}
@@ -56,14 +55,14 @@ export default abstract class CreateForm<Props, State> extends React.Component<P
                 key={key}
                 formStore={formRef}
                 formUid={formUid}
-                iFormWithSelect={iFormWithSelect}
+                iFormWithSelect={iFormProps}
             >
 
             </FormHLSelect>
         )
     }
     protected createFormRender(key: number|string,control: LabelWithRenderModel,form: WrappedFormUtils,formRef: InstanceForm) {
-        let { iAntdProps, rules, iFormRender } = control;
+        let { iAntdProps, rules, iFormProps } = control;
         return (
             <FormRender
                 iAntdProps={iAntdProps}
@@ -71,53 +70,53 @@ export default abstract class CreateForm<Props, State> extends React.Component<P
                 rules={rules}
                 key={key}
                 formRef={formRef}
-                iFormRender={iFormRender}
+                iFormRender={iFormProps}
             >
 
             </FormRender>
         )
     }
     protected createFormDatePicker(key: number|string, control: LabelWithDatePickerModel, form: WrappedFormUtils, formUid: string,formRef: InstanceForm) {
-        let { iAntdProps, rules, iFormDatePicker } = control;
+        let { iAntdProps, rules, iFormProps } = control;
         return (
             <FormDatePicker iAntdProps={iAntdProps}
                 form={form}
                 rules={rules}
                 key={key}
                 formUid={formUid}
-                iFormDatePicker={iFormDatePicker}
+                iFormDatePicker={iFormProps}
             >
             </FormDatePicker>
         );
     }
     protected createFormMonthPicker(key: number|string, control: LabelWithMonthPickerModel, form: WrappedFormUtils, formUid: string,formRef: InstanceForm) {
-        let { iAntdProps, rules, iFormMonthPicker } = control;
+        let { iAntdProps, rules, iFormProps } = control;
         return (
             <FormMonthPicker iAntdProps={iAntdProps}
                 form={form}
                 rules={rules}
                 key={key}
                 formUid={formUid}
-                iFormMonthPicker={iFormMonthPicker}
+                iFormMonthPicker={iFormProps}
             >
             </FormMonthPicker>
         );
     }
     protected createFormRangePicker(key: number|string, control: LabelWithRangePickerModel, form: WrappedFormUtils, formUid: string,formRef: InstanceForm) {
-        let { iAntdProps, rules, iFormRangePicker } = control;
+        let { iAntdProps, rules, iFormProps } = control;
         return (
             <FormRangePicker iAntdProps={iAntdProps}
                 form={form}
                 rules={rules}
                 key={key}
                 formUid={formUid}
-                iFormRangePicker={iFormRangePicker}
+                iFormRangePicker={iFormProps}
             >
             </FormRangePicker>
         );
     }
     protected createFormUpload(key: number|string, control: LabelWithUploadModel, form: WrappedFormUtils, formUid: string,formRef: InstanceForm) {
-        let { iAntdProps, rules, iFormWithUpload } = control;
+        let { iAntdProps, rules, iFormProps } = control;
         return (
             <FormUpload
                 iAntdProps={iAntdProps}
@@ -125,14 +124,14 @@ export default abstract class CreateForm<Props, State> extends React.Component<P
                 rules={rules}
                 key={key}
                 formUid={formUid}
-                iFormWithUpload={iFormWithUpload}
+                iFormWithUpload={iFormProps}
             >
 
             </FormUpload>
         )
     }
     protected createFormSwitch(key: number|string, control: LabelWithSwitchModel, form: WrappedFormUtils, formUid: string,formRef: InstanceForm) {
-        let { iAntdProps, rules, iFormWithSwitch } = control;
+        let { iAntdProps, rules, iFormProps } = control;
         return (
             <FormSwitch
                 iAntdProps={iAntdProps}
@@ -140,14 +139,14 @@ export default abstract class CreateForm<Props, State> extends React.Component<P
                 rules={rules}
                 key={key}
                 formUid={formUid}
-                iFormWithSwitch={iFormWithSwitch}
+                iFormWithSwitch={iFormProps}
             >
 
             </FormSwitch>
         )
     }
     protected createFormRadioButton(key: number|string, control: LabelWithRadioButtonModel, form: WrappedFormUtils, formUid: string,formRef: InstanceForm) {
-        let { iAntdProps, rules, iFormWithRadioButton } = control;
+        let { iAntdProps, rules, iFormProps } = control;
         return (
             <FormRadioButton
                 iAntdProps={iAntdProps}
@@ -155,14 +154,14 @@ export default abstract class CreateForm<Props, State> extends React.Component<P
                 rules={rules}
                 key={key}
                 formUid={formUid}
-                iFormWithRadioButton={iFormWithRadioButton}
+                iFormWithRadioButton={iFormProps}
             >
 
             </FormRadioButton>
         )
     }
     protected createFormText(key: number|string, control: LabelWithTextModel, form: WrappedFormUtils, formUid: string,formRef: InstanceForm) {
-        let { iAntdProps, rules,iFormText } = control;
+        let { iAntdProps, rules,iFormProps } = control;
         return (
             <FormText
                 iAntdProps={iAntdProps}
@@ -170,7 +169,7 @@ export default abstract class CreateForm<Props, State> extends React.Component<P
                 rules={rules}
                 key={key}
                 formUid={formUid}
-                iFormText={iFormText}
+                iFormText={iFormProps}
             >
 
             </FormText>
@@ -193,7 +192,7 @@ export default abstract class CreateForm<Props, State> extends React.Component<P
         )
     } */
     protected createFormCheckbox(key: number|string, control: LabelWithCheckboxModel, form: WrappedFormUtils, formUid: string,formRef: InstanceForm) {
-        let { iAntdProps, rules, iFormWithCheckbox } = control;
+        let { iAntdProps, rules, iFormProps } = control;
         return (
             <FormCheckbox
                 iAntdProps={iAntdProps}
@@ -201,7 +200,7 @@ export default abstract class CreateForm<Props, State> extends React.Component<P
                 rules={rules}
                 key={key}
                 formUid={formUid}
-                iFormWithCheckbox={iFormWithCheckbox}
+                iFormWithCheckbox={iFormProps}
             >
 
             </FormCheckbox>

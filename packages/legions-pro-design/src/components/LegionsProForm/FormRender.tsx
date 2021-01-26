@@ -24,7 +24,7 @@ export class LabelWithRenderModel {
      * @memberof LabelWithRenderModel
      */
     constructor(public iAntdProps: IAntdProps,
-        public iFormRender?: IFormRenderProps,
+        public iFormProps?: IFormRenderProps,
         public rules?: IAntdRule[],//验证规则
     ) {
 
