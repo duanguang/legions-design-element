@@ -35,11 +35,13 @@ export default class LegionsProEchartsBox extends React.Component<IProps> {
             <div style={mStyle} className={`${prefixCls}-box-wrap ${className}`}>
                 <div className={`${prefixCls}-box`} style={{height: '100%', paddingTop: title ? '36px' : void 0}}>
                     { title && <div className="pro-box-title" attr-title={title}></div> }
-                    <div className="boxTopLeft"></div>
-                    <div className="boxTopRight"></div>
-                    <div className="boxBotLeft"></div>
-                    <div className="boxBotRight"></div>
-                    {this.props.children}
+                    <div className="pro-box-topLeft"></div>
+                    <div className="pro-box-topRight"></div>
+                    <div className="pro-box-botLeft"></div>
+                    <div className="pro-box-botRight"></div>
+                    <div className="pro-box-Content">
+                        {this.props.children}
+                    </div>
                 </div>
             </div>
         )
