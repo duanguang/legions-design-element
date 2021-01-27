@@ -18,3 +18,4 @@ export { default as LegionsProEchartsChartPie }  from './LegionsProEchartsChartP
 export { default as LegionsProEchartsLayout }  from './LegionsProEchartsLayout';
 export { default as LegionsProEchartsLiquidFill }  from './LegionsProEchartsLiquidFill';
 export { default as LegionsProEchartsMap }  from './LegionsProEchartsMap';
+export { default as LegionsProEchartsTable }  from './LegionsProEchartsTable';
