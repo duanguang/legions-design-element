@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-29 10:09:16
- * @LastEditTime: 2021-01-25 11:54:54
+ * @LastEditTime: 2021-01-28 10:51:27
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProForm/interface/select.ts
@@ -47,7 +47,7 @@ export interface IFormSelectProps extends IProSelectProps,IAntdFormItemProps {
      */
     autoQuery?: ISelectAutoQuery
 }
-export class LabelWithHLSelectModel {
+export class LabelWithSelectModel {
     constructor(public iAntdProps: IAntdProps,
         public iFormProps: IFormSelectProps,
         public rules?: IAntdRule[]) {

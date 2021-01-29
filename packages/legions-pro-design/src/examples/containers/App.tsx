@@ -9,6 +9,7 @@ import { LegionsProEchartsLayoutDemo } from './pro.echarts.layout'; */
 import { LegionsProEchartsChartPieDemo } from './pro.echarts.chart';
 import { LegionsProEchartsMapDemo } from './pro.echarts.map'; */
 import { ProTable } from './proTable';
+import { ProTabsForm } from './tabsForm';
 
 
 export default class App extends React.Component {
@@ -23,6 +24,7 @@ export default class App extends React.Component {
  
                 <Route path="/table" component={ProTable}></Route>
                 <Route path="/form" component={ProForm}></Route>
+                <Route path="/tform" component={ProTabsForm}></Route>
                 {/* <Route path="/chart" component={LegionsProEchartsChartPieDemo}></Route> */}
                 {/* <Route component={() => {
                         return <div>hello world</div>

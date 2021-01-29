@@ -25,7 +25,7 @@ export class ProForm extends React.Component<IProps,IState> {
     }
     arr = this.createConfig()
     componentDidMount() {
-        /* this.formRef.viewModel.setFormState('price',{visible:false}) */
+    /* this.formRef.viewModel.setFormState('price',{visible:false}) */
     }
     createConfig() {
         const rules = FormFields.initFormRules<FormFields,{}>(FormFields,{})
@@ -36,7 +36,11 @@ export class ProForm extends React.Component<IProps,IState> {
                 ...formUtils.createLayout('文本框',5,7),
                 maxLength: '50',
                 type: 'text',
-                disabled: true,
+                /* visible:false, */
+            /* disabled: true, */
+                onChange: () => {
+                    console.log(this.formRef);
+                }
             },
             rules: rules.text
         });
@@ -45,7 +49,8 @@ export class ProForm extends React.Component<IProps,IState> {
             iFormProps: {
                 ...formUtils.createLayout('多行文本',5,7),
                 maxLength: '50',
-                type: 'textarea'
+                type: 'textarea',
+                disabled:true
             },
             rules: rules.textarea
         });
@@ -228,12 +233,11 @@ export class ProForm extends React.Component<IProps,IState> {
                         iAntdProps: formUtils.createAntdProps('price',1,'价格'),
                         iFormProps: {
                             maxLength: '70',
-                            disabled: true,
+                            /* disabled: true, */
                             onBlur: () => { }
                         },
                         rules: rules.price,
                     })
-
 
                     return (
                         <Row className="selectAndInput">
@@ -363,6 +367,15 @@ export class ProForm extends React.Component<IProps,IState> {
                                     }
                                 })
                             }
+                            this.formRef.methods.setFormStates('selectedItem',(value) => {
+                                if (value instanceof LegionsProForm.LabelWithSelectModel) {
+                                    value.iFormProps.options.push({
+                                        value: '工单2',
+                                        label: '工单2',
+                                        key: '3',
+                                    })
+                                }
+                            })
                         }
                         
                     }}>启用价格输入框</Button>
@@ -385,21 +398,32 @@ export class ProForm extends React.Component<IProps,IState> {
                         }
                         
                     }}>禁用价格输入框</Button>
+                    <Button onClick={() => {
+                        this.formRef.viewModel.updateFormSize('table')
+                    }}>表单尺寸</Button>
+                    <Button onClick={() => {
+                        this.formRef.store.updateFormInputData(this.formRef.uid,{text:{value:'222'}},true)
+                    }}>文本框赋值</Button>
                     <LegionsProForm
                         <FormFields>
                         {...this.formRef && this.formRef.viewModel.InputDataModel}
                         InputDataModel={FormFields}
                         onReady={(form,ref) => {
                             this.formRef = Object.assign(ref,{ that: this });
+                            this.formRef.viewModel.enableEnterSwitch = true;
+                            
                         }}
+                        isDragSort
                         mapPropsToFields={(props) => {
                             return new FormFields(props)
                         }}
                         onFieldsChange={(props,formFields) => {
                             this.formRef.store.updateFormInputData(this.formRef.uid,formFields)
-                            /* console.log(formFields,this.formRef.viewModel.InputDataModel); */
+                            console.log(formFields,this.formRef.viewModel.InputDataModel);
                         }}
+                        size="small"
                         controls={this.createConfig()}
+                        
                         colCount={1}
                     ></LegionsProForm>
 

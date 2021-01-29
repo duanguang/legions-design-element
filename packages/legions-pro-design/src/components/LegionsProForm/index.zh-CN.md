@@ -10,6 +10,17 @@ ProForm 在原来的 Form 的基础上增加一些语法糖和更多的布局设
 
 分步表单，Modal 表单，Drawer 表单等多种 layout 可以覆盖大部分的使用场景，脱离复杂而且繁琐的表单布局工作，更少的代码完成更多的功能。
 
+- 单尺寸大小设置
+- 表单数据自动双向绑定
+- 高性能
+- 表单分组显示
+- 表单回车或上下键切换聚焦元素
+- 表单支持自动管理远程下拉数据并进行缓存
+- 支持自定义表单元素项组件
+- 更轻松管理表单元素组件之间联动效果
+- 基于antd Form封装，支持antd  Form.item 所有属性
+- 可拖拽表单元素项显示位置
+
 
 ## 何时使用
 
@@ -28,8 +39,9 @@ ProForm 在 antd 的 antd Form 上进行了一层封装，支持了一些预设�
 | InputDataModel | 表单输入数据模型,通常是一个类 |Function|-|
 | colCount | 等分栅格 默认2 | 1 \| 2 \| 3 \| 4| 2 |
 | size | 表单大小舒适,迷你,紧凑 | 'default' \| 'small'\|'table' | `default` |
+| isDragSort | 拖拽排序 | boolean | `false` |
 | uniqueKeys | 主要用于当父组件中存在多个表单组件时，标记key 来保证父级组件中表单组件唯一,可选 | string | - |
-| onUpdateStyleSize | 改变表单大小时触发 | Function(size:'default' \| 'small'\|'table') | - |
+| onUpdateFormSize | 改变表单大小时触发 | Function(size:'default' \| 'small'\|'table') | - |
 | onReady | 获取表单数据模型 | Function((form: WrappedFormUtils,formRef: InstanceForm) | - |
 | onValuesChange | 任一表单域的值发生改变时的回调 | Function((props,values) | - |
 | onFieldsChange | 当 Form.Item 子节点的值发生改变时触发，可以把对应的值转存到 mobx store or redux store| Function(props: mapProps,fields) | - |

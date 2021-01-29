@@ -6,7 +6,6 @@ import FormElement from './FormElement';
 import { InstanceFormElement } from './interface/formElement';
 import LegionsProErrorReportShow from '../LegionsProErrorReportShow'
 const FormItem = Form.Item;
-import Styles from './style/index.modules.less'
 import classNames from 'classnames';
 import { TooltipProps } from 'antd/lib/tooltip'
 /* import { debounce as debounces } from 'lodash' */
@@ -72,8 +71,8 @@ export class TooltipText extends React.Component<TooltipProps & IForm>{
                 formUid={this.props.formUid}
                 errorClassName={
                     classNames({
-                        [`${Styles.tipIconInput}`]: true,
-                        [`${Styles['tipIcon-right-0']}`]: (this.props.value) ? true : false,
+                        [`tip-icon-input`]: true,
+                        [`tip-icon-right-0`]: (this.props.value) ? true : false,
                     })}>
                 <Tooltip
                     trigger={'click'}

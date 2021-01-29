@@ -9,7 +9,7 @@ import { WrappedFormUtils } from '../interface/antd';
 import { IErrorView, IFormState, IGroup } from './interface/form';
 import { ISchedule } from '../store/interface';
 import {
-    LabelWithHLSelectModel,LabelWithRenderModel,LabelWithDatePickerModel,
+    LabelWithSelectModel,LabelWithRenderModel,LabelWithDatePickerModel,
     LabelWithMonthPickerModel,LabelWithRangePickerModel,LabelWithUploadModel,LabelWithInputNumberModel,
 } from './interface';
 import { bind,observer } from 'legions/store-react'
@@ -28,7 +28,7 @@ import { ValidateCallback } from 'antd/lib/form/Form';
 import { LabelWithCheckboxModel } from './FormCheckbox';
 import { BaseFormFields, HlLabeledValue } from 'legions-lunar/model';
 import { legionsPlugins,LegionsPluginsExecute,LoggerManager } from 'legions-lunar/legion.plugin.sdk';
-import { ProFormFields,ProFormUtils } from './ProFormUtils';
+import { formClasses, ProFormFields,ProFormUtils, size } from './ProFormUtils';
 const baseCls = `legions-pro-form`
 
 export interface IProFormProps<mapProps = {}> {
@@ -45,7 +45,7 @@ export interface IProFormProps<mapProps = {}> {
     InputDataModel: Function,
     store?: ProFormStore,
     /** 初始化执行一次 */
-    controls: Array<any>;
+    controls: Array<IProFormFields['componentModel']>;
     group?: Array<IGroup>,
 
     /**
@@ -103,7 +103,7 @@ export interface IProFormProps<mapProps = {}> {
      *
      * @memberof IHLFormProps
      */
-    onUpdateStyleSize?: (size: 'default' | 'small' | 'table') => void
+    onUpdateFormSize?: (size: 'default' | 'small' | 'table') => void
 
     /**
      * 主要用于当父组件中存在多个表单组件时，标记key 来保证父级组件中表单组件唯一
@@ -140,15 +140,7 @@ enum KeydownEnum {
     /** 回车键 */
     enter = 13,
 }
-const size = {
-    'default': {
-        formItemLayOut: 'form-item-default',
-    },'small': {
-        formItemLayOut: 'form-item-small',
-    },'table': {
-        formItemLayOut: 'form-item-table',
-    }
-}
+
 @bind({ store: ProFormStore })
 @observer
 class HLForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
@@ -180,7 +172,11 @@ class HLForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
             this.uid = `form${this.props.store.HLFormContainer.size}${shortHash(`${this.timeId}${this.props.store.HLFormContainer.size}`)}`;
         }
         this.traceId = this.uid;
-        this.props.store.add(this.uid,{ ...this.props.form,validateFields: this.validateFields.bind(this) },this.props.InputDataModel)
+        this.props.store.add(this.uid,{
+            form: { ...this.props.form,validateFields: this.validateFields.bind(this) },
+            InputDataModel: this.props.InputDataModel,
+            formRef:this,
+        })
         if (this.props['uniqueUid']) {
             this.decryptionFreezeUid = `${this.props['uniqueUid']}${this.props.uniqueKeys || ''}${process.env.environment === 'production' ? 'production' : ''}`;
             this.freezeUid = shortHash(this.decryptionFreezeUid);
@@ -193,16 +189,8 @@ class HLForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
                 this.storeLocalView.updateControlsSort(this.props.controls.map(item => item.iAntdProps.name));
             }
         }
-        this.storeView.updateStyleSize(this.props.size);
-        /* if (this.props.InputDataModel) {
-            this.subscription = this.props.store.schedule([() => {
-                const view = this.storeView.InputDataModel
-            }])
-        } */
+        this.storeView.updateFormSize(this.props.size);
         this.initFromState();
-        /* this.setFormItemStateDisabled({
-            props: this.props
-        }); */
         this.consoleLog('hlFormContainer-constructor');
     }
     watcher = (n) => {
@@ -302,9 +290,6 @@ class HLForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
             if (value) {
                 if (value.type === 'normal') {
                     callback && callback(value.value)
-                    /* if (state instanceof LegionsProForm.LabelWithHLSelectModel) {
-                      this.storeView.formfields.set(name,new LegionsProForm.LabelWithHLSelectModel(state.iAntdProps,state.iFormProps,state.rules))
-                    } */
                     insertRenderEle()
                 }
                 if (value.type === 'custom') {
@@ -326,7 +311,6 @@ class HLForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
         })
         const view = this.props.store.HLFormContainer.get(this.uid);
         const localview = this.props.store.HLFormLocalDataContainer.get(this.freezeUid);
-        view.controls = this.props.controls;
 
         this.props.onReady && this.props.onReady({ ...this.props.form,validateFields: this.validateFields.bind(this) },{
             store: this.props.store,
@@ -379,22 +363,16 @@ class HLForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
         this.consoleLog('hlFormContainer-componentDidMount');
     }
     componentWillReceiveProps(nextProps: IProFormProps) {
-        const store = this.props.store.HLFormContainer.get(this.uid)
-        if (store.elementList.size !== store.nodeCount || store.elementList.size !== store.computedAllElementList.length) {
-            store.nodeCount = store.elementList.size;
-            this.props.store.clearAllElement(this.uid)
-        }
         if (this.props.controls !== nextProps.controls) {
            /*  this.setFormItemStateDisabled({
                 props: this.props,nextProps
             }) */
-            this.storeView.controls = nextProps.controls;
             if (this.storeLocalView.dragSortState) {
                 this.storeLocalView.updateControlsSort(nextProps.controls.map(item => item.iAntdProps.name));
             }
         }
         if (nextProps.size !== this.props.size) {
-            this.storeView.updateStyleSize(nextProps.size);
+            this.storeView.updateFormSize(nextProps.size);
         }
         if (this.props.group !== nextProps.group) {
             this.initGroup(nextProps.group);
@@ -433,7 +411,7 @@ class HLForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
     initSelectView(isDispatch: boolean = true,controls = this.props.controls) {
         if (controls && Array.isArray(this.props.controls)) {
             controls.map((item) => {
-                if (item instanceof LabelWithHLSelectModel && item.iFormProps && item.iFormProps.autoQuery)
+                if (item instanceof LabelWithSelectModel && item.iFormProps && item.iFormProps.autoQuery)
                     runInAction(() => {
                         if (this.storeLocalView && item.iAntdProps) {
                             const pageSize = item.iFormProps.pageSize || 30;
@@ -534,7 +512,11 @@ class HLForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
         const { keyCode } = e;
         if (formStore && formStore.enableEnterSwitch) {
             /* e.stopPropagation() */
-            const keys = formStore.elementList.keys()
+            const keysNext = formStore.elementList.keys()
+            const keys = [];
+            for (let key of keysNext) {
+               keys.push(key)
+            }
              //@ts-ignore
             if (keys.length > 0 && !formStore.focusUid) {
                 formStore.focusUid = keys[0];
@@ -546,6 +528,7 @@ class HLForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
                     let index = keys.findIndex((item) => item === formStore.focusUid)
                     if (index > -1) {
                         let currUid = keys[index]
+                       
                         let nextIndex = index + 1
                         let nextUid = keys[nextIndex]
                         const currElement = formStore.elementList.get(currUid)
@@ -725,37 +708,38 @@ class HLForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
         const form = this.props.form;
         const hasError = this.isFormHasError(form.getFieldsError)
         const error = form.getFieldError(control.iAntdProps.id)
-        const styleSize = this.storeView.styleSize;
+        const formSize = this.storeView.computedFormSize;
         if (control.iAntdProps.className) {
-            control.iAntdProps.className = control.iAntdProps.className.replace(size[styleSize]['formItemLayOut'],'')
+            control.iAntdProps.className = control.iAntdProps.className.replace(size[formSize]['formItemLayOut'],'')
         }
         const item = 'iFormProps'
+        const formItemRowHeight=formClasses.itemRowHeight
         if (!(control instanceof LegionsProForm.LabelWithRenderModel)) {
             //@ts-ignore
-            control[item].size = styleSize
+            control[item].size = formSize
         }
-        if (control instanceof LegionsProForm.LabelWithHLSelectModel) {
+        if (control instanceof LegionsProForm.LabelWithSelectModel) {
             if (control[item].options && control[item].options.length >= 50 && !control[item].paging) { // 当下拉数据超过50项自动开启分页
                 control[item].paging = true
             }
         }
         if (control.iAntdProps.className) {
-            control.iAntdProps.className = control.iAntdProps.className && control.iAntdProps.className.replace(size['table'].formItemLayOut,'').replace('table-error','').replace('table-not-error','').replace('hlform-table-row-height','')
-            control.iAntdProps.className = control.iAntdProps.className && control.iAntdProps.className.replace(size['small'].formItemLayOut,'').replace('hlform-table-row-height','')
-            control.iAntdProps.className = control.iAntdProps.className && control.iAntdProps.className.replace(size['default'].formItemLayOut,'').replace('form-item-default-error','')
+            control.iAntdProps.className = control.iAntdProps.className && control.iAntdProps.className.replace(size['table'].formItemLayOut,'').replace(formClasses.tableError,'').replace(formClasses.tableNotEror,'').replace(formItemRowHeight,'')
+            control.iAntdProps.className = control.iAntdProps.className && control.iAntdProps.className.replace(size['small'].formItemLayOut,'').replace(formItemRowHeight,'')
+            control.iAntdProps.className = control.iAntdProps.className && control.iAntdProps.className.replace(size['default'].formItemLayOut,'').replace(formClasses.itemDefaultError,'')
         }
-        if (styleSize === 'table') {
-            control.iAntdProps.className = `${control.iAntdProps.className || ''} ${size[styleSize].formItemLayOut} ${error ? 'table-error' : 'table-not-error'} hlform-table-row-height` /**  表单间距调小*/
+        if (formSize === 'table') {
+            control.iAntdProps.className = `${control.iAntdProps.className || ''} ${size[formSize].formItemLayOut} ${error ? formClasses.tableError : formClasses.tableNotEror} ${formItemRowHeight}` /**  表单间距调小*/
             if (!(control instanceof LegionsProForm.LabelWithRenderModel)) {
                 //@ts-ignore
                 control[item].size = 'small'
             }
         }
-        else if (styleSize === 'small') {
-            control.iAntdProps.className = `${control.iAntdProps.className || ''} ${size[styleSize].formItemLayOut} hlform-table-row-height`
+        else if (formSize === 'small') {
+            control.iAntdProps.className = `${control.iAntdProps.className || ''} ${size[formSize].formItemLayOut} ${formItemRowHeight}`
         }
         else {
-            control.iAntdProps.className = `${control.iAntdProps.className || ''} ${size[styleSize].formItemLayOut} ${hasError ? '' : size[styleSize].formItemLayOut} ${error ? 'form-item-default-error' : ''}` /**  表单间距调小*/
+            control.iAntdProps.className = `${control.iAntdProps.className || ''} ${size[formSize].formItemLayOut} ${hasError ? '' : size[formSize].formItemLayOut} ${error ? formClasses.itemDefaultError : ''}` /**  表单间距调小*/
         }
         const view = this.props.store.HLFormContainer.get(this.uid)
         const localview = this.props.store.HLFormLocalDataContainer.get(this.freezeUid)
@@ -784,8 +768,8 @@ class HLForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
         else if (control instanceof LabelWithInputNumberModel) {
             return super.createFormInputNumber(key,control,form,this.uid,viewModel);
         }
-        else if (control instanceof LabelWithHLSelectModel) {
-            if (control instanceof LabelWithHLSelectModel && control.iFormProps.autoQuery) {
+        else if (control instanceof LabelWithSelectModel) {
+            if (control instanceof LabelWithSelectModel && control.iFormProps.autoQuery) {
                 const view = localview.selectView.get(control.iAntdProps.name)
                 if (view && view.currValue) {
                     let options = []
@@ -877,7 +861,15 @@ class HLForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
             }}
             style={{ width: '100%',display: 'contents' }}
             onChange={(items: string[],sort,evt) => {
+                console.log(items);
                 this.storeLocalView.updateControlsSort(items);
+                this.storeView.elementList.clear();
+                this.storeView.computedAllFormFields.map((w) => {
+                    const name= w.iAntdProps.name
+                    this.storeView.renderNodeQueue.set(name,name);
+                    
+                })
+                this.forceUpdate()
             }}
         >
             {
@@ -900,10 +892,10 @@ class HLForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
                         <span className="span-left" >{item.name}</span>
                         <span className="span-right" >
                             {entity.isShowSizeIcon && <Dropdown overlay={(
-                                <Menu selectedKeys={[this.storeView.styleSize]} onClick={(item) => {
+                                <Menu selectedKeys={[this.storeView.computedFormSize]} onClick={(item) => {
                                     const size = item.key as IProFormProps['size']
-                                    this.storeView.updateStyleSize(size)
-                                    this.props.onUpdateStyleSize && this.props.onUpdateStyleSize(size)
+                                    this.storeView.updateFormSize(size)
+                                    this.props.onUpdateFormSize && this.props.onUpdateFormSize(size)
                                 }}>
                                     <Menu.Item key="default">
                                         <span>舒适型</span>
@@ -963,19 +955,17 @@ class HLForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
         const group = this.props.group;
     /* const controls = this.props.controls; */
         const controls = this.storeView.computedFormFields;
-        console.log(controls,'controlscontrols');
         if (group && group instanceof Array && group.length) {
             return this.renderGroup()
         }
+        console.log(this.props);
         return <Row type="flex">
             {this.renderControls(controls)}
         </Row>;
     }
     render() {
-        const { getFieldDecorator } = this.props.form;
-        console.log('HLForm');
         return (
-            <Form className={`${baseCls} ${this.uid}`} /* key={this.props.controls.length} */>
+            <Form {...this.storeView.InputDataModel} className={`${baseCls} ${this.uid}`} /* key={this.props.controls.length} */>
                 {this.renderForm()}
             </Form>
         )
@@ -1005,7 +995,7 @@ export function LegionsProForm<mapProps = {}>(props: IProFormProps<mapProps>) {
 LegionsProForm.CreateForm = CreateForm
 LegionsProForm.ProFormUtils = ProFormUtils;
 LegionsProForm.LabelWithInputNumberModel = LabelWithInputNumberModel;
-LegionsProForm.LabelWithHLSelectModel = LabelWithHLSelectModel;
+LegionsProForm.LabelWithSelectModel = LabelWithSelectModel;
 LegionsProForm.LabelWithRenderModel = LabelWithRenderModel;
 LegionsProForm.LabelWithDatePickerModel = LabelWithDatePickerModel;
 LegionsProForm.LabelWithMonthPickerModel = LabelWithMonthPickerModel;

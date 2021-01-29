@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-29 10:18:01
- * @LastEditTime: 2021-01-26 15:15:01
+ * @LastEditTime: 2021-01-29 16:44:07
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/store/pro.form/proFormStore.ts
@@ -26,6 +26,7 @@ import { IElementList, IErrorView, ISelectAutoQuery, ISelectOptions,ISelectDatab
 import { SelectDatabaseDB } from '../../db';
 import { SelectKeyValue } from '../../models';
 import { merge } from 'lodash';
+import { TabsFormView } from './tabsView';
 /* import { DexieUtils } from '../utils/dexie'; */
 
 type Proxify<T> = {
@@ -74,13 +75,7 @@ export class HlFormView {
    */
   @observable nodeCount = 0;
 
-  /**
-   * 表单元素集合
-   *
-   * @type {any[]}
-   * @memberof HlFormView
-   */
-  @observable controls: any[] = [];
+  
 
   @observable private formfields: IObservableMap<
   string,
@@ -187,13 +182,20 @@ export class HlFormView {
    * @readonly
    * @memberof HlFormView
    */
-  @computed get styleSize() {
+  @computed get computedFormSize() {
     return this.size;
   }
 
 
-  @action updateStyleSize(size: 'default' | 'small' | 'table') {
+  /** 修改表单尺寸 */
+  @action updateFormSize(size: 'default' | 'small' | 'table') {
     this.size = size;
+    this.computedAllFormFields.map((item) => {
+      const name = item.iAntdProps.name
+      if (!this.renderNodeQueue.has(name)) {
+         this.renderNodeQueue.set(name,name)
+      }
+    })
   }
   /**
    *  添加错误信息和组件元素的关联关系，可通过组件name查出错误信息组件UID
@@ -339,6 +341,7 @@ export interface IOtherView {
   InputDataModelClass?: Function;
 
   uid: string;
+  formRef:React.Component
 }
 export class ErrorViewModel {
   @observable uid: string = '';
@@ -766,6 +769,11 @@ export default class ProFormStore extends StoreBase {
     ViewModel<HLFormLocalView> & Proxify<HLFormLocalView>
   > = observable.map();
 
+  @observable _TabsFormDataMap:IObservableMap<
+  string,
+  ViewModel<TabsFormView> & Proxify<TabsFormView>
+>= observable.map();
+
   /**
    *
    * 添加表单临时性数据
@@ -774,18 +782,21 @@ export default class ProFormStore extends StoreBase {
    * @param {*} [InputDataModel]
    * @memberof HLFormStore
    */
-  @action add(uid: string, form: WrappedFormUtils, InputDataModel?: any) {
-    let otherView: IOtherView = { form, uid };
+  @action add(uid: string,options:{
+    form: WrappedFormUtils,InputDataModel?: any,
+    formRef:React.Component
+  }) {
+    let otherView: IOtherView = { form:options.form, uid,formRef:options.formRef };
     let formView = new HlFormView();
-    if (InputDataModel && typeof InputDataModel === 'function') {
+    if (options.InputDataModel && typeof options.InputDataModel === 'function') {
       /* otherView = Object.assign(otherView,{ InputDataModel: new InputDataModel(),InputDataModelClass: InputDataModel }) */
       otherView = Object.assign(otherView, {
-        InputDataModelClass: InputDataModel,
+        InputDataModelClass: options.InputDataModel,
       });
       /* formView = Object.assign(formView,{ InputDataModel: new InputDataModel() })
             formView = observable(formView); */
       formView = extendObservable(formView, {
-        InputDataModel: new InputDataModel(),
+        InputDataModel: new options.InputDataModel(),
       });
     }
     this.HLFormContainer.set(
@@ -912,7 +923,7 @@ export default class ProFormStore extends StoreBase {
   @action updateFormInputData(
     formUid: string,
     formFields: object,
-    parentRef?: React.Component
+    forceUpdate?: boolean
   ) {
     const view = this.HLFormContainer.get(formUid);
     if (view && typeof view.InputDataModelClass === 'function') {
@@ -926,9 +937,26 @@ export default class ProFormStore extends StoreBase {
           view.renderNodeQueue.set(key,key)
         }
       })
+      /* if (forceUpdate) {
+        view.formRef.forceUpdate();
+      } */
       /* if (parentRef && parentRef.forceUpdate) {
         parentRef.forceUpdate();
       } */
     }
+  }
+
+  @action addTabsForm(uid: string) {
+    let formView = new TabsFormView();
+    this._TabsFormDataMap.set(
+      uid,
+      observableViewModel<TabsFormView>(formView)
+    );
+  }
+  @action deleteTabsForm(uid: string) {
+    this._TabsFormDataMap.delete(uid);
+  }
+  @action getTabsForm(uid: string) {
+    return this._TabsFormDataMap.get(uid);
   }
 }

@@ -75,6 +75,7 @@ module.exports = function (configs) {
                 components: [
                   { name: 'LegionsProTable', props: 'uniqueUid', value: '' },
                   { name: 'LegionsProForm', props: 'uniqueUid' },
+                  { name: 'LegionsProTabsForm', props: 'uniqueUid' },
                   { name: 'QueryConditions', props: 'uniqueUid' },
                 ],
               }),

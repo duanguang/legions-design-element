@@ -10,7 +10,7 @@ import {
 import {ProFormStore} from '..';
 import { HLFormLocalView,HlFormView,IOtherView } from '../proFormStore';
 import {
-  LabelWithDatePickerModel,LabelWithHLSelectModel,
+  LabelWithDatePickerModel,LabelWithSelectModel,
   LabelWithInputModel,LabelWithInputNumberModel,LabelWithMonthPickerModel,
   LabelWithRadioButtonModel,LabelWithRangePickerModel,LabelWithSwitchModel,
   LabelWithTextModel,LabelWithUploadModel,
@@ -20,6 +20,8 @@ import {
   LabelWithSwitchPartialModel,LabelWithTextPartialModel,LabelWithUploadPartialModel, LabelWithCheckboxModel
 } from '../../../LegionsProForm/interface'
 import {SelectKeyValue,KeyValue} from '../../../models'
+import { TabsFormView, TabsItemView } from '../tabsView';
+import { IMapEntry } from 'mobx/lib/types/observablemap';
 export interface IErrorView {
   /**
    * 只读
@@ -257,11 +259,15 @@ export declare type IViewModelHlFormStore = ViewModel<HlFormView> &
   IOtherView;
 export declare type ILocalViewModelHlFormStore = ViewModel<HLFormLocalView> &
   Proxify<HLFormLocalView>;
+export declare type ITabsFormViewModelStore = ViewModel<TabsFormView> &
+  Proxify<TabsFormView>;
+
+export declare type ITabsFormItem = { key: string;tabsItemView:TabsItemView}
 
 export interface IProFormFields {
     componentModel: LabelWithInputModel | LabelWithInputNumberModel | LabelWithDatePickerModel | LabelWithMonthPickerModel |
     LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel |
-    LabelWithRadioButtonModel | LabelWithTextModel | LabelWithHLSelectModel|LabelWithCheckboxModel
+    LabelWithRadioButtonModel | LabelWithTextModel | LabelWithSelectModel|LabelWithCheckboxModel
 }
 export interface IProUpdateFormFields {
   componentModel: LabelWithInputPartialModel | LabelWithInputNumberPartialModel | LabelWithDatePickerPartialModel |

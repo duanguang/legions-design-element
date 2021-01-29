@@ -10,7 +10,6 @@ import AbstractForm from './AbstractForm';
 import FormElement from './FormElement';
 import {InstanceFormElement} from './interface/formElement'
 import LegionsProErrorReportShow from '../LegionsProErrorReportShow'
-import Styles from './style/index.modules.less'
 import { on,off } from 'legions-utils-tool/dom'
 import { legionsThirdpartyPlugin } from 'legions-thirdparty-plugin';
 import { IFormSelectProps, IFormSelectWrapError, IFormWithSelectProps } from './interface/select';
@@ -37,7 +36,7 @@ export class HLSelectWrapError extends React.Component<IFormSelectProps & IProSe
             <LegionsProErrorReportShow
                 formUid={this.props.formUid}
                 code={this.props.formItemName}
-                errorClassName={Styles.tipIcon}
+                errorClassName={'tip-icon'}
                 onIgnoreError={this.props.onIgnoreError}
                 className={isShowErrorView ? 'errorView' : ''}
             >
@@ -269,7 +268,6 @@ export default class FormHLSelect extends AbstractForm<IFormWithSelectProps,ISta
         if ('colon' in props) {
             formItemProps['colon'] = props.colon;
         }
-        console.log(iAntdProps.name);
         return (
             <FormElement form={form}
                 elType={'input'}

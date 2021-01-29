@@ -19,7 +19,6 @@ import {InstanceFormElement} from './interface/formElement'
 import LegionsProErrorReportShow from '../LegionsProErrorReportShow'
 const FormItem = Form.Item;
 const { TextArea } = Input;
-import Styles from './style/index.modules.less'
 import classNames from 'classnames';
 import { TooltipProps } from 'antd/lib/tooltip'
 /* import { debounce as debounces } from 'lodash' */
@@ -111,7 +110,7 @@ export class TooltipInput extends React.Component<ITooltipInputProps,{}>{
     },200); */
     handleOnChange(even) {
         const { target: { value } } = even;
-        this.props.onChange && this.props.onChange(value);
+        this.props.onChange && this.props.onChange(even);
         //@ts-ignore
         /* this.onChanges(even,value); */
     };
@@ -140,8 +139,8 @@ export class TooltipInput extends React.Component<ITooltipInputProps,{}>{
                 onIgnoreError={this.props.onIgnoreError}
                 errorClassName={
                 classNames({
-                    [`${Styles.tipIconInput}`]: true,
-                    [`${Styles['tipIcon-right-0']}`]: (this.props.value && !this.props.disabled) ? true : false,
+                    [`tip-icon-input`]: true,
+                    [`tip-icon-right-0`]: (this.props.value && !this.props.disabled) ? true : false,
                 })}>
                 {this.props.inputType === 'number' ? <LegionsProNumericInput
                     {...theProps}></LegionsProNumericInput> : <Tooltip
@@ -206,14 +205,13 @@ export default class FormInput extends AbstractForm<IFormWithInputProps>{
         if (store) {
             store.focusUid = this.FormInputRef.uid
         }
-        console.log(store.focusUid,'store.focusUid');
         /* const el = document.querySelector(`.${this.FormInputRef.uid}`); */
         const even = e.target
         even.select()
         this.props.iFormInput && this.props.iFormInput.onFocus && this.props.iFormInput.onFocus(e)
     }
     onBlur(even) {
-        if (this.props.form && this.store && this.store.styleSize === 'table') {
+        if (this.props.form && this.store && this.store.computedFormSize === 'table') {
             const error = this.props.form.getFieldError(this.props.iAntdProps.name)
             error && message.error(error,5)
         }
@@ -236,7 +234,10 @@ export default class FormInput extends AbstractForm<IFormWithInputProps>{
         if ('colon' in props) {
             formItemProps['colon'] = props.colon;
         }
-        console.log('input',this.props.iAntdProps.name,iFormInput);
+        if (iAntdProps.name === 'text') {
+            
+            console.log(this.props.iFormInput.value,form.getFieldValue('text'));
+        }
         return (
             <FormElement form={form}
                 onReady={(value) => {

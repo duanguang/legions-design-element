@@ -63,7 +63,6 @@ export default class FormInputNumber extends AbstractForm<IFormWithInputNumberPr
         if ('colon' in props) {
             formItemProps['colon'] = props.colon;
         }
-        console.log(iAntdProps.name,'FormInputNumber');
         return (
             <FormElement form={form} 
                 onReady={(value)=>{

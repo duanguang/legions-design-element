@@ -93,7 +93,7 @@
     .form-item-table{
         margin-bottom: 0px;
         border: 1px solid #776464;
-        margin: 0px 0px -1px -1px;
+        margin: 0px 0px 1px 0px;
         font-weight: bold;
         .ant-form-explain{
             display: none;
@@ -101,18 +101,26 @@
         .ant-input-group-wrapper.ant-input-group-wrapper-sm{
             top:1px !important;
         }
-    }
-    .table-not-error{
-        input{
-            border: none;
+        .ant-form-item-control{
+            border-left: 1px solid #776464;
+            padding: 1px;
         }
-        .ant-select-selection{
-            border: none;
-        }
+        .ant-form-item-label{
+              padding-right: 2px;
+          }
     }
-    .form-item-table .ant-form-item-label{
-        border-right: 1px solid #776464;
-        padding-right: 2px;
+    .form-item-row-height{
+        .ant-form-item-label{
+            line-height: 25px;
+        }
+        .ant-form-item-control{
+            line-height: 25px;
+        }
+        .ant-input-group-addon{
+            padding: 0px 10px !important;
+            background-color:#fff !important;
+            border:none !important;
+        }
     }
     .ant-form-explain{
         overflow: hidden;
@@ -128,43 +136,46 @@
             opacity: 0.55;
         }
     }
-}
-.legions-pro-table-row-height{
-    .ant-form-item-label{
-        line-height: 25px;
+    .ant-input-disabled{
+        background-color: #f7f7f7;
+        opacity: 1;
+        cursor: not-allowed;
+        color:#666;
     }
-    .ant-form-item-control{
-        line-height: 25px;
+    .errorView .ant-select-arrow{
+        right: 28px;
     }
-    .ant-input-group-addon{
-        padding: 0px 10px !important;
-        background-color:#fff !important;
-        border:none !important;
+    .errorView .ant-select-selection__clear{
+        right: 28px;
+    }
+    .errorView .hool-select-copy{
+        right: 16px;
+    }
+    .has-error .ant-form-explain,
+    .has-error .ant-form-split {
+        color: #f04134;
+        font-size: 12px;
+    }
+    .tip-icon{
+        position: absolute;
+        right: 5px;
+        top: 0;
+        height: 100%;
+        cursor: pointer;
+        z-index: 9;
+        color: #f04134;
+    }
+    .tip-icon-input{
+        position: absolute;
+        top: 1px;
+        right: 5px;
+        height: 100%;
+        cursor: pointer;
+        z-index: 9;
+        color: #f04134;
+    }
+    .tip-icon-right-0{
+        top:0px;
     }
 }
-.legions-pro-table-layout  .ant-tooltip-inner{
-    background-color: rgba(204, 67, 67, 0.75);
-}
-.legions-pro-table-layout .ant-tooltip-arrow{
-    border-left-color: rgba(204, 67, 67, 0.75) !important;
-}
-.ant-input-disabled{
-    background-color: #f7f7f7;
-    opacity: 1;
-    cursor: not-allowed;
-    color:#666;
-}
-.errorView .ant-select-arrow{
-    right: 28px;
-}
-.errorView .ant-select-selection__clear{
-    right: 28px;
-}
-.errorView .hool-select-copy{
-    right: 16px;
-}
-.legions-pro-form .has-error .ant-form-explain,
-.has-error .ant-form-split {
-  color: #f04134;
-  font-size: 12px;
-}
+

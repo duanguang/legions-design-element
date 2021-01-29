@@ -7,7 +7,7 @@ import FormMonthPicker, { LabelWithMonthPickerModel } from './FormMonthPicker';
 import FormRangePicker, { LabelWithRangePickerModel } from './FormRangePicker';
 import FormUpload, { LabelWithUploadModel } from './FormUpload';
 import FormHLSelect from './FormHLSelect';
-import {LabelWithHLSelectModel} from './interface'
+import {LabelWithSelectModel} from './interface'
 import FormInputNumber, { LabelWithInputNumberModel } from './FormInputNumber';
 import { InstanceForm } from './interface';
 import FormSwitch, { LabelWithSwitchModel } from './FormSwitch';
@@ -45,7 +45,7 @@ export default abstract class CreateForm<Props, State> extends React.Component<P
             </FormInputNumber>
         );
     }
-    protected createFormSelect(key: number|string, control: LabelWithHLSelectModel, form: WrappedFormUtils, formUid: string,formRef: InstanceForm) {
+    protected createFormSelect(key: number|string, control: LabelWithSelectModel, form: WrappedFormUtils, formUid: string,formRef: InstanceForm) {
         let { iAntdProps,rules,iFormProps } = control;
         return (
             <FormHLSelect

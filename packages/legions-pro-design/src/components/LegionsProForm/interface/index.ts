@@ -9,7 +9,7 @@
  */
 export type { IErrorView,IFormState,IGroup } from './form';
 export type { IFormSelectProps } from './select';
-export  { LabelWithHLSelectModel } from './select';
+export  { LabelWithSelectModel } from './select';
 export type { IFormInputProps } from '../FormInput';
 export  { LabelWithInputModel,LabelWithInputPartialModel } from '../FormInput';
 export type { IFormTextProps } from '../FormText';

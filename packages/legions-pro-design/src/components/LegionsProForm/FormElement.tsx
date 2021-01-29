@@ -8,6 +8,7 @@ import { findDOMNode } from 'react-dom';
 import { InstanceFormElement } from './interface/formElement';
 import { inject } from 'legions/store';
 import { ProFormStore } from '../store/pro.form';
+import { LabelWithSelectModel } from './interface/select';
 export interface IFormElementProps{
     form: WrappedFormUtils;
     elementKey: string;
@@ -166,9 +167,9 @@ export default class FormElement extends React.Component<IFormElementProps,{}>{
                 const selectSelectionDom = selectDom.getElementsByClassName('ant-select-open')
                 let controlsOptiosn = []
                 if (this.formStore) {
-                    const controls = this.formStore.controls.find((item) => item.iAntdProps.name === this.props.elementKey)
-                    if (controls && controls.iFormWithSelect) {
-                        controlsOptiosn = controls.iFormWithSelect.options||[]
+                    const controls = this.formStore.computedFormFields.find((item) => item.iAntdProps.name === this.props.elementKey)
+                    if (controls && controls instanceof LabelWithSelectModel) {
+                        controlsOptiosn = controls.iFormProps.options||[]
                     }
                 }
                 if (selectSelectionDom && selectSelectionDom.length<=0) { // 当下拉框展开选项数据时，不拦截默认下拉回车选中行为
@@ -196,9 +197,9 @@ export default class FormElement extends React.Component<IFormElementProps,{}>{
                 const selectSelectionDom = selectDom.getElementsByClassName('ant-select-open')
                 let controlsOptiosn = []
                 if (this.formStore) {
-                    const controls = this.formStore.controls.find((item) => item.iAntdProps.name === this.props.elementKey)
-                    if (controls && controls.iFormWithSelect) {
-                        controlsOptiosn = controls.iFormWithSelect.options||[]
+                    const controls = this.formStore.computedFormFields.find((item) => item.iAntdProps.name === this.props.elementKey)
+                    if (controls && controls instanceof LabelWithSelectModel) {
+                        controlsOptiosn = controls.iFormProps.options||[]
                     }
                 }
                 if (selectSelectionDom && selectSelectionDom.length) { // 当下拉框展开选项数据时，不拦截默认下拉回车选中行为，回车选中数据
@@ -233,7 +234,7 @@ export default class FormElement extends React.Component<IFormElementProps,{}>{
         const formStore = this.props.store.get(this.props.formUid)
         if(formStore){
             formStore.addAllElementKeys(this.props.elementKey)
-            if(!formStore.elementList.has(this.uid)){
+            if (!formStore.elementList.has(this.uid)) {
                 const el = document.querySelector(`.${this.uid}`);
                 if (el&&this.props.elType) {
                     const elChildren = el.getElementsByTagName(this.props.elType)

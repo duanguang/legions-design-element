@@ -2,7 +2,7 @@
 category: Components
 cols: 1
 type: 数据展示
-title: LegionsProTable
+title: ProTable
 subtitle: 高级表格
 ---
 

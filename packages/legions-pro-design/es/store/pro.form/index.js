@@ -124,6 +124,14 @@ var HlFormView = /** @class */ (function () {
          * @memberof HlFormView
          */
         this.controls = [];
+        this.formfields = observable.map();
+        /** 自定义表单元素配置项 */
+        this.customFormFields = observable.map();
+        /** 待执行渲染的组件元素队列
+         *
+         * 执行完后移出队列
+         */
+        this.renderNodeQueue = observable.map();
         /**
          * 需要进行回车，上下键操作的组件钩子列表keys
          *
@@ -143,14 +151,8 @@ var HlFormView = /** @class */ (function () {
          * @memberof HlFormView
          */
         this.errorListView = observable.map();
-        /**
-         *
-         * 表单数据状态
-         * @private
-         * @type {(ObservableMap<IFormState>| ObservableMap<string,IFormState>)}
-         * @memberof HlFormView
-         */
-        this.formState = observable.map();
+        this.formfields.observe(function (chan) {
+        });
     }
     Object.defineProperty(HlFormView.prototype, "computedErrorReactNodeList", {
         /**
@@ -172,6 +174,69 @@ var HlFormView = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
+    Object.defineProperty(HlFormView.prototype, "computedFormFields", {
+        /** 表单元素配置项
+         * 渲染formItem
+         */
+        get: function () {
+            var e_1, _a;
+            var value = [];
+            try {
+                for (var _b = __values(this.formfields.values()), _c = _b.next(); !_c.done; _c = _b.next()) {
+                    var item = _c.value;
+                    value.push(item);
+                }
+            }
+            catch (e_1_1) { e_1 = { error: e_1_1 }; }
+            finally {
+                try {
+                    if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
+                }
+                finally { if (e_1) throw e_1.error; }
+            }
+            return value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(HlFormView.prototype, "computedAllFormFields", {
+        /** 表单元素配置项
+         * 包含自定义render 里面子元素配置项
+         */
+        get: function () {
+            var e_2, _a, e_3, _b;
+            var value = [];
+            try {
+                for (var _c = __values(this.formfields.values()), _d = _c.next(); !_d.done; _d = _c.next()) {
+                    var item = _d.value;
+                    value.push(item);
+                }
+            }
+            catch (e_2_1) { e_2 = { error: e_2_1 }; }
+            finally {
+                try {
+                    if (_d && !_d.done && (_a = _c.return)) _a.call(_c);
+                }
+                finally { if (e_2) throw e_2.error; }
+            }
+            try {
+                for (var _e = __values(this.customFormFields.values()), _f = _e.next(); !_f.done; _f = _e.next()) {
+                    var item = _f.value;
+                    value.push(item);
+                }
+            }
+            catch (e_3_1) { e_3 = { error: e_3_1 }; }
+            finally {
+                try {
+                    if (_f && !_f.done && (_b = _e.return)) _b.call(_e);
+                }
+                finally { if (e_3) throw e_3.error; }
+            }
+            return value;
+        },
+        enumerable: false,
+        configurable: true
+    });
     Object.defineProperty(HlFormView.prototype, "computedErrorListView", {
         /**
          * 获取全部错误信息
@@ -180,7 +245,7 @@ var HlFormView = /** @class */ (function () {
          * @memberof HlFormView
          */
         get: function () {
-            var e_1, _a;
+            var e_4, _a;
             var keys = this.errorListView.keys();
             var data = [];
             try {
@@ -191,24 +256,19 @@ var HlFormView = /** @class */ (function () {
                     });
                 }
             }
-            catch (e_1_1) { e_1 = { error: e_1_1 }; }
+            catch (e_4_1) { e_4 = { error: e_4_1 }; }
             finally {
                 try {
                     if (keys_1_1 && !keys_1_1.done && (_a = keys_1.return)) _a.call(keys_1);
                 }
-                finally { if (e_1) throw e_1.error; }
+                finally { if (e_4) throw e_4.error; }
             }
-            /* keys.map((item) => {
-                    this.errorListView.get(item).map((entity) => {
-                        data.push(entity)
-                    })
-                }) */
             return data;
         },
         enumerable: false,
         configurable: true
     });
-    Object.defineProperty(HlFormView.prototype, "styleSize", {
+    Object.defineProperty(HlFormView.prototype, "computedFormSize", {
         /**
          * 表单展示风格 舒适,迷你,紧凑
          *
@@ -221,21 +281,16 @@ var HlFormView = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
-    Object.defineProperty(HlFormView.prototype, "computedFormState", {
-        /**
-         *
-         * 表单状态数据
-         * @readonly
-         * @memberof HlFormView
-         */
-        get: function () {
-            return this.formState;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    HlFormView.prototype.updateStyleSize = function (size) {
+    /** 修改表单尺寸 */
+    HlFormView.prototype.updateFormSize = function (size) {
+        var _this = this;
         this.size = size;
+        this.computedAllFormFields.map(function (item) {
+            var name = item.iAntdProps.name;
+            if (!_this.renderNodeQueue.has(name)) {
+                _this.renderNodeQueue.set(name, name);
+            }
+        });
     };
     /**
      *  添加错误信息和组件元素的关联关系，可通过组件name查出错误信息组件UID
@@ -320,58 +375,34 @@ var HlFormView = /** @class */ (function () {
             this.allElementList = this.allElementList.slice();
         }
     };
-    /**
-     * 初始化表单组件数据，组件内部方法，请勿调用
-     *
-     * @param {string} name
-     * @memberof HlFormView
-     */
-    HlFormView.prototype.initFormState = function (name, defaultValue) {
-        if (!this.formState.has(name)) {
-            var value = {
-                visible: true,
-                display: true,
-                disabled: false,
+    /** 查询表单元素字段配置信息 */
+    HlFormView.prototype.getFormItemField = function (key) {
+        if (this.formfields.has(key)) {
+            return {
+                value: this.formfields.get(key),
+                type: 'normal',
             };
-            if (defaultValue) {
-                value = __assign(__assign({}, value), defaultValue);
+        }
+        else if (this.customFormFields.has(key)) {
+            return {
+                value: this.customFormFields.get(key),
+                type: 'custom',
+            };
+        }
+        return null;
+    };
+    /** 初始化表单配置项元素 */
+    HlFormView.prototype._initFormItemField = function (key, value, type) {
+        if (type === void 0) { type = 'normal'; }
+        if (type === 'normal') {
+            if (!this.formfields.has(key)) {
+                this.formfields.set(key, value);
             }
-            this.formState.set(name, value);
         }
-    };
-    /**
-     *
-     * 设置表单组件状态
-     * @param {string} name
-     * @param {IFormState} state
-     * @memberof HlFormView
-     */
-    HlFormView.prototype.setFormState = function (name, state) {
-        if (this.formState.has(name)) {
-            this.formState.set(name, Object.assign(this.formState.get(name), state));
-        }
-        else {
-            var defaultObject = {
-                visible: true,
-                display: true,
-                disabled: false,
-            };
-            this.formState.set(name, Object.assign(defaultObject, state));
-        }
-    };
-    /**
-     *
-     * 设置表单组件状态
-     * @param {string} name
-     * @param {IFormState} state
-     * @memberof HlFormView
-     */
-    HlFormView.prototype.getFormState = function (name) {
-        if (this.formState.has(name)) {
-            return this.formState.get(name);
-        }
-        else {
-            return null;
+        else if (type === 'custom') {
+            if (!this.customFormFields.has(key)) {
+                this.customFormFields.set(key, value);
+            }
         }
     };
     __decorate([
@@ -401,6 +432,18 @@ var HlFormView = /** @class */ (function () {
     __decorate([
         observable,
         __metadata("design:type", Object)
+    ], HlFormView.prototype, "formfields", void 0);
+    __decorate([
+        observable,
+        __metadata("design:type", Object)
+    ], HlFormView.prototype, "customFormFields", void 0);
+    __decorate([
+        observable,
+        __metadata("design:type", Object)
+    ], HlFormView.prototype, "renderNodeQueue", void 0);
+    __decorate([
+        observable,
+        __metadata("design:type", Object)
     ], HlFormView.prototype, "allElementList", void 0);
     __decorate([
         observable,
@@ -410,10 +453,6 @@ var HlFormView = /** @class */ (function () {
         observable,
         __metadata("design:type", Object)
     ], HlFormView.prototype, "errorListView", void 0);
-    __decorate([
-        observable,
-        __metadata("design:type", Object)
-    ], HlFormView.prototype, "formState", void 0);
     __decorate([
         computed,
         __metadata("design:type", Object),
@@ -426,6 +465,16 @@ var HlFormView = /** @class */ (function () {
     ], HlFormView.prototype, "computedAllElementList", null);
     __decorate([
         computed,
+        __metadata("design:type", Array),
+        __metadata("design:paramtypes", [])
+    ], HlFormView.prototype, "computedFormFields", null);
+    __decorate([
+        computed,
+        __metadata("design:type", Array),
+        __metadata("design:paramtypes", [])
+    ], HlFormView.prototype, "computedAllFormFields", null);
+    __decorate([
+        computed,
         __metadata("design:type", Object),
         __metadata("design:paramtypes", [])
     ], HlFormView.prototype, "computedErrorListView", null);
@@ -433,18 +482,13 @@ var HlFormView = /** @class */ (function () {
         computed,
         __metadata("design:type", Object),
         __metadata("design:paramtypes", [])
-    ], HlFormView.prototype, "styleSize", null);
-    __decorate([
-        computed,
-        __metadata("design:type", Object),
-        __metadata("design:paramtypes", [])
-    ], HlFormView.prototype, "computedFormState", null);
+    ], HlFormView.prototype, "computedFormSize", null);
     __decorate([
         action,
         __metadata("design:type", Function),
         __metadata("design:paramtypes", [String]),
         __metadata("design:returntype", void 0)
-    ], HlFormView.prototype, "updateStyleSize", null);
+    ], HlFormView.prototype, "updateFormSize", null);
     __decorate([
         action,
         __metadata("design:type", Function),
@@ -472,21 +516,15 @@ var HlFormView = /** @class */ (function () {
     __decorate([
         action,
         __metadata("design:type", Function),
-        __metadata("design:paramtypes", [String, Object]),
-        __metadata("design:returntype", void 0)
-    ], HlFormView.prototype, "initFormState", null);
-    __decorate([
-        action,
-        __metadata("design:type", Function),
-        __metadata("design:paramtypes", [String, Object]),
-        __metadata("design:returntype", void 0)
-    ], HlFormView.prototype, "setFormState", null);
-    __decorate([
-        action,
-        __metadata("design:type", Function),
         __metadata("design:paramtypes", [String]),
         __metadata("design:returntype", Object)
-    ], HlFormView.prototype, "getFormState", null);
+    ], HlFormView.prototype, "getFormItemField", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [String, Object, String]),
+        __metadata("design:returntype", void 0)
+    ], HlFormView.prototype, "_initFormItemField", null);
     return HlFormView;
 }());
 var ErrorViewModel = /** @class */ (function () {
@@ -698,6 +736,7 @@ var HLFormLocalView = /** @class */ (function () {
                 }
                 var model = {
                     onBeforTranform: function (value) {
+                        options.callback && options.callback(value);
                         return {
                             responseData: value,
                             mappingEntity: autoQuery.mappingEntity,
@@ -976,7 +1015,7 @@ var ProFormStore = /** @class */ (function (_super) {
      * @memberof AbstractForm
      */
     ProFormStore.prototype.nextElement = function (formElementUid, formUid, nextElementName) {
-        var e_2, _a;
+        var e_5, _a;
         var store = this.get(formUid);
         if (store && store.enableEnterSwitch) {
             /*  const elementListKeys = store.elementList.keys() */
@@ -987,12 +1026,12 @@ var ProFormStore = /** @class */ (function (_super) {
                     elementListKeys_1.push(item);
                 }
             }
-            catch (e_2_1) { e_2 = { error: e_2_1 }; }
+            catch (e_5_1) { e_5 = { error: e_5_1 }; }
             finally {
                 try {
                     if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
                 }
-                finally { if (e_2) throw e_2.error; }
+                finally { if (e_5) throw e_5.error; }
             }
             /**  解决日期组件回车被阻止冒泡，导致回车键没法切换到下一个元素*/
             elementListKeys_1.map(function (item, index) {
@@ -1047,9 +1086,14 @@ var ProFormStore = /** @class */ (function (_super) {
         if (view && typeof view.InputDataModelClass === 'function') {
             // @ts-ignore
             view.InputDataModel = new view.InputDataModelClass(__assign(__assign({}, view.InputDataModel), formFields));
-            if (parentRef && parentRef.forceUpdate) {
-                parentRef.forceUpdate();
-            }
+            Object.keys(formFields).map(function (key) {
+                if (!view.renderNodeQueue.has(key)) {
+                    view.renderNodeQueue.set(key, key);
+                }
+            });
+            /* if (parentRef && parentRef.forceUpdate) {
+              parentRef.forceUpdate();
+            } */
         }
     };
     ProFormStore.meta = __assign({}, StoreBase.meta);

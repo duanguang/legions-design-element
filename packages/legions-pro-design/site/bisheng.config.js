@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-23 10:55:09
- * @LastEditTime: 2021-01-20 17:47:19
+ * @LastEditTime: 2021-01-28 13:58:43
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/site/bisheng.config.js
@@ -73,7 +73,7 @@ module.exports = {
   },
   webpackConfig(config) {
       config.resolve.alias = {
-        'legions-pro-design': path.join(process.cwd(), 'src/components/index'),
+        'legions-pro-design': path.join(process.cwd(), 'es/index'),
         /* 'antd/lib': path.join(process.cwd(), 'components'),
         'antd/es': path.join(process.cwd(), 'components'),
         antd: path.join(process.cwd(), 'index'), */

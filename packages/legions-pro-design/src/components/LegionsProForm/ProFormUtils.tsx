@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-08 15:19:23
- * @LastEditTime: 2021-01-26 15:15:25
+ * @LastEditTime: 2021-01-28 10:52:12
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProForm/ProFormUtils.tsx
@@ -15,7 +15,7 @@ import {
     WrappedFormUtils,
     ColProps
 } from '../interface/antd';
-import { IFormCheckboxProps, IFormDatePickerProps, IFormInputNumberProps, IFormInputProps, IFormMonthPickerProps, IFormRadioButtonProps, IFormRangePickerProps, IFormRenderProps, IFormSelectProps, IFormState, IFormSwitchProps, IFormTextProps, IFormUploadProps, InstanceForm, LabelWithCheckboxModel, LabelWithDatePickerModel, LabelWithHLSelectModel, LabelWithInputModel, LabelWithInputNumberModel, LabelWithMonthPickerModel, LabelWithRadioButtonModel, LabelWithRangePickerModel, LabelWithRenderModel, LabelWithSwitchModel, LabelWithTextModel, LabelWithUploadModel } from './interface';
+import { IFormCheckboxProps, IFormDatePickerProps, IFormInputNumberProps, IFormInputProps, IFormMonthPickerProps, IFormRadioButtonProps, IFormRangePickerProps, IFormRenderProps, IFormSelectProps, IFormState, IFormSwitchProps, IFormTextProps, IFormUploadProps, InstanceForm, LabelWithCheckboxModel, LabelWithDatePickerModel, LabelWithSelectModel, LabelWithInputModel, LabelWithInputNumberModel, LabelWithMonthPickerModel, LabelWithRadioButtonModel, LabelWithRangePickerModel, LabelWithRenderModel, LabelWithSwitchModel, LabelWithTextModel, LabelWithUploadModel } from './interface';
 import FormInput from './FormInput';
 import FormInputNumber from './FormInputNumber';
 import FormHLSelect from './FormHLSelect';
@@ -63,11 +63,26 @@ interface IRenderComponentParams<T> {
 interface IProFormUtils {
     componentModel: LabelWithInputModel | LabelWithInputNumberModel | LabelWithDatePickerModel | LabelWithMonthPickerModel |
     LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel |
-    LabelWithRadioButtonModel | LabelWithTextModel | LabelWithHLSelectModel
+    LabelWithRadioButtonModel | LabelWithTextModel | LabelWithSelectModel
+}
+export const size = {
+    'default': {
+        formItemLayOut: 'form-item-default',
+    },'small': {
+        formItemLayOut: 'form-item-small',
+    },'table': {
+        formItemLayOut: 'form-item-table',
+    }
+}
+export const formClasses = {
+     itemRowHeight : `form-item-row-height`,
+     tableError :'table-error',
+    tableNotEror: 'table-not-error',
+    itemDefaultError:'form-item-default-error',
 }
 export class ProFormUtils<Store,global = {}>{
     static LabelWithInputNumberModel = LabelWithInputNumberModel;
-    static LabelWithHLSelectModel = LabelWithHLSelectModel;
+    static LabelWithHLSelectModel = LabelWithSelectModel;
     static LabelWithRenderModel = LabelWithRenderModel;
     static LabelWithDatePickerModel = LabelWithDatePickerModel;
     static LabelWithMonthPickerModel = LabelWithMonthPickerModel;
@@ -77,6 +92,17 @@ export class ProFormUtils<Store,global = {}>{
     static LabelWithRadioButtonModel = LabelWithRadioButtonModel;
     static LabelWithTextModel = LabelWithTextModel;
     static LabelWithInputModel = LabelWithInputModel;
+    static isFormHasError(getFieldsError: () => any) {
+        let error = getFieldsError && getFieldsError()
+        let has = false
+        for (let key in error) {
+            if (error[key]) {
+                has = true
+                break;
+            }
+        }
+        return has
+    }
     readonly global: global = null
     readonly mobxStore: Store = null
     constructor(options?: {
@@ -133,9 +159,9 @@ export class ProFormUtils<Store,global = {}>{
             storeView._initFormItemField(key,iFormItemProps,'custom')
         }
     }
-    renderSelectConfig(options: IRenderComponentParams<IFormSelectProps>): LabelWithHLSelectModel {
+    renderSelectConfig(options: IRenderComponentParams<IFormSelectProps>): LabelWithSelectModel {
         this.chkRenderConfig(options.iAntdProps.id)
-        this[options.iAntdProps.id] = new LabelWithHLSelectModel(options.iAntdProps,options.iFormProps,options.rules || [])
+        this[options.iAntdProps.id] = new LabelWithSelectModel(options.iAntdProps,options.iFormProps,options.rules || [])
         return this[options.iAntdProps.id];
     }
     renderInputConfig<T extends IFormInputProps>(options: IRenderComponentParams<T>): LabelWithInputModel {
@@ -192,6 +218,7 @@ export class ProFormUtils<Store,global = {}>{
         this.chkRenderConfig(options.iAntdProps.id)
         return this[options.iAntdProps.id] = new LabelWithCheckboxModel(options.iAntdProps,options.iFormProps,options.rules || []);
     }
+    
     /**
      * 生成一个表单基础组件
      * 应用场景一般自定义组件由很多比如input,select等组成，可以通过此方法快速创建一个组件
@@ -216,7 +243,28 @@ export class ProFormUtils<Store,global = {}>{
             if (item) {
                 control = item.value
             }
+           
+            const formSize = storeView.computedFormSize;
+            const hasError = ProFormUtils.isFormHasError(form.getFieldsError)
+            const error = form.getFieldError(control.iAntdProps.id)
+            control['iFormProps']['size'] = formSize
+            if (control.iAntdProps.className) {
+                control.iAntdProps.className = control.iAntdProps.className && control.iAntdProps.className.replace(size['table'].formItemLayOut,'').replace(formClasses.tableError,'').replace(formClasses.tableNotEror,'').replace(formClasses.itemRowHeight,'')
+                control.iAntdProps.className = control.iAntdProps.className && control.iAntdProps.className.replace(size['small'].formItemLayOut,'').replace(formClasses.itemRowHeight,'')
+                control.iAntdProps.className = control.iAntdProps.className && control.iAntdProps.className.replace(size['default'].formItemLayOut,'').replace(formClasses.itemDefaultError,'')
+            }
+            if (formSize === 'table') {
+                control.iAntdProps.className = `${control.iAntdProps.className || ''} ${size[formSize].formItemLayOut} ${error ? formClasses.tableError : formClasses.tableNotEror} ${formClasses.itemRowHeight}` /**  表单间距调小*/
+                control['iFormProps']['size'] = 'small'
+            }
+            else if (formSize === 'small') {
+                control.iAntdProps.className = `${control.iAntdProps.className || ''} ${size[formSize].formItemLayOut} ${formClasses.itemRowHeight}`
+            }
+            else {
+                control.iAntdProps.className = `${control.iAntdProps.className || ''} ${size[formSize].formItemLayOut} ${hasError ? '' : size[formSize].formItemLayOut} ${error ? formClasses.itemDefaultError : ''}` /**  表单间距调小*/
+            }
         }
+        
         
         /* console.log(control,'controlcus'); */
         if (control.iFormProps.visible===false) {
@@ -250,7 +298,7 @@ export class ProFormUtils<Store,global = {}>{
                 </FormInputNumber>
             );
         }
-        else if (control instanceof LabelWithHLSelectModel) {
+        else if (control instanceof LabelWithSelectModel) {
             let { iAntdProps,rules,iFormProps } = control;
             return (
                 <FormHLSelect

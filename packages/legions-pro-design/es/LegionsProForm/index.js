@@ -5,23 +5,21 @@
   */
 import React, { Component } from 'react';
 import { Tooltip, Input, Row, Form, Icon, message, DatePicker, Select, InputNumber, Switch, Radio, Checkbox, Anchor, Col, Dropdown, Menu, Affix } from 'antd';
-import LegionsProSelect, { AbstractSelect } from '../LegionsProSelect';
 import { getStringLen } from 'legions-utils-tool/format.string';
-import { debounce } from 'legions-utils-tool/debounce';
 import { shortHash } from 'legions-lunar/object-hash';
 import { bind, observer } from 'legions/store-react';
 import { findDOMNode } from 'react-dom';
 import { ProFormStore } from '../store/pro.form';
 import LegionsProErrorReportShow from '../LegionsProErrorReportShow';
-import Styles from './style/index.modules.less';
 import classNames from 'classnames';
 import LegionsProUpload from '../LegionsProUpload';
+import LegionsProSelect from '../LegionsProSelect';
 import { off, on } from 'legions-utils-tool/dom';
 import { legionsThirdpartyPlugin } from 'legions-thirdparty-plugin';
 import './style/index.less';
+import { debounce } from 'legions-utils-tool/debounce';
 import { toJS, runInAction } from 'mobx';
 import LegionsProDragger from '../LegionsProDragger';
-import get from 'lodash/get';
 import { BaseFormFields, HlLabeledValue } from 'legions-lunar/model';
 import { LoggerManager } from 'legions-lunar/legion.plugin.sdk';
 import { getInjector } from 'legions/store';
@@ -141,26 +139,26 @@ var AbstractForm = /** @class */ (function (_super) {
         }
         return has;
     };
-    return AbstractForm;
-}(Component));
-var AbstractSelectForm = /** @class */ (function (_super) {
-    __extends(AbstractSelectForm, _super);
-    function AbstractSelectForm() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    AbstractSelectForm.prototype.isFormHasError = function (getFieldsError) {
-        var error = getFieldsError && getFieldsError();
-        var has = false;
-        for (var key in error) {
-            if (error[key]) {
-                has = true;
-                break;
+    AbstractForm.prototype.didMountClearNodeQueue = function (formref, uid, eleId) {
+        if (formref) {
+            var viewStore = formref.store.get(uid);
+            if (viewStore.renderNodeQueue.has(eleId)) {
+                viewStore.renderNodeQueue.delete(eleId);
             }
         }
-        return has;
     };
-    return AbstractSelectForm;
-}(AbstractSelect));
+    AbstractForm.prototype.isShouldComponentUpdate = function (formref, uid, eleId) {
+        if (formref) {
+            var viewStore = formref.store.get(uid);
+            if (viewStore.renderNodeQueue.has(eleId)) {
+                viewStore.renderNodeQueue.delete(eleId);
+                return true;
+            }
+        }
+        return false;
+    };
+    return AbstractForm;
+}(Component));
 
 function formatNumber(value) {
     value += '';
@@ -209,6 +207,15 @@ var LegionsProNumericInput = /** @class */ (function (_super) {
     };
     return LegionsProNumericInput;
 }(Component));
+
+var LabelWithSelectModel = /** @class */ (function () {
+    function LabelWithSelectModel(iAntdProps, iFormProps, rules) {
+        this.iAntdProps = iAntdProps;
+        this.iFormProps = iFormProps;
+        this.rules = rules;
+    }
+    return LabelWithSelectModel;
+}());
 
 var KeydownEnum;
 (function (KeydownEnum) {
@@ -327,9 +334,9 @@ var FormElement = /** @class */ (function (_super) {
             if (selectDom) {
                 var selectSelectionDom = selectDom.getElementsByClassName('ant-select-open');
                 if (this.formStore) {
-                    var controls = this.formStore.controls.find(function (item) { return item.iAntdProps.name === _this.props.elementKey; });
-                    if (controls && controls.iFormWithSelect) {
-                        controls.iFormWithSelect.options || [];
+                    var controls = this.formStore.computedFormFields.find(function (item) { return item.iAntdProps.name === _this.props.elementKey; });
+                    if (controls && controls instanceof LabelWithSelectModel) {
+                        controls.iFormProps.options || [];
                     }
                 }
                 if (selectSelectionDom && selectSelectionDom.length <= 0) { // 当下拉框展开选项数据时，不拦截默认下拉回车选中行为
@@ -357,9 +364,9 @@ var FormElement = /** @class */ (function (_super) {
             if (selectDom) {
                 var selectSelectionDom = selectDom.getElementsByClassName('ant-select-open');
                 if (this.formStore) {
-                    var controls = this.formStore.controls.find(function (item) { return item.iAntdProps.name === _this.props.elementKey; });
-                    if (controls && controls.iFormWithSelect) {
-                        controls.iFormWithSelect.options || [];
+                    var controls = this.formStore.computedFormFields.find(function (item) { return item.iAntdProps.name === _this.props.elementKey; });
+                    if (controls && controls instanceof LabelWithSelectModel) {
+                        controls.iFormProps.options || [];
                     }
                 }
                 if (selectSelectionDom && selectSelectionDom.length) { // 当下拉框展开选项数据时，不拦截默认下拉回车选中行为，回车选中数据
@@ -439,9 +446,9 @@ var FormElement = /** @class */ (function (_super) {
 var FormItem = Form.Item;
 var TextArea = Input.TextArea;
 var LabelWithInputModel = /** @class */ (function () {
-    function LabelWithInputModel(iAntdProps, iFormInput, rules) {
+    function LabelWithInputModel(iAntdProps, iFormProps, rules) {
         this.iAntdProps = iAntdProps;
-        this.iFormInput = iFormInput;
+        this.iFormProps = iFormProps;
         this.rules = rules;
     }
     return LabelWithInputModel;
@@ -449,43 +456,44 @@ var LabelWithInputModel = /** @class */ (function () {
 var TooltipInput = /** @class */ (function (_super) {
     __extends(TooltipInput, _super);
     function TooltipInput(props) {
-        var _this = _super.call(this, props) || this;
-        /* onChanges = (() => {
-            let updb = this.props.onChange;
-            if (200 >= 0) {
-                updb = debounces((even,value) => {
-                    const event =
-                    even.target = {value}
-                console.log(even,value,even.target)
-                this.props.onChange&&this.props.onChange(value);
-              }, 200);
-            }
-            return updb;
-        })(); */
-        _this.onChanges = debounce(function (even, value) {
-            // @ts-ignore
-            _this.props.onChange && _this.props.onChange(value);
-        }, 200);
-        _this.state = {
-            value: _this.props.form.getFieldValue(_this.props.formItemName),
-        };
-        return _this;
+        return _super.call(this, props) || this;
     }
+    Object.defineProperty(TooltipInput.prototype, "store", {
+        get: function () {
+            if (this.props.FormInputRef && this.props.formUid) {
+                return this.props.FormInputRef.store.get(this.props.formUid);
+            }
+            return null;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    /* onChanges = (() => {
+        let updb = this.props.onChange;
+        if (200 >= 0) {
+            updb = debounces((even,value) => {
+                const event =
+                even.target = {value}
+            console.log(even,value,even.target)
+            this.props.onChange&&this.props.onChange(value);
+          }, 200);
+        }
+        return updb;
+    })(); */
+    /* onChanges = debounce((even,value) => {
+        // @ts-ignore
+        this.props.onChange && this.props.onChange(value);
+    },200); */
     TooltipInput.prototype.handleOnChange = function (even) {
         var value = even.target.value;
-        this.setState({ value: value });
+        this.props.onChange && this.props.onChange(value);
         //@ts-ignore
-        this.onChanges(even, value);
-    };
-    TooltipInput.prototype.componentWillReceiveProps = function (nextProps) {
-        if (this.props.value !== nextProps.value && typeof nextProps.value !== 'object') {
-            this.setState({ value: nextProps.value });
-        }
+        /* this.onChanges(even,value); */
     };
     TooltipInput.prototype.render = function () {
         var _a;
         var _this = this;
-        var _b = this.props, form = _b.form, name = _b.name, valueLen = _b.valueLen, FormInputRef = _b.FormInputRef, inputType = _b.inputType, type = _b.type, props = __rest(_b, ["form", "name", "valueLen", "FormInputRef", "inputType", "type"]);
+        var _b = this.props, form = _b.form, name = _b.name, valueLen = _b.valueLen, FormInputRef = _b.FormInputRef, inputType = _b.inputType, type = _b.type, formUid = _b.formUid, formItemName = _b.formItemName, onIgnoreError = _b.onIgnoreError, props = __rest(_b, ["form", "name", "valueLen", "FormInputRef", "inputType", "type", "formUid", "formItemName", "onIgnoreError"]);
         var isShowErrorView = false;
         if (FormInputRef && this.props.formUid) {
             var viewStore = FormInputRef.store.get(this.props.formUid);
@@ -497,21 +505,18 @@ var TooltipInput = /** @class */ (function (_super) {
         var getFieldDecorator = form.getFieldDecorator, getFieldsError = form.getFieldsError, setFieldsValue = form.setFieldsValue;
         var iconStyle = {};
         isShowErrorView && (iconStyle = { marginRight: '18px' });
-        var theProps = __assign(__assign({}, props), this.state);
+        var theProps = __assign({}, props);
         theProps.onChange = this.handleOnChange.bind(this);
         var maxlen = parseInt(this.props.maxLength);
         return (React.createElement(LegionsProErrorReportShow, { code: this.props.formItemName, formUid: this.props.formUid, onIgnoreError: this.props.onIgnoreError, errorClassName: classNames((_a = {},
-                _a["" + Styles.tipIconInput] = true,
-                _a["" + Styles['tipIcon-right-0']] = (this.state.value && !this.props.disabled) ? true : false,
+                _a["tip-icon-input"] = true,
+                _a["tip-icon-right-0"] = (this.props.value && !this.props.disabled) ? true : false,
                 _a)) }, this.props.inputType === 'number' ? React.createElement(LegionsProNumericInput, __assign({}, theProps)) : React.createElement(Tooltip
         /* trigger={'click'} */
         , { 
             /* trigger={'click'} */
-            mouseEnterDelay: 1, title: valueLen >= maxlen - 10 ? this.state.value : '', placement: "topLeft", overlayStyle: { wordWrap: 'break-word' } },
-            React.createElement(Input, __assign({}, theProps, { type: type, suffix: (React.createElement("div", null, (this.state.value && !this.props.disabled) && React.createElement(Icon, { style: iconStyle, type: "close-circle", onClick: function () {
-                        _this.setState({
-                            value: '',
-                        });
+            mouseEnterDelay: 1, title: valueLen >= maxlen - 10 ? this.props.value : '', placement: "topLeft", overlayStyle: { wordWrap: 'break-word' } },
+            React.createElement(Input, __assign({}, theProps, { type: type, suffix: (React.createElement("div", null, (this.props.value && !this.props.disabled) && React.createElement(Icon, { style: iconStyle, type: "close-circle", onClick: function () {
                         var fileName = {};
                         fileName[_this.props.formItemName] = '';
                         setFieldsValue(fileName);
@@ -537,6 +542,9 @@ var FormInput = /** @class */ (function (_super) {
         enumerable: false,
         configurable: true
     });
+    FormInput.prototype.componentDidMount = function () {
+        this.didMountClearNodeQueue(this.FormInputRef, this.props.formUid, this.props.iAntdProps.name);
+    };
     FormInput.prototype.onChange = function (even) {
         var value = typeof even === 'object' ? even.target.value : even;
         this.props.iFormInput.onChange && this.props.iFormInput.onChange(value);
@@ -563,11 +571,14 @@ var FormInput = /** @class */ (function (_super) {
         this.props.iFormInput && this.props.iFormInput.onFocus && this.props.iFormInput.onFocus(e);
     };
     FormInput.prototype.onBlur = function (even) {
-        if (this.props.form && this.store && this.store.styleSize === 'table') {
+        if (this.props.form && this.store && this.store.computedFormSize === 'table') {
             var error = this.props.form.getFieldError(this.props.iAntdProps.name);
             error && message.error(error, 5);
         }
         this.props.iFormInput.onBlur && this.props.iFormInput.onBlur(even);
+    };
+    FormInput.prototype.shouldComponentUpdate = function (nextProps, nextState, context) {
+        return this.isShouldComponentUpdate(this.FormInputRef, this.props.formUid, nextProps.iAntdProps.name);
     };
     FormInput.prototype.render = function () {
         var _this = this;
@@ -576,7 +587,7 @@ var FormInput = /** @class */ (function (_super) {
         var disabled = iFormInput && iFormInput.disabled;
         var addonAfter = iFormInput && iFormInput.addonAfter;
         var addonBefore = iFormInput && iFormInput.addonBefore;
-        var label = iFormInput.label, labelCol = iFormInput.labelCol, wrapperCol = iFormInput.wrapperCol, render = iFormInput.render, props = __rest(iFormInput, ["label", "labelCol", "wrapperCol", "render"]);
+        var label = iFormInput.label, labelCol = iFormInput.labelCol, wrapperCol = iFormInput.wrapperCol, visible = iFormInput.visible, display = iFormInput.display, render = iFormInput.render, props = __rest(iFormInput, ["label", "labelCol", "wrapperCol", "visible", "display", "render"]);
         var valueLen = getStringLen(form.getFieldValue(iAntdProps.name));
         var maxLength = iFormInput.maxLength ? parseInt(iFormInput.maxLength) : 50;
         var placeholder = iAntdProps.placeholder || '';
@@ -586,7 +597,7 @@ var FormInput = /** @class */ (function (_super) {
         }
         return (React.createElement(FormElement, { form: form, onReady: function (value) {
                 _this.FormInputRef = value;
-            }, elType: iFormInput.type === 'textarea' ? 'textarea' : 'input', elementKey: iAntdProps.name, nextElementKey: iAntdProps.nextElementKey, formUid: this.props.formUid },
+            }, key: "FormElement" + iAntdProps.name, elType: iFormInput.type === 'textarea' ? 'textarea' : 'input', elementKey: iAntdProps.name, nextElementKey: iAntdProps.nextElementKey, formUid: this.props.formUid },
             React.createElement(FormItem, __assign({}, formItemProps, { extra: iFormInput.extra, className: iAntdProps.className, label: iFormInput.label, labelCol: iFormInput.labelCol, wrapperCol: iFormInput.wrapperCol }),
                 getFieldDecorator(iAntdProps.name, {
                     rules: rules,
@@ -595,8 +606,10 @@ var FormInput = /** @class */ (function (_super) {
                     },
                 })(iFormInput.type === 'textarea' ?
                     // @ts-ignore
-                    React.createElement(TextArea, __assign({}, props, { autosize: iFormInput.autosize === void 0 ? { minRows: 1, maxRows: 2 } : iFormInput.autosize, onPressEnter: this.onPressEnter.bind(this), title: form.getFieldValue(iAntdProps.name), onFocus: this.onFocus.bind(this), maxLength: iFormInput.maxLength ? parseInt(iFormInput.maxLength) : 200, placeholder: iFormInput.disabled ? '' : placeholder })) :
-                    React.createElement(TooltipInput, __assign({ type: iAntdProps.type }, props, { onIgnoreError: this.props.formStore && this.props.formStore.onIgnoreError, formUid: this.props.formUid, FormInputRef: this.FormInputRef, value: form.getFieldValue(iAntdProps.name), maxLength: maxLength.toString(), valueLen: valueLen, formItemName: iAntdProps.name, form: form, inputType: iFormInput.type, onPressEnter: this.onPressEnter.bind(this), disabled: disabled, placeholder: iFormInput.disabled ? '' : placeholder, onFocus: this.onFocus.bind(this), onChange: this.onChange.bind(this), addonAfter: addonAfter, onBlur: this.onBlur.bind(this), addonBefore: addonBefore }))),
+                    React.createElement(TextArea, __assign({}, props, { key: iAntdProps.name, autosize: iFormInput.autosize === void 0 ? { minRows: 1, maxRows: 2 } : iFormInput.autosize, onPressEnter: this.onPressEnter.bind(this), title: form.getFieldValue(iAntdProps.name), onFocus: this.onFocus.bind(this), maxLength: iFormInput.maxLength ? parseInt(iFormInput.maxLength) : 200, placeholder: iFormInput.disabled ? '' : placeholder })) :
+                    React.createElement(TooltipInput, __assign({}, props, { onIgnoreError: this.props.formStore && this.props.formStore.onIgnoreError, formUid: this.props.formUid, FormInputRef: this.FormInputRef, 
+                        /* value={form.getFieldValue(iAntdProps.name)} */
+                        maxLength: maxLength.toString(), valueLen: valueLen, formItemName: iAntdProps.name, form: form, key: iAntdProps.name, inputType: iFormInput.type, onPressEnter: this.onPressEnter.bind(this), disabled: disabled, placeholder: iFormInput.disabled ? '' : placeholder, onFocus: this.onFocus.bind(this), onChange: this.onChange.bind(this), addonAfter: addonAfter, onBlur: this.onBlur.bind(this), addonBefore: addonBefore }))),
                 children)));
     };
     return FormInput;
@@ -619,9 +632,9 @@ var LabelWithRenderModel = /** @class */ (function () {
      * @param {IAntdRule[]} [rules]
      * @memberof LabelWithRenderModel
      */
-    function LabelWithRenderModel(iAntdProps, iFormRender, rules) {
+    function LabelWithRenderModel(iAntdProps, iFormProps, rules) {
         this.iAntdProps = iAntdProps;
-        this.iFormRender = iFormRender;
+        this.iFormProps = iFormProps;
         this.rules = rules;
     }
     return LabelWithRenderModel;
@@ -641,9 +654,9 @@ var FormRender = /** @class */ (function (_super) {
 
 var FormItem$1 = Form.Item;
 var LabelWithDatePickerModel = /** @class */ (function () {
-    function LabelWithDatePickerModel(iAntdProps, iFormDatePicker, rules) {
+    function LabelWithDatePickerModel(iAntdProps, iFormProps, rules) {
         this.iAntdProps = iAntdProps;
-        this.iFormDatePicker = iFormDatePicker;
+        this.iFormProps = iFormProps;
         this.rules = rules;
     }
     return LabelWithDatePickerModel;
@@ -664,6 +677,12 @@ var FormDatePicker = /** @class */ (function (_super) {
             }
         }
         this.props.iFormDatePicker && this.props.iFormDatePicker.onOpenChange && this.props.iFormDatePicker.onOpenChange(status);
+    };
+    FormDatePicker.prototype.componentDidMount = function () {
+        this.didMountClearNodeQueue(this.FormDatePickerRef, this.props.formUid, this.props.iAntdProps.name);
+    };
+    FormDatePicker.prototype.shouldComponentUpdate = function (nextProps, nextState, context) {
+        return this.isShouldComponentUpdate(this.FormDatePickerRef, this.props.formUid, nextProps.iAntdProps.name);
     };
     FormDatePicker.prototype.render = function () {
         var _this = this;
@@ -687,9 +706,9 @@ var FormDatePicker = /** @class */ (function (_super) {
 var FormItem$2 = Form.Item;
 var MonthPicker = DatePicker.MonthPicker;
 var LabelWithMonthPickerModel = /** @class */ (function () {
-    function LabelWithMonthPickerModel(iAntdProps, iFormMonthPicker, rules) {
+    function LabelWithMonthPickerModel(iAntdProps, iFormProps, rules) {
         this.iAntdProps = iAntdProps;
-        this.iFormMonthPicker = iFormMonthPicker;
+        this.iFormProps = iFormProps;
         this.rules = rules;
     }
     return LabelWithMonthPickerModel;
@@ -707,6 +726,12 @@ var FormMonthPicker = /** @class */ (function (_super) {
             store.focusUid = this.FormMonthPickerRef.uid;
         }
         this.props.iFormMonthPicker && this.props.iFormMonthPicker.onOpenChange && this.props.iFormMonthPicker.onOpenChange(status);
+    };
+    FormMonthPicker.prototype.componentDidMount = function () {
+        this.didMountClearNodeQueue(this.FormMonthPickerRef, this.props.formUid, this.props.iAntdProps.name);
+    };
+    FormMonthPicker.prototype.shouldComponentUpdate = function (nextProps, nextState, context) {
+        return this.isShouldComponentUpdate(this.FormMonthPickerRef, this.props.formUid, nextProps.iAntdProps.name);
     };
     FormMonthPicker.prototype.render = function () {
         var _this = this;
@@ -730,9 +755,9 @@ var FormMonthPicker = /** @class */ (function (_super) {
 var FormItem$3 = Form.Item;
 var RangePicker = DatePicker.RangePicker;
 var LabelWithRangePickerModel = /** @class */ (function () {
-    function LabelWithRangePickerModel(iAntdProps, iFormRangePicker, rules) {
+    function LabelWithRangePickerModel(iAntdProps, iFormProps, rules) {
         this.iAntdProps = iAntdProps;
-        this.iFormRangePicker = iFormRangePicker;
+        this.iFormProps = iFormProps;
         this.rules = rules;
     }
     return LabelWithRangePickerModel;
@@ -750,6 +775,12 @@ var FormRangePicker = /** @class */ (function (_super) {
             store.focusUid = this.FormRangePickerRef.uid;
         }
         this.props.iFormRangePicker && this.props.iFormRangePicker.onOpenChange && this.props.iFormRangePicker.onOpenChange(status);
+    };
+    FormRangePicker.prototype.componentDidMount = function () {
+        this.didMountClearNodeQueue(this.FormRangePickerRef, this.props.formUid, this.props.iAntdProps.name);
+    };
+    FormRangePicker.prototype.shouldComponentUpdate = function (nextProps, nextState, context) {
+        return this.isShouldComponentUpdate(this.FormRangePickerRef, this.props.formUid, nextProps.iAntdProps.name);
     };
     FormRangePicker.prototype.render = function () {
         var _this = this;
@@ -772,9 +803,9 @@ var FormRangePicker = /** @class */ (function (_super) {
 
 var FormItem$4 = Form.Item;
 var LabelWithUploadModel = /** @class */ (function () {
-    function LabelWithUploadModel(iAntdProps, iFormWithUpload, rules) {
+    function LabelWithUploadModel(iAntdProps, iFormProps, rules) {
         this.iAntdProps = iAntdProps;
-        this.iFormWithUpload = iFormWithUpload;
+        this.iFormProps = iFormProps;
         this.rules = rules;
     }
     return LabelWithUploadModel;
@@ -797,7 +828,11 @@ var FormUpload = /** @class */ (function (_super) {
         };
         return _this;
     }
-    FormUpload.prototype.draggerThem = function () {
+    FormUpload.prototype.componentDidMount = function () {
+        this.didMountClearNodeQueue(this.FormUploadRef, this.props.formUid, this.props.iAntdProps.name);
+    };
+    FormUpload.prototype.shouldComponentUpdate = function (nextProps, nextState, context) {
+        return this.isShouldComponentUpdate(this.FormUploadRef, this.props.formUid, nextProps.iAntdProps.name);
     };
     FormUpload.prototype.render = function () {
         var _this = this;
@@ -838,7 +873,7 @@ var HLSelectWrapError = /** @class */ (function (_super) {
                 isShowErrorView = viewStore.errorListView.has(uid);
             }
         }
-        return (React.createElement(LegionsProErrorReportShow, { formUid: this.props.formUid, code: this.props.formItemName, errorClassName: Styles.tipIcon, onIgnoreError: this.props.onIgnoreError, className: isShowErrorView ? 'errorView' : '' },
+        return (React.createElement(LegionsProErrorReportShow, { formUid: this.props.formUid, code: this.props.formItemName, errorClassName: 'tip-icon', onIgnoreError: this.props.onIgnoreError, className: isShowErrorView ? 'errorView' : '' },
             React.createElement(LegionsProSelect, __assign({ style: { width: '100%' }, placeholder: this.props.placeholder }, props))));
     };
     return HLSelectWrapError;
@@ -913,6 +948,7 @@ var FormHLSelect = /** @class */ (function (_super) {
     };
     FormHLSelect.prototype.componentDidMount = function () {
         this.bindCopyKeydown();
+        this.didMountClearNodeQueue(this.FormHLSelectRef, this.props.formUid, this.props.iAntdProps.name);
     };
     FormHLSelect.prototype.componentWillUnmount = function () {
         var el = document.querySelector("." + this.FormHLSelectRef.uid);
@@ -1036,6 +1072,9 @@ var FormHLSelect = /** @class */ (function (_super) {
             this.setState({ styleClassFocus: '' });
         }
     };
+    FormHLSelect.prototype.shouldComponentUpdate = function (nextProps, nextState, context) {
+        return this.isShouldComponentUpdate(this.FormHLSelectRef, this.props.formUid, nextProps.iAntdProps.name);
+    };
     FormHLSelect.prototype.render = function () {
         var _this = this;
         var _a = this.props, form = _a.form, iAntdProps = _a.iAntdProps, iFormWithSelect = _a.iFormWithSelect, children = _a.children, rules = _a.rules, formUid = _a.formUid;
@@ -1060,13 +1099,13 @@ var FormHLSelect = /** @class */ (function (_super) {
                 children)));
     };
     return FormHLSelect;
-}(AbstractSelectForm));
+}(AbstractForm));
 
 var FormItem$6 = Form.Item;
 var LabelWithInputNumberModel = /** @class */ (function () {
-    function LabelWithInputNumberModel(iAntdProps, iFormInput, rules) {
+    function LabelWithInputNumberModel(iAntdProps, iFormProps, rules) {
         this.iAntdProps = iAntdProps;
-        this.iFormInput = iFormInput;
+        this.iFormProps = iFormProps;
         this.rules = rules;
     }
     return LabelWithInputNumberModel;
@@ -1085,11 +1124,17 @@ var FormInputNumber = /** @class */ (function (_super) {
         }
         this.props.iFormInput && this.props.iFormInput.onFocus && this.props.iFormInput.onFocus(e);
     };
+    FormInputNumber.prototype.componentDidMount = function () {
+        this.didMountClearNodeQueue(this.FormInputNumberRef, this.props.formUid, this.props.iAntdProps.name);
+    };
+    FormInputNumber.prototype.shouldComponentUpdate = function (nextProps, nextState, context) {
+        return this.isShouldComponentUpdate(this.FormInputNumberRef, this.props.formUid, nextProps.iAntdProps.name);
+    };
     FormInputNumber.prototype.render = function () {
         var _this = this;
         var _a = this.props, form = _a.form, iAntdProps = _a.iAntdProps, iFormInput = _a.iFormInput, children = _a.children, rules = _a.rules;
         var getFieldDecorator = form.getFieldDecorator, getFieldsError = form.getFieldsError;
-        var label = iFormInput.label, labelCol = iFormInput.labelCol, wrapperCol = iFormInput.wrapperCol, render = iFormInput.render, props = __rest(iFormInput, ["label", "labelCol", "wrapperCol", "render"]);
+        var label = iFormInput.label, labelCol = iFormInput.labelCol, wrapperCol = iFormInput.wrapperCol, visible = iFormInput.visible, render = iFormInput.render, props = __rest(iFormInput, ["label", "labelCol", "wrapperCol", "visible", "render"]);
         var formItemProps = {};
         if ('colon' in props) {
             formItemProps['colon'] = props.colon;
@@ -1115,9 +1160,9 @@ var FormInputNumber = /** @class */ (function (_super) {
 
 var FormItem$7 = Form.Item;
 var LabelWithSwitchModel = /** @class */ (function () {
-    function LabelWithSwitchModel(iAntdProps, iFormWithSwitch, rules) {
+    function LabelWithSwitchModel(iAntdProps, iFormProps, rules) {
         this.iAntdProps = iAntdProps;
-        this.iFormWithSwitch = iFormWithSwitch;
+        this.iFormProps = iFormProps;
         this.rules = rules;
     }
     return LabelWithSwitchModel;
@@ -1126,10 +1171,16 @@ var FormSwitch = /** @class */ (function (_super) {
     __extends(FormSwitch, _super);
     function FormSwitch(props) {
         var _this = _super.call(this, props) || this;
-        _this.FormUploadRef = null;
+        _this.FormSwitchRef = null;
         _this.state = {};
         return _this;
     }
+    FormSwitch.prototype.componentDidMount = function () {
+        this.didMountClearNodeQueue(this.FormSwitchRef, this.props.formUid, this.props.iAntdProps.name);
+    };
+    FormSwitch.prototype.shouldComponentUpdate = function (nextProps, nextState, context) {
+        return this.isShouldComponentUpdate(this.FormSwitchRef, this.props.formUid, nextProps.iAntdProps.name);
+    };
     FormSwitch.prototype.render = function () {
         var _this = this;
         var _a = this.props, form = _a.form, iAntdProps = _a.iAntdProps, iFormWithSwitch = _a.iFormWithSwitch, children = _a.children, rules = _a.rules;
@@ -1140,7 +1191,7 @@ var FormSwitch = /** @class */ (function (_super) {
             formItemProps['colon'] = props.colon;
         }
         return (React.createElement(FormElement, { form: form, onReady: function (value) {
-                _this.FormUploadRef = value;
+                _this.FormSwitchRef = value;
             }, nextElementKey: iAntdProps.nextElementKey, elType: "button", elementKey: iAntdProps.name, formUid: this.props.formUid },
             React.createElement(FormItem$7, __assign({}, formItemProps, { className: iAntdProps.className, label: label, labelCol: labelCol, wrapperCol: wrapperCol }),
                 getFieldDecorator(iAntdProps.name, {
@@ -1156,9 +1207,9 @@ var FormItem$8 = Form.Item;
 var RadioButton = Radio.Button;
 var RadioGroup = Radio.Group;
 var LabelWithRadioButtonModel = /** @class */ (function () {
-    function LabelWithRadioButtonModel(iAntdProps, iFormWithRadioButton, rules) {
+    function LabelWithRadioButtonModel(iAntdProps, iFormProps, rules) {
         this.iAntdProps = iAntdProps;
-        this.iFormWithRadioButton = iFormWithRadioButton;
+        this.iFormProps = iFormProps;
         this.rules = rules;
     }
     return LabelWithRadioButtonModel;
@@ -1167,10 +1218,16 @@ var FormRadioButton = /** @class */ (function (_super) {
     __extends(FormRadioButton, _super);
     function FormRadioButton(props) {
         var _this = _super.call(this, props) || this;
-        _this.FormUploadRef = null;
+        _this.FormRadioButtonRef = null;
         _this.state = {};
         return _this;
     }
+    FormRadioButton.prototype.componentDidMount = function () {
+        this.didMountClearNodeQueue(this.FormRadioButtonRef, this.props.formUid, this.props.iAntdProps.name);
+    };
+    FormRadioButton.prototype.shouldComponentUpdate = function (nextProps, nextState, context) {
+        return this.isShouldComponentUpdate(this.FormRadioButtonRef, this.props.formUid, nextProps.iAntdProps.name);
+    };
     FormRadioButton.prototype.render = function () {
         var _this = this;
         var _a = this.props, form = _a.form, iAntdProps = _a.iAntdProps, iFormWithRadioButton = _a.iFormWithRadioButton, children = _a.children, rules = _a.rules;
@@ -1181,7 +1238,7 @@ var FormRadioButton = /** @class */ (function (_super) {
             formItemProps['colon'] = props.colon;
         }
         return (React.createElement(FormElement, { form: form, onReady: function (value) {
-                _this.FormUploadRef = value;
+                _this.FormRadioButtonRef = value;
             }, elType: "input", nextElementKey: iAntdProps.nextElementKey, elementKey: iAntdProps.name, formUid: this.props.formUid },
             React.createElement(FormItem$8, __assign({}, formItemProps, { className: iAntdProps.className, label: label, labelCol: labelCol, wrapperCol: wrapperCol }),
                 getFieldDecorator(iAntdProps.name, {
@@ -1201,9 +1258,9 @@ var FormRadioButton = /** @class */ (function (_super) {
 var FormItem$9 = Form.Item;
 /* import { debounce as debounces } from 'lodash' */
 var LabelWithTextModel = /** @class */ (function () {
-    function LabelWithTextModel(iAntdProps, iFormText, rules) {
+    function LabelWithTextModel(iAntdProps, iFormProps, rules) {
         this.iAntdProps = iAntdProps;
-        this.iFormText = iFormText;
+        this.iFormProps = iFormProps;
         this.rules = rules;
     }
     return LabelWithTextModel;
@@ -1225,8 +1282,8 @@ var TooltipText = /** @class */ (function (_super) {
         }
         var getFieldDecorator = form.getFieldDecorator, getFieldsError = form.getFieldsError, setFieldsValue = form.setFieldsValue;
         return (React.createElement(LegionsProErrorReportShow, { code: this.props.formItemName, formUid: this.props.formUid, errorClassName: classNames((_a = {},
-                _a["" + Styles.tipIconInput] = true,
-                _a["" + Styles['tipIcon-right-0']] = (this.props.value) ? true : false,
+                _a["tip-icon-input"] = true,
+                _a["tip-icon-right-0"] = (this.props.value) ? true : false,
                 _a)) },
             React.createElement(Tooltip, { trigger: 'click', title: this.props.value, placement: "topLeft", overlayStyle: { wordWrap: 'break-word' } },
                 React.createElement("span", { style: {
@@ -1242,7 +1299,14 @@ var FormText = /** @class */ (function (_super) {
         _this.FormTextRef = null;
         return _this;
     }
+    FormText.prototype.componentDidMount = function () {
+        this.didMountClearNodeQueue(this.FormTextRef, this.props.formUid, this.props.iAntdProps.name);
+    };
+    FormText.prototype.shouldComponentUpdate = function (nextProps, nextState, context) {
+        return this.isShouldComponentUpdate(this.FormTextRef, this.props.formUid, nextProps.iAntdProps.name);
+    };
     FormText.prototype.render = function () {
+        var _this = this;
         var _a = this.props, form = _a.form, iAntdProps = _a.iAntdProps, iFormText = _a.iFormText, children = _a.children, rules = _a.rules;
         var getFieldDecorator = form.getFieldDecorator, getFieldsError = form.getFieldsError, setFieldsValue = form.setFieldsValue;
         var label = iFormText.label, labelCol = iFormText.labelCol, wrapperCol = iFormText.wrapperCol, props = __rest(iFormText, ["label", "labelCol", "wrapperCol"]);
@@ -1250,23 +1314,26 @@ var FormText = /** @class */ (function (_super) {
         if ('colon' in props) {
             formItemProps['colon'] = props.colon;
         }
-        return (React.createElement(FormItem$9, __assign({}, formItemProps, { extra: iFormText.extra, className: iAntdProps.className, label: iFormText.label, labelCol: iFormText.labelCol, wrapperCol: iFormText.wrapperCol }),
-            getFieldDecorator(iAntdProps.name, {
-                rules: rules,
-                normalize: function (value, prevValue, allValues) {
-                    return value && value.toString();
-                },
-            })(React.createElement(TooltipText, __assign({}, props, { formUid: this.props.formUid, FormTextRef: this.FormTextRef, value: form.getFieldValue(iAntdProps.name), formItemName: iAntdProps.name, form: form, inputType: 'span' }))),
-            children));
+        return (React.createElement(FormElement, { form: form, onReady: function (value) {
+                _this.FormTextRef = value;
+            }, nextElementKey: iAntdProps.nextElementKey, elementKey: iAntdProps.name, formUid: this.props.formUid },
+            React.createElement(FormItem$9, __assign({}, formItemProps, { extra: iFormText.extra, className: iAntdProps.className, label: iFormText.label, labelCol: iFormText.labelCol, wrapperCol: iFormText.wrapperCol }),
+                getFieldDecorator(iAntdProps.name, {
+                    rules: rules,
+                    normalize: function (value, prevValue, allValues) {
+                        return value && value.toString();
+                    },
+                })(React.createElement(TooltipText, __assign({}, props, { formUid: this.props.formUid, FormTextRef: this.FormTextRef, value: form.getFieldValue(iAntdProps.name), formItemName: iAntdProps.name, form: form, inputType: 'span' }))),
+                children)));
     };
     return FormText;
 }(AbstractForm));
 
 var FormItem$a = Form.Item;
 var LabelWithCheckboxModel = /** @class */ (function () {
-    function LabelWithCheckboxModel(iAntdProps, iFormWithCheckbox, rules) {
+    function LabelWithCheckboxModel(iAntdProps, iFormProps, rules) {
         this.iAntdProps = iAntdProps;
-        this.iFormWithCheckbox = iFormWithCheckbox;
+        this.iFormProps = iFormProps;
         this.rules = rules;
     }
     return LabelWithCheckboxModel;
@@ -1279,6 +1346,12 @@ var FormCheckbox = /** @class */ (function (_super) {
         _this.state = {};
         return _this;
     }
+    FormCheckbox.prototype.componentDidMount = function () {
+        this.didMountClearNodeQueue(this.FormCheckboxRef, this.props.formUid, this.props.iAntdProps.name);
+    };
+    FormCheckbox.prototype.shouldComponentUpdate = function (nextProps, nextState, context) {
+        return this.isShouldComponentUpdate(this.FormCheckboxRef, this.props.formUid, nextProps.iAntdProps.name);
+    };
     FormCheckbox.prototype.render = function () {
         var _this = this;
         var _a = this.props, form = _a.form, iAntdProps = _a.iAntdProps, iFormWithCheckbox = _a.iFormWithCheckbox, children = _a.children, rules = _a.rules;
@@ -1310,48 +1383,48 @@ var CreateForm = /** @class */ (function (_super) {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     CreateForm.prototype.createFormInput = function (key, control, form, formUid, formRef) {
-        var iAntdProps = control.iAntdProps, iFormInput = control.iFormInput, rules = control.rules;
-        return (React.createElement(FormInput, { iAntdProps: iAntdProps, form: form, key: key, rules: rules, formUid: formUid, formStore: formRef, iFormInput: iFormInput }));
+        var iAntdProps = control.iAntdProps, iFormProps = control.iFormProps, rules = control.rules;
+        return (React.createElement(FormInput, { iAntdProps: iAntdProps, form: form, key: key, rules: rules, formUid: formUid, formStore: formRef, iFormInput: iFormProps }));
     };
     CreateForm.prototype.createFormInputNumber = function (key, control, form, formUid, formRef) {
-        var iAntdProps = control.iAntdProps, iFormInput = control.iFormInput, rules = control.rules;
-        return (React.createElement(FormInputNumber, { iAntdProps: iAntdProps, form: form, key: key, rules: rules, formUid: formUid, iFormInput: iFormInput }));
+        var iAntdProps = control.iAntdProps, iFormProps = control.iFormProps, rules = control.rules;
+        return (React.createElement(FormInputNumber, { iAntdProps: iAntdProps, form: form, key: key, rules: rules, formUid: formUid, iFormInput: iFormProps }));
     };
     CreateForm.prototype.createFormSelect = function (key, control, form, formUid, formRef) {
-        var iAntdProps = control.iAntdProps, rules = control.rules, iFormWithSelect = control.iFormWithSelect;
-        return (React.createElement(FormHLSelect, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formStore: formRef, formUid: formUid, iFormWithSelect: iFormWithSelect }));
+        var iAntdProps = control.iAntdProps, rules = control.rules, iFormProps = control.iFormProps;
+        return (React.createElement(FormHLSelect, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formStore: formRef, formUid: formUid, iFormWithSelect: iFormProps }));
     };
     CreateForm.prototype.createFormRender = function (key, control, form, formRef) {
-        var iAntdProps = control.iAntdProps, rules = control.rules, iFormRender = control.iFormRender;
-        return (React.createElement(FormRender, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formRef: formRef, iFormRender: iFormRender }));
+        var iAntdProps = control.iAntdProps, rules = control.rules, iFormProps = control.iFormProps;
+        return (React.createElement(FormRender, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formRef: formRef, iFormRender: iFormProps }));
     };
     CreateForm.prototype.createFormDatePicker = function (key, control, form, formUid, formRef) {
-        var iAntdProps = control.iAntdProps, rules = control.rules, iFormDatePicker = control.iFormDatePicker;
-        return (React.createElement(FormDatePicker, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formUid: formUid, iFormDatePicker: iFormDatePicker }));
+        var iAntdProps = control.iAntdProps, rules = control.rules, iFormProps = control.iFormProps;
+        return (React.createElement(FormDatePicker, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formUid: formUid, iFormDatePicker: iFormProps }));
     };
     CreateForm.prototype.createFormMonthPicker = function (key, control, form, formUid, formRef) {
-        var iAntdProps = control.iAntdProps, rules = control.rules, iFormMonthPicker = control.iFormMonthPicker;
-        return (React.createElement(FormMonthPicker, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formUid: formUid, iFormMonthPicker: iFormMonthPicker }));
+        var iAntdProps = control.iAntdProps, rules = control.rules, iFormProps = control.iFormProps;
+        return (React.createElement(FormMonthPicker, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formUid: formUid, iFormMonthPicker: iFormProps }));
     };
     CreateForm.prototype.createFormRangePicker = function (key, control, form, formUid, formRef) {
-        var iAntdProps = control.iAntdProps, rules = control.rules, iFormRangePicker = control.iFormRangePicker;
-        return (React.createElement(FormRangePicker, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formUid: formUid, iFormRangePicker: iFormRangePicker }));
+        var iAntdProps = control.iAntdProps, rules = control.rules, iFormProps = control.iFormProps;
+        return (React.createElement(FormRangePicker, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formUid: formUid, iFormRangePicker: iFormProps }));
     };
     CreateForm.prototype.createFormUpload = function (key, control, form, formUid, formRef) {
-        var iAntdProps = control.iAntdProps, rules = control.rules, iFormWithUpload = control.iFormWithUpload;
-        return (React.createElement(FormUpload, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formUid: formUid, iFormWithUpload: iFormWithUpload }));
+        var iAntdProps = control.iAntdProps, rules = control.rules, iFormProps = control.iFormProps;
+        return (React.createElement(FormUpload, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formUid: formUid, iFormWithUpload: iFormProps }));
     };
     CreateForm.prototype.createFormSwitch = function (key, control, form, formUid, formRef) {
-        var iAntdProps = control.iAntdProps, rules = control.rules, iFormWithSwitch = control.iFormWithSwitch;
-        return (React.createElement(FormSwitch, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formUid: formUid, iFormWithSwitch: iFormWithSwitch }));
+        var iAntdProps = control.iAntdProps, rules = control.rules, iFormProps = control.iFormProps;
+        return (React.createElement(FormSwitch, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formUid: formUid, iFormWithSwitch: iFormProps }));
     };
     CreateForm.prototype.createFormRadioButton = function (key, control, form, formUid, formRef) {
-        var iAntdProps = control.iAntdProps, rules = control.rules, iFormWithRadioButton = control.iFormWithRadioButton;
-        return (React.createElement(FormRadioButton, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formUid: formUid, iFormWithRadioButton: iFormWithRadioButton }));
+        var iAntdProps = control.iAntdProps, rules = control.rules, iFormProps = control.iFormProps;
+        return (React.createElement(FormRadioButton, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formUid: formUid, iFormWithRadioButton: iFormProps }));
     };
     CreateForm.prototype.createFormText = function (key, control, form, formUid, formRef) {
-        var iAntdProps = control.iAntdProps, rules = control.rules, iFormText = control.iFormText;
-        return (React.createElement(FormText, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formUid: formUid, iFormText: iFormText }));
+        var iAntdProps = control.iAntdProps, rules = control.rules, iFormProps = control.iFormProps;
+        return (React.createElement(FormText, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formUid: formUid, iFormText: iFormProps }));
     };
     /* protected createFormHlTable(key:number,control:LabelWithHLTableModel,form:WrappedFormUtils,formUid:string){
         let {iAntdProps,rules,iFormWithTable}=control;
@@ -1369,78 +1442,27 @@ var CreateForm = /** @class */ (function (_super) {
         )
     } */
     CreateForm.prototype.createFormCheckbox = function (key, control, form, formUid, formRef) {
-        var iAntdProps = control.iAntdProps, rules = control.rules, iFormWithCheckbox = control.iFormWithCheckbox;
-        return (React.createElement(FormCheckbox, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formUid: formUid, iFormWithCheckbox: iFormWithCheckbox }));
+        var iAntdProps = control.iAntdProps, rules = control.rules, iFormProps = control.iFormProps;
+        return (React.createElement(FormCheckbox, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formUid: formUid, iFormWithCheckbox: iFormProps }));
     };
     return CreateForm;
 }(React.Component));
 
-var LabelWithHLSelectModel = /** @class */ (function () {
-    function LabelWithHLSelectModel(iAntdProps, iFormWithSelect, rules) {
-        this.iAntdProps = iAntdProps;
-        this.iFormWithSelect = iFormWithSelect;
-        this.rules = rules;
+var size = {
+    'default': {
+        formItemLayOut: 'form-item-default',
+    }, 'small': {
+        formItemLayOut: 'form-item-small',
+    }, 'table': {
+        formItemLayOut: 'form-item-table',
     }
-    return LabelWithHLSelectModel;
-}());
-
-var FormItem$b = Form.Item;
-var Option$1 = Select.Option;
-var OptGroup$1 = Select.OptGroup;
-var LabelWithSelectModel = /** @class */ (function () {
-    function LabelWithSelectModel(iAntdProps, iFormWithSelect, rules) {
-        this.iAntdProps = iAntdProps;
-        this.iFormWithSelect = iFormWithSelect;
-        this.rules = rules;
-    }
-    return LabelWithSelectModel;
-}());
-var FormSelect = /** @class */ (function (_super) {
-    __extends(FormSelect, _super);
-    function FormSelect(props) {
-        var _this = _super.call(this, props) || this;
-        _this.FormSelectRef = null;
-        return _this;
-    }
-    FormSelect.prototype.renderOption = function () {
-        var _a = this.props.iFormWithSelect, optGroups = _a.optGroups, options = _a.options;
-        if (optGroups) {
-            return optGroups.map(function (item, index) {
-                var option = options.filter(function (entity) { return entity.group === item.label; });
-                return React.createElement(OptGroup$1, { label: item.label, key: "" + item.label + index }, option.map(function (option, key) {
-                    React.createElement(Option$1, __assign({}, option, { value: option.key, disabled: option.disabled, key: "" + key.toString() + option.value }), option.value);
-                }));
-            });
-        }
-        return options.map(function (option, key) {
-            return React.createElement(Option$1, __assign({}, option, { disabled: option.disabled, value: option.key, key: "" + key.toString() + option.value }), option.value);
-        });
-    };
-    FormSelect.prototype.onFocus = function () {
-        var store = this.FormSelectRef.store.get(this.props.formUid);
-        if (store) {
-            store.focusUid = this.FormSelectRef.uid;
-        }
-        this.props.iFormWithSelect && this.props.iFormWithSelect.onFocus && this.props.iFormWithSelect.onFocus();
-    };
-    FormSelect.prototype.render = function () {
-        var _this = this;
-        var _a = this.props, form = _a.form, iAntdProps = _a.iAntdProps, iFormWithSelect = _a.iFormWithSelect, children = _a.children, rules = _a.rules;
-        var getFieldDecorator = form.getFieldDecorator, getFieldsError = form.getFieldsError;
-        var label = iFormWithSelect.label, labelCol = iFormWithSelect.labelCol, wrapperCol = iFormWithSelect.wrapperCol, props = __rest(iFormWithSelect, ["label", "labelCol", "wrapperCol"]);
-        return (React.createElement(FormElement, { form: form, onReady: function (value) {
-                _this.FormSelectRef = value;
-            }, nextElementKey: iAntdProps.nextElementKey, elementKey: iAntdProps.name, formUid: this.props.formUid },
-            React.createElement(FormItem$b, { extra: iFormWithSelect.extra, className: iAntdProps.className, label: iFormWithSelect.label, labelCol: iFormWithSelect.labelCol, wrapperCol: iFormWithSelect.wrapperCol },
-                getFieldDecorator(iAntdProps.name, {
-                    rules: rules,
-                })(React.createElement(Select, __assign({ size: "small" }, props, { onFocus: this.onFocus.bind(this) }), this.renderOption())),
-                children)));
-    };
-    return FormSelect;
-}(AbstractForm));
-
-var COMPONENT_TYPE = ['iFormInput', 'iFormText', 'iFormWithSelect', 'iFormDatePicker', 'iFormMonthPicker', 'iFormRangePicker', 'iFormWithRadioButton', 'iFormWithSwitch',];
+};
+var formClasses = {
+    itemRowHeight: "form-item-row-height",
+    tableError: 'table-error',
+    tableNotEror: 'table-not-error',
+    itemDefaultError: 'form-item-default-error',
+};
 var ProFormUtils = /** @class */ (function () {
     function ProFormUtils(options) {
         this.global = null;
@@ -1457,6 +1479,17 @@ var ProFormUtils = /** @class */ (function () {
             }
         }
     }
+    ProFormUtils.isFormHasError = function (getFieldsError) {
+        var error = getFieldsError && getFieldsError();
+        var has = false;
+        for (var key in error) {
+            if (error[key]) {
+                has = true;
+                break;
+            }
+        }
+        return has;
+    };
     ProFormUtils.prototype.createAntdProps = function (name, groupId, placeholder, params) {
         if (placeholder === void 0) { placeholder = ''; }
         return __assign({ id: name, name: name, placeholder: placeholder || '', groupId: groupId }, params);
@@ -1476,25 +1509,13 @@ var ProFormUtils = /** @class */ (function () {
     };
     ProFormUtils.prototype.initFromState = function (key, formRef, iFormItemProps) {
         if (formRef && key) {
-            var wc = COMPONENT_TYPE.find(function (cc) { return iFormItemProps['hasOwnProperty'](cc); });
-            var defaultValue = null;
-            if (wc) {
-                var wItem = iFormItemProps[wc];
-                if (wItem['hasOwnProperty']('defaultVisible')) {
-                    defaultValue = { visible: wItem['defaultVisible'] };
-                }
-                if (wItem['hasOwnProperty']('disabled')) {
-                    defaultValue = defaultValue || {};
-                    defaultValue = __assign(__assign({}, defaultValue), { disabled: wItem['disabled'] });
-                }
-            }
             var storeView = formRef.store.get(formRef.uid);
-            storeView.initFormState(key, defaultValue);
+            storeView._initFormItemField(key, iFormItemProps, 'custom');
         }
     };
     ProFormUtils.prototype.renderSelectConfig = function (options) {
         this.chkRenderConfig(options.iAntdProps.id);
-        this[options.iAntdProps.id] = new LabelWithHLSelectModel(options.iAntdProps, options.iFormProps, options.rules || []);
+        this[options.iAntdProps.id] = new LabelWithSelectModel(options.iAntdProps, options.iFormProps, options.rules || []);
         return this[options.iAntdProps.id];
     };
     ProFormUtils.prototype.renderInputConfig = function (options) {
@@ -1562,72 +1583,97 @@ var ProFormUtils = /** @class */ (function () {
      * @returns
      * @memberof HLFormUtils
      */
-    ProFormUtils.prototype.createFormComponent = function (control, form, formUid, formRef, key) {
+    ProFormUtils.prototype.createFormComponent = function (controls, form, formUid, formRef, key) {
+        var control = controls;
         if (key === void 0) {
             key = control.iAntdProps.id;
         }
-        var storeView = formRef.store.get(formRef.uid);
-        var formState = storeView.getFormState(control.iAntdProps.id);
-        if (!formState) {
-            this.initFromState(control.iAntdProps.id, formRef, control);
-            formState = storeView.getFormState(control.iAntdProps.id);
+        this.initFromState(control.iAntdProps.id, formRef, controls);
+        if (formRef) {
+            var storeView = formRef.store.get(formRef.uid);
+            var item = storeView.getFormItemField(control.iAntdProps.id);
+            if (item) {
+                control = item.value;
+            }
+            var formSize = storeView.computedFormSize;
+            var hasError = ProFormUtils.isFormHasError(form.getFieldsError);
+            var error = form.getFieldError(control.iAntdProps.id);
+            control['iFormProps']['size'] = formSize;
+            if (control.iAntdProps.className) {
+                control.iAntdProps.className = control.iAntdProps.className && control.iAntdProps.className.replace(size['table'].formItemLayOut, '').replace(formClasses.tableError, '').replace(formClasses.tableNotEror, '').replace(formClasses.itemRowHeight, '');
+                control.iAntdProps.className = control.iAntdProps.className && control.iAntdProps.className.replace(size['small'].formItemLayOut, '').replace(formClasses.itemRowHeight, '');
+                control.iAntdProps.className = control.iAntdProps.className && control.iAntdProps.className.replace(size['default'].formItemLayOut, '').replace(formClasses.itemDefaultError, '');
+            }
+            if (formSize === 'table') {
+                control.iAntdProps.className = (control.iAntdProps.className || '') + " " + size[formSize].formItemLayOut + " " + (error ? formClasses.tableError : formClasses.tableNotEror) + " " + formClasses.itemRowHeight; /**  表单间距调小*/
+                control['iFormProps']['size'] = 'small';
+            }
+            else if (formSize === 'small') {
+                control.iAntdProps.className = (control.iAntdProps.className || '') + " " + size[formSize].formItemLayOut + " " + formClasses.itemRowHeight;
+            }
+            else {
+                control.iAntdProps.className = (control.iAntdProps.className || '') + " " + size[formSize].formItemLayOut + " " + (hasError ? '' : size[formSize].formItemLayOut) + " " + (error ? formClasses.itemDefaultError : ''); /**  表单间距调小*/
+            }
         }
-        if (!formState.visible) {
+        /* console.log(control,'controlcus'); */
+        if (control.iFormProps.visible === false) {
             return null;
         }
         if (control instanceof LabelWithInputModel) {
-            var iAntdProps = control.iAntdProps, iFormInput = control.iFormInput, rules = control.rules;
-            iFormInput['disabled'] = formState.disabled;
-            return (React.createElement(FormInput, { iAntdProps: iAntdProps, form: form, key: key, rules: rules, formUid: formUid, formStore: formRef, iFormInput: iFormInput }));
+            var iAntdProps = control.iAntdProps, iFormProps = control.iFormProps, rules = control.rules;
+            return (React.createElement(FormInput, { iAntdProps: iAntdProps, form: form, key: key, rules: rules, formUid: formUid, formStore: formRef, iFormInput: iFormProps }));
         }
         else if (control instanceof LabelWithInputNumberModel) {
-            var iAntdProps = control.iAntdProps, iFormInput = control.iFormInput, rules = control.rules;
-            iFormInput['disabled'] = formState.disabled;
-            return (React.createElement(FormInputNumber, { iAntdProps: iAntdProps, form: form, key: key, rules: rules, formUid: formUid, iFormInput: iFormInput }));
+            var iAntdProps = control.iAntdProps, iFormProps = control.iFormProps, rules = control.rules;
+            return (React.createElement(FormInputNumber, { iAntdProps: iAntdProps, form: form, key: key, rules: rules, formUid: formUid, iFormInput: iFormProps }));
         }
-        else if (control instanceof LabelWithHLSelectModel) {
-            var iAntdProps = control.iAntdProps, rules = control.rules, iFormWithSelect = control.iFormWithSelect;
-            iFormWithSelect['disabled'] = formState.disabled;
-            return (React.createElement(FormHLSelect, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formStore: formRef, formUid: formUid, iFormWithSelect: iFormWithSelect }));
+        else if (control instanceof LabelWithSelectModel) {
+            var iAntdProps = control.iAntdProps, rules = control.rules, iFormProps = control.iFormProps;
+            return (React.createElement(FormHLSelect, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formStore: formRef, formUid: formUid, iFormWithSelect: iFormProps }));
         }
         else if (control instanceof LabelWithDatePickerModel) {
-            var iAntdProps = control.iAntdProps, rules = control.rules, iFormDatePicker = control.iFormDatePicker;
-            iFormDatePicker['disabled'] = formState.disabled;
-            return (React.createElement(FormDatePicker, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formUid: formUid, iFormDatePicker: iFormDatePicker }));
+            var iAntdProps = control.iAntdProps, rules = control.rules, iFormProps = control.iFormProps;
+            return (React.createElement(FormDatePicker, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formUid: formUid, iFormDatePicker: iFormProps }));
         }
         else if (control instanceof LabelWithMonthPickerModel) {
-            var iAntdProps = control.iAntdProps, rules = control.rules, iFormMonthPicker = control.iFormMonthPicker;
-            iFormMonthPicker['disabled'] = formState.disabled;
-            return (React.createElement(FormMonthPicker, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formUid: formUid, iFormMonthPicker: iFormMonthPicker }));
+            var iAntdProps = control.iAntdProps, rules = control.rules, iFormProps = control.iFormProps;
+            return (React.createElement(FormMonthPicker, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formUid: formUid, iFormMonthPicker: iFormProps }));
         }
         else if (control instanceof LabelWithRangePickerModel) {
-            var iAntdProps = control.iAntdProps, rules = control.rules, iFormRangePicker = control.iFormRangePicker;
-            iFormRangePicker['disabled'] = formState.disabled;
-            return (React.createElement(FormRangePicker, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formUid: formUid, iFormRangePicker: iFormRangePicker }));
+            var iAntdProps = control.iAntdProps, rules = control.rules, iFormProps = control.iFormProps;
+            return (React.createElement(FormRangePicker, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formUid: formUid, iFormRangePicker: iFormProps }));
         }
         else if (control instanceof LabelWithUploadModel) {
-            var iAntdProps = control.iAntdProps, rules = control.rules, iFormWithUpload = control.iFormWithUpload;
-            iFormWithUpload['disabled'] = formState.disabled;
-            return (React.createElement(FormUpload, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formUid: formUid, iFormWithUpload: iFormWithUpload }));
+            var iAntdProps = control.iAntdProps, rules = control.rules, iFormProps = control.iFormProps;
+            return (React.createElement(FormUpload, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formUid: formUid, iFormWithUpload: iFormProps }));
         }
         else if (control instanceof LabelWithSwitchModel) {
-            var iAntdProps = control.iAntdProps, rules = control.rules, iFormWithSwitch = control.iFormWithSwitch;
-            iFormWithSwitch['disabled'] = formState.disabled;
-            return (React.createElement(FormSwitch, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formUid: formUid, iFormWithSwitch: iFormWithSwitch }));
+            var iAntdProps = control.iAntdProps, rules = control.rules, iFormProps = control.iFormProps;
+            return (React.createElement(FormSwitch, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formUid: formUid, iFormWithSwitch: iFormProps }));
         }
         else if (control instanceof LabelWithRadioButtonModel) {
-            var iAntdProps = control.iAntdProps, rules = control.rules, iFormWithRadioButton = control.iFormWithRadioButton;
-            iFormWithRadioButton['disabled'] = formState.disabled;
-            return (React.createElement(FormRadioButton, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formUid: formUid, iFormWithRadioButton: iFormWithRadioButton }));
+            var iAntdProps = control.iAntdProps, rules = control.rules, iFormProps = control.iFormProps;
+            return (React.createElement(FormRadioButton, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formUid: formUid, iFormWithRadioButton: iFormProps }));
         }
         else if (control instanceof LabelWithTextModel) {
-            var iAntdProps = control.iAntdProps, rules = control.rules, iFormText = control.iFormText;
-            return (React.createElement(FormText, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formUid: formUid, iFormText: iFormText }));
+            var iAntdProps = control.iAntdProps, rules = control.rules, iFormProps = control.iFormProps;
+            return (React.createElement(FormText, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formUid: formUid, iFormText: iFormProps }));
         }
         else {
             throw new Error("HLFormUtils: Unknown control. control = " + JSON.stringify(control));
         }
     };
+    ProFormUtils.LabelWithInputNumberModel = LabelWithInputNumberModel;
+    ProFormUtils.LabelWithHLSelectModel = LabelWithSelectModel;
+    ProFormUtils.LabelWithRenderModel = LabelWithRenderModel;
+    ProFormUtils.LabelWithDatePickerModel = LabelWithDatePickerModel;
+    ProFormUtils.LabelWithMonthPickerModel = LabelWithMonthPickerModel;
+    ProFormUtils.LabelWithRangePickerModel = LabelWithRangePickerModel;
+    ProFormUtils.LabelWithUploadModel = LabelWithUploadModel;
+    ProFormUtils.LabelWithSwitchModel = LabelWithSwitchModel;
+    ProFormUtils.LabelWithRadioButtonModel = LabelWithRadioButtonModel;
+    ProFormUtils.LabelWithTextModel = LabelWithTextModel;
+    ProFormUtils.LabelWithInputModel = LabelWithInputModel;
     return ProFormUtils;
 }());
 var ProFormFields = /** @class */ (function (_super) {
@@ -1644,7 +1690,7 @@ var ProFormFields = /** @class */ (function (_super) {
 }(BaseFormFields));
 
 var Link = Anchor.Link;
-var FormItem$c = Form.Item;
+var FormItem$b = Form.Item;
 var baseCls = "legions-pro-form";
 var KeydownEnum$1;
 (function (KeydownEnum) {
@@ -1655,15 +1701,6 @@ var KeydownEnum$1;
     /** 回车键 */
     KeydownEnum[KeydownEnum["enter"] = 13] = "enter";
 })(KeydownEnum$1 || (KeydownEnum$1 = {}));
-var size = {
-    'default': {
-        formItemLayOut: 'form-item-default',
-    }, 'small': {
-        formItemLayOut: 'form-item-small',
-    }, 'table': {
-        formItemLayOut: 'form-item-table',
-    }
-};
 var HLForm = /** @class */ (function (_super) {
     __extends(HLForm, _super);
     function HLForm(props) {
@@ -1707,16 +1744,8 @@ var HLForm = /** @class */ (function (_super) {
                 _this.storeLocalView.updateControlsSort(_this.props.controls.map(function (item) { return item.iAntdProps.name; }));
             }
         }
-        _this.storeView.updateStyleSize(_this.props.size);
-        /* if (this.props.InputDataModel) {
-            this.subscription = this.props.store.schedule([() => {
-                const view = this.storeView.InputDataModel
-            }])
-        } */
+        _this.storeView.updateFormSize(_this.props.size);
         _this.initFromState();
-        _this.setFormItemStateDisabled({
-            props: _this.props
-        });
         _this.consoleLog('hlFormContainer-constructor');
         return _this;
     }
@@ -1758,9 +1787,6 @@ var HLForm = /** @class */ (function (_super) {
                 modulesPath: this.props['uniqueUid'],
             }, this.props.onLogRecord);
         }
-    };
-    HLForm.prototype.getFormItemState = function (name) {
-        return this.storeView.computedFormState.get(name);
     };
     HLForm.prototype.initGroup = function (group) {
         if (group === void 0) { group = this.props.group; }
@@ -1807,6 +1833,28 @@ var HLForm = /** @class */ (function (_super) {
         // @ts-ignore
         (_a = this.props.form).validateFields.apply(_a, __spread(options));
     };
+    HLForm.prototype.setFormStates = function (name, callback) {
+        var _this = this;
+        this.storeLocalView.dispatchAction(function () {
+            var insertRenderEle = function () {
+                if (!_this.storeView.renderNodeQueue.has(name)) {
+                    _this.storeView.renderNodeQueue.set(name, name);
+                }
+            };
+            var value = _this.storeView.getFormItemField(name);
+            if (value) {
+                if (value.type === 'normal') {
+                    callback && callback(value.value);
+                    insertRenderEle();
+                }
+                if (value.type === 'custom') {
+                    callback && callback(value.value);
+                    insertRenderEle();
+                    _this.forceUpdate();
+                }
+            }
+        });
+    };
     HLForm.prototype.componentWillMount = function () {
         var _this = this;
         var group = this.props.group;
@@ -1819,7 +1867,6 @@ var HLForm = /** @class */ (function (_super) {
         });
         var view = this.props.store.HLFormContainer.get(this.uid);
         var localview = this.props.store.HLFormLocalDataContainer.get(this.freezeUid);
-        view.controls = this.props.controls;
         this.props.onReady && this.props.onReady(__assign(__assign({}, this.props.form), { validateFields: this.validateFields.bind(this) }), {
             store: this.props.store,
             uid: this.uid,
@@ -1848,6 +1895,9 @@ var HLForm = /** @class */ (function (_super) {
                         option: optionItem,
                     };
                 },
+                setFormStates: function (name, callback) {
+                    _this.setFormStates(name, callback);
+                }
             },
             validateFields: function (callback) {
                 view.form.validateFields(callback);
@@ -1865,26 +1915,16 @@ var HLForm = /** @class */ (function (_super) {
         this.consoleLog('hlFormContainer-componentDidMount');
     };
     HLForm.prototype.componentWillReceiveProps = function (nextProps) {
-        var store = this.props.store.HLFormContainer.get(this.uid);
-        if (store.elementList.size !== store.nodeCount || store.elementList.size !== store.computedAllElementList.length) {
-            store.nodeCount = store.elementList.size;
-            this.props.store.clearAllElement(this.uid);
-        }
         if (this.props.controls !== nextProps.controls) {
-            this.setFormItemStateDisabled({
-                props: this.props,
-                nextProps: nextProps
-            });
-            this.storeView.controls = nextProps.controls;
+            /*  this.setFormItemStateDisabled({
+                 props: this.props,nextProps
+             }) */
             if (this.storeLocalView.dragSortState) {
                 this.storeLocalView.updateControlsSort(nextProps.controls.map(function (item) { return item.iAntdProps.name; }));
             }
-            if (this.props['uniqueUid']) {
-                this.initSelectView(false, nextProps.controls);
-            }
         }
         if (nextProps.size !== this.props.size) {
-            this.storeView.updateStyleSize(nextProps.size);
+            this.storeView.updateFormSize(nextProps.size);
         }
         if (this.props.group !== nextProps.group) {
             this.initGroup(nextProps.group);
@@ -1904,15 +1944,11 @@ var HLForm = /** @class */ (function (_super) {
         var _this = this;
         if (this.props.controls && Array.isArray(this.props.controls)) {
             this.props.controls.map(function (item) {
-                var wc = COMPONENT_TYPE.find(function (cc) { return item['hasOwnProperty'](cc); });
-                var defaultValue = null;
-                if (wc) {
-                    var wItem = item[wc];
-                    if (wItem['hasOwnProperty']('defaultVisible')) {
-                        defaultValue = { visible: wItem['defaultVisible'] };
-                    }
+                var name = item['iAntdProps'].name;
+                _this.storeView._initFormItemField(name, item);
+                if (!_this.storeView.renderNodeQueue.has(name)) {
+                    _this.storeView.renderNodeQueue.set(name, name);
                 }
-                _this.storeView.initFormState(item.iAntdProps.name, defaultValue);
             });
         }
     };
@@ -1929,29 +1965,35 @@ var HLForm = /** @class */ (function (_super) {
         if (controls === void 0) { controls = this.props.controls; }
         if (controls && Array.isArray(this.props.controls)) {
             controls.map(function (item) {
-                if (item instanceof LabelWithHLSelectModel && item.iFormWithSelect && item.iFormWithSelect.autoQuery)
+                if (item instanceof LabelWithSelectModel && item.iFormProps && item.iFormProps.autoQuery)
                     runInAction(function () {
                         if (_this.storeLocalView && item.iAntdProps) {
-                            var pageSize = item.iFormWithSelect.pageSize || 30;
-                            var keywords = item.iFormWithSelect.autoQuery.params(1, pageSize, '').defaultKeyWords;
+                            var pageSize = item.iFormProps.pageSize || 30;
+                            var keywords = item.iFormProps.autoQuery.params(1, pageSize, '').defaultKeyWords;
                             if (!_this.storeLocalView.selectView.has(item.iAntdProps.name)) {
-                                _this.storeLocalView.initSelectView(item.iAntdProps.name, item.iFormWithSelect.autoQuery, {
-                                    paging: item.iFormWithSelect.paging === void 0 ? false : item.iFormWithSelect.paging,
-                                    remote: item.iFormWithSelect.remote === void 0 ? false : item.iFormWithSelect.remote,
+                                _this.storeLocalView.initSelectView(item.iAntdProps.name, item.iFormProps.autoQuery, {
+                                    paging: item.iFormProps.paging === void 0 ? false : item.iFormProps.paging,
+                                    remote: item.iFormProps.remote === void 0 ? false : item.iFormProps.remote,
                                     pageSize: pageSize,
                                     tableNameDb: "" + _this.freezeUid,
-                                    keywords: item.iFormWithSelect.autoQuery.params(1, item.iFormWithSelect.pageSize || 30, '').defaultKeyWords
+                                    keywords: item.iFormProps.autoQuery.params(1, item.iFormProps.pageSize || 30, '').defaultKeyWords
                                 });
                             }
-                            if (item.iFormWithSelect.autoQuery) {
+                            if (item.iFormProps.autoQuery) {
                                 if (!_this.storeLocalView.selectOptions.has(item.iAntdProps.name)) {
-                                    _this.storeLocalView.initSelectOptions(item.iAntdProps.name, item.iFormWithSelect.autoQuery);
+                                    _this.storeLocalView.initSelectOptions(item.iAntdProps.name, item.iFormProps.autoQuery);
                                 }
                                 if (isDispatch) {
-                                    _this.storeLocalView.dispatchRequest(item.iAntdProps.name, item.iFormWithSelect.autoQuery, {
+                                    var name_1 = item.iAntdProps.name;
+                                    _this.storeLocalView.dispatchRequest(item.iAntdProps.name, item.iFormProps.autoQuery, {
                                         pageIndex: 1,
                                         pageSize: pageSize,
                                         keyWords: keywords,
+                                        callback: function (value) {
+                                            if (!_this.storeView.renderNodeQueue.has(name_1)) {
+                                                _this.storeView.renderNodeQueue.set(name_1, name_1);
+                                            }
+                                        }
                                     });
                                 }
                             }
@@ -1964,53 +2006,6 @@ var HLForm = /** @class */ (function (_super) {
         if (this.storeLocalView && this.storeLocalView.selectView.has(name)) {
             var item = this.storeLocalView.selectView.get(name);
             this.storeLocalView.dispatchRequest(name, item.autoQuery, __assign({ pageIndex: options.pageIndex, pageSize: item.pageSize, keyWords: options.keywords }, options));
-        }
-    };
-    /** 设置表单选项禁用和启用值 */
-    HLForm.prototype.setFormItemStateDisabled = function (options) {
-        var _this = this;
-        var nextProps = options.nextProps;
-        var props = options.props || this.props;
-        if (nextProps) {
-            nextProps.controls.map(function (item) {
-                var entity = props.controls.find(function (w) { return w.iAntdProps.name === item.iAntdProps.name; });
-                if (entity) {
-                    COMPONENT_TYPE.map(function (c) {
-                        if (c === 'iFormWithRadioButton') {
-                            var propsDisabled = get(entity, c + ".radioGroup.disabled");
-                            var nextPropsDisabled = get(item, c + ".radioGroup.disabled");
-                            if (propsDisabled !== void 0 && nextPropsDisabled !== void 0 && propsDisabled !== nextPropsDisabled) {
-                                _this.storeView.setFormState(item.iAntdProps.name, { disabled: nextPropsDisabled });
-                            }
-                        }
-                        else {
-                            var propsDisabled = get(entity, c + ".disabled");
-                            var nextPropsDisabled = get(item, c + ".disabled");
-                            if (propsDisabled !== void 0 && nextPropsDisabled !== void 0 && propsDisabled !== nextPropsDisabled) {
-                                _this.storeView.setFormState(item.iAntdProps.name, { disabled: nextPropsDisabled });
-                            }
-                        }
-                    });
-                }
-            });
-        }
-        else {
-            props.controls.map(function (item) {
-                COMPONENT_TYPE.map(function (c) {
-                    if (c === 'iFormWithRadioButton') {
-                        var propsDisabled = get(item, c + ".radioGroup.disabled");
-                        if (propsDisabled !== void 0) {
-                            _this.storeView.setFormState(item.iAntdProps.name, { disabled: propsDisabled });
-                        }
-                    }
-                    else {
-                        var propsDisabled = get(item, c + ".disabled");
-                        if (propsDisabled !== void 0) {
-                            _this.storeView.setFormState(item.iAntdProps.name, { disabled: propsDisabled });
-                        }
-                    }
-                });
-            });
         }
     };
     HLForm.prototype.queryElementItem = function (ElementKey) {
@@ -2067,11 +2062,26 @@ var HLForm = /** @class */ (function (_super) {
     };
     //@ts-ignore
     HLForm.prototype.handleKeyDown = function (e) {
+        var e_2, _a;
         var formStore = this.props.store.get(this.uid);
         var keyCode = e.keyCode;
         if (formStore && formStore.enableEnterSwitch) {
             /* e.stopPropagation() */
-            var keys = formStore.elementList.keys();
+            var keysNext = formStore.elementList.keys();
+            var keys = [];
+            try {
+                for (var keysNext_1 = __values(keysNext), keysNext_1_1 = keysNext_1.next(); !keysNext_1_1.done; keysNext_1_1 = keysNext_1.next()) {
+                    var key = keysNext_1_1.value;
+                    keys.push(key);
+                }
+            }
+            catch (e_2_1) { e_2 = { error: e_2_1 }; }
+            finally {
+                try {
+                    if (keysNext_1_1 && !keysNext_1_1.done && (_a = keysNext_1.return)) _a.call(keysNext_1);
+                }
+                finally { if (e_2) throw e_2.error; }
+            }
             //@ts-ignore
             if (keys.length > 0 && !formStore.focusUid) {
                 formStore.focusUid = keys[0];
@@ -2262,49 +2272,41 @@ var HLForm = /** @class */ (function (_super) {
         return has;
     };
     HLForm.prototype.renderControl = function (control, key) {
-        var _this = this;
         var form = this.props.form;
         var hasError = this.isFormHasError(form.getFieldsError);
         var error = form.getFieldError(control.iAntdProps.id);
-        var styleSize = this.storeView.styleSize;
+        var formSize = this.storeView.computedFormSize;
         if (control.iAntdProps.className) {
-            control.iAntdProps.className = control.iAntdProps.className.replace(size[styleSize]['formItemLayOut'], '');
+            control.iAntdProps.className = control.iAntdProps.className.replace(size[formSize]['formItemLayOut'], '');
         }
-        COMPONENT_TYPE.map(function (item) {
-            if (control[item]) {
-                control[item].size = styleSize;
-                if (item === 'iFormWithSelect' && control[item].options && control[item].options.length >= 50 && !control[item].paging) { // 当下拉数据超过50项自动开启分页
-                    control[item].paging = true;
-                }
-                /* 防止表单动态增加的字段在表单状态集合中不存在而报错 */
-                if (_this.storeView.computedFormState.has(control.iAntdProps.name)) { // 判断表单字段是否在表单状态数据集合中存在
-                    if (item === 'iFormWithRadioButton' && control.iFormWithRadioButton['radioGroup']) {
-                        control.iFormWithRadioButton['radioGroup']['disabled'] = _this.storeView.computedFormState.get(control.iAntdProps.name).disabled;
-                    }
-                    else {
-                        control[item]['disabled'] = _this.storeView.computedFormState.get(control.iAntdProps.name).disabled;
-                    }
-                }
+        var item = 'iFormProps';
+        var formItemRowHeight = formClasses.itemRowHeight;
+        if (!(control instanceof LegionsProForm.LabelWithRenderModel)) {
+            //@ts-ignore
+            control[item].size = formSize;
+        }
+        if (control instanceof LegionsProForm.LabelWithSelectModel) {
+            if (control[item].options && control[item].options.length >= 50 && !control[item].paging) { // 当下拉数据超过50项自动开启分页
+                control[item].paging = true;
             }
-        });
+        }
         if (control.iAntdProps.className) {
-            control.iAntdProps.className = control.iAntdProps.className && control.iAntdProps.className.replace(size['table'].formItemLayOut, '').replace('table-error', '').replace('table-not-error', '').replace('hlform-table-row-height', '');
-            control.iAntdProps.className = control.iAntdProps.className && control.iAntdProps.className.replace(size['small'].formItemLayOut, '').replace('hlform-table-row-height', '');
-            control.iAntdProps.className = control.iAntdProps.className && control.iAntdProps.className.replace(size['default'].formItemLayOut, '').replace('form-item-default-error', '');
+            control.iAntdProps.className = control.iAntdProps.className && control.iAntdProps.className.replace(size['table'].formItemLayOut, '').replace(formClasses.tableError, '').replace(formClasses.tableNotEror, '').replace(formItemRowHeight, '');
+            control.iAntdProps.className = control.iAntdProps.className && control.iAntdProps.className.replace(size['small'].formItemLayOut, '').replace(formItemRowHeight, '');
+            control.iAntdProps.className = control.iAntdProps.className && control.iAntdProps.className.replace(size['default'].formItemLayOut, '').replace(formClasses.itemDefaultError, '');
         }
-        if (styleSize === 'table') {
-            control.iAntdProps.className = (control.iAntdProps.className || '') + " " + size[styleSize].formItemLayOut + " " + (error ? 'table-error' : 'table-not-error') + " hlform-table-row-height"; /**  表单间距调小*/
-            COMPONENT_TYPE.map(function (item) {
-                if (control[item]) {
-                    control[item].size = 'small';
-                }
-            });
+        if (formSize === 'table') {
+            control.iAntdProps.className = (control.iAntdProps.className || '') + " " + size[formSize].formItemLayOut + " " + (error ? formClasses.tableError : formClasses.tableNotEror) + " " + formItemRowHeight; /**  表单间距调小*/
+            if (!(control instanceof LegionsProForm.LabelWithRenderModel)) {
+                //@ts-ignore
+                control[item].size = 'small';
+            }
         }
-        else if (styleSize === 'small') {
-            control.iAntdProps.className = (control.iAntdProps.className || '') + " " + size[styleSize].formItemLayOut + " hlform-table-row-height";
+        else if (formSize === 'small') {
+            control.iAntdProps.className = (control.iAntdProps.className || '') + " " + size[formSize].formItemLayOut + " " + formItemRowHeight;
         }
         else {
-            control.iAntdProps.className = (control.iAntdProps.className || '') + " " + size[styleSize].formItemLayOut + " " + (hasError ? '' : size[styleSize].formItemLayOut) + " " + (error ? 'form-item-default-error' : ''); /**  表单间距调小*/
+            control.iAntdProps.className = (control.iAntdProps.className || '') + " " + size[formSize].formItemLayOut + " " + (hasError ? '' : size[formSize].formItemLayOut) + " " + (error ? formClasses.itemDefaultError : ''); /**  表单间距调小*/
         }
         var view = this.props.store.HLFormContainer.get(this.uid);
         var localview = this.props.store.HLFormLocalDataContainer.get(this.freezeUid);
@@ -2333,8 +2335,8 @@ var HLForm = /** @class */ (function (_super) {
         else if (control instanceof LabelWithInputNumberModel) {
             return _super.prototype.createFormInputNumber.call(this, key, control, form, this.uid, viewModel);
         }
-        else if (control instanceof LabelWithSelectModel || control instanceof LabelWithHLSelectModel) {
-            if (control instanceof LabelWithHLSelectModel && control.iFormWithSelect.autoQuery) {
+        else if (control instanceof LabelWithSelectModel) {
+            if (control instanceof LabelWithSelectModel && control.iFormProps.autoQuery) {
                 var view_1 = localview.selectView.get(control.iAntdProps.name);
                 if (view_1 && view_1.currValue) {
                     var options = [];
@@ -2343,10 +2345,11 @@ var HLForm = /** @class */ (function (_super) {
                     if (view_1.currValue.data.get(view_1.pageIndex.toString())) {
                         //@ts-ignore
                         options = view_1.currValue.data.get(view_1.pageIndex.toString());
+                        var name_2 = control.iAntdProps.name;
                         total = view_1.currValue.total;
                     }
-                    control.iFormWithSelect.options = options;
-                    control.iFormWithSelect.total = total;
+                    control.iFormProps.options = options;
+                    control.iFormProps.total = total;
                 }
             }
             return _super.prototype.createFormSelect.call(this, key, control, form, this.uid, viewModel);
@@ -2400,16 +2403,13 @@ var HLForm = /** @class */ (function (_super) {
             var span = controls.iAntdProps.span || (24 / colCount);
             var name = controls.iAntdProps.name;
             var keys = "col" + name;
-            var formItemState = _this.getFormItemState(name);
             var visible = true;
             var display = true;
-            if (formItemState) {
-                if (formItemState.visible === false) {
-                    visible = formItemState.visible;
-                }
-                if (formItemState.display === false) {
-                    display = false;
-                }
+            if (controls.iFormProps.visible !== void 0) {
+                visible = controls.iFormProps.visible;
+            }
+            if (controls.iFormProps.display !== void 0) {
+                display = controls.iFormProps.display;
             }
             return ((visible) ? React.createElement(Col, { span: span, "data-id": name, key: "col" + keys, style: { display: "" + (display ? 'block' : 'none') } }, _this.renderControl(controls, "col" + keys)) : null);
         });
@@ -2421,14 +2421,21 @@ var HLForm = /** @class */ (function (_super) {
                     put: true,
                 }
             }, style: { width: '100%', display: 'contents' }, onChange: function (items, sort, evt) {
+                console.log(items);
                 _this.storeLocalView.updateControlsSort(items);
+                _this.storeView.elementList.clear();
+                _this.storeView.computedAllFormFields.map(function (w) {
+                    var name = w.iAntdProps.name;
+                    _this.storeView.renderNodeQueue.set(name, name);
+                });
+                _this.forceUpdate();
             } }, rendercontrols) : rendercontrols);
     };
     HLForm.prototype.renderGroup = function () {
         var _this = this;
         var group = this.props.group;
-        var controls = this.props.controls;
-        /* const controls = this.storeView.controls; */
+        /* const controls = this.props.controls; */
+        var controls = this.storeView.computedFormFields;
         //@ts-ignore
         var groupComponent = group.map(function (item, index) {
             var groupFormItem = controls.filter(function (entity) { return entity.iAntdProps.groupId === item.id; });
@@ -2438,10 +2445,10 @@ var HLForm = /** @class */ (function (_super) {
                     React.createElement("div", { className: "title " + (item.className || ''), "data-id": "form-floor", "data-tab": item.name },
                         React.createElement("span", { className: "span-left" }, item.name),
                         React.createElement("span", { className: "span-right" },
-                            entity.isShowSizeIcon && React.createElement(Dropdown, { overlay: (React.createElement(Menu, { selectedKeys: [_this.storeView.styleSize], onClick: function (item) {
+                            entity.isShowSizeIcon && React.createElement(Dropdown, { overlay: (React.createElement(Menu, { selectedKeys: [_this.storeView.computedFormSize], onClick: function (item) {
                                         var size = item.key;
-                                        _this.storeView.updateStyleSize(size);
-                                        _this.props.onUpdateStyleSize && _this.props.onUpdateStyleSize(size);
+                                        _this.storeView.updateFormSize(size);
+                                        _this.props.onUpdateFormSize && _this.props.onUpdateFormSize(size);
                                     } },
                                     React.createElement(Menu.Item, { key: "default" },
                                         React.createElement("span", null, "\u8212\u9002\u578B")),
@@ -2471,14 +2478,14 @@ var HLForm = /** @class */ (function (_super) {
     };
     HLForm.prototype.renderForm = function () {
         var group = this.props.group;
-        var controls = this.props.controls;
+        /* const controls = this.props.controls; */
+        var controls = this.storeView.computedFormFields;
         if (group && group instanceof Array && group.length) {
             return this.renderGroup();
         }
         return React.createElement(Row, { type: "flex" }, this.renderControls(controls));
     };
     HLForm.prototype.render = function () {
-        var getFieldDecorator = this.props.form.getFieldDecorator;
         return (React.createElement(Form, { className: baseCls + " " + this.uid }, this.renderForm()));
     };
     HLForm.defaultProps = {
@@ -2517,7 +2524,6 @@ LegionsProForm.CreateForm = CreateForm;
 LegionsProForm.ProFormUtils = ProFormUtils;
 LegionsProForm.LabelWithInputNumberModel = LabelWithInputNumberModel;
 LegionsProForm.LabelWithSelectModel = LabelWithSelectModel;
-LegionsProForm.LabelWithHLSelectModel = LabelWithHLSelectModel;
 LegionsProForm.LabelWithRenderModel = LabelWithRenderModel;
 LegionsProForm.LabelWithDatePickerModel = LabelWithDatePickerModel;
 LegionsProForm.LabelWithMonthPickerModel = LabelWithMonthPickerModel;

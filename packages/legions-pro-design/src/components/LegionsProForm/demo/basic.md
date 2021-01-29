@@ -61,18 +61,17 @@ class ProFormDemo extends React.Component<IProps,IState> {
         const formUtils = new LegionsProForm.ProFormUtils();
         console.log(rules,'rules');
         formUtils.renderInputConfig({
-            iAntdProps: formUtils.createAntdProps('text',null),
+            iAntdProps: formUtils.createAntdProps('text',1,null),
             iFormProps: {
                 ...formUtils.createLayout('文本框',5,15),
                 maxLength: '50',
                 type: 'text',
                 disabled: true,
-                defaultVisible:false,
             },
             rules: rules.text
         });
         formUtils.renderInputConfig({
-            iAntdProps: formUtils.createAntdProps('textarea',null),
+            iAntdProps: formUtils.createAntdProps('textarea',1,null),
             iFormProps: {
                 ...formUtils.createLayout('多行文本',5,15),
                 maxLength: '50',
@@ -91,7 +90,7 @@ class ProFormDemo extends React.Component<IProps,IState> {
             rules: rules.password
         })
         formUtils.renderInputConfig({
-            iAntdProps: formUtils.createAntdProps('numberText',null),
+            iAntdProps: formUtils.createAntdProps('numberText',1,null),
             iFormProps: {
                 ...formUtils.createLayout('数字文本',5,15),
                 maxLength: '50',
@@ -101,7 +100,7 @@ class ProFormDemo extends React.Component<IProps,IState> {
             rules: rules.numberText
         })
         formUtils.renderInputNumberConfig({
-            iAntdProps: formUtils.createAntdProps('numbers',null),
+            iAntdProps: formUtils.createAntdProps('numbers',1,null),
             iFormProps: {
                 ...formUtils.createLayout('数字',5,15),
 
@@ -109,7 +108,7 @@ class ProFormDemo extends React.Component<IProps,IState> {
             rules: rules.numbers
         })
         formUtils.renderSelectConfig({
-            iAntdProps: formUtils.createAntdProps('selectedItem',null,'请选择'),
+            iAntdProps: formUtils.createAntdProps('selectedItem',2,null,'请选择'),
             iFormProps: {
                 ...formUtils.createLayout('普通下拉',5,1 * 15),
                 options: [{
@@ -130,7 +129,7 @@ class ProFormDemo extends React.Component<IProps,IState> {
             rules: rules.selectedItem,
         })
         formUtils.renderSelectConfig({
-            iAntdProps: formUtils.createAntdProps('selectedItemRemote',null,'请选择'),
+            iAntdProps: formUtils.createAntdProps('selectedItemRemote',2,null,'请选择'),
             iFormProps: {
                 ...formUtils.createLayout('远程下拉',5,1 * 15),
                 allowClear: true,
@@ -150,7 +149,7 @@ class ProFormDemo extends React.Component<IProps,IState> {
                     },
                     ApiUrl: 'https://gateway.hoolinks.com/api/gateway',
                     method: 'post',
-                    token: 'SESSION=f53dcf36-ac05-4c78-8bda-9c11221c6aa8;',
+                    token: 'SESSION=0cef87fd-a1c3-4d32-8273-45402da62d56;',
                     options: {
                         'api-target':'https://qa-scm.hoolinks.com//jg/basic/cusinfo/search.json'
                     },
@@ -186,7 +185,7 @@ class ProFormDemo extends React.Component<IProps,IState> {
             rules: rules.selectedItem,
         })
         formUtils.renderSelectConfig({
-            iAntdProps: formUtils.createAntdProps('selectedItemMultiple',1,'下拉多选'),
+            iAntdProps: formUtils.createAntdProps('selectedItemMultiple',2,'下拉多选'),
             iFormProps: {
                 ...formUtils.createLayout('下拉多选',5,1*15),
                 allowClear: true,
@@ -211,7 +210,7 @@ class ProFormDemo extends React.Component<IProps,IState> {
             rules: rules.selectedItemMultiple,
         })
         formUtils.renderUploadConfig({
-            iAntdProps: formUtils.createAntdProps('upload',1,'文件上传'),
+            iAntdProps: formUtils.createAntdProps('upload',2,'文件上传'),
             iFormProps: {
                 ...formUtils.createLayout('文件上传',5,15),
                 maxFileCount: 1,
@@ -223,7 +222,7 @@ class ProFormDemo extends React.Component<IProps,IState> {
         formUtils.renderCustomConfig({
             // 自定义组件容器div属性设置 {span:24} 单独占一行 
             // 此属性定义是标识整个容器组件
-            iAntdProps: formUtils.createAntdProps('customRenderInput',1,''),
+            iAntdProps: formUtils.createAntdProps('customRenderInput',3,''),
             iFormProps: {
                 render: (form,antdProps,rule,formRef) => {
                     const jsxInput = formUtils.renderInputConfig({
@@ -239,7 +238,7 @@ class ProFormDemo extends React.Component<IProps,IState> {
             },
         })
         formUtils.renderCustomConfig({
-            iAntdProps: formUtils.createAntdProps('customRender',1,''),
+            iAntdProps: formUtils.createAntdProps('customRender',3,''),
             iFormProps: {
                 render: (form,antdProps,rule,formRef) => {
                     const JsxSelect = formUtils.renderSelectConfig({
@@ -254,7 +253,7 @@ class ProFormDemo extends React.Component<IProps,IState> {
                         rules: rules.priceType,
                     })
                     const JsxInput = formUtils.renderInputConfig({
-                        iAntdProps: formUtils.createAntdProps('price',1,'价格'),
+                        iAntdProps: formUtils.createAntdProps('price',null,'价格'),
                         iFormProps: {
                             maxLength: '70',
                         },
@@ -308,8 +307,23 @@ class ProFormDemo extends React.Component<IProps,IState> {
           }}
           onFieldsChange={(props,formFields) => {
               this.formRef.store.updateFormInputData(this.formRef.uid,formFields)
-              console.log(formFields,this.formRef.viewModel.InputDataModel);
           }}
+          group={[{
+                name:'文本输入',
+                id: 1,
+                active: true,
+                isFolding:true,
+            },{
+                name:'下拉框',
+                id: 2,
+                active: true,
+                isFolding:true,
+            },{
+                name:'自定义',
+                id: 3,
+                active: true,
+                isFolding:true,
+          }]}
           controls={this.createConfig()}
           uniqueUid="demo/proForm/one"
           colCount={2}
@@ -330,27 +344,50 @@ class ProFormDemo extends React.Component<IProps,IState> {
                     })
                 }}>提交</Button>
           <Button style={{marginLeft:'10px'}} type="primary" htmlType="submit" onClick={()=>{
-                    const value=this.formRef.viewModel.getFormState('text').disabled;
-                    this.formRef.viewModel.setFormState('text',{
-                            disabled: !value,
-                    })
-                    this.setState({
-                      disabledText:!value
-                    })
+                    const item = this.formRef.viewModel.getFormItemField('text');
+                    if (item&&item.value instanceof LegionsProForm.LabelWithInputModel) {
+                        const disabled = item.value.iFormProps.disabled
+                        this.setState({
+                            disabledText: !disabled
+                        })
+                        this.formRef.methods.setFormStates('text',(value) => {
+                            if (value instanceof LegionsProForm.LabelWithInputModel) {
+                                value.iFormProps.disabled=!disabled
+                            }
+                        })
+                    }
                 }}>{!this.state.disabledText?'禁用文本框输入':'启用文本框输入'}</Button>
          <Button style={{marginLeft:'10px'}} type="primary" htmlType="submit" onClick={()=>{
-                  const visibleText=this.formRef.viewModel.getFormState('text').visible;
-                  this.setState({
-                    visibleText:!visibleText
-                  })
-                  this.formRef.viewModel.setFormState('text',{visible:!visibleText})
+                  const item = this.formRef.viewModel.getFormItemField('text');
+                  if (item&&item.value) {
+                        let visibleText = item.value.iFormProps.visible;
+                        if (visibleText === void 0) {
+                            visibleText = true;
+                        }
+                            this.setState({
+                            visibleText:!visibleText
+                        })
+                        this.formRef.methods.setFormStates('text',(value) => {
+                            value.iFormProps.visible=!visibleText
+                        })
+                  }
+                 
                 }}>{!this.state.visibleText?'显示文本框':'隐藏文本框'}</Button>       
          <Button style={{marginLeft:'10px'}} type="primary" htmlType="submit" onClick={()=>{
-                  const value=this.formRef.viewModel.getFormState('price').visible;
-                  this.setState({
-                    visible:!value
-                  })
-                  this.formRef.viewModel.setFormState('price',{visible:!value})
+                    const item = this.formRef.viewModel.getFormItemField('price');
+                    if (item&&item.value) {
+                        
+                        let visible = item.value.iFormProps.visible;
+                        if (visible === void 0) {
+                            visible = true;
+                        }
+                        this.setState({
+                            visible:!visible
+                        })
+                        this.formRef.methods.setFormStates('price',(value) => {
+                                value.iFormProps.visible = !visible;
+                        })
+                    }
                 }}>{!this.state.visible?'显示价格文本框':'隐藏价格文本框'}</Button>       
         </FormItem>
       </Row>
