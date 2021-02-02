@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-07 17:02:30
- * @LastEditTime: 2021-01-13 10:28:31
+ * @LastEditTime: 2021-01-29 17:49:09
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/store/pro.layout/TabPaneUIView.ts
@@ -14,7 +14,7 @@ export class TabPaneUIView {
    *
    * @memberof TabPaneUIView
    */
-  @observable tabPanesTimestamp = observable.map<number>();
+  @observable tabPanesTimestamp = observable.map<string>();
 
   /**
    *

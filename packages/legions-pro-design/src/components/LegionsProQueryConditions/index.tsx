@@ -658,7 +658,9 @@ export default class LegionsProQueryConditions<Query = {}> extends React.Compone
                     float: 'left',marginLeft: '5px',marginRight: '3px',
                     position: 'absolute',zIndex: 999,background: '#fff',
                     height: '20px',lineHeight: '20px',
-                    color: '#999',top: '-3px',fontSize: 10,webkitTransform: 'scale(0.9)'
+                    color: '#999',top: '-3px',fontSize: 10,
+                    //@ts-ignore
+                    webkitTransform: 'scale(0.9)'
                 }}>
                     {component.type === 'radioButton' ? '' : label}
                 </span> :

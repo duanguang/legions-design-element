@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-07 16:49:31
- * @LastEditTime: 2021-01-07 18:01:29
+ * @LastEditTime: 2021-02-02 22:56:30
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/store/pro.query.conditions/HlQueryConditionView.ts
@@ -127,6 +127,37 @@ export class HlQueryConditionView<Query = {}> {
     }
     @computed get computedSize(){
        return this.size
+    }
+    /**
+     * xs: 宽度<768px 响应式栅格，可为栅格数或一个包含其他属性的对象 
+     * 
+     * sm:宽度≥768px 响应式栅格，可为栅格数或一个包含其他属性的对象 
+     * 
+     * md: 宽度≥992px 响应式栅格，可为栅格数或一个包含其他属性的对象
+     * 
+     * lg: 宽度≥1200px 响应式栅格，可为栅格数或一个包含其他属性的对象
+     * 
+     * xl:宽度≥1600px 响应式栅格，可为栅格数或一个包含其他属性的对象
+     */
+    @computed get compuedResolution(): 'xs' | 'sm' | 'md' | 'lg' | 'xl' {
+        const width = this.widthContainer;
+        let resolution = null
+        if (width >= 1600) {/** 宽度≥1600px 响应式栅格，可为栅格数或一个包含其他属性的对象 */
+            return 'xl'
+        }
+        else if (width >= 1200 && width < 1600) { /**宽度≥1200px 响应式栅格，可为栅格数或一个包含其他属性的对象 */
+            return 'lg'
+        }
+        else if (width >= 992 && width < 1200) {/**宽度≥992px 响应式栅格，可为栅格数或一个包含其他属性的对象 */
+            return 'md'
+        }
+        else if (width >= 768 && width < 992) {/**宽度≥768px 响应式栅格，可为栅格数或一个包含其他属性的对象 */
+            return 'sm';
+        }
+        else if (width < 768) {
+            return 'xs'
+        }
+        return null;
     }
     /**
      *  更新数据模型

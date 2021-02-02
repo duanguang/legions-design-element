@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-26 17:54:09
- * @LastEditTime: 2020-12-26 17:56:03
+ * @LastEditTime: 2021-02-02 11:09:38
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/store/pro.modal/modalView.ts
@@ -23,7 +23,7 @@ export class ModalView {
    *
    * @memberof ModalView
    */
-  @observable.ref visible = false;
+  @observable visible = false;
 
   /**
    * 模态框宽度
@@ -283,7 +283,7 @@ export class ModalView {
     return style[this.computedResizable.direction] || '';
   }
   @action asyncResizableBodyStyle(options?: {
-    modalType?: 'Drawer' | 'Modal' | 'fullscreen';
+    modalType?: 'drawer' | 'modal' | 'fullscreen';
     placement?: 'left' | 'right' | 'top' | 'bottom';
   }) {
     let style = {};
@@ -301,7 +301,7 @@ export class ModalView {
     if (this.computedResizable.direction === 'left') {
       if (
         options &&
-        options.modalType === 'Drawer' &&
+        options.modalType === 'drawer' &&
         options.placement === 'right'
       ) {
         this.width = document.body.clientWidth - this.resizableData.resizableX;

@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-08 12:00:22
- * @LastEditTime: 2021-01-11 17:33:19
+ * @LastEditTime: 2021-02-02 15:50:48
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProQueryConditions/interface/index.ts
@@ -61,7 +61,7 @@ interface IMethods {
         } & Object) => void
 }
 export interface IQueryProps {
-    width: number
+    width?: number
     span?: number
     title?: string
     maxlength?: string,
@@ -148,17 +148,17 @@ interface IComponent {
     render?: Function,
     regex?: RegExp
 }
-interface IQueryTextProps extends IQueryProps,InputProps {
+export interface IQueryTextProps extends IQueryProps,InputProps {
 
 }
-interface IQueryTextAreaProps extends Weaken<IQueryProps,'maxlength'>,TextAreaProps {
+export interface IQueryTextAreaProps extends Weaken<IQueryProps,'maxlength'>,TextAreaProps {
     maxlength?: number
 }
-interface IQueryRadioButtonProps extends IQueryProps,RadioGroupProps {
+export interface IQueryRadioButtonProps extends IQueryProps,RadioGroupProps {
 }
-interface IQueryTextNumberProps extends IQueryProps,InputNumberProps {
+export interface IQueryTextNumberProps extends IQueryProps,InputNumberProps {
 }
-interface IQuerySelectProps extends IQueryProps,IProSelectProps {
+export interface IQuerySelectProps extends IQueryProps,IProSelectProps {
     multiple: boolean,
     loading?: boolean,
     /** 自动托管下拉数据请求，在下拉框组件中使用,只支持一次性查询全部数据
@@ -166,21 +166,23 @@ interface IQuerySelectProps extends IQueryProps,IProSelectProps {
      */
     autoQuery?: ISelectAutoQuery
 }
-interface IQueryDateProps extends IQueryProps,DatePickerProps {
+export interface IQueryDateProps extends IQueryProps,DatePickerProps {
     format: 'YYYY-MM-DD HH:mm:ss' | 'YYYY-MM-DD' | 'YYYY-MM-DD HH:mm'
     showTime: boolean | { format: 'HH:mm' }
 }
-interface IQueryRangePickerProps extends RangePickerProps,Weaken<IQueryProps,'placeholder'> {
+export interface IQueryRangePickerProps extends RangePickerProps,Weaken<IQueryProps,'placeholder'> {
     placeholder?: [string,string]
 }
-
+export interface IQueryCheckBoxProps extends IQueryProps,CheckboxProps{}
 interface IRadioButtonProps {
     value: string
     label: string,
     disabled?: boolean
 }
 export interface IQueryProps {
-    width: number
+    width?: number
+    label: string;
+    labelSpan?: number;
     span?: number
     title?: string
     maxlength?: string,
@@ -200,4 +202,7 @@ export interface IQueryProps {
      */
     onReset?: <T extends {}>(fieldName: string,vlaue: T) => T;
     onPaste?: (event) => void;
+
+    onEnter?:(value,viewEntity?: IViewQueryConditionStore)=>void
 }
+

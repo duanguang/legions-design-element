@@ -4,75 +4,21 @@ import { Modal,message } from 'antd';
 import { ModalProps,WrappedFormUtils } from '../interface/antd';
 import { bind,observer } from 'legions/store-react'
 import {ProModalStore  } from '../store/pro.modal';
-import { InstanceLegionsProModal } from './interface';
+import { ILegionsProModalProps, InstanceLegionsProModal } from './interface';
 import { IViewModelModalStore } from '../store/pro.modal/interface';
 import { ISchedule } from '../store/interface';
 import { shortHash } from 'legions-lunar/object-hash';
 import styles from './style/index.modules.less';
 import './style/index.less';
-import { runInAction } from 'mobx';
+import { runInAction,autorun } from 'mobx';
+import { LegionsProModalContext } from './LegionsProModalContext';
 const maximizeSrc = 'https://gitee.com/duanguang/figure-bed/raw/master/oss/maximize.png'
 const undoSrc = 'https://gitee.com/duanguang/figure-bed/raw/master/oss/undo.png'
 const antPrefix = 'ant';
 
-interface IdraggableOptions {
-    minHeight?: number;
-    minWidth?: number;
-    /* location?:'body'|'header'  */
-}
-interface IProps extends ModalProps {
-    store?: ProModalStore,
-    onReady: (instance: InstanceLegionsProModal) => void
 
-    /**
-     * 组件类型，默认modal，也可以设置Drawer 抽屉形式
-     * fullscreen 支持手动全屏及还原
-     *
-     * @type {('Drawer'|'Modal')}
-     * @memberof IProps
-     */
-    modalType?: 'Drawer' | 'Modal' | 'fullscreen',
-
-    /**
-     *
-     * 抽屉方向
-     * @type {('left'|'right')}
-     * @memberof IProps
-     */
-    placement?: 'left' | 'right' | 'top' | 'bottom',
-
-    /**
-     *
-     * 是否可以拖拽移动
-     * 
-     * 会自动关闭mask及maskClosable 
-     * @type {boolean}
-     * @memberof IProps
-     */
-    draggable?: boolean
-
-    /**
-     *
-     * 拖拽参数设置
-     * @type {IdraggableOptions}
-     * @memberof IProps
-     */
-    draggableOptions?: IdraggableOptions
-    /**
-     * 拖拽位置
-     *
-     * @type {('body'|'header')}
-     * @memberof IProps
-     */
-    /*  draggableLocation?:'body'|'header' */
-
-    /**
-     * 是否可以调整模态框大小
-     * 如果开启此参数，请务必同步开启draggable 拖拽移动参数
-     * @type {boolean}
-     * @memberof IProps
-     */
-    resizable?: boolean;
+interface IProps extends ILegionsProModalProps {
+    
 }
 interface IState {
 
@@ -157,6 +103,7 @@ export default class LegionsProModal extends Component<IProps,IState> {
     contentResizableNode: Element = null;
     nodeMaximize: Element = null;
     subscription: ISchedule = null;
+    subscriptionVisible: ISchedule = null;
     /**
      * antd-content 坐标轴 *
      */
@@ -182,11 +129,12 @@ export default class LegionsProModal extends Component<IProps,IState> {
     viewStore: IViewModelModalStore = null;
     getModalDOM: Element = null;
     static defaultProps = {
-        modalType: 'Modal',
+        modalType: 'modal',
         placement: 'left',
         draggable: false,
         resizable: false,
     }
+    static LegionsProModalContext = LegionsProModalContext
     constructor(props) {
         super(props)
         this.handleCancel = this.handleCancel.bind(this);
@@ -202,6 +150,11 @@ export default class LegionsProModal extends Component<IProps,IState> {
                 clearTimeout(timeId);
             },0)
         }
+    }
+    
+    watchVisibleChange = (n) => {
+        const visible = this.viewStore.visible;
+        this.props.onVisibleChange && this.props.onVisibleChange(visible);
     }
     get getModalContentDOM() {
         if (this.getModalDOM) {
@@ -294,6 +247,7 @@ export default class LegionsProModal extends Component<IProps,IState> {
         if (this.props.draggable) {
             this.subscription = this.props.store.schedule([this.log.bind(this)])
         }
+        this.subscriptionVisible = this.props.store.schedule([this.watchVisibleChange.bind(this)])
         this.props.onReady && this.props.onReady({ store: this.props.store,uid: this.uid,viewModel: view });
     }
     componentDidMount() {
@@ -342,11 +296,12 @@ export default class LegionsProModal extends Component<IProps,IState> {
     }
     componentWillUnmount() {
         this.props.store.delete(this.uid);
-        this.subscription && this.subscription.unsubscribe()
-        this.destroyPortal()
+        this.subscription && this.subscription.unsubscribe();
+        this.subscriptionVisible && this.subscriptionVisible.unsubscribe();
+        this.destroyPortal();
         this.unbindingResizableEven();
         if (this.getModalHeaderDOM) {
-            this.getModalHeaderDOM.removeEventListener('mousedown',this.handleDraggableMoveStart.bind(this))
+            this.getModalHeaderDOM.removeEventListener('mousedown',this.handleDraggableMoveStart.bind(this));
         }
     }
     /** 销毁最大化按钮节点 */
@@ -832,14 +787,14 @@ export default class LegionsProModal extends Component<IProps,IState> {
             }
             draggingMouseStyles = this.viewStore.dragData.dragging ? 'legions-pro-modal-content-dragging' : 'legions-pro-modal-content-drag'
         }
-        if (this.props.modalType === 'Drawer' && this.props.resizable) {
+        if (this.props.modalType === 'drawer' && this.props.resizable) {
             drawerMaskProps = {
                 maskClosable: false,
             }
         }
         const drawerStyles: React.CSSProperties = Object.assign({ ...this.props.style },{ paddingBottom: '0px' },placement[this.props.placement],this.viewStore.computedResizableContentStyles)
         return (
-            this.props.modalType === 'Drawer' ? <Modal
+            this.props.modalType === 'drawer' ? <Modal
                 width={(this.props.placement === 'top' || this.props.placement === 'bottom') ? '100%' : this.viewStore.width}
                 {...this.props}
                 {...drawerMaskProps}
@@ -858,11 +813,8 @@ export default class LegionsProModal extends Component<IProps,IState> {
             </Modal> :
                 <Modal
                     width={(this.viewStore.operaModel === 'maximize') ? '100%' : this.viewStore.width}
-                    /*                  width={this.viewStore.width} */
                     {...this.props}
                     {...draggableMaskProps}
-                    /* mask={false}
-                    maskClosable={false} */
                     style={Object.assign(this.props.style || {},
                         draggableStyles,
                         this.viewStore.computedMaximizeContentStyles,

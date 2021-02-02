@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-25 18:42:42
- * @LastEditTime: 2021-01-18 16:15:57
+ * @LastEditTime: 2021-02-02 10:03:07
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/index.ts
@@ -36,3 +36,5 @@ export { default as LegionsProUEditor } from './LegionsProUEditor';
 export { default as LegionsProUpload } from './LegionsProUpload';
 export { default as LegionsProVirtualTable } from './LegionsProVirtualTable';
 export { default as LgeionsProVirtualList } from './LgeionsProVirtualList';
+export { default as LegionsProModalForm } from './LegionsProModalForm';
+export { default as LegionsProTabsForm } from './LegionsProTabsForm';

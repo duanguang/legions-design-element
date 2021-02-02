@@ -234,10 +234,6 @@ export default class FormInput extends AbstractForm<IFormWithInputProps>{
         if ('colon' in props) {
             formItemProps['colon'] = props.colon;
         }
-        if (iAntdProps.name === 'text') {
-            
-            console.log(this.props.iFormInput.value,form.getFieldValue('text'));
-        }
         return (
             <FormElement form={form}
                 onReady={(value) => {

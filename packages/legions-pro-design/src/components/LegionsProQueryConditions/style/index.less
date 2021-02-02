@@ -1,7 +1,8 @@
 .legions-pro-query{
     background: white;
+    
     .ant-btn{
-      padding: 0 10px !important;
+      padding: 0 6px ;
     }
     .ant-dropdown-button{
       .ant-dropdown-trigger{
@@ -27,8 +28,26 @@
   .anticon-close-circle:active {
     color: #666;
   } 
+  .ant-checkbox-wrapper + span, .ant-checkbox + span {
+    padding-left: 2px;
+    padding-right: 0px;
+  }
+  .ant-radio-button-wrapper{
+    padding: 0 8px;
+  }
 }
 .legions-pro-query-tooltip .ant-tooltip-inner{
   max-height: 300px;
   overflow: auto;
+}
+.legions-pro-query-label{
+  height: 28px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+   label:after {
+    content: ":";
+    position: relative;
+    top: -0.5px;
+   }
 }

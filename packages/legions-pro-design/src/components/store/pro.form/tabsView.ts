@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-28 16:13:01
- * @LastEditTime: 2021-01-29 15:45:08
+ * @LastEditTime: 2021-01-29 17:53:54
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/store/pro.form/tabsView.ts
@@ -83,7 +83,7 @@ export class TabsFormView{
         return this._tabsMap.entries();
     }
     @action getTabs(key: string) {
-        console.log(this);
+        console.log(this._tabsMap);
         return this._tabsMap.get(key);
     }
     @action hasTabs(key: string) {

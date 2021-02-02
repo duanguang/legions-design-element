@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-28 15:58:15
- * @LastEditTime: 2021-01-29 16:02:04
+ * @LastEditTime: 2021-02-01 16:57:02
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProTabsForm/index.tsx
@@ -81,7 +81,7 @@ export default class LegionsProTabsForm<Model> extends React.Component<IProps<Mo
         super(props);
         if (this.props['uniqueUid']) {
             this.decryptionFreezeUid = `${this.props['uniqueUid']}${this.props.uniqueKeys || ''}${process.env.environment === 'production' ? 'production' : ''}`;
-            this.freezeUid = shortHash(this.decryptionFreezeUid);
+            this.freezeUid = `tabsform${shortHash(this.decryptionFreezeUid)}`;
         }
         else {
             console.error('props.uniqueUid Can not be empty');
@@ -157,7 +157,6 @@ export default class LegionsProTabsForm<Model> extends React.Component<IProps<Mo
     renderForm(key: string,tab) {
         const { controls,InputDataModel,group,size,colCount } = this.props;
         return <LegionsProForm
-            {...tab.formInstance && tab.formInstance.viewModel.InputDataModel}
             size={size}
             colCount={colCount}
             InputDataModel={InputDataModel}
@@ -170,6 +169,8 @@ export default class LegionsProTabsForm<Model> extends React.Component<IProps<Mo
             onReady={(_,formInstance?: InstanceForm) => {
                 tab.formInstance = { ...formInstance,that: this };
             }}
+            uniqueKeys={key}
+            key={key}
             group={group}
             controls={controls}
         />
@@ -243,6 +244,7 @@ export default class LegionsProTabsForm<Model> extends React.Component<IProps<Mo
                             </React.Fragment>
                             }
                             key={item.keys}
+                            data-key={item.keys}
                         >
                             {this.renderForm(item.keys,item)}
                         </Tabs.TabPane>

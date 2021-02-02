@@ -166,20 +166,13 @@ class HLForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
             activeName: ''
         }
         this.uid = this.props['uid'];
-        this.uid = `form${this.props.store.HLFormContainer.size}${shortHash(`${this.timeId}${this.props.store.HLFormContainer.size}`)}`;
-        if (this.props.store.HLFormContainer.has(this.uid)) {
-            this.timeId = new Date().getTime()
-            this.uid = `form${this.props.store.HLFormContainer.size}${shortHash(`${this.timeId}${this.props.store.HLFormContainer.size}`)}`;
-        }
         this.traceId = this.uid;
-        this.props.store.add(this.uid,{
-            form: { ...this.props.form,validateFields: this.validateFields.bind(this) },
-            InputDataModel: this.props.InputDataModel,
-            formRef:this,
-        })
-        if (this.props['uniqueUid']) {
-            this.decryptionFreezeUid = `${this.props['uniqueUid']}${this.props.uniqueKeys || ''}${process.env.environment === 'production' ? 'production' : ''}`;
-            this.freezeUid = shortHash(this.decryptionFreezeUid);
+        this.decryptionFreezeUid = this.props['decryptionFreezeUid'];
+        this.freezeUid = this.props['freezeUid'];
+        if (this.props.store.get(this.uid)) {
+            this.props.store.get(this.uid)['form'] = { ...this.props.form,validateFields: this.validateFields.bind(this) }
+        }
+        if (this.freezeUid) {
             if (!this.props.store.HLFormLocalDataContainer.has(this.freezeUid)) {
                 this.props.store.addLocalData(this.freezeUid)
                 this.initSelectView();
@@ -380,7 +373,9 @@ class HLForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
         this.consoleLog('hlFormContainer-componentWillReceiveProps');
     }
     componentWillUnmount() {
-        this.props.store.delete(this.uid);
+        if (!this.props['uniqueUid']) {
+            this.props.store.delete(this.uid);
+        }
         const el = document.querySelector(`.${this.uid}`);
         if (el) {
             el.removeEventListener('keydown',this.handleKeyDown.bind(this))
@@ -958,14 +953,13 @@ class HLForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
         if (group && group instanceof Array && group.length) {
             return this.renderGroup()
         }
-        console.log(this.props);
         return <Row type="flex">
             {this.renderControls(controls)}
         </Row>;
     }
     render() {
         return (
-            <Form {...this.storeView.InputDataModel} className={`${baseCls} ${this.uid}`} /* key={this.props.controls.length} */>
+            <Form  className={`${baseCls} ${this.uid}`} /* key={this.props.controls.length} */>
                 {this.renderForm()}
             </Form>
         )
@@ -986,27 +980,68 @@ const CustomizedForm = Form.create({
         props.onValuesChange && props.onValuesChange(props,values)
     }
 })(HLForm);
-/* export const HLFormContainer = (props: IHLFormProps) => {
-    return <CustomizedForm {...props} />
-} */
-export function LegionsProForm<mapProps = {}>(props: IProFormProps<mapProps>) {
-    return <CustomizedForm {...props} />
+
+@bind({ store: ProFormStore })
+@observer
+export class LegionsProForm<mapProps = {}> extends React.Component<IProFormProps<mapProps>>{
+    static CreateForm = CreateForm
+    static ProFormUtils = ProFormUtils;
+    static LabelWithInputNumberModel = LabelWithInputNumberModel;
+    static LabelWithSelectModel = LabelWithSelectModel;
+    static LabelWithRenderModel = LabelWithRenderModel;
+    static LabelWithDatePickerModel = LabelWithDatePickerModel;
+    static LabelWithMonthPickerModel = LabelWithMonthPickerModel;
+    static LabelWithRangePickerModel = LabelWithRangePickerModel;
+    static LabelWithUploadModel = LabelWithUploadModel;
+    static LabelWithSwitchModel = LabelWithSwitchModel;
+    static LabelWithRadioButtonModel = LabelWithRadioButtonModel;
+    static LabelWithTextModel = LabelWithTextModel;
+    static LabelWithInputModel = LabelWithInputModel;
+    static BaseFormFields = BaseFormFields
+    static ProFormFields = ProFormFields
+    /** 根据时间戳生成，每次初始化表单组件都会产生新的值*/
+    uid = ''
+    timeId = new Date().getTime()
+
+    /** uid 的值绝对唯一，且每次初始生成表单都是相同值 */
+    freezeUid = ''
+
+    /** 未加密的freezeUid 值 */
+    decryptionFreezeUid = ''
+    constructor(props){
+        super(props);
+        if (this.props['uniqueUid']) {
+            this.decryptionFreezeUid = `${this.props['uniqueUid']}${this.props.uniqueKeys || ''}${process.env.environment === 'production' ? 'production' : ''}`;
+            this.freezeUid = `form${shortHash(this.decryptionFreezeUid)}`;
+            this.uid = this.freezeUid
+        } else {
+            this.uid = `form${this.props.store.HLFormContainer.size}${shortHash(`${this.timeId}${this.props.store.HLFormContainer.size}`)}`;
+            if (this.props.store.HLFormContainer.has(this.uid)) {
+                this.timeId = new Date().getTime()
+                this.uid = `form${this.props.store.HLFormContainer.size}${shortHash(`${this.timeId}${this.props.store.HLFormContainer.size}`)}`;
+            }
+            this.freezeUid = this.uid;
+            this.decryptionFreezeUid = this.uid;
+        }
+        console.log(this.uid,'this.uid');
+        this.props.store.add(this.uid,{
+            InputDataModel: this.props.InputDataModel,
+            formRef:this,
+        })
+        
+    }
+    get storeView() {
+        return this.props.store.HLFormContainer.get(this.uid)
+    }
+    render() {
+        return <CustomizedForm {...this.props} {...this.storeView.InputDataModel} {...{
+            uid: this.uid,
+            freezeUid: this.freezeUid,
+            decryptionFreezeUid:this.decryptionFreezeUid
+        }} />
+    }
 }
-LegionsProForm.CreateForm = CreateForm
-LegionsProForm.ProFormUtils = ProFormUtils;
-LegionsProForm.LabelWithInputNumberModel = LabelWithInputNumberModel;
-LegionsProForm.LabelWithSelectModel = LabelWithSelectModel;
-LegionsProForm.LabelWithRenderModel = LabelWithRenderModel;
-LegionsProForm.LabelWithDatePickerModel = LabelWithDatePickerModel;
-LegionsProForm.LabelWithMonthPickerModel = LabelWithMonthPickerModel;
-LegionsProForm.LabelWithRangePickerModel = LabelWithRangePickerModel;
-LegionsProForm.LabelWithUploadModel = LabelWithUploadModel;
-LegionsProForm.LabelWithSwitchModel = LabelWithSwitchModel;
-LegionsProForm.LabelWithRadioButtonModel = LabelWithRadioButtonModel;
-LegionsProForm.LabelWithTextModel = LabelWithTextModel;
-LegionsProForm.LabelWithInputModel = LabelWithInputModel;
-LegionsProForm.BaseFormFields = BaseFormFields
-LegionsProForm.ProFormFields = ProFormFields
+
 
 /* @bind({ store: HLFormStore })
 @observer

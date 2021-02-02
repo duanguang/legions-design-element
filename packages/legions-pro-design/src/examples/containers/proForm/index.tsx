@@ -402,11 +402,10 @@ export class ProForm extends React.Component<IProps,IState> {
                         this.formRef.viewModel.updateFormSize('table')
                     }}>表单尺寸</Button>
                     <Button onClick={() => {
-                        this.formRef.store.updateFormInputData(this.formRef.uid,{text:{value:'222'}},true)
+                        this.formRef.store.updateFormInputData(this.formRef.uid,{text:{value:'222'}})
                     }}>文本框赋值</Button>
                     <LegionsProForm
                         <FormFields>
-                        {...this.formRef && this.formRef.viewModel.InputDataModel}
                         InputDataModel={FormFields}
                         onReady={(form,ref) => {
                             this.formRef = Object.assign(ref,{ that: this });

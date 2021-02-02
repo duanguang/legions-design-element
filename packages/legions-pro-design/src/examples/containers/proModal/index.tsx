@@ -1,33 +1,27 @@
 import { Button,Col,Row } from 'antd';
 import React from 'react';
 import { bind,observer } from 'legions/store-react';
-import { LegionsProForm,LegionsProPageContainer } from '../../../components';
+import { LegionsProForm, LegionsProModalForm,LegionsProPageContainer } from '../../../components';
 import { observablePromise } from 'legions/store-utils';
 import { observable } from 'legions/store';
 import { HttpConfig } from '../../constants/httpConfig';
-import { InstanceForm } from '../../../components/LegionsProForm/interface'
 import { FormFields } from '../proForm/model';
 import { ClassOf } from 'legions-lunar/types/api/typescript';
-import LegionsProTabsForm from 'components/LegionsProTabsForm';
-import { InstanceTabsForm } from 'components/LegionsProTabsForm/interface';
+import { InstanceLegionsModalForm } from '../../../components/LegionsProModalForm/interface'
 interface IProps { }
 interface IState {
     visible: boolean;
     disabled: boolean;
 }
 /* @observer */
-export class ProTabsForm extends React.Component<IProps,IState> {
-    formRef: InstanceTabsForm<FormFields>
+export class ProModal extends React.Component<IProps,IState> {
+    modalStore: InstanceLegionsModalForm<FormFields> = null;
     constructor(props: IProps) {
         super(props)
         this.state = {
             visible: true,
             disabled: false
         }
-    }
-    arr = this.createConfig()
-    componentDidMount() {
-    /* this.formRef.viewModel.setFormState('price',{visible:false}) */
     }
     createConfig() {
         const rules = FormFields.initFormRules<FormFields,{}>(FormFields,{})
@@ -41,7 +35,7 @@ export class ProTabsForm extends React.Component<IProps,IState> {
                 /* visible:false, */
             /* disabled: true, */
                 onChange: () => {
-                    console.log(this.formRef);
+                    console.log(this.modalStore.formInstance);
                 }
             },
             rules: rules.text
@@ -171,17 +165,10 @@ export class ProTabsForm extends React.Component<IProps,IState> {
             formUtils.getFormConfig('numbers'),
             formUtils.getFormConfig('selectedItem'),
             formUtils.getFormConfig('selectedItemRemote'),
-            /* formUtils.getFormConfig('textarea'), */
-            /* formUtils.getFormConfig('password'),
-            formUtils.getFormConfig('numberText'),
-            formUtils.getFormConfig('numbers'),
-            formUtils.getFormConfig('selectedItem'),
-            formUtils.getFormConfig('selectedItemRemote'),
-            formUtils.getFormConfig('selectedItemMultiple'),
-            formUtils.getFormConfig('customRenderInput'), */
-            /* formUtils.getFormConfig('customRender'), */
-            /* formUtils.getFormConfig('upload'), */
         ]
+    }
+    componentDidMount() {
+        /* this.formRef.viewModel.setFormState('price',{visible:false}) */
     }
     render() {
         console.log('render parent');
@@ -190,36 +177,36 @@ export class ProTabsForm extends React.Component<IProps,IState> {
             content={
                 <Row>
                     <Button style={{ marginLeft: '10px' }} type="primary" htmlType="submit" onClick={() => {
-                        console.log(this.formRef.methods.validateFields());
-                       
-                    }}>检验</Button>
+
+                        this.modalStore.modalInstance.viewModel.visible = true
+                        this.modalStore.modalInstance.viewModel.title = 'test'
+                    }}>打开</Button>
                     <Button style={{ marginLeft: '10px' }} type="primary" htmlType="submit" onClick={() => {
-                        this.formRef.methods.submit((values) => {
-                            console.log(values);
-                        })
-                       
+
+
                     }}>提交</Button>
                     <Button style={{ marginLeft: '10px' }} type="primary" htmlType="submit" onClick={() => {
-                        const item = this.formRef.viewModel.getTabs(this.formRef.viewModel.activeTabKey)
-                        console.log(this.formRef.viewModel.activeTabKey);
-                      item.formInstance.store.updateFormInputData(item.formInstance.uid,{text:{value:'222'}})
+
                     }}>赋值</Button>
-                    <LegionsProTabsForm
+
+                    <LegionsProModalForm
                         <FormFields>
+                        modalProps={{
+                            resizable: true,
+                            modalType: 'fullscreen',
+                            placement: 'right',
+                            draggable: true,
+                            onVisibleChange: (value) => {
+                                console.log(value,'onVisibleChange');
+                            }
+                        }}
                         InputDataModel={FormFields}
                         controls={this.createConfig()}
-                        tabPaneProps={
-                            {
-                                tab: (key,index) => {
-                                    return <div>销售订单{index+1}</div>
-                                }
-                            }
-                        }
-                        onReady={(formref) => {
-                            this.formRef = formref;
-                        }}
-                    ></LegionsProTabsForm>
-                    
+                        onReady={(value) => {
+                            this.modalStore = value;
+                        }}>
+
+                    </LegionsProModalForm>
 
                 </Row>
             }

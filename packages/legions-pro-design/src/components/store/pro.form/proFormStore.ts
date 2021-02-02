@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-29 10:18:01
- * @LastEditTime: 2021-01-29 16:44:07
+ * @LastEditTime: 2021-02-02 11:25:59
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/store/pro.form/proFormStore.ts
@@ -68,15 +68,6 @@ export class HlFormView {
   @observable enableEnterSwitch = false;
 
   @observable private size: 'default' | 'small' | 'table' = 'default';
-  /**
-   * 收集到节点数量，私有变量，主要用于当前后两次收集到节点数量不一致时，这是可以强制清空队列，重新收集，保证收集节点顺序
-   *
-   * @memberof HlFormView
-   */
-  @observable nodeCount = 0;
-
-  
-
   @observable private formfields: IObservableMap<
   string,
   IProFormFields['componentModel']
@@ -783,7 +774,7 @@ export default class ProFormStore extends StoreBase {
    * @memberof HLFormStore
    */
   @action add(uid: string,options:{
-    form: WrappedFormUtils,InputDataModel?: any,
+    form?: WrappedFormUtils,InputDataModel?: any,
     formRef:React.Component
   }) {
     let otherView: IOtherView = { form:options.form, uid,formRef:options.formRef };
@@ -923,7 +914,6 @@ export default class ProFormStore extends StoreBase {
   @action updateFormInputData(
     formUid: string,
     formFields: object,
-    forceUpdate?: boolean
   ) {
     const view = this.HLFormContainer.get(formUid);
     if (view && typeof view.InputDataModelClass === 'function') {
@@ -937,12 +927,6 @@ export default class ProFormStore extends StoreBase {
           view.renderNodeQueue.set(key,key)
         }
       })
-      /* if (forceUpdate) {
-        view.formRef.forceUpdate();
-      } */
-      /* if (parentRef && parentRef.forceUpdate) {
-        parentRef.forceUpdate();
-      } */
     }
   }
 
