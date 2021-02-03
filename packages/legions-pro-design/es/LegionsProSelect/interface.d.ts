@@ -114,4 +114,5 @@ export interface ISelectProps extends OptionProps {
     * @memberof IAntdSelectOption
     */
     group?: string | number;
+    label?: React.ReactNode | string;
 }

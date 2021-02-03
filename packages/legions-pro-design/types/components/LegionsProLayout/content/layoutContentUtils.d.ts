@@ -13,7 +13,7 @@ export declare class LayoutContentUtils {
     static getTabPanePath(pane: IPanes, that: ContentPart): string;
     static renderTabPaneContent(pane: IPanes, that: ContentPart): any;
     static renderTabPaneIframe(pane: IPanes, that: ContentPart, src: string): JSX.Element;
-    static renderTabPaneRouterComponent(pane: IPanes, that: ContentPart, src: string): React.CElement<unknown, React.Component<unknown, React.ComponentState>>;
+    static renderTabPaneRouterComponent(pane: IPanes, that: ContentPart, src: string): React.CElement<{}, React.Component<{}, any, any>>;
     static renderProxySanboxDom(pane: IPanes, that: ContentPart, src: string, proxySanbox: ProxySanbox): any;
     static loadMicroApp(pane: IPanes, that: ContentPart, proxySanbox: ProxySanbox): void;
     /** 沙箱单实例加载方式 */

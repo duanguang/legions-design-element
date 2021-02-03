@@ -3,9 +3,14 @@ import AbstractForm from './AbstractForm';
 import { InstanceFormElement } from './interface/formElement';
 export declare class LabelWithRangePickerModel {
     iAntdProps: IAntdProps;
-    iFormRangePicker: IFormRangePickerProps;
+    iFormProps: IFormRangePickerProps;
     rules?: IAntdRule[];
-    constructor(iAntdProps: IAntdProps, iFormRangePicker: IFormRangePickerProps, rules?: IAntdRule[]);
+    constructor(iAntdProps: IAntdProps, iFormProps: IFormRangePickerProps, rules?: IAntdRule[]);
+}
+export interface LabelWithRangePickerPartialModel {
+    iAntdProps?: IAntdProps;
+    iFormRangePicker?: IFormRangePickerProps;
+    rules?: IAntdRule[];
 }
 export interface IFormRangePickerProps extends RangePickerProps, IAntdFormItemProps {
 }
@@ -26,5 +31,7 @@ export default class FormRangePicker extends AbstractForm<IFormWithRangePickerPr
     FormRangePickerRef: InstanceFormElement;
     constructor(props: any);
     onOpenChange(status: any): void;
+    componentDidMount(): void;
+    shouldComponentUpdate(nextProps: IFormWithRangePickerProps, nextState: any, context: any): boolean;
     render(): JSX.Element;
 }

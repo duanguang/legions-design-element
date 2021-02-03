@@ -3,6 +3,9 @@ import { observablePromise } from 'legions/store-utils';
 import { ViewModel } from 'brain-store-utils';
 import { ProTableView } from '../ProTableView';
 import { ProTableLocalView } from '../ProTableLocalView';
+import { PageListEntity } from '../../../LegionsProTable/pageListEntity';
+import { request } from 'legions/request';
+import { ClassOf } from 'legions-lunar/types/api/typescript';
 export interface ITableColumnConfig {
     /** 当传入的title不为string类型时，可传label作为checkbox的label展示 */
     label?: string;
@@ -57,14 +60,19 @@ export interface ITableAutoQuery<Model = {}> {
      */
     options?: HeadersPrams & {
         [key: string]: string;
-    };
+    } & request.HeadersPrams;
     /**
-     * 数据模型
+     * 数据模型配置
      *
      * @type {Model}
      * @memberof IAutoQuery
      */
-    model: Model;
+    model: {
+        /** 埋点配置项，暂时不用 */
+        model?: ClassOf<Model>;
+        /** 映射数据至===>result */
+        mappingEntity: (that: PageListEntity<Model>, responseData: any) => void;
+    } | Model;
     /**
      *
      * 授权令牌，一般泛指接口权限
@@ -77,7 +85,7 @@ export interface ITableAutoQuery<Model = {}> {
      *
      * @memberof IAutoQuery
      */
-    transform: (value: observablePromise.PramsResult<any>) => {
+    transform: (value: observablePromise.PramsResult<PageListEntity<Model>>) => {
         total: number;
         data: Array<any>;
     };

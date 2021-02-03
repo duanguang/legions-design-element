@@ -1,6 +1,6 @@
 import React from 'react';
 import { IProSelectProps, LabeledValue } from '../LegionsProSelect/interface';
-import { AbstractSelectForm } from './AbstractForm';
+import AbstractForm from './AbstractForm';
 import { InstanceFormElement } from './interface/formElement';
 import { IFormSelectProps, IFormSelectWrapError, IFormWithSelectProps } from './interface/select';
 export declare class HLSelectWrapError extends React.Component<IFormSelectProps & IProSelectProps & IFormSelectWrapError> {
@@ -20,7 +20,7 @@ interface IState {
      */
     styleClassFocus?: string;
 }
-export default class FormHLSelect extends AbstractSelectForm<IFormWithSelectProps, IState> {
+export default class FormHLSelect extends AbstractForm<IFormWithSelectProps, IState> {
     FormHLSelectRef: InstanceFormElement;
     constructor(props: any);
     /**
@@ -42,6 +42,7 @@ export default class FormHLSelect extends AbstractSelectForm<IFormWithSelectProp
     onClear: () => void;
     onChange(even: any): void;
     onPagingQuery: (pageIndex: number, pageSize: number, value?: string | string[] | number[] | LabeledValue | LabeledValue[]) => void;
+    shouldComponentUpdate(nextProps: IFormWithSelectProps, nextState: any, context: any): boolean;
     render(): JSX.Element;
 }
 export {};

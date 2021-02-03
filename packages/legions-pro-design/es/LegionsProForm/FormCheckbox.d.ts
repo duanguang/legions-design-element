@@ -4,9 +4,14 @@ import AbstractForm from './AbstractForm';
 import { InstanceFormElement } from './interface/formElement';
 export declare class LabelWithCheckboxModel {
     iAntdProps: IAntdProps;
-    iFormWithCheckbox: IFormCheckboxProps;
+    iFormProps: IFormCheckboxProps;
     rules?: IAntdRule[];
-    constructor(iAntdProps: IAntdProps, iFormWithCheckbox: IFormCheckboxProps, rules?: IAntdRule[]);
+    constructor(iAntdProps: IAntdProps, iFormProps: IFormCheckboxProps, rules?: IAntdRule[]);
+}
+export interface LabelWithCheckboxPartialModel {
+    iAntdProps?: IAntdProps;
+    iFormInput?: IFormCheckboxProps;
+    rules?: IAntdRule[];
 }
 export interface IFormCheckboxProps extends Weaken<CheckboxGroupProps, 'options'>, CheckboxGroupProps, IAntdFormItemProps {
     options: {
@@ -33,6 +38,8 @@ interface ISate {
 export default class FormCheckbox extends AbstractForm<IFormWithCheckbox, ISate> {
     FormCheckboxRef: InstanceFormElement;
     constructor(props: any);
+    componentDidMount(): void;
+    shouldComponentUpdate(nextProps: IFormWithCheckbox, nextState: any, context: any): boolean;
     render(): JSX.Element;
 }
 export {};

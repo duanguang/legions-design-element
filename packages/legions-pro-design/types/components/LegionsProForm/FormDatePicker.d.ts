@@ -3,9 +3,14 @@ import AbstractForm from './AbstractForm';
 import { InstanceFormElement } from './interface/formElement';
 export declare class LabelWithDatePickerModel {
     iAntdProps: IAntdProps;
-    iFormDatePicker: IFormDatePickerProps;
+    iFormProps: IFormDatePickerProps;
     rules?: IAntdRule[];
-    constructor(iAntdProps: IAntdProps, iFormDatePicker: IFormDatePickerProps, rules?: IAntdRule[]);
+    constructor(iAntdProps: IAntdProps, iFormProps: IFormDatePickerProps, rules?: IAntdRule[]);
+}
+export interface LabelWithDatePickerPartialModel {
+    iAntdProps?: IAntdProps;
+    iFormDatePicker?: IFormDatePickerProps;
+    rules?: IAntdRule[];
 }
 export interface IFormDatePickerProps extends DatePickerProps, IAntdFormItemProps {
 }
@@ -26,5 +31,7 @@ export default class FormDatePicker extends AbstractForm<IFormWithDatePickerProp
     FormDatePickerRef: InstanceFormElement;
     constructor(props: any);
     onOpenChange(status: boolean): void;
+    componentDidMount(): void;
+    shouldComponentUpdate(nextProps: IFormWithDatePickerProps, nextState: any, context: any): boolean;
     render(): JSX.Element;
 }

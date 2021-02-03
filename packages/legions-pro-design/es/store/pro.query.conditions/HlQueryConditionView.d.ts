@@ -89,6 +89,18 @@ export declare class HlQueryConditionView<Query = {}> {
     get computedRightComponent(): JSX.Element;
     get computedSize(): "small" | "default";
     /**
+     * xs: 宽度<768px 响应式栅格，可为栅格数或一个包含其他属性的对象
+     *
+     * sm:宽度≥768px 响应式栅格，可为栅格数或一个包含其他属性的对象
+     *
+     * md: 宽度≥992px 响应式栅格，可为栅格数或一个包含其他属性的对象
+     *
+     * lg: 宽度≥1200px 响应式栅格，可为栅格数或一个包含其他属性的对象
+     *
+     * xl:宽度≥1600px 响应式栅格，可为栅格数或一个包含其他属性的对象
+     */
+    get compuedResolution(): 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+    /**
      *  更新数据模型
      *
      * @param {Object} model

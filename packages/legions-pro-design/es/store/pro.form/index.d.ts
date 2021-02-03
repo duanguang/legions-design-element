@@ -1,1 +1,2 @@
-export { default as ProFormStore } from './proFormStore';
+import ProFormStore from './proFormStore';
+export { ProFormStore };

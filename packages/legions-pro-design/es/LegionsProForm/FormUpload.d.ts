@@ -4,9 +4,14 @@ import { InstanceFormElement } from './interface/formElement';
 import { IProUploadProps } from '../LegionsProUpload/interface';
 export declare class LabelWithUploadModel {
     iAntdProps: IAntdProps;
-    iFormWithUpload: IFormUploadProps;
+    iFormProps: IFormUploadProps;
     rules?: IAntdRule[];
-    constructor(iAntdProps: IAntdProps, iFormWithUpload: IFormUploadProps, rules?: IAntdRule[]);
+    constructor(iAntdProps: IAntdProps, iFormProps: IFormUploadProps, rules?: IAntdRule[]);
+}
+export interface LabelWithUploadPartialModel {
+    iAntdProps?: IAntdProps;
+    iFormWithUpload?: IFormUploadProps;
+    rules?: IAntdRule[];
 }
 export interface IFormUploadProps extends IProUploadProps, IAntdFormItemProps {
 }
@@ -37,7 +42,8 @@ export default class FormUpload extends AbstractForm<IFormWithUpload, ISate> {
     FormUploadRef: InstanceFormElement;
     constructor(props: any);
     handlePreview: (file: any) => void;
-    draggerThem(): void;
+    componentDidMount(): void;
+    shouldComponentUpdate(nextProps: IFormWithUpload, nextState: any, context: any): boolean;
     render(): JSX.Element;
 }
 export {};

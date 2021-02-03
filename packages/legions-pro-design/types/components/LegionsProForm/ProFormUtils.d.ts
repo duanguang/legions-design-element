@@ -1,6 +1,8 @@
 import React from 'react';
 import { IAntdProps, IAntdRule, WrappedFormUtils, ColProps } from '../interface/antd';
-import { IFormCheckboxProps, IFormDatePickerProps, IFormInputNumberProps, IFormInputProps, IFormMonthPickerProps, IFormRadioButtonProps, IFormRangePickerProps, IFormRenderProps, IFormSelectProps, IFormSwitchProps, IFormTextProps, IFormUploadProps, InstanceForm, LabelWithCheckboxModel, LabelWithDatePickerModel, LabelWithHLSelectModel, LabelWithInputModel, LabelWithInputNumberModel, LabelWithMonthPickerModel, LabelWithRadioButtonModel, LabelWithRangePickerModel, LabelWithRenderModel, LabelWithSwitchModel, LabelWithTextModel, LabelWithUploadModel } from './interface';
+import { IFormCheckboxProps, IFormDatePickerProps, IFormInputNumberProps, IFormInputProps, IFormMonthPickerProps, IFormRadioButtonProps, IFormRangePickerProps, IFormRenderProps, IFormSelectProps, IFormSwitchProps, IFormTextProps, IFormUploadProps, InstanceForm, LabelWithCheckboxModel, LabelWithDatePickerModel, LabelWithSelectModel, LabelWithInputModel, LabelWithInputNumberModel, LabelWithMonthPickerModel, LabelWithRadioButtonModel, LabelWithRangePickerModel, LabelWithRenderModel, LabelWithSwitchModel, LabelWithTextModel, LabelWithUploadModel } from './interface';
+import { BaseFormFields } from 'legions-lunar/model';
+import { ClassOf } from 'legions-lunar/types/api/typescript';
 interface IRenderComponentParams<T> {
     /**
      *
@@ -23,11 +25,45 @@ interface IRenderComponentParams<T> {
      * @memberof IRenderComponentParams
      */
     rules?: IAntdRule[];
+    /** 表单组件实例
+     *
+     * 可选参数，在自定义表单组件时，需要传入此数据，用于初始化表单组件项数据
+     */
+    formRef?: InstanceForm;
 }
 interface IProFormUtils {
-    componentModel: LabelWithInputModel | LabelWithInputNumberModel | LabelWithDatePickerModel | LabelWithMonthPickerModel | LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel | LabelWithRadioButtonModel | LabelWithTextModel | LabelWithHLSelectModel;
+    componentModel: LabelWithInputModel | LabelWithInputNumberModel | LabelWithDatePickerModel | LabelWithMonthPickerModel | LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel | LabelWithRadioButtonModel | LabelWithTextModel | LabelWithSelectModel;
 }
+export declare const size: {
+    default: {
+        formItemLayOut: string;
+    };
+    small: {
+        formItemLayOut: string;
+    };
+    table: {
+        formItemLayOut: string;
+    };
+};
+export declare const formClasses: {
+    itemRowHeight: string;
+    tableError: string;
+    tableNotEror: string;
+    itemDefaultError: string;
+};
 export declare class ProFormUtils<Store, global = {}> {
+    static LabelWithInputNumberModel: typeof LabelWithInputNumberModel;
+    static LabelWithHLSelectModel: typeof LabelWithSelectModel;
+    static LabelWithRenderModel: typeof LabelWithRenderModel;
+    static LabelWithDatePickerModel: typeof LabelWithDatePickerModel;
+    static LabelWithMonthPickerModel: typeof LabelWithMonthPickerModel;
+    static LabelWithRangePickerModel: typeof LabelWithRangePickerModel;
+    static LabelWithUploadModel: typeof LabelWithUploadModel;
+    static LabelWithSwitchModel: typeof LabelWithSwitchModel;
+    static LabelWithRadioButtonModel: typeof LabelWithRadioButtonModel;
+    static LabelWithTextModel: typeof LabelWithTextModel;
+    static LabelWithInputModel: typeof LabelWithInputModel;
+    static isFormHasError(getFieldsError: () => any): boolean;
     readonly global: global;
     readonly mobxStore: Store;
     constructor(options?: {
@@ -49,25 +85,26 @@ export declare class ProFormUtils<Store, global = {}> {
     };
     getFormConfig(componentConfigKey: string): IProFormUtils['componentModel'];
     private chkRenderConfig;
-    renderSelectConfig<T = {}>(options: IRenderComponentParams<IFormSelectProps & T>): LabelWithHLSelectModel;
-    renderInputConfig<T = {}>(options: IRenderComponentParams<IFormInputProps & T>): LabelWithInputModel;
-    renderTextConfig<T = {}>(options: IRenderComponentParams<IFormTextProps & T>): LabelWithTextModel;
-    renderDatePickerConfig<T = {}>(options: IRenderComponentParams<IFormDatePickerProps & T>): LabelWithDatePickerModel;
-    renderMonthPickerConfig<T = {}>(options: IRenderComponentParams<IFormMonthPickerProps & T>): LabelWithMonthPickerModel;
-    renderRangePickerConfig<T = {}>(options: IRenderComponentParams<IFormRangePickerProps & T>): LabelWithRangePickerModel;
-    renderInputNumberConfig<T = {}>(options: IRenderComponentParams<IFormInputNumberProps & T>): LabelWithInputNumberModel;
-    renderRadioButtonConfig<T = {}>(options: IRenderComponentParams<IFormRadioButtonProps & T>): LabelWithRadioButtonModel;
-    renderSwitchConfig<T = {}>(options: IRenderComponentParams<IFormSwitchProps & T>): LabelWithSwitchModel;
-    renderUploadConfig<T = {}>(options: IRenderComponentParams<IFormUploadProps & T>): LabelWithUploadModel;
+    private initFromState;
+    renderSelectConfig(options: IRenderComponentParams<IFormSelectProps>): LabelWithSelectModel;
+    renderInputConfig<T extends IFormInputProps>(options: IRenderComponentParams<T>): LabelWithInputModel;
+    renderTextConfig<T extends IFormTextProps>(options: IRenderComponentParams<T>): LabelWithTextModel;
+    renderDatePickerConfig(options: IRenderComponentParams<IFormDatePickerProps>): LabelWithDatePickerModel;
+    renderMonthPickerConfig(options: IRenderComponentParams<IFormMonthPickerProps>): LabelWithMonthPickerModel;
+    renderRangePickerConfig(options: IRenderComponentParams<IFormRangePickerProps>): LabelWithRangePickerModel;
+    renderInputNumberConfig(options: IRenderComponentParams<IFormInputNumberProps>): LabelWithInputNumberModel;
+    renderRadioButtonConfig(options: IRenderComponentParams<IFormRadioButtonProps>): LabelWithRadioButtonModel;
+    renderSwitchConfig(options: IRenderComponentParams<IFormSwitchProps>): LabelWithSwitchModel;
+    renderUploadConfig(options: IRenderComponentParams<IFormUploadProps>): LabelWithUploadModel;
     /**
      * 自定义组件
      *
      * @template T
-     * @param {(IRenderComponentParams<IFormUploadProps & T>)} options
+     * @param {(IRenderComponentParams<IFormUploadProps>)} options
      * @memberof HLFormUtils
      */
-    renderCustomConfig<T = {}>(options: IRenderComponentParams<IFormRenderProps & T>): LabelWithRenderModel;
-    renderCheckboxConfig<T = {}>(options: IRenderComponentParams<IFormCheckboxProps & T>): LabelWithCheckboxModel;
+    renderCustomConfig(options: IRenderComponentParams<IFormRenderProps>): LabelWithRenderModel;
+    renderCheckboxConfig(options: IRenderComponentParams<IFormCheckboxProps>): LabelWithCheckboxModel;
     /**
      * 生成一个表单基础组件
      * 应用场景一般自定义组件由很多比如input,select等组成，可以通过此方法快速创建一个组件
@@ -80,6 +117,14 @@ export declare class ProFormUtils<Store, global = {}> {
      * @returns
      * @memberof HLFormUtils
      */
-    createFormComponent(control: IProFormUtils['componentModel'], form: WrappedFormUtils, formUid: string, formRef: InstanceForm, key?: string | number): JSX.Element;
+    createFormComponent(controls: IProFormUtils['componentModel'], form: WrappedFormUtils, formUid: string, formRef: InstanceForm, key?: string | number): JSX.Element;
+}
+declare type IFormRules<FormRules> = {
+    [P in keyof FormRules]: IAntdRule[];
+};
+export declare class ProFormFields<T> extends BaseFormFields {
+    constructor();
+    /** 初始化表单规则 */
+    static initFormRules<Form, P>(FormFields: ClassOf<Form>, props: P): IFormRules<Form>;
 }
 export {};

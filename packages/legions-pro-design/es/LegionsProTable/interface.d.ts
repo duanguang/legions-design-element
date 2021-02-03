@@ -306,7 +306,7 @@ export interface IProTableProps<TableRow = {}, Model = {}> extends TableProps<Ta
      * @memberof IHLTableProps
      */
     isOpenRowChange?: boolean;
-    /** 是否开启行选中 */
+    /** 是否开启行选中,只在初始化执行一次 */
     isOpenRowSelection?: boolean;
     /**
      * 是否显示导出当前页
@@ -324,11 +324,5 @@ export interface IProTableProps<TableRow = {}, Model = {}> extends TableProps<Ta
         traceId: string;
         browserEnvironment: string;
     }) => void;
-    customColumnsConfig: {
-        /** 编辑自定义信息同步到服务端接口地址 */
-        editApi: string;
-        /** 从服务端查询自定义列信息接口地址 */
-        queryApi: string;
-    };
 }
 export {};

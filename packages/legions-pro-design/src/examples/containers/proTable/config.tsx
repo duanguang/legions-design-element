@@ -2,7 +2,7 @@ import { Button,Row } from 'antd';
 import React from 'react';
 import { ProTable } from '.';
 import { TableColumnConfig } from '../../../../es/interface/antd';
-import { IQuery } from '../../../../es/LegionsProQueryConditions/interface';
+import { IQuery } from '../../../../es/LegionsProConditions/interface';
 export abstract class PageListConfig<P, S = {}> extends React.Component<P, S> {
     instanceStatement: ProTable = null;
     constructor(props: P) {

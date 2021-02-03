@@ -1,9 +1,19 @@
 import React from 'react';
+import CreateForm from './CreateForm';
+import { LabelWithInputModel } from './FormInput';
 import './style/index.less';
 import { WrappedFormUtils } from '../interface/antd';
-import { IErrorView } from './interface/form';
+import { IErrorView, IGroup } from './interface/form';
+import { LabelWithSelectModel, LabelWithRenderModel, LabelWithDatePickerModel, LabelWithMonthPickerModel, LabelWithRangePickerModel, LabelWithUploadModel, LabelWithInputNumberModel } from './interface';
 import { ProFormStore } from '../store/pro.form';
+import { IElementList, IProFormFields } from '../store/pro.form/interface';
+import { LabelWithSwitchModel } from './FormSwitch';
+import { LabelWithRadioButtonModel } from './FormRadioButton';
+import { LabelWithTextModel } from './FormText';
 import { InstanceForm } from './interface/form';
+import { LabelWithCheckboxModel } from './FormCheckbox';
+import { BaseFormFields } from 'legions-lunar/model';
+import { ProFormFields, ProFormUtils } from './ProFormUtils';
 export interface IProFormProps<mapProps = {}> {
     form?: WrappedFormUtils;
     /**
@@ -14,9 +24,10 @@ export interface IProFormProps<mapProps = {}> {
      * @type {Object}
      * @memberof IHLFormProps
      */
-    InputDataModel?: Function;
+    InputDataModel: Function;
     store?: ProFormStore;
-    controls: Array<any>;
+    /** 初始化执行一次 */
+    controls: Array<IProFormFields['componentModel']>;
     group?: Array<IGroup>;
     /**
      * 等分栅格 默认2
@@ -49,7 +60,7 @@ export interface IProFormProps<mapProps = {}> {
      *
      * @memberof IHLFormProps
      */
-    onGetForm?: (
+    onReady: (
     /**即将废弃，请formRef.viewModel.form 获取 */
     form: WrappedFormUtils, formRef?: InstanceForm) => void;
     size?: 'default' | 'small' | 'table';
@@ -64,7 +75,7 @@ export interface IProFormProps<mapProps = {}> {
      *
      * @memberof IHLFormProps
      */
-    onUpdateStyleSize?: (size: 'default' | 'small' | 'table') => void;
+    onUpdateFormSize?: (size: 'default' | 'small' | 'table') => void;
     /**
      * 主要用于当父组件中存在多个表单组件时，标记key 来保证父级组件中表单组件唯一
      * 注意，建议一定传递
@@ -83,52 +94,59 @@ export interface IProFormProps<mapProps = {}> {
         browserEnvironment: string;
     }) => void;
 }
-export interface IGroup {
-    /**
-     * 分组名称
-     *
-     * @type {string}
-     * @memberof IGroup
-     */
-    name: string | React.ReactNode;
-    /**
-     * 分组唯一标识ID
-     *
-     * @type {string}
-     * @memberof IGroup
-     */
-    id: number;
-    active: boolean;
-    /**
-     * 分组是否折叠
-     *
-     * @type {boolean}
-     * @memberof IGroup
-     */
-    isFolding: boolean;
-    className?: string;
-    /**
-     * 标题行是否显示设置主题风格图标 默认不显示 true 显示
-     *
-     * @type {boolean}
-     * @memberof IGroup
-     */
-    isShowFormSizeIcon?: boolean;
-}
-export declare function LegionsProForm<mapProps = {}>(props: IProFormProps<mapProps>): JSX.Element;
-export declare namespace LegionsProForm {
-    var CreateForm: typeof import("./CreateForm").default;
-    var ProFormUtils: typeof import("./ProFormUtils").ProFormUtils;
-    var LabelWithInputNumberModel: typeof import("./FormInputNumber").LabelWithInputNumberModel;
-    var LabelWithSelectModel: typeof import("./FormSelect").LabelWithSelectModel;
-    var LabelWithHLSelectModel: typeof import("./interface").LabelWithHLSelectModel;
-    var LabelWithRenderModel: typeof import("./FormRender").LabelWithRenderModel;
-    var LabelWithDatePickerModel: typeof import("./FormDatePicker").LabelWithDatePickerModel;
-    var LabelWithMonthPickerModel: typeof import("./FormMonthPicker").LabelWithMonthPickerModel;
-    var LabelWithRangePickerModel: typeof import("./FormRangePicker").LabelWithRangePickerModel;
-    var LabelWithUploadModel: typeof import("./FormUpload").LabelWithUploadModel;
-    var LabelWithSwitchModel: typeof import("./FormSwitch").LabelWithSwitchModel;
-    var LabelWithRadioButtonModel: typeof import("./FormRadioButton").LabelWithRadioButtonModel;
-    var LabelWithTextModel: typeof import("./FormText").LabelWithTextModel;
-    var LabelWithInputModel: typeof import("./FormInput").LabelWithInputModel;
+export declare class LegionsProForm<mapProps = {}> extends React.Component<IProFormProps<mapProps>> {
+    static CreateForm: typeof CreateForm;
+    static ProFormUtils: typeof ProFormUtils;
+    static LabelWithInputNumberModel: typeof LabelWithInputNumberModel;
+    static LabelWithSelectModel: typeof LabelWithSelectModel;
+    static LabelWithRenderModel: typeof LabelWithRenderModel;
+    static LabelWithDatePickerModel: typeof LabelWithDatePickerModel;
+    static LabelWithMonthPickerModel: typeof LabelWithMonthPickerModel;
+    static LabelWithRangePickerModel: typeof LabelWithRangePickerModel;
+    static LabelWithUploadModel: typeof LabelWithUploadModel;
+    static LabelWithSwitchModel: typeof LabelWithSwitchModel;
+    static LabelWithRadioButtonModel: typeof LabelWithRadioButtonModel;
+    static LabelWithTextModel: typeof LabelWithTextModel;
+    static LabelWithInputModel: typeof LabelWithInputModel;
+    static BaseFormFields: typeof BaseFormFields;
+    static ProFormFields: typeof ProFormFields;
+    /** 根据时间戳生成，每次初始化表单组件都会产生新的值*/
+    uid: string;
+    timeId: number;
+    /** uid 的值绝对唯一，且每次初始生成表单都是相同值 */
+    freezeUid: string;
+    /** 未加密的freezeUid 值 */
+    decryptionFreezeUid: string;
+    constructor(props: any);
+    get storeView(): import("brain-store-utils").ViewModel<import("../store/pro.form/proFormStore").HlFormView> & {
+        elementList: import("../store/pro.form/interface").IObservableMap<string, IElementList>;
+        focusUid: string;
+        enableEnterSwitch: boolean;
+        renderNodeQueue: import("../store/pro.form/interface").IObservableMap<string, string>;
+        errorReactNodeList: import("../store/pro.form/interface").IObservableMap<string, import("brain-store-utils").ViewModel<import("../store/pro.form/proFormStore").ErrorViewModel> & {
+            uid: string;
+            validateStatus: "" | "error";
+        }>;
+        errorListView: import("../store/pro.form/interface").IObservableMap<string, IErrorView[]>;
+        readonly computedErrorReactNodeList: import("../store/pro.form/interface").IObservableMap<string, import("brain-store-utils").ViewModel<import("../store/pro.form/proFormStore").ErrorViewModel> & {
+            uid: string;
+            validateStatus: "" | "error";
+        }>;
+        readonly computedAllElementList: string[];
+        readonly computedFormFields: (LabelWithInputModel | LabelWithInputNumberModel | LabelWithDatePickerModel | LabelWithMonthPickerModel | LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel | LabelWithRadioButtonModel | LabelWithTextModel | LabelWithSelectModel | LabelWithCheckboxModel)[];
+        readonly computedAllFormFields: (LabelWithInputModel | LabelWithInputNumberModel | LabelWithDatePickerModel | LabelWithMonthPickerModel | LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel | LabelWithRadioButtonModel | LabelWithTextModel | LabelWithSelectModel | LabelWithCheckboxModel)[];
+        readonly computedErrorListView: IErrorView[];
+        readonly computedFormSize: "small" | "table" | "default";
+        updateFormSize: (size: "small" | "table" | "default") => void;
+        collectErrorReactNode: (componentCode: string, errorUid: string) => void;
+        setErrorErrorReactNodeList: (componentCode: string, errorListView: IErrorView[]) => void;
+        handleIgnore: (componentCode: string, id: number) => void;
+        addAllElementKeys: (keys: string) => void;
+        getFormItemField: (key: string) => {
+            value: LabelWithInputModel | LabelWithInputNumberModel | LabelWithDatePickerModel | LabelWithMonthPickerModel | LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel | LabelWithRadioButtonModel | LabelWithTextModel | LabelWithSelectModel | LabelWithCheckboxModel;
+            type: "normal" | "custom";
+        };
+        _initFormItemField: (key: string, value: LabelWithInputModel | LabelWithInputNumberModel | LabelWithDatePickerModel | LabelWithMonthPickerModel | LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel | LabelWithRadioButtonModel | LabelWithTextModel | LabelWithSelectModel | LabelWithCheckboxModel, type?: "normal" | "custom") => void;
+    } & import("../store/pro.form/proFormStore").IOtherView;
+    render(): JSX.Element;
 }

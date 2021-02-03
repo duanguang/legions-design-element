@@ -1,8 +1,7 @@
 import { Component } from 'react';
-import { AbstractSelect } from '../LegionsProSelect';
-export default class AbstractForm<P, S = {}> extends Component<P, S> {
+import { InstanceFormElement } from './interface/formElement';
+export default abstract class AbstractForm<P, S = {}> extends Component<P, S> {
     isFormHasError(getFieldsError: () => any): boolean;
-}
-export declare class AbstractSelectForm<P, S = {}> extends AbstractSelect<P, S> {
-    isFormHasError(getFieldsError: () => any): boolean;
+    didMountClearNodeQueue(formref: InstanceFormElement, uid: string, eleId: string): void;
+    isShouldComponentUpdate(formref: InstanceFormElement, uid: string, eleId: string): boolean;
 }

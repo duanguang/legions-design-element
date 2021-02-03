@@ -3,6 +3,7 @@ export declare const HttpConfig: {
     domainLcm: string;
     domainTms: string;
     domain3pl: string;
+    bffService: string;
 };
 export declare const setHeaders: (url: string, option?: Object, cookie?: string) => {
     'api-target': string;

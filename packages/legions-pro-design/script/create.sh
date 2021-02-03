@@ -107,10 +107,10 @@ cp -r -f types/components/LegionsProPageContainer/* lib/LegionsProPageContainer/
 cp -r -f src/components/LegionsProPageContainer/style/* lib/LegionsProPageContainer/style/
 cp -r -f src/components/LegionsProPageContainer/style/* es/LegionsProPageContainer/style/
 
-cp -r -f types/components/LegionsProQueryConditions/* es/LegionsProQueryConditions/
-cp -r -f types/components/LegionsProQueryConditions/* lib/LegionsProQueryConditions/
-cp -r -f src/components/LegionsProQueryConditions/style/* lib/LegionsProQueryConditions/style/
-cp -r -f src/components/LegionsProQueryConditions/style/* es/LegionsProQueryConditions/style/
+cp -r -f types/components/LegionsProConditions/* es/LegionsProConditions/
+cp -r -f types/components/LegionsProConditions/* lib/LegionsProConditions/
+cp -r -f src/components/LegionsProConditions/style/* lib/LegionsProConditions/style/
+cp -r -f src/components/LegionsProConditions/style/* es/LegionsProConditions/style/
 
 cp -r -f types/components/LegionsProScrawl/* es/LegionsProScrawl/
 cp -r -f types/components/LegionsProScrawl/* lib/LegionsProScrawl/

@@ -12,6 +12,13 @@ interface options<Parameter, Model> {
      */
     model: Model;
     catch?: (err: any) => void;
+    onBeforTranform?: (response: any) => {
+        model?: any;
+        /** 服务端数据 */
+        responseData: any;
+        /** 映射数据至===>result */
+        mappingEntity: (that: any, responseData: any) => void;
+    };
 }
 export declare class LegionsFetch {
     private setHeaders;

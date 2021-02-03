@@ -3,9 +3,14 @@ import AbstractForm from './AbstractForm';
 import { InstanceFormElement } from './interface/formElement';
 export declare class LabelWithMonthPickerModel {
     iAntdProps: IAntdProps;
-    iFormMonthPicker: IFormMonthPickerProps;
+    iFormProps: IFormMonthPickerProps;
     rules?: IAntdRule[];
-    constructor(iAntdProps: IAntdProps, iFormMonthPicker: IFormMonthPickerProps, rules?: IAntdRule[]);
+    constructor(iAntdProps: IAntdProps, iFormProps: IFormMonthPickerProps, rules?: IAntdRule[]);
+}
+export interface LabelWithMonthPickerPartialModel {
+    iAntdProps?: IAntdProps;
+    iFormMonthPicker?: IFormMonthPickerProps;
+    rules?: IAntdRule[];
 }
 export interface IFormMonthPickerProps extends MonthPickerProps, IAntdFormItemProps {
 }
@@ -26,5 +31,7 @@ export default class FormMonthPicker extends AbstractForm<IFormWithMonthPickerPr
     FormMonthPickerRef: InstanceFormElement;
     constructor(props: any);
     onOpenChange(status: any): void;
+    componentDidMount(): void;
+    shouldComponentUpdate(nextProps: IFormWithMonthPickerProps, nextState: any, context: any): boolean;
     render(): JSX.Element;
 }

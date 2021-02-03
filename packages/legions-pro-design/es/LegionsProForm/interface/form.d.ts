@@ -1,57 +1,9 @@
 /// <reference types="react" />
 import { ValidateCallback } from 'antd/lib/form/Form';
 import { HlLabeledValue } from 'legions-lunar/model';
-import { ILocalViewModelHlFormStore, IViewModelHlFormStore } from '../../store/pro.form/interface';
+import { ILocalViewModelHlFormStore, IViewModelHlFormStore, IErrorView, IProFormFields } from '../../store/pro.form/interface';
 import { ProFormStore } from '../../store/pro.form';
-export interface IErrorView {
-    /**
-     * 只读
-     * 设置此值关联错误信息到相应组件元素
-     *
-     * @type {(string | number)}
-     * @memberof IErrorView
-     */
-    key: string | number;
-    /**
-     * 只读
-     *  错误信息标题
-     *
-     * @type {string}
-     * @memberof IErrorView
-     */
-    title: string;
-    /**
-     * 只读
-     * 错误信息类型 分为可提交(canBeSubmit)和不可提交(doNotSubmit)
-     * @type {('canBeSubmit' | 'doNotSubmit')}
-     * @memberof IErrorView
-     */
-    type: 'canBeSubmit' | 'doNotSubmit';
-    /**
-     * 状态  eg:
-     * 0表示不可提交类型 无需忽略;
-     * 2表示可提交类型中未忽略状态，也就是还未转换为已忽略;
-     * 1表示 可提交类型中从忽略变更为已忽略;
-     *
-     * @type {(0|1|2)}
-     * @memberof IErrorView
-     */
-    status: 0 | 1 | 2;
-    /**
-     * 对应组件元素唯一编码 只读
-     *
-     * @type {string}
-     * @memberof IErrorView
-     */
-    componentCode: string;
-    /**
-     * 组件名称
-     *
-     * @type {string}
-     * @memberof IErrorView
-     */
-    componentLabel?: string;
-}
+export type { IErrorView };
 export interface InstanceForm {
     store: ProFormStore;
     /**
@@ -136,5 +88,61 @@ interface IMethods {
     /** 下拉选项key值*/ optionKey: string) => {
         readonly option: HlLabeledValue;
     };
+    setFormStates: (name: string, callback: (state: IProFormFields['componentModel']) => void) => void;
 }
-export {};
+export interface IFormState {
+    /**
+     *
+     * 组件是否可见，一般用来控制组件显隐，默认值true 可见，false不可见 组件移除
+     * @type {Boolean}
+     * @memberof IFormState
+     */
+    visible?: boolean;
+    /**
+     *
+     * 组件是否可见，一般用来控制组件显隐，默认值true 可见，false不可见
+     * 注意此隐藏只是隐藏dom 设置display:'none'，元素依然存在只是不可见，如果元素有附加验证规则，则
+     * @type {Boolean}
+     * @memberof IFormState
+     */
+    display?: boolean;
+    /**
+     * 组件可编辑状态 false 可编辑， 否则不可编辑
+     *
+     * @type {boolean}
+     * @memberof IFormState
+     */
+    disabled?: boolean;
+}
+export interface IGroup {
+    /**
+     * 分组名称
+     *
+     * @type {string}
+     * @memberof IGroup
+     */
+    name: string | React.ReactNode;
+    /**
+     * 分组唯一标识ID
+     *
+     * @type {string}
+     * @memberof IGroup
+     */
+    id: number;
+    active: boolean;
+    /**
+     * 分组是否折叠
+     *
+     * @type {boolean}
+     * @memberof IGroup
+     */
+    isFolding: boolean;
+    className?: string;
+    /**
+     * 标题行是否显示设置主题风格图标 默认不显示 true 显示
+     *
+     * @type {boolean}
+     * @memberof IGroup
+     */
+    isShowSizeIcon?: boolean;
+}

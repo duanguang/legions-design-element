@@ -4,35 +4,13 @@ import { IStoreBaseMeta } from '../interface';
 import { ViewModel } from 'brain-store-utils';
 import { WrappedFormUtils, IAntdSelectOption } from '../../interface/antd';
 import { ObservableMap } from 'mobx';
-import { IElementList, IErrorView, ISelectAutoQuery, ISelectOptions, IObservableMap } from './interface';
+import { IElementList, IErrorView, ISelectAutoQuery, ISelectOptions, IObservableMap, IProFormFields } from './interface';
+import { TabsFormView } from './tabsView';
 declare type Proxify<T> = {
     [P in keyof T]: T[P];
 };
-export interface IFormState {
-    /**
-     *
-     * 组件是否可见，一般用来控制组件显隐，默认值true 可见，false不可见 组件移除
-     * @type {Boolean}
-     * @memberof IFormState
-     */
-    visible?: Boolean;
-    /**
-     *
-     * 组件是否可见，一般用来控制组件显隐，默认值true 可见，false不可见
-     * 注意此隐藏只是隐藏dom 设置display:'none'，元素依然存在只是不可见，如果元素有附加验证规则，则
-     * @type {Boolean}
-     * @memberof IFormState
-     */
-    display?: Boolean;
-    /**
-     * 组件可编辑状态 false 可编辑， 否则不可编辑
-     *
-     * @type {boolean}
-     * @memberof IFormState
-     */
-    disabled?: boolean;
-}
 export declare class HlFormView {
+    constructor();
     /**
      * 需要进行回车，上下键操作的组件钩子列表(不包含禁用的组件)
      *
@@ -52,19 +30,14 @@ export declare class HlFormView {
      */
     enableEnterSwitch: boolean;
     private size;
-    /**
-     * 收集到节点数量，私有变量，主要用于当前后两次收集到节点数量不一致时，这是可以强制清空队列，重新收集，保证收集节点顺序
+    private formfields;
+    /** 自定义表单元素配置项 */
+    private customFormFields;
+    /** 待执行渲染的组件元素队列
      *
-     * @memberof HlFormView
+     * 执行完后移出队列
      */
-    nodeCount: number;
-    /**
-     * 表单元素集合
-     *
-     * @type {any[]}
-     * @memberof HlFormView
-     */
-    controls: any[];
+    renderNodeQueue: IObservableMap<string, string>;
     /**
      * 需要进行回车，上下键操作的组件钩子列表keys
      *
@@ -85,14 +58,6 @@ export declare class HlFormView {
      */
     errorListView: IObservableMap<string, IErrorView[]>;
     /**
-     *
-     * 表单数据状态
-     * @private
-     * @type {(ObservableMap<IFormState>| ObservableMap<string,IFormState>)}
-     * @memberof HlFormView
-     */
-    private formState;
-    /**
      * 错误信息组件节点集合 只读
      *
      * @returns
@@ -100,6 +65,14 @@ export declare class HlFormView {
      */
     get computedErrorReactNodeList(): HlFormView['errorReactNodeList'];
     get computedAllElementList(): string[];
+    /** 表单元素配置项
+     * 渲染formItem
+     */
+    get computedFormFields(): IProFormFields['componentModel'][];
+    /** 表单元素配置项
+     * 包含自定义render 里面子元素配置项
+     */
+    get computedAllFormFields(): IProFormFields['componentModel'][];
     /**
      * 获取全部错误信息
      *
@@ -113,15 +86,9 @@ export declare class HlFormView {
      * @readonly
      * @memberof HlFormView
      */
-    get styleSize(): "small" | "table" | "default";
-    /**
-     *
-     * 表单状态数据
-     * @readonly
-     * @memberof HlFormView
-     */
-    get computedFormState(): IObservableMap<string, IFormState>;
-    updateStyleSize(size: 'default' | 'small' | 'table'): void;
+    get computedFormSize(): "small" | "table" | "default";
+    /** 修改表单尺寸 */
+    updateFormSize(size: 'default' | 'small' | 'table'): void;
     /**
      *  添加错误信息和组件元素的关联关系，可通过组件name查出错误信息组件UID
      *
@@ -153,21 +120,13 @@ export declare class HlFormView {
      * @memberof HlFormView
      */
     addAllElementKeys(keys: string): void;
-    /**
-     * 初始化表单组件数据，组件内部方法，请勿调用
-     *
-     * @param {string} name
-     * @memberof HlFormView
-     */
-    initFormState(name: string): void;
-    /**
-     *
-     * 设置表单组件状态
-     * @param {string} name
-     * @param {IFormState} state
-     * @memberof HlFormView
-     */
-    setFormState(name: string, state: IFormState): void;
+    /** 查询表单元素字段配置信息 */
+    getFormItemField(key: string): {
+        value: IProFormFields['componentModel'];
+        type: 'normal' | 'custom';
+    };
+    /** 初始化表单配置项元素 */
+    _initFormItemField(key: string, value: IProFormFields['componentModel'], type?: 'normal' | 'custom'): void;
 }
 export interface IOtherView {
     form: WrappedFormUtils;
@@ -186,6 +145,7 @@ export interface IOtherView {
      */
     InputDataModelClass?: Function;
     uid: string;
+    formRef: React.Component;
 }
 export declare class ErrorViewModel {
     uid: string;
@@ -261,6 +221,8 @@ export declare class HLFormLocalView {
         pageIndex: number;
         pageSize?: number;
         keyWords?: string;
+        /** 接口请求完成触发 */
+        callback?: (value: any) => void;
     }): void;
 }
 export default class ProFormStore extends StoreBase {
@@ -273,6 +235,7 @@ export default class ProFormStore extends StoreBase {
      */
     HLFormContainer: IObservableMap<string, ViewModel<HlFormView> & Proxify<HlFormView> & IOtherView>;
     HLFormLocalDataContainer: IObservableMap<string, ViewModel<HLFormLocalView> & Proxify<HLFormLocalView>>;
+    _TabsFormDataMap: IObservableMap<string, ViewModel<TabsFormView> & Proxify<TabsFormView>>;
     /**
      *
      * 添加表单临时性数据
@@ -281,7 +244,11 @@ export default class ProFormStore extends StoreBase {
      * @param {*} [InputDataModel]
      * @memberof HLFormStore
      */
-    add(uid: string, form: WrappedFormUtils, InputDataModel?: any): void;
+    add(uid: string, options: {
+        form?: WrappedFormUtils;
+        InputDataModel?: any;
+        formRef: React.Component;
+    }): void;
     init(uid: string, options: HlFormView): void;
     delete(uid: string): void;
     get(uid: string): ViewModel<HlFormView> & Proxify<HlFormView> & IOtherView;
@@ -304,7 +271,7 @@ export default class ProFormStore extends StoreBase {
     /**
      *
      *
-     * @param {FormElement} formElementUid  FormElement 组件生成的唯一uid
+     * @param  formElementUid  FormElement 组件生成的唯一uid
      * @param {string} formUid 表单UID
      * @param {string} [nextElementName] 下一个组件name
      * @memberof AbstractForm
@@ -318,6 +285,9 @@ export default class ProFormStore extends StoreBase {
      * @param {React.Component} parentRef 表单父级组件实例 this
      * @memberof HLFormStore
      */
-    updateFormInputData(formUid: string, formFields: object, parentRef?: React.Component): void;
+    updateFormInputData(formUid: string, formFields: object): void;
+    addTabsForm(uid: string): void;
+    deleteTabsForm(uid: string): void;
+    getTabsForm(uid: string): ViewModel<TabsFormView> & Proxify<TabsFormView>;
 }
 export {};

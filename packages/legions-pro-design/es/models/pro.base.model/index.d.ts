@@ -1,5 +1,5 @@
 export declare class BaseEntity<T> {
-    constructor(fromJson: any);
+    constructor();
     /**
      *操作结果
      *

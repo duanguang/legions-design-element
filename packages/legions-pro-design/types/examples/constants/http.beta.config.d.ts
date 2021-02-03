@@ -3,4 +3,5 @@ export declare const HttpConfigBeta: {
     domainLcm: string;
     domainTms: string;
     domain3pl: string;
+    bffService: string;
 };

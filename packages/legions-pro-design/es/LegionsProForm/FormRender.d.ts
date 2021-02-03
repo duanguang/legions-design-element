@@ -9,7 +9,7 @@ import { InstanceForm } from './interface/form';
  */
 export declare class LabelWithRenderModel {
     iAntdProps: IAntdProps;
-    iFormRender?: IFormRenderProps;
+    iFormProps?: IFormRenderProps;
     rules?: IAntdRule[];
     /**
      * 使用Render模型自定义组件时，需要要主动用FormItem 包裹住自定义的组件
@@ -21,7 +21,18 @@ export declare class LabelWithRenderModel {
      * @param {IAntdRule[]} [rules]
      * @memberof LabelWithRenderModel
      */
-    constructor(iAntdProps: IAntdProps, iFormRender?: IFormRenderProps, rules?: IAntdRule[]);
+    constructor(iAntdProps: IAntdProps, iFormProps?: IFormRenderProps, rules?: IAntdRule[]);
+}
+/**
+ * 使用Render模型自定义组件时，需要要主动用FormItem 包裹住自定义的组件
+ *
+ * @export
+ * @class LabelWithRenderModel
+ */
+export interface LabelWithRenderPartialModel {
+    iAntdProps?: IAntdProps;
+    iFormRender?: IFormRenderProps;
+    rules?: IAntdRule[];
 }
 export interface IFormRenderProps extends IAntdFormItemProps {
     render: (form: WrappedFormUtils, iAntdProps?: IAntdProps, rules?: IAntdRule[], 

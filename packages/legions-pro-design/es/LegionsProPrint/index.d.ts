@@ -16,5 +16,5 @@ export default class LegionsProPrint extends React.Component<IProPrintProps> {
         a4w: number;
         a4h: number;
     };
-    render(): React.ReactElement<import("./interface").ITriggerProps<unknown>>;
+    render(): React.ReactElement<import("./interface").ITriggerProps<unknown>, string | ((props: any) => React.ReactElement<any, string | any | (new (props: any) => React.Component<any, any, any>)>) | (new (props: any) => React.Component<any, any, any>)>;
 }

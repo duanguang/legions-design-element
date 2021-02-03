@@ -3,7 +3,7 @@ import { IStoreBaseMeta } from '../interface';
 export declare class ProModalStore extends StoreBase {
     static meta: IStoreBaseMeta;
     constructor(context: any);
-    ModalContainer: import("mobx").ObservableMap<import("./interface").IViewModelModalStore, any>;
+    ModalContainer: import("mobx").ObservableMap<string, import("./interface").IViewModelModalStore>;
     /**
      *
      * 打开 Modal 模态对话框。

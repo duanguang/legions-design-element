@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-25 18:42:42
- * @LastEditTime: 2021-02-02 10:03:07
+ * @LastEditTime: 2021-02-03 11:49:52
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/index.ts
@@ -25,7 +25,7 @@ export { default as LegionsProNumericInput } from './LegionsProNumericInput';
 export { default as LegionsProPageContainer } from './LegionsProPageContainer';
 export { default as LegionsProPrint } from './LegionsProPrint';
 export { default as LegionsProQrCode } from './LegionsProQrCode';
-export { default as LegionsProQueryConditions } from './LegionsProQueryConditions';
+export { default as LegionsProConditions } from './LegionsProConditions';
 export { default as LegionsProScrawl } from './LegionsProScrawl';
 export { default as LegionsProSelect } from './LegionsProSelect';
 export { default as LegionsProTable } from './LegionsProTable';

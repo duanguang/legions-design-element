@@ -1,13 +1,12 @@
 import React from 'react';
 import { LabelWithInputModel } from './FormInput';
 import { WrappedFormUtils } from '../interface/antd';
-import { LabelWithSelectModel } from './FormSelect';
 import { LabelWithRenderModel } from './FormRender';
 import { LabelWithDatePickerModel } from './FormDatePicker';
 import { LabelWithMonthPickerModel } from './FormMonthPicker';
 import { LabelWithRangePickerModel } from './FormRangePicker';
 import { LabelWithUploadModel } from './FormUpload';
-import { LabelWithHLSelectModel } from './interface';
+import { LabelWithSelectModel } from './interface';
 import { LabelWithInputNumberModel } from './FormInputNumber';
 import { InstanceForm } from './interface';
 import { LabelWithSwitchModel } from './FormSwitch';
@@ -17,7 +16,7 @@ import { LabelWithCheckboxModel } from './FormCheckbox';
 export default abstract class CreateForm<Props, State> extends React.Component<Props, State> {
     protected createFormInput(key: number | string, control: LabelWithInputModel, form: WrappedFormUtils, formUid: string, formRef: InstanceForm): JSX.Element;
     protected createFormInputNumber(key: number | string, control: LabelWithInputNumberModel, form: WrappedFormUtils, formUid: string, formRef: InstanceForm): JSX.Element;
-    protected createFormSelect(key: number | string, control: LabelWithSelectModel | LabelWithHLSelectModel, form: WrappedFormUtils, formUid: string, formRef: InstanceForm): JSX.Element;
+    protected createFormSelect(key: number | string, control: LabelWithSelectModel, form: WrappedFormUtils, formUid: string, formRef: InstanceForm): JSX.Element;
     protected createFormRender(key: number | string, control: LabelWithRenderModel, form: WrappedFormUtils, formRef: InstanceForm): JSX.Element;
     protected createFormDatePicker(key: number | string, control: LabelWithDatePickerModel, form: WrappedFormUtils, formUid: string, formRef: InstanceForm): JSX.Element;
     protected createFormMonthPicker(key: number | string, control: LabelWithMonthPickerModel, form: WrappedFormUtils, formUid: string, formRef: InstanceForm): JSX.Element;

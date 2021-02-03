@@ -5,9 +5,14 @@ import { InstanceFormElement } from './interface/formElement';
 import { TooltipProps } from 'antd/lib/tooltip';
 export declare class LabelWithTextModel {
     iAntdProps: IAntdProps;
-    iFormText: IFormTextProps;
+    iFormProps: IFormTextProps;
     rules?: IAntdRule[];
-    constructor(iAntdProps: IAntdProps, iFormText: IFormTextProps, rules?: IAntdRule[]);
+    constructor(iAntdProps: IAntdProps, iFormProps: IFormTextProps, rules?: IAntdRule[]);
+}
+export interface LabelWithTextPartialModel {
+    iAntdProps?: IAntdProps;
+    iFormText?: IFormTextProps;
+    rules?: IAntdRule[];
 }
 export interface IFormTextProps extends IAntdFormItemProps {
     maxlen?: number;
@@ -41,6 +46,8 @@ export declare class TooltipText extends React.Component<TooltipProps & IForm> {
 export default class FormText extends AbstractForm<IFormWithTextProps> {
     FormTextRef: InstanceFormElement;
     constructor(props: any);
+    componentDidMount(): void;
+    shouldComponentUpdate(nextProps: IFormWithTextProps, nextState: any, context: any): boolean;
     render(): JSX.Element;
 }
 export {};

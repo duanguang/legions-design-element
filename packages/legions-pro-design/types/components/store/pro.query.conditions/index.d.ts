@@ -10,9 +10,9 @@ declare type Proxify<T> = {
 export declare class ProQueryConditionStore<Query = {}> extends StoreBase {
     static meta: IStoreBaseMeta;
     constructor(context: any);
-    HlQueryConditionContainer: ObservableMap<ViewModel<HlQueryConditionView<Query>> & Proxify<HlQueryConditionView<Query>>, any>;
+    HlQueryConditionContainer: ObservableMap<string, ViewModel<HlQueryConditionView<Query>> & Proxify<HlQueryConditionView<Query>>>;
     add(uid: string): void;
     delete(uid: string): void;
-    get(uid: string): any;
+    get(uid: string): ViewModel<HlQueryConditionView<Query>> & Proxify<HlQueryConditionView<Query>>;
 }
 export {};

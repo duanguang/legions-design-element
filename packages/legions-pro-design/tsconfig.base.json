@@ -22,8 +22,8 @@
       "allowJs": true,
       "isolatedModules": false,
       "jsx": "react",
-      /* "resolveJsonModule": true,
-      "esModuleInterop": true, */
+      "resolveJsonModule": true,
+      "esModuleInterop": true,
       /*  "strict": true, */
       "pretty": true,
       /*  "noUnusedLocals": true,

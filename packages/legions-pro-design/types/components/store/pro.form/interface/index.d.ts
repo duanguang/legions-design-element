@@ -5,7 +5,58 @@ import { ViewModel } from 'brain-store-utils';
 import { IAntdSelectOption } from '../../../interface/antd';
 import { ProFormStore } from '..';
 import { HLFormLocalView, HlFormView, IOtherView } from '../proFormStore';
-export { IErrorView } from '../../../LegionsProForm/interface';
+import { LabelWithDatePickerModel, LabelWithSelectModel, LabelWithInputModel, LabelWithInputNumberModel, LabelWithMonthPickerModel, LabelWithRadioButtonModel, LabelWithRangePickerModel, LabelWithSwitchModel, LabelWithTextModel, LabelWithUploadModel, LabelWithDatePickerPartialModel, LabelWithInputPartialModel, LabelWithInputNumberPartialModel, LabelWithMonthPickerPartialModel, LabelWithRadioButtonPartialModel, LabelWithRangePickerPartialModel, LabelWithSwitchPartialModel, LabelWithTextPartialModel, LabelWithUploadPartialModel, LabelWithCheckboxModel } from '../../../LegionsProForm/interface';
+import { SelectKeyValue, KeyValue } from '../../../models';
+import { TabsFormView, TabsItemView } from '../tabsView';
+export interface IErrorView {
+    /**
+     * 只读
+     * 设置此值关联错误信息到相应组件元素
+     *
+     * @type {(string | number)}
+     * @memberof IErrorView
+     */
+    key: string | number;
+    /**
+     * 只读
+     *  错误信息标题
+     *
+     * @type {string}
+     * @memberof IErrorView
+     */
+    title: string;
+    /**
+     * 只读
+     * 错误信息类型 分为可提交(canBeSubmit)和不可提交(doNotSubmit)
+     * @type {('canBeSubmit' | 'doNotSubmit')}
+     * @memberof IErrorView
+     */
+    type: 'canBeSubmit' | 'doNotSubmit';
+    /**
+     * 状态  eg:
+     * 0表示不可提交类型 无需忽略;
+     * 2表示可提交类型中未忽略状态，也就是还未转换为已忽略;
+     * 1表示 可提交类型中从忽略变更为已忽略;
+     *
+     * @type {(0|1|2)}
+     * @memberof IErrorView
+     */
+    status: 0 | 1 | 2;
+    /**
+     * 对应组件元素唯一编码 只读
+     *
+     * @type {string}
+     * @memberof IErrorView
+     */
+    componentCode: string;
+    /**
+     * 组件名称
+     *
+     * @type {string}
+     * @memberof IErrorView
+     */
+    componentLabel?: string;
+}
 export { ISelectDatabaseDB };
 export interface InstanceFormElement {
     store: ProFormStore;
@@ -124,14 +175,12 @@ export interface ISelectAutoQuery<Model = {}> {
      */
     options?: HeadersPrams & Object;
     /**
-     *
-     * 数据模型
-     *
-     * 一般用于定义接口返回结构
-     * @type {Model}
-     * @memberof ISelectAutoQuery
-     */
-    model: Model;
+       * 转换服务端数据
+       *
+       *
+       * 如果不想写model,则通过此函数先把数据转换成约定结构，在由底层固定model去转换
+       */
+    mappingEntity: (that: SelectKeyValue, responseData: any) => KeyValue[];
     /**
      * 下拉数据绑定前转换绑定数据结构
      *
@@ -165,3 +214,14 @@ declare type Proxify<T> = {
 };
 export declare type IViewModelHlFormStore = ViewModel<HlFormView> & Proxify<HlFormView> & IOtherView;
 export declare type ILocalViewModelHlFormStore = ViewModel<HLFormLocalView> & Proxify<HLFormLocalView>;
+export declare type ITabsFormViewModelStore = ViewModel<TabsFormView> & Proxify<TabsFormView>;
+export declare type ITabsFormItem = {
+    key: string;
+    tabsItemView: TabsItemView;
+};
+export interface IProFormFields {
+    componentModel: LabelWithInputModel | LabelWithInputNumberModel | LabelWithDatePickerModel | LabelWithMonthPickerModel | LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel | LabelWithRadioButtonModel | LabelWithTextModel | LabelWithSelectModel | LabelWithCheckboxModel;
+}
+export interface IProUpdateFormFields {
+    componentModel: LabelWithInputPartialModel | LabelWithInputNumberPartialModel | LabelWithDatePickerPartialModel | LabelWithMonthPickerPartialModel | LabelWithRangePickerPartialModel | LabelWithUploadPartialModel | LabelWithSwitchPartialModel | LabelWithRadioButtonPartialModel | LabelWithTextPartialModel;
+}

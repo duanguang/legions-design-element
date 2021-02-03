@@ -42,10 +42,7 @@ export interface IAntdProps {
     id: string;
     name: string;
     placeholder: string;
-    type?: string;
-    value?: any;
     className?: string;
-    initialValue?: string | object[];
     /**
      *
      * 分组ID
@@ -78,6 +75,15 @@ export interface IAntdFormItemProps extends FormItemProps {
      * @memberof IAntdFormItemProps
      */
     transformFormItem?: <T>(value: any) => T;
+    /**组件是否可见，一般用来控制组件显隐，默认值true 可见，false不可见 组件移除 */
+    visible?: boolean;
+    /**
+     *
+     * 组件是否可见，一般用来控制组件显隐，默认值true 可见，false不可见
+     * 注意此隐藏只是隐藏dom 设置display:'none'，元素依然存在只是不可见，如果元素有附加验证规则，则
+     * @type {Boolean}
+     */
+    display?: boolean;
 }
 export interface IAntdRule extends ValidationRule {
     required?: boolean;
@@ -105,6 +111,7 @@ export interface IAntdSelectOption extends OptionProps {
      */
     value: string;
     key: string;
+    keyValue?: any;
     /**
      * 分组信息
      *

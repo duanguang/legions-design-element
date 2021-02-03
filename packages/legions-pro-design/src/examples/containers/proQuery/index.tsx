@@ -1,227 +1,10 @@
 import React from 'react';
 import { bind,observer } from 'legions/store-react'
-import { Button } from 'antd';
-import { LegionsProQueryConditions, LegionsProModalForm,LegionsProPageContainer } from '../../../components';
+import { Button, Row } from 'antd';
+import { LegionsProConditions, LegionsProModalForm,LegionsProPageContainer } from '../../../components';
 import { observablePromise } from 'legions/store-utils';
-import { IQuery, IQueryConditionsInstance } from 'components/LegionsProQueryConditions/interface';
-import LegionsProConditions from 'components/LegionsProQueryConditions/conditions';
-const query = (that: QueryDemo,props?): Array<IQuery> => {
-    return [
-        {
-            container: {
-                width: 200,position: 'left',
-                span:3,
-                component: {
-                    label: '企业全称:',
-                    props: {
-                        width: 145,
-                        span:18,
-                        placeholder: '企业全称',
-                    },
-                    type: 'textArea',
-                    JsonProperty: {
-                        name: 'vmOrderNo',
-                        value: '',
-                        queryPrams: 'orderNo',
-                    },
-                },
-            },
-        },
-        {
-            container: {
-                width: 180,position: 'left',
-                span:3,
-                component: {
-                    label: '数量:',
-                    props: {
-                        width: 145,
-                        span:20,
-                        placeholder: '数量',
-                    },
-                    type: 'number',
-                    JsonProperty: {
-                        name: 'number',
-                        value: '',
-                        queryPrams: 'number',
-                    },
-                    hooks: [{
-                        name: 'onSearch',handle: (value) => {
-                            console.log('数量回车搜索',value)
-                        },
-                    }],
-                },
-            },
-        },
-        {
-            container: {
-                width: 415,position: 'content',
-                span:6,
-                component: {
-                    label: '单选组合:',
-                    props: {
-                        width: 360,
-                        span:21,
-                        placeholder: '单选组合',
-                        /* options:[{label:'Hangzhou',value:'a',disabled:true},{label:'Shanghai',value:'b'},{label:'Beijing',value:'c'},{label:'Chengdu',value:'d'}], */
-                    },
-                    data: [{ label: 'Hangzhou',value: 'a' },{ label: 'Shanghai',value: 'b' },{ label: 'Beijing',value: 'c' },{ label: 'Chengdu',value: 'd' }],
-                    type: 'radioButton',
-                    JsonProperty: {
-                        name: 'radioButton',
-                        value: '',
-                        queryPrams: 'radioButton',
-                    },
-                    defaultValue: 'a',
-                },
-            },
-        },
-        {
-            container: {
-                width: 200,position: 'content',
-                span:3,
-                component: {
-                    label: '司机姓名:',
-                    props: {
-                        width: 145,
-                        span:18,
-                        placeholder: '司机姓名',
-                    },
-                    type: 'text',
-                    JsonProperty: {
-                        name: 'vmOrderNo3',
-                        value: '',
-                        queryPrams: 'orderNo3',
-                    },
-                    defaultValue: '2222',
-                },
-            },
-        },
-        {
-            container: {
-                width: 180,position: 'content',
-                span:3,
-                component: {
-                    label: '车牌:',
-                    props: {
-                        width: 125,
-                        span:20,
-                        placeholder: '车牌',
-                        /* mode: 'multiple', */
-                        maxTagCount: 1,
-                        paging: true,
-                    },
-                    type: 'select',
-                    data: [{ key: '111',value: '昊链科技' },{ key: '222',value: '昊链科技1' },{ key: '333',value: '昊链科技3' },{ key: '444',value: '昊链科技4' }],
-                    /* data:that.state.selectList, */
-                    JsonProperty: {
-                        name: 'vmOrderNo4',
-                        value: '',
-                        queryPrams: 'orderNo4',
-                    },
-                    defaultValue: [],
-                    hooks: [{
-                        handle: (value) => {
-                            console.log(value);
-                        },
-                        name:'onChange',
-                    }],
-                },
-            },
-        },
-        {
-            container: {
-                width: 80,position: 'content',
-                span:1,
-                component: {
-                    props: {
-                        width: 80,
-                        span:24,
-                        placeholder: '是否删除',
-                    },
-                    type: 'checkBox',
-                    JsonProperty: {
-                        name: 'vmOrderNo5',
-                        value: '',
-                        queryPrams: 'orderNo5',
-                    },
-                    defaultValue: true,
-                },
-            },
-        },
-        {
-            container: {
-                width: 200,position: 'content',
-                span:3,
-                component: {
-                    label: '创建日期:',
-                    props: {
-                        width: 145,
-                        span:18,
-                        placeholder: '日期',
-                        format: 'YYYY-MM-DD HH:mm:ss',
-                    },
-                    type: 'date',
-                    JsonProperty: {
-                        name: 'vmOrderNo6',
-                        value: '',
-                        queryPrams: 'orderNo6',
-                    },
-                    defaultValue: '2019-10-6',
-                },
-            },
-        },
-        {
-            container: {
-                width: 240,
-                span:3,
-                position: 'content',
-                component: {
-                    label: '日期范围:',
-                    props: {
-                        width: 185,
-                        span:18,
-                        placeholder: '日期',
-                    },
-                    type: 'daterange',
-                    JsonProperty: {
-                        name: 'vmOrderNo7',
-                        value: '',
-                        queryPrams: 'orderNo7',
-                    },
-                    defaultValue: '',
-                },
-            },
-        },
-        {
-            container: {
-                position: 'right',
-                component: {
-                    /* label: '保存', */
-                    props: {
-                        width: 66,
-                    },
-                    hooks: [
-                        {
-                            name: 'onSearch',handle: (value) => {
-                                console.log('搜索',value)
-                            },
-                        },
-                        {
-                            name: 'onReset',handle: (value) => {
-                                console.log(value)
-                            },
-                        },
-                        {
-                            name:'onRefresh',handle: (value) => {
-                                console.log(value)
-                            },
-                        },
-                    ],
-                },
-            },
-        },
-    ]
-}
+import {  IQueryConditionsInstance } from 'components/LegionsProConditions/interface';
+import moment from 'moment';
 interface Istate{
     visable:boolean
 }
@@ -235,18 +18,17 @@ export default class QueryDemo extends React.Component<{},Istate>{
         }
     }
     componentDidMount() {
-        this.queryRef.methods.setFieldState([
+ /*        this.queryRef.methods.setFieldState([
             {name:'vmOrderNo3',state:{visable:false}},
             {name:'vmOrderNo4',state:{visable:false}},
             {name:'vmOrderNo7',state:{visable:false}},
-        ])
+        ]) */
     }
     createConfig() {
         const formUtils = new LegionsProConditions.ProConditions();
         formUtils.renderTextConfig({
             containerProps: {
                 col: {
-                    span: 4,
                     md: 6,
                     lg: 4,
                     xl: 4,
@@ -256,14 +38,16 @@ export default class QueryDemo extends React.Component<{},Istate>{
             conditionsProps: {
                 label: '司机姓名',
                 labelSpan: 5,
-                span:22,
+                defaultValue:'司机姓名',
+                onChange: (event,value,viewStore) => {
+                    console.log(event,value,viewStore,'司机姓名');
+                }
             },
             jsonProperty:'orderNo'
         })
         formUtils.renderTextAreaConfig({
             containerProps: {
                 col: {
-                    span: 4,
                     md: 6,
                     lg: 4,
                     xl: 4,
@@ -273,14 +57,16 @@ export default class QueryDemo extends React.Component<{},Istate>{
             conditionsProps: {
                 label: '企业全称',
                 labelSpan: 5,
-                span:22,
+                defaultValue:'企业全称',
+                onChange: (event,value,viewStore) => {
+                    console.log(event,value,viewStore,'企业全称');
+                }
             },
             jsonProperty:'orderNo1'
         })
         formUtils.renderSelectConfig({
             containerProps: {
                 col: {
-                    span: 4,
                     md: 6,
                     lg: 4,
                     xl: 4,
@@ -290,15 +76,22 @@ export default class QueryDemo extends React.Component<{},Istate>{
             conditionsProps: {
                 label: '企业',
                 labelSpan: 3,
-                multiple:false,
-                options:[{ key: '111',value: '昊链科技' },{ key: '222',value: '昊链科技1' },{ key: '333',value: '昊链科技3' },{ key: '444',value: '昊链科技4' }]
+                multiple: false,
+                labelInValue: true,
+                defaultValue:{key:'111',label:''},
+                onChange: (value,viewStore) => {
+                    console.log(value,viewStore,'企业');
+                },
+                options: [{ key: '111',label: '111',value: '昊链科技' },
+                    { key: '222',label: '2222',value: '昊链科技1' },
+                    { key: '333',value: '昊链科技3',label:'333' },
+                    { key: '444',value: '昊链科技4',label:'444' }]
             },
             jsonProperty:'orderNo2'
         })
         formUtils.renderDateConfig({
             containerProps: {
                 col: {
-                    span: 4,
                     md: 6,
                     lg: 4,
                     xl: 4,
@@ -308,15 +101,20 @@ export default class QueryDemo extends React.Component<{},Istate>{
             conditionsProps: {
                 label: '创建日期',
                 labelSpan: 5,
-                format: 'YYYY-MM-DD HH:mm:ss',
-                showTime:true,
+                /* format: 'YYYY-MM-DD HH:mm:ss', */
+                format: 'YYYY-MM-DD',
+                showTime: true,
+                defaultValue:moment('2016-01-01', 'YYYY-MM-DD'),
+                /* value:moment('2017-01-01', 'YYYY-MM-DD'), */
+                onChange: (originValue,value,viewStore) => {
+                    console.log(originValue,value,viewStore,'企业');
+                },
             },
             jsonProperty:'orderNo3'
         })
         formUtils.renderRangePickerConfig({
             containerProps: {
                 col: {
-                    span: 4,
                     md: 6,
                     lg: 4,
                     xl: 4,
@@ -326,32 +124,35 @@ export default class QueryDemo extends React.Component<{},Istate>{
             conditionsProps: {
                 label: '日期范围',
                 labelSpan: 5,
-                placeholder:['开始日期','结束日期']
-                /* format: 'YYYY-MM-DD HH:mm:ss',
-                showTime:true, */
+                placeholder: ['开始日期','结束日期'],
+                onChange: (originValue,value,viewStore) => {
+                    console.log(originValue,value,viewStore,'日期范围');
+                },
+                defaultValue:[moment('2015-01-01', 'YYYY-MM-DD'),moment('2016-01-01', 'YYYY-MM-DD')],
+                format: 'YYYY-MM-DD',
+                /*showTime:true, */
             },
             jsonProperty:'orderNo4'
         })
         formUtils.renderCheckBoxConfig({
             containerProps: {
                 col: {
-                    span: 2,
-                    md: 4,
+                    md: 2,
                     lg: 2,
-                    xl: 4,
+                    xl: 2,
                 },
                 name:'vmOrderNo5'
             },
             conditionsProps: {
                 label: '是否删除',
                 labelSpan: 5,
+                defaultChecked:true,
             },
             jsonProperty:'orderNo5'
         })
         formUtils.renderTextNumberConfig({
             containerProps: {
                 col: {
-                    span: 4,
                     md: 6,
                     lg: 4,
                     xl: 4,
@@ -361,13 +162,15 @@ export default class QueryDemo extends React.Component<{},Istate>{
             conditionsProps: {
                 label: '数量',
                 labelSpan: 5,
+                onChange: (event,value,viewStore) => {
+                    console.log(event,value,viewStore,'数量');
+                }
             },
             jsonProperty:'orderNo6'
         })
         formUtils.renderRadioButtonConfig({
             containerProps: {
                 col: {
-                    span: 4,
                     md: 6,
                     lg: 4,
                     xl: 4,
@@ -377,6 +180,9 @@ export default class QueryDemo extends React.Component<{},Istate>{
             conditionsProps: {
                 label: '城市',
                 labelSpan: 5,
+                onChange: (event,value,viewStore) => {
+                    console.log(event,value,viewStore,'城市');
+                },
                 options:[{ label: '上海',value: 'a' },{ label: '杭州',value: 'b' },{ label: '广州',value: 'g' },{ label: '北京',value: 'c' },{ label: '成都',value: 'd' }]
             },
             jsonProperty:'orderNo7'
@@ -385,15 +191,34 @@ export default class QueryDemo extends React.Component<{},Istate>{
             containerProps: {
                 name: 'search',
                 col: {
-                    span: 4,
                     md: 6,
                     lg: 4,
                     xl: 4,
                 }
             },
             conditionsProps: {
-                
+                onSearch: (value,view) => {
+                    console.log(value);
+                }
             }
+        })
+        formUtils.renderGroupCheckBoxConfig({
+            containerProps: {
+                col: {
+                    md: 5,
+                    lg: 2,
+                    xl: 4,
+                },
+                name:'vmOrderNo8'
+            },
+            conditionsProps: {
+                
+                labelSpan: 5,
+                options: [{ label: 'Apple', value: 'Apple' },
+                { label: 'Pear', value: 'Pear' },
+                { label: 'Orange', value: 'Orange' }]
+            },
+            jsonProperty:'orderNo8'
         })
         return [
             formUtils.getConditionsConfig('vmOrderNo'),
@@ -401,10 +226,11 @@ export default class QueryDemo extends React.Component<{},Istate>{
             formUtils.getConditionsConfig('vmOrderNo2'),
             formUtils.getConditionsConfig('vmOrderNo3'),
             formUtils.getConditionsConfig('vmOrderNo4'),
-            formUtils.getConditionsConfig('search'),
             formUtils.getConditionsConfig('vmOrderNo6'),
             formUtils.getConditionsConfig('vmOrderNo7'),
             formUtils.getConditionsConfig('vmOrderNo5'),
+            formUtils.getConditionsConfig('vmOrderNo8'),
+            formUtils.getConditionsConfig('search'),
         ]
     }
     onChange() {
@@ -440,12 +266,9 @@ export default class QueryDemo extends React.Component<{},Istate>{
                         {name:'vmOrderNo4',state:{visable:true}},
                     ])
                 }}>设置指定元素显示</Button>
-                <LegionsProQueryConditions query={query(this)} onReady={(value) => {
-                    this.queryRef = value;
-                    console.log(this.queryRef)
-                }}></LegionsProQueryConditions>
-
-                <LegionsProConditions query={this.createConfig()}></LegionsProConditions>
+                <Row style={{marginTop:'10px'}}><LegionsProConditions query={this.createConfig()}></LegionsProConditions>
+                </Row>
+                
             </div>
         )
     }

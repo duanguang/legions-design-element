@@ -3,9 +3,14 @@ import AbstractForm from './AbstractForm';
 import { InstanceFormElement } from './interface/formElement';
 export declare class LabelWithRadioButtonModel {
     iAntdProps: IAntdProps;
-    iFormWithRadioButton: IFormRadioButtonProps;
+    iFormProps: IFormRadioButtonProps;
     rules?: IAntdRule[];
-    constructor(iAntdProps: IAntdProps, iFormWithRadioButton: IFormRadioButtonProps, rules?: IAntdRule[]);
+    constructor(iAntdProps: IAntdProps, iFormProps: IFormRadioButtonProps, rules?: IAntdRule[]);
+}
+export interface LabelWithRadioButtonPartialModel {
+    iAntdProps?: IAntdProps;
+    iFormWithRadioButton?: IFormRadioButtonProps;
+    rules?: IAntdRule[];
 }
 export interface IFormRadioButtonProps extends IAntdFormItemProps {
     radioButton?: {
@@ -38,8 +43,10 @@ interface IFormWithRadioButton {
 interface ISate {
 }
 export default class FormRadioButton extends AbstractForm<IFormWithRadioButton, ISate> {
-    FormUploadRef: InstanceFormElement;
+    FormRadioButtonRef: InstanceFormElement;
     constructor(props: any);
+    componentDidMount(): void;
+    shouldComponentUpdate(nextProps: IFormWithRadioButton, nextState: any, context: any): boolean;
     render(): JSX.Element;
 }
 export {};

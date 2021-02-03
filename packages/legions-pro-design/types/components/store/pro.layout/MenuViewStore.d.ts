@@ -37,7 +37,7 @@ export declare class MenuViewStore {
         color: string;
         skin: string;
         logoSkin: string;
-        theme: "light" | "dark";
+        theme: "dark" | "light";
         width: number;
         collapsedWidth: number;
     };

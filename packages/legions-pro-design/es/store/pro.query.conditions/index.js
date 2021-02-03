@@ -76,7 +76,7 @@ function __metadata(metadataKey, metadataValue) {
 /*
  * @Author: duanguang
  * @Date: 2021-01-07 16:49:31
- * @LastEditTime: 2021-01-07 18:01:29
+ * @LastEditTime: 2021-02-03 11:55:24
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/store/pro.query.conditions/HlQueryConditionView.ts
@@ -191,6 +191,40 @@ var HlQueryConditionView = /** @class */ (function () {
     Object.defineProperty(HlQueryConditionView.prototype, "computedSize", {
         get: function () {
             return this.size;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(HlQueryConditionView.prototype, "compuedResolution", {
+        /**
+         * xs: 宽度<768px 响应式栅格，可为栅格数或一个包含其他属性的对象
+         *
+         * sm:宽度≥768px 响应式栅格，可为栅格数或一个包含其他属性的对象
+         *
+         * md: 宽度≥992px 响应式栅格，可为栅格数或一个包含其他属性的对象
+         *
+         * lg: 宽度≥1200px 响应式栅格，可为栅格数或一个包含其他属性的对象
+         *
+         * xl:宽度≥1600px 响应式栅格，可为栅格数或一个包含其他属性的对象
+         */
+        get: function () {
+            var width = this.widthContainer;
+            if (width >= 1600) { /** 宽度≥1600px 响应式栅格，可为栅格数或一个包含其他属性的对象 */
+                return 'xl';
+            }
+            else if (width >= 1200 && width < 1600) { /**宽度≥1200px 响应式栅格，可为栅格数或一个包含其他属性的对象 */
+                return 'lg';
+            }
+            else if (width >= 992 && width < 1200) { /**宽度≥992px 响应式栅格，可为栅格数或一个包含其他属性的对象 */
+                return 'md';
+            }
+            else if (width >= 768 && width < 992) { /**宽度≥768px 响应式栅格，可为栅格数或一个包含其他属性的对象 */
+                return 'sm';
+            }
+            else if (width < 768) {
+                return 'xs';
+            }
+            return null;
         },
         enumerable: false,
         configurable: true
@@ -332,6 +366,11 @@ var HlQueryConditionView = /** @class */ (function () {
         __metadata("design:paramtypes", [])
     ], HlQueryConditionView.prototype, "computedSize", null);
     __decorate([
+        computed,
+        __metadata("design:type", String),
+        __metadata("design:paramtypes", [])
+    ], HlQueryConditionView.prototype, "compuedResolution", null);
+    __decorate([
         action,
         __metadata("design:type", Function),
         __metadata("design:paramtypes", [Object]),
@@ -379,7 +418,7 @@ var HlQueryConditionView = /** @class */ (function () {
 /*
  * @Author: duanguang
  * @Date: 2020-12-29 16:44:16
- * @LastEditTime: 2021-01-07 16:55:34
+ * @LastEditTime: 2021-01-13 10:27:29
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/store/pro.query.conditions/index.ts

@@ -4,6 +4,7 @@ import { ViewModel } from 'brain-store-utils';
 import { ProTableView } from './ProTableView';
 import { ProTableLocalView } from './ProTableLocalView';
 import { IStoreBaseMeta } from '../interface';
+import { ObservableMap } from 'mobx';
 declare type Proxify<T> = {
     [P in keyof T]: T[P];
 };
@@ -21,19 +22,19 @@ export declare class ProTableStore extends StoreBase {
      *
      * @memberof HLTableStore
      */
-    HlTableContainer: import("mobx").ObservableMap<ViewModel<ProTableView> & Proxify<ProTableView>, any>;
-    HlTableContainerModules: import("mobx").ObservableMap<string, any>;
+    HlTableContainer: ObservableMap<string, ViewModel<ProTableView> & Proxify<ProTableView>>;
+    HlTableContainerModules: ObservableMap<string, any>;
     /**
      *
      *  数据生命周期，应用重新数据前有效
      * @memberof HLTableStore
      */
-    HlTableLocalStateContainer: import("mobx").ObservableMap<ViewModel<ProTableLocalView> & Proxify<ProTableLocalView>, any>;
+    HlTableLocalStateContainer: ObservableMap<string, ViewModel<ProTableLocalView> & Proxify<ProTableLocalView>>;
     add(uid: string, modulesName: string, timeuid: string): void;
     init(uid: string, options: ProTableView): void;
     delete(uid: string): void;
     deleteTableModules(modulesName: string): void;
-    get(uid: string): any;
+    get(uid: string): ViewModel<ProTableView> & Proxify<ProTableView>;
     addContainerModules(modulesName: string): void;
     /**
      * 添加本地数据
@@ -44,6 +45,6 @@ export declare class ProTableStore extends StoreBase {
      */
     _addLocalState(uid: string): void;
     _deleteLocalState(uid: string): void;
-    getLocalState(uid: string): any;
+    getLocalState(uid: string): ViewModel<ProTableLocalView> & Proxify<ProTableLocalView>;
 }
 export {};

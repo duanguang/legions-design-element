@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-26 22:43:04
- * @LastEditTime: 2020-12-26 22:47:52
+ * @LastEditTime: 2021-02-03 11:38:43
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProSelect/interface.ts
@@ -138,5 +138,6 @@ export interface ISelectProps extends OptionProps {
     * @type {(string|number)}
     * @memberof IAntdSelectOption
     */
-    group?: string | number
+    group?: string | number;
+    label?: React.ReactNode|string;
 }

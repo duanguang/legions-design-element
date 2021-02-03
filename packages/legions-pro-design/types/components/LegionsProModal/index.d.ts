@@ -1,61 +1,10 @@
 import { Component } from 'react';
-import { ModalProps } from '../interface/antd';
-import { ProModalStore } from '../store/pro.modal';
-import { InstanceLegionsProModal } from './interface';
+import { ILegionsProModalProps } from './interface';
 import { IViewModelModalStore } from '../store/pro.modal/interface';
 import { ISchedule } from '../store/interface';
 import './style/index.less';
-interface IdraggableOptions {
-    minHeight?: number;
-    minWidth?: number;
-}
-interface IProps extends ModalProps {
-    store?: ProModalStore;
-    onReady: (instance: InstanceLegionsProModal) => void;
-    /**
-     * 组件类型，默认modal，也可以设置Drawer 抽屉形式
-     * fullscreen 支持手动全屏及还原
-     *
-     * @type {('Drawer'|'Modal')}
-     * @memberof IProps
-     */
-    modalType?: 'Drawer' | 'Modal' | 'fullscreen';
-    /**
-     *
-     * 抽屉方向
-     * @type {('left'|'right')}
-     * @memberof IProps
-     */
-    placement?: 'left' | 'right' | 'top' | 'bottom';
-    /**
-     *
-     * 是否可以拖拽移动
-     *
-     * 会自动关闭mask及maskClosable
-     * @type {boolean}
-     * @memberof IProps
-     */
-    draggable?: boolean;
-    /**
-     *
-     * 拖拽参数设置
-     * @type {IdraggableOptions}
-     * @memberof IProps
-     */
-    draggableOptions?: IdraggableOptions;
-    /**
-     * 拖拽位置
-     *
-     * @type {('body'|'header')}
-     * @memberof IProps
-     */
-    /**
-     * 是否可以调整模态框大小
-     * 如果开启此参数，请务必同步开启draggable 拖拽移动参数
-     * @type {boolean}
-     * @memberof IProps
-     */
-    resizable?: boolean;
+import { LegionsProModalContext } from './LegionsProModalContext';
+interface IProps extends ILegionsProModalProps {
 }
 interface IState {
 }
@@ -75,6 +24,7 @@ export default class LegionsProModal extends Component<IProps, IState> {
     contentResizableNode: Element;
     nodeMaximize: Element;
     subscription: ISchedule;
+    subscriptionVisible: ISchedule;
     /**
      * antd-content 坐标轴 *
      */
@@ -100,8 +50,10 @@ export default class LegionsProModal extends Component<IProps, IState> {
         draggable: boolean;
         resizable: boolean;
     };
+    static LegionsProModalContext: typeof LegionsProModalContext;
     constructor(props: any);
     log: (n: any) => void;
+    watchVisibleChange: (n: any) => void;
     get getModalContentDOM(): Element;
     get getModalHeaderDOM(): Element;
     /** 设置模态框根节点值 */

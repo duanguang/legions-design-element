@@ -43,19 +43,24 @@ declare const LegionsProVirtualList: (options?: IOptions, mapVirtualToProps?: ({
         setStateIfNeeded(list: any, container: any, items: any, itemHeight: any, itemBuffer: any): void;
         refreshState(): void;
         render(): JSX.Element;
-        setState<K extends "firstItemIndex" | "lastItemIndex">(state: IState | ((prevState: Readonly<IState>, props: IProps) => IState | Pick<IState, K>) | Pick<IState, K>, callback?: () => any): void;
-        forceUpdate(callBack?: () => any): void;
-        props: Readonly<{
-            children?: React.ReactNode;
-        }> & Readonly<IProps>;
-        state: Readonly<IState>;
         context: any;
+        setState<K extends "firstItemIndex" | "lastItemIndex">(state: IState | ((prevState: Readonly<IState>, props: Readonly<IProps>) => IState | Pick<IState, K>) | Pick<IState, K>, callback?: () => void): void;
+        forceUpdate(callback?: () => void): void;
+        readonly props: Readonly<IProps> & Readonly<{
+            children?: React.ReactNode;
+        }>;
+        state: Readonly<IState>;
         refs: {
             [key: string]: React.ReactInstance;
         };
         shouldComponentUpdate?(nextProps: Readonly<IProps>, nextState: Readonly<IState>, nextContext: any): boolean;
+        componentDidCatch?(error: Error, errorInfo: React.ErrorInfo): void;
+        getSnapshotBeforeUpdate?(prevProps: Readonly<IProps>, prevState: Readonly<IState>): any;
+        componentDidUpdate?(prevProps: Readonly<IProps>, prevState: Readonly<IState>, snapshot?: any): void;
+        UNSAFE_componentWillMount?(): void;
+        UNSAFE_componentWillReceiveProps?(nextProps: Readonly<IProps>, nextContext: any): void;
         componentWillUpdate?(nextProps: Readonly<IProps>, nextState: Readonly<IState>, nextContext: any): void;
-        componentDidUpdate?(prevProps: Readonly<IProps>, prevState: Readonly<IState>, prevContext: any): void;
+        UNSAFE_componentWillUpdate?(nextProps: Readonly<IProps>, nextState: Readonly<IState>, nextContext: any): void;
     };
     propTypes: {
         items: PropTypes.Validator<any[]>;
@@ -65,5 +70,6 @@ declare const LegionsProVirtualList: (options?: IOptions, mapVirtualToProps?: ({
     defaultProps: {
         itemBuffer: number;
     };
+    contextType?: React.Context<any>;
 };
 export default LegionsProVirtualList;

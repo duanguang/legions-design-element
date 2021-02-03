@@ -124,7 +124,7 @@ export declare class ModalView {
      */
     get computedResizableClasses(): string;
     asyncResizableBodyStyle(options?: {
-        modalType?: 'Drawer' | 'Modal' | 'fullscreen';
+        modalType?: 'drawer' | 'modal' | 'fullscreen';
         placement?: 'left' | 'right' | 'top' | 'bottom';
     }): void;
     /**

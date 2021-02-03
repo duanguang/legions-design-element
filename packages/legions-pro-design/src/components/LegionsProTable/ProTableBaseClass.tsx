@@ -1,14 +1,14 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-13 11:06:29
- * @LastEditTime: 2021-01-14 09:49:28
+ * @LastEditTime: 2021-02-03 21:39:57
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProTable/ProTableBaseClass.tsx
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
 import React from 'react';
-import { IQuery } from '../LegionsProQueryConditions/interface';
+import { IQuery } from '../LegionsProConditions/interface';
 import { observable,action,StoreModules, } from 'legions/store';
 import { ObservableMap,toJS } from 'mobx';
 import * as mobx from 'mobx';

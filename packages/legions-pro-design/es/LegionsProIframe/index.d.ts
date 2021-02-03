@@ -21,25 +21,56 @@ interface IProps {
     onFirstLoaded?: () => void;
 }
 declare const LegionsProIframe: {
-    new (props?: IProps, context?: any): {
+    new (props: IProps | Readonly<IProps>): {
         componentWillMount(): void;
         componentDidUpdate(): void;
         componentDidMount(): void;
         render(): React.DetailedReactHTMLElement<any, HTMLElement>;
-        setState<K extends never>(state: {} | ((prevState: Readonly<{}>, props: IProps) => {} | Pick<{}, K>) | Pick<{}, K>, callback?: () => any): void;
-        forceUpdate(callBack?: () => any): void;
-        props: Readonly<{
-            children?: React.ReactNode;
-        }> & Readonly<IProps>;
-        state: Readonly<{}>;
         context: any;
+        setState<K extends never>(state: {} | ((prevState: Readonly<{}>, props: Readonly<IProps>) => {} | Pick<{}, K>) | Pick<{}, K>, callback?: () => void): void;
+        forceUpdate(callback?: () => void): void;
+        readonly props: Readonly<IProps> & Readonly<{
+            children?: React.ReactNode;
+        }>;
+        state: Readonly<{}>;
         refs: {
             [key: string]: React.ReactInstance;
         };
-        componentWillReceiveProps?(nextProps: Readonly<IProps>, nextContext: any): void;
         shouldComponentUpdate?(nextProps: Readonly<IProps>, nextState: Readonly<{}>, nextContext: any): boolean;
-        componentWillUpdate?(nextProps: Readonly<IProps>, nextState: Readonly<{}>, nextContext: any): void;
         componentWillUnmount?(): void;
+        componentDidCatch?(error: Error, errorInfo: React.ErrorInfo): void;
+        getSnapshotBeforeUpdate?(prevProps: Readonly<IProps>, prevState: Readonly<{}>): any;
+        UNSAFE_componentWillMount?(): void;
+        componentWillReceiveProps?(nextProps: Readonly<IProps>, nextContext: any): void;
+        UNSAFE_componentWillReceiveProps?(nextProps: Readonly<IProps>, nextContext: any): void;
+        componentWillUpdate?(nextProps: Readonly<IProps>, nextState: Readonly<{}>, nextContext: any): void;
+        UNSAFE_componentWillUpdate?(nextProps: Readonly<IProps>, nextState: Readonly<{}>, nextContext: any): void;
     };
+    new (props: IProps, context: any): {
+        componentWillMount(): void;
+        componentDidUpdate(): void;
+        componentDidMount(): void;
+        render(): React.DetailedReactHTMLElement<any, HTMLElement>;
+        context: any;
+        setState<K extends never>(state: {} | ((prevState: Readonly<{}>, props: Readonly<IProps>) => {} | Pick<{}, K>) | Pick<{}, K>, callback?: () => void): void;
+        forceUpdate(callback?: () => void): void;
+        readonly props: Readonly<IProps> & Readonly<{
+            children?: React.ReactNode;
+        }>;
+        state: Readonly<{}>;
+        refs: {
+            [key: string]: React.ReactInstance;
+        };
+        shouldComponentUpdate?(nextProps: Readonly<IProps>, nextState: Readonly<{}>, nextContext: any): boolean;
+        componentWillUnmount?(): void;
+        componentDidCatch?(error: Error, errorInfo: React.ErrorInfo): void;
+        getSnapshotBeforeUpdate?(prevProps: Readonly<IProps>, prevState: Readonly<{}>): any;
+        UNSAFE_componentWillMount?(): void;
+        componentWillReceiveProps?(nextProps: Readonly<IProps>, nextContext: any): void;
+        UNSAFE_componentWillReceiveProps?(nextProps: Readonly<IProps>, nextContext: any): void;
+        componentWillUpdate?(nextProps: Readonly<IProps>, nextState: Readonly<{}>, nextContext: any): void;
+        UNSAFE_componentWillUpdate?(nextProps: Readonly<IProps>, nextState: Readonly<{}>, nextContext: any): void;
+    };
+    contextType?: React.Context<any>;
 };
 export default LegionsProIframe;

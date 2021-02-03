@@ -1,4 +1,4 @@
-import ProFormStore from '../../store/pro.form';
+import { ProFormStore } from '../../store/pro.form';
 export interface InstanceFormElement {
     store: ProFormStore;
     /**

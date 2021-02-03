@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-07 16:49:31
- * @LastEditTime: 2021-02-02 22:56:30
+ * @LastEditTime: 2021-02-03 11:55:24
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/store/pro.query.conditions/HlQueryConditionView.ts
@@ -89,7 +89,7 @@ export class HlQueryConditionView<Query = {}> {
 
     @observable private size: 'small' | 'default' = 'default';
 
-    @observable selectOptions:IObservableMap<string,ISelectOptions> = observable.map()
+    @observable selectOptions: IObservableMap<string,ISelectOptions> = observable.map()
     @computed get computedQuery() {
         return this.query;
     }

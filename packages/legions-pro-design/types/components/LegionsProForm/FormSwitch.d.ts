@@ -3,9 +3,14 @@ import AbstractForm from './AbstractForm';
 import { InstanceFormElement } from './interface/formElement';
 export declare class LabelWithSwitchModel {
     iAntdProps: IAntdProps;
-    iFormWithSwitch: IFormSwitchProps;
+    iFormProps: IFormSwitchProps;
     rules?: IAntdRule[];
-    constructor(iAntdProps: IAntdProps, iFormWithSwitch: IFormSwitchProps, rules?: IAntdRule[]);
+    constructor(iAntdProps: IAntdProps, iFormProps: IFormSwitchProps, rules?: IAntdRule[]);
+}
+export interface LabelWithSwitchPartialModel {
+    iAntdProps?: IAntdProps;
+    iFormWithSwitch?: IFormSwitchProps;
+    rules?: IAntdRule[];
 }
 export interface IFormSwitchProps extends SwitchProps, IAntdFormItemProps {
 }
@@ -25,8 +30,10 @@ interface IFormWithSwitch {
 interface ISate {
 }
 export default class FormSwitch extends AbstractForm<IFormWithSwitch, ISate> {
-    FormUploadRef: InstanceFormElement;
+    FormSwitchRef: InstanceFormElement;
     constructor(props: any);
+    componentDidMount(): void;
+    shouldComponentUpdate(nextProps: IFormWithSwitch, nextState: any, context: any): boolean;
     render(): JSX.Element;
 }
 export {};
