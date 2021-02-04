@@ -3,8 +3,10 @@ import { IBaseFormFields, HlLabeledValue } from 'legions-lunar/model';
 import { LegionsProForm } from '../../../components';
 interface IFormFieldUserRenderInput1 {
     currency: string;
+    /** 只读 */
     number: number;
 }
+export declare function create(): IFormFieldUserRenderInput1;
 export declare class FormFields extends LegionsProForm.ProFormFields<FormFields> {
     text: IBaseFormFields<string>;
     textarea: IBaseFormFields<string>;

@@ -228,7 +228,7 @@ export interface ISelectAutoQuery<Model = {}> {
    * @memberof ISelectAutoQuery
    */
   transform: (
-    value: observablePromise.PramsResult<any>
+    value: observablePromise.PramsResult<SelectKeyValue>
   ) => { total: number; data: IAntdSelectOption[] };
   /**
    *

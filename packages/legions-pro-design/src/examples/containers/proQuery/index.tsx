@@ -5,17 +5,24 @@ import { LegionsProConditions, LegionsProModalForm,LegionsProPageContainer } fro
 import { observablePromise } from 'legions/store-utils';
 import {  IQueryConditionsInstance } from 'components/LegionsProConditions/interface';
 import moment from 'moment';
+import { observable } from 'legions/store';
+import { ObservableMap,runInAction } from 'mobx';
+import { SearchEntity } from './searchEntity';
 interface Istate{
     visable:boolean
 }
 @observer
 export default class QueryDemo extends React.Component<{},Istate>{
-    queryRef:IQueryConditionsInstance = null
+    queryRef: IQueryConditionsInstance = null
+    @observable smp:ObservableMap<string,{a:{b:number}}>=observable.map()
     constructor(props:{}) {
         super(props)
         this.state = {
             visable:false,
         }
+        runInAction(() => {
+            this.smp.set('ss',{a:{b:2}})
+        })
     }
     componentDidMount() {
  /*        this.queryRef.methods.setFieldState([
@@ -146,7 +153,10 @@ export default class QueryDemo extends React.Component<{},Istate>{
             conditionsProps: {
                 label: '是否删除',
                 labelSpan: 5,
-                defaultChecked:true,
+                defaultChecked: true,
+                onChange: (event,value) => {
+                    console.log(event,value,'数量');
+                },
             },
             jsonProperty:'orderNo5'
         })
@@ -164,7 +174,8 @@ export default class QueryDemo extends React.Component<{},Istate>{
                 labelSpan: 5,
                 onChange: (event,value,viewStore) => {
                     console.log(event,value,viewStore,'数量');
-                }
+                },
+                defaultValue:22
             },
             jsonProperty:'orderNo6'
         })
@@ -180,6 +191,7 @@ export default class QueryDemo extends React.Component<{},Istate>{
             conditionsProps: {
                 label: '城市',
                 labelSpan: 5,
+                defaultValue:'b',
                 onChange: (event,value,viewStore) => {
                     console.log(event,value,viewStore,'城市');
                 },
@@ -199,7 +211,7 @@ export default class QueryDemo extends React.Component<{},Istate>{
             conditionsProps: {
                 onSearch: (value,view) => {
                     console.log(value);
-                }
+                },
             }
         })
         formUtils.renderGroupCheckBoxConfig({
@@ -212,13 +224,74 @@ export default class QueryDemo extends React.Component<{},Istate>{
                 name:'vmOrderNo8'
             },
             conditionsProps: {
-                
+                defaultValue:['Apple'],
                 labelSpan: 5,
                 options: [{ label: 'Apple', value: 'Apple' },
                 { label: 'Pear', value: 'Pear' },
                 { label: 'Orange', value: 'Orange' }]
             },
             jsonProperty:'orderNo8'
+        })
+        formUtils.renderSelectConfig({
+            containerProps: {
+                col: {
+                    md: 5,
+                    lg: 2,
+                    xl: 4,
+                },
+                name:'vmOrderNo9'
+            },
+            conditionsProps: {
+                paging: true,
+                label: '远程下拉',
+                options: [],
+                labelSpan: 5,
+                autoQuery: {
+                    params: (pageIndex,pageSize,keywords,params) => {
+                        return {
+                            keyword: keywords,
+                            current: pageIndex,
+                            size: 300,
+                            templateCode: 'Country',
+                            pageIndex: 1,
+                            pageSize,
+                            defaultKeyWords:'',
+                        }
+                    },
+                    options: {
+                        'api-target': 'https://qa-scm.hoolinks.com//jg/basic/cusinfo/search.json'
+                    },
+                    isInitialize: false,
+                    ApiUrl: 'https://gateway.hoolinks.com/api/gateway',
+                    method: 'post',
+                    token: 'SESSION=ffeb848f-53f1-4d50-b021-5ef3789a2fbd;',
+                    mappingEntity: (that,res) => {
+                        that.total = res['total'];
+                        that.current = res['current'];
+                        that.pageSize = res['size'];
+                        const data = res['data'] as [] || []
+                        return data.map((item) => {
+                            return {
+                                key: item['code'],
+                                value: item['name'],
+                            }
+                        });
+                    },
+                    transform: (value) => {
+                        let arr = value.value ? value.value.result : []
+                        return {
+                            data: arr.map((item) => {
+                                return {
+                                    key: item.key,
+                                    value: '(' + item.key + ')' + item.value,
+                                }
+                            }),
+                            total: value.value ? value.value.total : 0,
+                        }
+                    },
+                },
+            },
+            jsonProperty:'orderNo9'
         })
         return [
             formUtils.getConditionsConfig('vmOrderNo'),
@@ -230,43 +303,55 @@ export default class QueryDemo extends React.Component<{},Istate>{
             formUtils.getConditionsConfig('vmOrderNo7'),
             formUtils.getConditionsConfig('vmOrderNo5'),
             formUtils.getConditionsConfig('vmOrderNo8'),
+            formUtils.getConditionsConfig('vmOrderNo9'),
             formUtils.getConditionsConfig('search'),
         ]
     }
     onChange() {
     }
     render() {
+        console.log(22);
         return (
             <div>
                 <Button onClick={() => {
-                    this.queryRef.methods.setFieldsValue([{ fieldName: 'vmOrderNo4',value: '111' },{
-                        fieldName: 'radioButton',
-                        value:'b',
-                    }])
-                }}> 设置指定数据值</Button>
+                    /* this.queryRef.methods.setFieldsValue([{ fieldName: 'vmOrderNo5',value: false },{
+                        fieldName: 'vmOrderNo6',
+                        value:2,
+                    }]) */
+                    this.queryRef.methods.setFieldsValues('vmOrderNo',(value) => {
+                        if (value instanceof LegionsProConditions.ConditionTextModel) {
+                            value.conditionsProps.label = 'sss';
+                            value.conditionsProps.value = '222';
+                        }
+                    })
+                
+                }}> 设置指定数据值{this.smp.get('ss').a.b}</Button>
                 <Button onClick={() => {
-                    this.queryRef.methods.onSelectSearch('vmOrderNo4',{
+                    this.queryRef.methods.onRrmoteSearch('vmOrderNo9',{
                         pageIndex: 1,
                         ...{a:1},
                     })
                 }}> 主动请求车牌下拉数据</Button>
                 <Button onClick={() => {
-                    const item = this.queryRef.methods.getQuerySelectOption('vmOrderNo4','103');
+                    const item = this.queryRef.methods.getQuerySelectOption('vmOrderNo9','103');
                     console.log(item);
                 }}> 获取车牌数据指定项数据</Button>
                 <Button onClick={() => {
                     this.setState({visable:!this.state.visable})
-                    this.queryRef.methods.setFieldState([
-                        {name:'vmOrderNo3',state:{visable:!this.state.visable}},
-                        {name:'vmOrderNo7',state:{visable:this.state.visable}},
-                    ])
+                    this.queryRef.methods.setFieldsValues('vmOrderNo',(value) => {
+                        if (value instanceof LegionsProConditions.ConditionTextModel) {
+                            value.conditionsProps.visable = false;
+                        }
+                    })
                 }}>设置指定元素隐藏/隐藏</Button>
                 <Button onClick={() => {
-                    this.queryRef.methods.setFieldState([
-                        {name:'vmOrderNo4',state:{visable:true}},
-                    ])
                 }}>设置指定元素显示</Button>
-                <Row style={{marginTop:'10px'}}><LegionsProConditions query={this.createConfig()}></LegionsProConditions>
+                <Row style={{ marginTop: '10px' }}><LegionsProConditions
+                    onReady={(value) => {
+                        this.queryRef = value;
+                    }}
+                    defaultCollapsed
+                    query={this.createConfig()}></LegionsProConditions>
                 </Row>
                 
             </div>

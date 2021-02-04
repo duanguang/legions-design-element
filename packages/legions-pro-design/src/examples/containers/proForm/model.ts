@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-15 15:42:07
- * @LastEditTime: 2021-01-19 16:23:22
+ * @LastEditTime: 2021-02-04 14:24:15
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/examples/containers/proForm/model.ts
@@ -13,8 +13,15 @@ import { IBaseFormFields,HlLabeledValue } from 'legions-lunar/model';
 import { ClassOf } from 'legions-lunar/types/api/typescript';
 import { LegionsProForm } from '../../../components';
 interface IFormFieldUserRenderInput1{
-    currency:string,
+    currency: string,
+    /** 只读 */
     number:number
+}
+export function create():IFormFieldUserRenderInput1 {
+    return {
+        currency:'string',
+    number:1
+    }
 }
 export class FormFields extends LegionsProForm.ProFormFields<FormFields>{
     @FormRuleProperty({

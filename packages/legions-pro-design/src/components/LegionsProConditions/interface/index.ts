@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-08 12:00:22
- * @LastEditTime: 2021-02-03 23:13:25
+ * @LastEditTime: 2021-02-04 18:29:55
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProConditions/interface/index.ts
@@ -25,6 +25,7 @@ import {
 } from '../../interface/antd';
 import {IProSelectProps} from '../../LegionsProSelect/interface'
 import { CheckboxValueType } from 'antd/lib/checkbox/Group';
+import { IProConditions } from '../ProConditionsUtils';
 export interface ISelectProps {
     value: string
     key: string
@@ -39,22 +40,14 @@ interface IMethods {
      */
     reset: () => void;
 
-
-    /**
-     * 设置一组指定元素value值
-     *
-     * @memberof IMethods
-     */
-    setFieldsValue: (fieldsValues: { fieldName: string,value: any }[]) => void
-    /** 设置指定元素显示隐藏 */
-    setFieldState: (fieldsStates: { name: string,state: IFieldsState }[]) => void
+    setFieldsValues?:(name: string,callback: (value: IProConditions['componentModel']) => void)=>void
     /** 查询指定下拉组件数据项 */
-    getQuerySelectOption: (/** 下拉组件name值，对应container.component.JsonProperty.name */name: string,/** 下拉选项key值*/optionKey: string) => { readonly item: HlLabeledValue,readonly options: Array<ISelectProps> };
+    getQuerySelectOption: (/** 下拉组件name值 */name: string,/** 下拉选项key值*/optionKey: string) => { readonly item: HlLabeledValue,readonly options: Array<ISelectProps> };
 
-    /** 指定下拉搜索函数
-     * 主要用于下拉托管请求时，无法得到搜索函数 */
-    onSelectSearch: (
-        /** 下拉组件name值，对应container.component.JsonProperty.name */name: string,
+    /** 下拉远程搜索
+     * 主要同于手动触发下拉组件搜索函数 */
+    onRrmoteSearch: (
+        /** 下拉组件name值 */name: string,
         params: {
             pageIndex: number;
             pageSize?: number;
@@ -71,10 +64,12 @@ export interface IFieldsState {
      * @memberof IFieldsState
      */
     display?: boolean
+    /**组件是否可见，一般用来控制组件显隐，默认值true 可见，false不可见   */
     visable?: boolean
 }
 export interface IQueryConditionsInstance<Query = {}> {
     store: ProQueryConditionStore<Query>;
+    /** 只读 */
     readonly uid: string;
 
     /**
@@ -92,52 +87,61 @@ export interface IQueryConditionsInstance<Query = {}> {
      */
     methods?: IMethods
 }
-
+interface IData{
+    /** 组件内部值 */
+    viewState: any;
+    /** 查询条件对象 */
+    parameter: any;
+}
 
 export interface IQueryTextProps extends IQueryProps,Weaken<InputProps,'onChange'> {
-    onChange?: (even: React.ChangeEvent<HTMLInputElement>,value: any,viewStore:IViewQueryConditionStore) => void;
+   readonly onChange?: (even: React.ChangeEvent<HTMLInputElement>,data:IData,viewStore:IViewQueryConditionStore) => void;
 }
 export interface IQueryTextAreaProps extends IQueryProps,TextAreaProps {
     maxlength?: number;
     placeholder?: string;
-    onChange?: (even: React.ChangeEvent<HTMLInputElement>,value: any,viewStore: IViewQueryConditionStore) => void;
+    readonly onChange?: (even: React.ChangeEvent<HTMLInputElement>,value: IData,viewStore: IViewQueryConditionStore) => void;
 }
 export interface IQueryRadioButtonProps extends IQueryProps,Weaken<RadioGroupProps,'onChange'> {
-    onChange?: (event: React.FormEvent<any>,value: any,viewStore: IViewQueryConditionStore) => void;
+    readonly onChange?: (event: React.FormEvent<any>,value: IData,viewStore: IViewQueryConditionStore) => void;
 }
 export interface IQueryTextNumberProps extends IQueryProps,Weaken<InputNumberProps,'onChange'> {
-    onChange?: (value: number,model: any,viewStore:IViewQueryConditionStore) => void;
+    readonly onChange?: (value: number,model: IData,viewStore:IViewQueryConditionStore) => void;
 }
 export interface IQuerySelectProps extends IQueryProps,Weaken<IProSelectProps,'onChange'> {
-    multiple: boolean,
+    multiple?: boolean,
     loading?: boolean,
     /** 自动托管下拉数据请求，在下拉框组件中使用,只支持一次性查询全部数据
      * 不支持远程根据关键词搜索
      */
-    autoQuery?: ISelectAutoQuery;
-    onChange?: (value: any,viewStore:IViewQueryConditionStore) => void;
+    readonly  autoQuery?: ISelectAutoQuery;
+    readonly onChange?: (value: IData,viewStore:IViewQueryConditionStore) => void;
 }
 export interface IQueryDateProps extends IQueryProps ,Weaken<DatePickerProps,'onChange'>{
     format: 'YYYY-MM-DD HH:mm:ss' | 'YYYY-MM-DD' | 'YYYY-MM-DD HH:mm'
     showTime: boolean | { format: 'HH:mm' }
-    onChange?: (originValue: {
+    /** 只读 */
+    readonly  onChange?: (originValue: {
         date: moment.Moment, dateString: string
-    },value: any,viewStore:IViewQueryConditionStore) => void;
+    },value: IData,viewStore:IViewQueryConditionStore) => void;
 }
 export interface IQueryRangePickerProps extends IQueryProps, Weaken<RangePickerProps,'onChange'|'placeholder'>{
     placeholder?: [string,string]
-    onChange?: (originValue: {
+    /** 只读 */
+    readonly onChange?: (originValue: {
         date: [moment.Moment,moment.Moment], dateString: [string, string]
-    },value: any,viewStore:IViewQueryConditionStore) => void;
+    },value: IData,viewStore:IViewQueryConditionStore) => void;
 }
 export interface IQueryCheckBoxProps extends IQueryProps,Weaken<CheckboxProps,'onChange'>{
-    onChange?: (even: React.ChangeEvent<HTMLInputElement>,value: any) => void;
+    /** 只读 */
+    readonly onChange?: (even: React.ChangeEvent<HTMLInputElement>,value: IData,viewStore:IViewQueryConditionStore) => void;
 }
 export interface IQueryGroupCheckBoxProps extends Omit<IQueryProps,'label'>,Weaken<CheckboxGroupProps,'onChange'>{
-    onChange?: (checkedValue: Array<CheckboxValueType>,value: any,viewStore:IViewQueryConditionStore) => void;
+    /** 只读 */
+    readonly onChange?: (checkedValue: Array<CheckboxValueType>,value: IData,viewStore:IViewQueryConditionStore) => void;
 }
 
-export interface IQueryProps {
+export interface IQueryProps extends IFieldsState {
     label: string;
     labelSpan?: number;
     /**
@@ -151,12 +155,15 @@ export interface IQueryProps {
     /**
      *
      * 自定义重置方法,返回一个新值
+     * 
+     * 只读
      * @memberof IQueryProps
      */
-    onReset?: <T extends {}>(fieldName: string,vlaue: T) => T;
-    onPaste?: (event) => void;
-
-    onEnter?: (value,viewEntity?: IViewQueryConditionStore) => void
+    readonly onReset?: <T extends {}>(fieldName: string,vlaue: T) => T;
+    /** 只读 */
+    readonly onPaste?: (event) => void;
+/** 只读 */
+    readonly onEnter?: (value,viewEntity?: IViewQueryConditionStore) => void
     
 }
 

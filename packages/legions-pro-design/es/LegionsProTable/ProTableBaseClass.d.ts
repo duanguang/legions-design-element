@@ -1,5 +1,5 @@
 import React from 'react';
-import { IQuery } from '../LegionsProQueryConditions/interface';
+import { IQuery } from '../LegionsProConditions/interface';
 import { TableColumnConfig } from '../interface/antd';
 import { InstanceProTable } from './interface';
 import { PageListEntity } from './pageListEntity';

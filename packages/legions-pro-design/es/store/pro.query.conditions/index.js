@@ -9,6 +9,7 @@ import { observablePromise, observableViewModel } from 'legions/store-utils';
 import { computed } from 'mobx';
 import { LegionsFetch } from '../../core';
 import { cloneDeep } from 'lodash';
+import { SelectKeyValue } from '../../models';
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -73,41 +74,36 @@ function __metadata(metadataKey, metadataValue) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(metadataKey, metadataValue);
 }
 
+function __values(o) {
+    var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
+    if (m) return m.call(o);
+    if (o && typeof o.length === "number") return {
+        next: function () {
+            if (o && i >= o.length) o = void 0;
+            return { value: o && o[i++], done: !o };
+        }
+    };
+    throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
+}
+
 /*
  * @Author: duanguang
  * @Date: 2021-01-07 16:49:31
- * @LastEditTime: 2021-02-03 11:55:24
+ * @LastEditTime: 2021-02-04 18:21:30
  * @LastEditors: duanguang
  * @Description:
- * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/store/pro.query.conditions/HlQueryConditionView.ts
+ * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/store/pro.query.conditions/conditionView.ts
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
-var HlQueryConditionView = /** @class */ (function () {
-    function HlQueryConditionView() {
+var ConditionView = /** @class */ (function () {
+    function ConditionView() {
         /**
+         * 查询条件
          *
-         * 搜索条件左侧组件集合
-         * @private
-         * @type {React.ReactNode[]}
-         * @memberof HlQueryConditionView
+         * @type {Object}
+         * @memberof ConditionView
          */
-        this.queryLeftComponent = null;
-        /**
-         * 搜索条件右侧组件集合
-         *
-         * @private
-         * @type {React.ReactNode[]}
-         * @memberof HlQueryConditionView
-         */
-        this.queryRightComponent = null;
-        /**
-         * 动态排版区域组件
-         *
-         * @private
-         * @type {JSX.Element}
-         * @memberof HlQueryConditionView
-         */
-        this.queryContentComponent = null;
+        this.query = observable.map();
         /**
          * 组件在 dom 树的真实高度
          * 自动获取的
@@ -121,7 +117,7 @@ var HlQueryConditionView = /** @class */ (function () {
          *
          * 容器宽度
          * @type {number}
-         * @memberof HlQueryConditionView
+         * @memberof ConditionView
          */
         this.widthContainer = document.body.clientWidth;
         /**
@@ -129,73 +125,49 @@ var HlQueryConditionView = /** @class */ (function () {
          * 搜索条件组件数据模型
          * @private
          * @type {Object}
-         * @memberof HlQueryConditionView
+         * @memberof ConditionView
          */
         this.vmModel = null;
         this.size = 'default';
         this.selectOptions = observable.map();
     }
-    Object.defineProperty(HlQueryConditionView.prototype, "computedQuery", {
+    Object.defineProperty(ConditionView.prototype, "computedQuery", {
         get: function () {
-            return this.query;
+            var e_1, _a;
+            var value = [];
+            try {
+                for (var _b = __values(this.query.values()), _c = _b.next(); !_c.done; _c = _b.next()) {
+                    var item = _c.value;
+                    value.push(item);
+                }
+            }
+            catch (e_1_1) { e_1 = { error: e_1_1 }; }
+            finally {
+                try {
+                    if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
+                }
+                finally { if (e_1) throw e_1.error; }
+            }
+            return value;
         },
         enumerable: false,
         configurable: true
     });
-    Object.defineProperty(HlQueryConditionView.prototype, "computedVmModel", {
+    Object.defineProperty(ConditionView.prototype, "computedVmModel", {
         get: function () {
             return JSON.parse(this.vmModel);
         },
         enumerable: false,
         configurable: true
     });
-    Object.defineProperty(HlQueryConditionView.prototype, "computedLeftComponent", {
-        /**
-         * 搜索条件右侧组件集合
-         *
-         * @readonly
-         * @memberof HlQueryConditionView
-         */
-        get: function () {
-            return this.queryLeftComponent;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(HlQueryConditionView.prototype, "computedContentComponent", {
-        /**
-         * 动态排布区域组件
-         *
-         * @readonly
-         * @memberof HlQueryConditionView
-         */
-        get: function () {
-            return this.queryContentComponent;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(HlQueryConditionView.prototype, "computedRightComponent", {
-        /**
-         *
-         * 搜索左侧组件集合
-         * @readonly
-         * @memberof HlQueryConditionView
-         */
-        get: function () {
-            return this.queryRightComponent;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(HlQueryConditionView.prototype, "computedSize", {
+    Object.defineProperty(ConditionView.prototype, "computedSize", {
         get: function () {
             return this.size;
         },
         enumerable: false,
         configurable: true
     });
-    Object.defineProperty(HlQueryConditionView.prototype, "compuedResolution", {
+    Object.defineProperty(ConditionView.prototype, "compuedResolution", {
         /**
          * xs: 宽度<768px 响应式栅格，可为栅格数或一个包含其他属性的对象
          *
@@ -235,32 +207,42 @@ var HlQueryConditionView = /** @class */ (function () {
      * @param {Object} model
      * @memberof HlQueryConditionView
      */
-    HlQueryConditionView.prototype.setVmModel = function (model) {
+    ConditionView.prototype._setVmModel = function (model) {
         this.vmModel = JSON.stringify(model);
     };
-    HlQueryConditionView.prototype.setLeftComponent = function (left) {
-        if (left === void 0) { left = null; }
-        this.queryLeftComponent = left;
+    ConditionView.prototype._initQuery = function (query) {
+        var _this = this;
+        query.map(function (item) {
+            var id = item.containerProps.uuid;
+            if (!_this.query.has(id)) {
+                _this.query.set(id, item);
+            }
+        });
     };
-    HlQueryConditionView.prototype.setRightComponent = function (right) {
-        if (right === void 0) { right = null; }
-        this.queryRightComponent = right;
+    /** 改变搜索条件配置数据 */
+    ConditionView.prototype._setQueryState = function (name, callback) {
+        var item = this._getQueryItem(name);
+        if (item) {
+            callback && callback(item);
+            if (this.query.has(item.containerProps.uuid)) {
+                this.query.set(item.containerProps.uuid, cloneDeep(item));
+            }
+        }
     };
-    HlQueryConditionView.prototype.setContentComponent = function (content) {
-        if (content === void 0) { content = null; }
-        this.queryContentComponent = content;
+    ConditionView.prototype._getQueryItem = function (name) {
+        var item = this.computedQuery.find(function (item) { return item.containerProps.name === name; });
+        if (item) {
+            return this.query.get(item.containerProps.uuid);
+        }
+        return null;
     };
-    HlQueryConditionView.prototype.setQuery = function (query) {
-        this.query = query;
-    };
-    HlQueryConditionView.prototype.setSize = function (size) {
+    ConditionView.prototype._setSize = function (size) {
         this.size = size;
     };
-    HlQueryConditionView.prototype.dispatchRequest = function (name, autoQuery, options) {
+    ConditionView.prototype._dispatchRequest = function (name, autoQuery, options) {
         if (options === void 0) { options = { pageIndex: 1, pageSize: 30 }; }
         if (autoQuery) {
             var server_1 = new LegionsFetch();
-            /* const keyWords = options.keyWords || '' */
             //@ts-ignore
             var apiServer = function () {
                 var pageIndex = options.pageIndex, pageSize = options.pageSize, _a = options.keyWords, keyWords = _a === void 0 ? '' : _a, props = __rest(options, ["pageIndex", "pageSize", "keyWords"]);
@@ -271,23 +253,20 @@ var HlQueryConditionView = /** @class */ (function () {
                 if (autoQuery.requestBeforeTransformParams) {
                     params = autoQuery.requestBeforeTransformParams(__assign(__assign({}, params), { pageIndex: options.pageIndex, pageSize: options.pageSize }));
                 }
+                var model = {
+                    onBeforTranform: function (value) {
+                        options.callback && options.callback(value);
+                        return {
+                            responseData: value,
+                            mappingEntity: autoQuery.mappingEntity,
+                        };
+                    },
+                };
                 if (autoQuery.method === 'post') {
-                    return server_1.post({
-                        url: autoQuery.ApiUrl,
-                        parameter: params,
-                        headerOption: __assign(__assign({}, autoQuery.options), { 'api-cookie': autoQuery.token }),
-                        //@ts-ignore
-                        model: autoQuery.model,
-                    });
+                    return server_1.post(__assign({ url: autoQuery.ApiUrl, parameter: params, headers: __assign(__assign({}, autoQuery.options), { 'api-cookie': autoQuery.token }), model: SelectKeyValue }, model));
                 }
                 else if (autoQuery.method === 'get') {
-                    return server_1.get({
-                        url: autoQuery.ApiUrl,
-                        parameter: params,
-                        headerOption: __assign(__assign({}, autoQuery.options), { 'api-cookie': autoQuery.token }),
-                        //@ts-ignore
-                        model: autoQuery.model,
-                    });
+                    return server_1.get(__assign({ url: autoQuery.ApiUrl, parameter: params, headers: __assign(__assign({}, autoQuery.options), { 'api-cookie': autoQuery.token }), model: SelectKeyValue }, model));
                 }
             };
             this.selectOptions.set(name, {
@@ -298,127 +277,94 @@ var HlQueryConditionView = /** @class */ (function () {
     __decorate([
         observable,
         __metadata("design:type", Object)
-    ], HlQueryConditionView.prototype, "query", void 0);
+    ], ConditionView.prototype, "query", void 0);
     __decorate([
         observable,
         __metadata("design:type", Object)
-    ], HlQueryConditionView.prototype, "tranQuery", void 0);
-    __decorate([
-        observable,
-        __metadata("design:type", Object)
-    ], HlQueryConditionView.prototype, "queryLeftComponent", void 0);
-    __decorate([
-        observable,
-        __metadata("design:type", Object)
-    ], HlQueryConditionView.prototype, "queryRightComponent", void 0);
-    __decorate([
-        observable,
-        __metadata("design:type", Object)
-    ], HlQueryConditionView.prototype, "queryContentComponent", void 0);
+    ], ConditionView.prototype, "tranQuery", void 0);
     __decorate([
         observable,
         __metadata("design:type", Number)
-    ], HlQueryConditionView.prototype, "domHeight", void 0);
+    ], ConditionView.prototype, "domHeight", void 0);
     __decorate([
         observable,
         __metadata("design:type", Number)
-    ], HlQueryConditionView.prototype, "widthContainer", void 0);
+    ], ConditionView.prototype, "widthContainer", void 0);
     __decorate([
         observable.ref,
-        __metadata("design:type", String)
-    ], HlQueryConditionView.prototype, "vmModel", void 0);
+        __metadata("design:type", Object)
+    ], ConditionView.prototype, "vmModel", void 0);
     __decorate([
         observable,
         __metadata("design:type", String)
-    ], HlQueryConditionView.prototype, "size", void 0);
+    ], ConditionView.prototype, "size", void 0);
     __decorate([
         observable,
         __metadata("design:type", Object)
-    ], HlQueryConditionView.prototype, "selectOptions", void 0);
+    ], ConditionView.prototype, "selectOptions", void 0);
+    __decorate([
+        computed,
+        __metadata("design:type", Array),
+        __metadata("design:paramtypes", [])
+    ], ConditionView.prototype, "computedQuery", null);
     __decorate([
         computed,
         __metadata("design:type", Object),
         __metadata("design:paramtypes", [])
-    ], HlQueryConditionView.prototype, "computedQuery", null);
+    ], ConditionView.prototype, "computedVmModel", null);
     __decorate([
         computed,
         __metadata("design:type", Object),
         __metadata("design:paramtypes", [])
-    ], HlQueryConditionView.prototype, "computedVmModel", null);
-    __decorate([
-        computed,
-        __metadata("design:type", Object),
-        __metadata("design:paramtypes", [])
-    ], HlQueryConditionView.prototype, "computedLeftComponent", null);
-    __decorate([
-        computed,
-        __metadata("design:type", Object),
-        __metadata("design:paramtypes", [])
-    ], HlQueryConditionView.prototype, "computedContentComponent", null);
-    __decorate([
-        computed,
-        __metadata("design:type", Object),
-        __metadata("design:paramtypes", [])
-    ], HlQueryConditionView.prototype, "computedRightComponent", null);
-    __decorate([
-        computed,
-        __metadata("design:type", Object),
-        __metadata("design:paramtypes", [])
-    ], HlQueryConditionView.prototype, "computedSize", null);
+    ], ConditionView.prototype, "computedSize", null);
     __decorate([
         computed,
         __metadata("design:type", String),
         __metadata("design:paramtypes", [])
-    ], HlQueryConditionView.prototype, "compuedResolution", null);
+    ], ConditionView.prototype, "compuedResolution", null);
     __decorate([
         action,
         __metadata("design:type", Function),
         __metadata("design:paramtypes", [Object]),
         __metadata("design:returntype", void 0)
-    ], HlQueryConditionView.prototype, "setVmModel", null);
+    ], ConditionView.prototype, "_setVmModel", null);
     __decorate([
         action,
         __metadata("design:type", Function),
-        __metadata("design:paramtypes", [Object]),
+        __metadata("design:paramtypes", [Array]),
         __metadata("design:returntype", void 0)
-    ], HlQueryConditionView.prototype, "setLeftComponent", null);
+    ], ConditionView.prototype, "_initQuery", null);
     __decorate([
         action,
         __metadata("design:type", Function),
-        __metadata("design:paramtypes", [Object]),
+        __metadata("design:paramtypes", [String, Function]),
         __metadata("design:returntype", void 0)
-    ], HlQueryConditionView.prototype, "setRightComponent", null);
-    __decorate([
-        action,
-        __metadata("design:type", Function),
-        __metadata("design:paramtypes", [Object]),
-        __metadata("design:returntype", void 0)
-    ], HlQueryConditionView.prototype, "setContentComponent", null);
-    __decorate([
-        action,
-        __metadata("design:type", Function),
-        __metadata("design:paramtypes", [Object]),
-        __metadata("design:returntype", void 0)
-    ], HlQueryConditionView.prototype, "setQuery", null);
+    ], ConditionView.prototype, "_setQueryState", null);
     __decorate([
         action,
         __metadata("design:type", Function),
         __metadata("design:paramtypes", [String]),
         __metadata("design:returntype", void 0)
-    ], HlQueryConditionView.prototype, "setSize", null);
+    ], ConditionView.prototype, "_getQueryItem", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [String]),
+        __metadata("design:returntype", void 0)
+    ], ConditionView.prototype, "_setSize", null);
     __decorate([
         action,
         __metadata("design:type", Function),
         __metadata("design:paramtypes", [String, Object, Object]),
         __metadata("design:returntype", void 0)
-    ], HlQueryConditionView.prototype, "dispatchRequest", null);
-    return HlQueryConditionView;
+    ], ConditionView.prototype, "_dispatchRequest", null);
+    return ConditionView;
 }());
 
 /*
  * @Author: duanguang
  * @Date: 2020-12-29 16:44:16
- * @LastEditTime: 2021-01-13 10:27:29
+ * @LastEditTime: 2021-02-04 16:17:22
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/store/pro.query.conditions/index.ts
@@ -428,23 +374,29 @@ var ProQueryConditionStore = /** @class */ (function (_super) {
     __extends(ProQueryConditionStore, _super);
     function ProQueryConditionStore(context) {
         var _this = _super.call(this, context) || this;
-        _this.HlQueryConditionContainer = observable.map();
+        _this.viewModelQuery = observableViewModel(new ConditionView());
+        _this.ConditionContainer = observable.map();
         return _this;
     }
     ProQueryConditionStore.prototype.add = function (uid) {
-        this.HlQueryConditionContainer.set(uid, observableViewModel(new HlQueryConditionView()));
+        this.viewModelQuery = observableViewModel(new ConditionView());
+        this.ConditionContainer.set(uid, this.viewModelQuery);
     };
     ProQueryConditionStore.prototype.delete = function (uid) {
-        this.HlQueryConditionContainer.delete(uid);
+        this.ConditionContainer.delete(uid);
     };
     ProQueryConditionStore.prototype.get = function (uid) {
-        return this.HlQueryConditionContainer.get(uid);
+        return this.ConditionContainer.get(uid);
     };
     ProQueryConditionStore.meta = __assign({}, StoreBase.meta);
     __decorate([
         observable,
         __metadata("design:type", Object)
-    ], ProQueryConditionStore.prototype, "HlQueryConditionContainer", void 0);
+    ], ProQueryConditionStore.prototype, "viewModelQuery", void 0);
+    __decorate([
+        observable,
+        __metadata("design:type", Object)
+    ], ProQueryConditionStore.prototype, "ConditionContainer", void 0);
     __decorate([
         action,
         __metadata("design:type", Function),

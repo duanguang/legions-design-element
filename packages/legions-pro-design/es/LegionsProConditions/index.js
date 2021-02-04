@@ -5,7 +5,7 @@
   */
 import React from 'react';
 import './style/index.less';
-import { Radio, DatePicker, Select, Input, Icon, Tooltip, Checkbox, InputNumber, Menu, Row, Col, Button, Dropdown } from 'antd';
+import { Radio, DatePicker, Select, Input, Checkbox, Icon, Tooltip, InputNumber, Menu, Row, Col, Button, Dropdown } from 'antd';
 import moment from 'moment';
 import { bind, observer } from 'legions/store-react';
 import LegionsProSelect from '../LegionsProSelect';
@@ -175,6 +175,14 @@ var ConditionCheckBoxModel = /** @class */ (function () {
     }
     return ConditionCheckBoxModel;
 }());
+var ConditionGroupCheckBoxModel = /** @class */ (function () {
+    function ConditionGroupCheckBoxModel(containerProps, conditionsProps, jsonProperty) {
+        this.containerProps = containerProps;
+        this.conditionsProps = conditionsProps;
+        this.jsonProperty = jsonProperty;
+    }
+    return ConditionGroupCheckBoxModel;
+}());
 var ProConditions = /** @class */ (function () {
     function ProConditions(options) {
         this.global = null;
@@ -191,52 +199,69 @@ var ProConditions = /** @class */ (function () {
             }
         }
     }
+    ProConditions.prototype.createUid = function (name) {
+        var timeId = new Date().getTime();
+        var uid = name + "-" + shortHash("" + timeId + name);
+        return uid;
+    };
+    ProConditions.prototype.createContainerProps = function (props) {
+        var id = props.name;
+        if (!this[id]) {
+            return __assign(__assign({}, props), { uuid: this.createUid(id) });
+        }
+        return this[id]['containerProps'];
+    };
     ProConditions.prototype.getConditionsConfig = function (componentConfigKey) {
         return this[componentConfigKey];
     };
     ProConditions.prototype.renderSelectConfig = function (options) {
         var id = options.containerProps.name;
-        this[id] = new ConditionSelectModel(options.containerProps, options.conditionsProps, options.jsonProperty);
+        this[id] = new ConditionSelectModel(this.createContainerProps(options.containerProps), options.conditionsProps, options.jsonProperty);
         return this[id];
     };
     ProConditions.prototype.renderTextNumberConfig = function (options) {
         var id = options.containerProps.name;
-        this[id] = new ConditionTextNumberModel(options.containerProps, options.conditionsProps, options.jsonProperty);
+        this[id] = new ConditionTextNumberModel(this.createContainerProps(options.containerProps), options.conditionsProps, options.jsonProperty);
         return this[id];
     };
     ProConditions.prototype.renderRadioButtonConfig = function (options) {
         var id = options.containerProps.name;
-        this[id] = new ConditionRadioButtonModel(options.containerProps, options.conditionsProps, options.jsonProperty);
+        this[id] = new ConditionRadioButtonModel(this.createContainerProps(options.containerProps), options.conditionsProps, options.jsonProperty);
         return this[id];
     };
     ProConditions.prototype.renderTextAreaConfig = function (options) {
         var id = options.containerProps.name;
-        this[id] = new ConditionTextAreaModel(options.containerProps, options.conditionsProps, options.jsonProperty);
+        this[id] = new ConditionTextAreaModel(this.createContainerProps(options.containerProps), options.conditionsProps, options.jsonProperty);
         return this[id];
     };
     ProConditions.prototype.renderTextConfig = function (options) {
         var id = options.containerProps.name;
-        this[id] = new ConditionTextModel(options.containerProps, options.conditionsProps, options.jsonProperty);
+        this[id] = new ConditionTextModel(this.createContainerProps(options.containerProps), options.conditionsProps, options.jsonProperty);
         return this[id];
     };
     ProConditions.prototype.renderDateConfig = function (options) {
         var id = options.containerProps.name;
-        this[id] = new ConditionDateModel(options.containerProps, options.conditionsProps, options.jsonProperty);
+        this[id] = new ConditionDateModel(this.createContainerProps(options.containerProps), options.conditionsProps, options.jsonProperty);
         return this[id];
     };
     ProConditions.prototype.renderRangePickerConfig = function (options) {
         var id = options.containerProps.name;
-        this[id] = new ConditionRangePickerModel(options.containerProps, options.conditionsProps, options.jsonProperty);
+        this[id] = new ConditionRangePickerModel(this.createContainerProps(options.containerProps), options.conditionsProps, options.jsonProperty);
         return this[id];
     };
     ProConditions.prototype.renderCheckBoxConfig = function (options) {
         var id = options.containerProps.name;
-        this[id] = new ConditionCheckBoxModel(options.containerProps, options.conditionsProps, options.jsonProperty);
+        this[id] = new ConditionCheckBoxModel(this.createContainerProps(options.containerProps), options.conditionsProps, options.jsonProperty);
+        return this[id];
+    };
+    ProConditions.prototype.renderGroupCheckBoxConfig = function (options) {
+        var id = options.containerProps.name;
+        this[id] = new ConditionGroupCheckBoxModel(this.createContainerProps(options.containerProps), options.conditionsProps, options.jsonProperty);
         return this[id];
     };
     ProConditions.prototype.renderSearchConfig = function (options) {
         var id = options.containerProps.name;
-        this[id] = new ConditionSearchModel(options.containerProps, options.conditionsProps);
+        this[id] = new ConditionSearchModel(this.createContainerProps(options.containerProps), options.conditionsProps);
         return this[id];
     };
     return ProConditions;
@@ -263,20 +288,18 @@ var LegionsProConditions = /** @class */ (function (_super) {
         }, 500);
         _this.timeId = new Date().getTime();
         _this.uid = "Query" + shortHash(_this.timeId);
+        _this.queryPrams = {};
         _this.state = {
-            vmModel: {},
-            queryPrams: {},
-            fieldsStates: [],
-            collapsed: true,
+            collapsed: _this.props.defaultCollapsed,
         };
         if (_this.props['uniqueUid']) {
             _this.uid = "Query" + shortHash(_this.props['uniqueUid']);
         }
         else {
-            _this.uid = "Query" + _this.props.store.HlQueryConditionContainer.size + shortHash("" + _this.timeId + _this.props.store.HlQueryConditionContainer.size);
-            if (_this.props.store.HlQueryConditionContainer.has(_this.uid)) {
+            _this.uid = "Query" + _this.props.store.ConditionContainer.size + shortHash("" + _this.timeId + _this.props.store.ConditionContainer.size);
+            if (_this.props.store.ConditionContainer.has(_this.uid)) {
                 _this.timeId = new Date().getTime();
-                _this.uid = "Query" + _this.props.store.HlQueryConditionContainer.size + shortHash("" + _this.timeId + _this.props.store.HlQueryConditionContainer.size);
+                _this.uid = "Query" + _this.props.store.ConditionContainer.size + shortHash("" + _this.timeId + _this.props.store.ConditionContainer.size);
             }
         }
         _this.consoleLog('constructor');
@@ -285,7 +308,14 @@ var LegionsProConditions = /** @class */ (function (_super) {
     Object.defineProperty(LegionsProConditions.prototype, "viewStore", {
         //@ts-ignore
         get: function () {
-            return this.props.store.HlQueryConditionContainer.get(this.uid);
+            return this.props.store.ConditionContainer.get(this.uid);
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(LegionsProConditions.prototype, "vmModel", {
+        get: function () {
+            return this.viewStore.computedVmModel;
         },
         enumerable: false,
         configurable: true
@@ -299,25 +329,20 @@ var LegionsProConditions = /** @class */ (function (_super) {
     };
     LegionsProConditions.prototype.componentWillMount = function () {
         var _this = this;
-        if (!this.props.store.HlQueryConditionContainer.has(this.uid)) {
+        if (!this.props.store.ConditionContainer.has(this.uid)) {
             this.props.store.add(this.uid);
             this.initVModel();
+            this.viewStore._initQuery(this.props.query);
         }
-        else {
-            this.setState({ vmModel: __assign({}, this.viewStore.computedVmModel) });
-        }
-        this.viewStore.setSize(this.props.size);
+        this.viewStore._setSize(this.props.size);
         this.props.onReady && this.props.onReady({
             store: this.props.store, uid: this.uid, viewModel: this.viewStore,
             methods: {
                 reset: function () {
-                    _this.reset();
+                    _this.handleReset();
                 },
-                setFieldsValue: function (fieldsValues) {
-                    _this.setFieldsValue(fieldsValues);
-                },
-                setFieldState: function (fieldsStates) {
-                    _this.setFieldState(fieldsStates);
+                setFieldsValues: function (name, callback) {
+                    _this.setFieldsValues(name, callback);
                 },
                 getQuerySelectOption: function (name, optionKey) {
                     var selectConfigs = _this.props.query.filter(function (item) { return item instanceof ConditionSelectModel; });
@@ -342,20 +367,14 @@ var LegionsProConditions = /** @class */ (function (_super) {
                         options: newData,
                     };
                 },
-                onSelectSearch: function (name, params) {
+                onRrmoteSearch: function (name, params) {
                     var selectConfigs = _this.props.query.filter(function (item) { return item instanceof ConditionSelectModel; });
                     var index = selectConfigs.findIndex(function (item) { return item.containerProps.name === name; });
                     if (index > -1) {
                         var item = selectConfigs[index].conditionsProps;
                         if (item.autoQuery) {
-                            _this.viewStore.dispatchRequest(name, item.autoQuery, params);
+                            _this.viewStore._dispatchRequest(name, item.autoQuery, params);
                         }
-                        else {
-                            console.warn('此下拉框组件并没有开启自动托管请求配置信息,请检查');
-                        }
-                    }
-                    else {
-                        console.warn('搜索条件配置数据找不到此名称的下拉组件,请检查');
                     }
                 }
             }
@@ -393,7 +412,7 @@ var LegionsProConditions = /** @class */ (function (_super) {
             if (item instanceof ConditionSelectModel) {
                 var props = item.conditionsProps;
                 if (props.autoQuery && (props.autoQuery.isInitialize === void 0 || props.autoQuery.isInitialize)) {
-                    _this.viewStore.dispatchRequest(item.containerProps.name, props.autoQuery, {
+                    _this.viewStore._dispatchRequest(item.containerProps.name, props.autoQuery, {
                         pageIndex: 1,
                     });
                 }
@@ -411,59 +430,57 @@ var LegionsProConditions = /** @class */ (function (_super) {
             }
         }
     };
-    /**
-     * 设置指定元素显示隐藏
-     *
-     * @template T state 类型
-     * @param {string} name JsonProperty.name
-     * @param {T} state
-     * @memberof QueryConditions
-     */
-    LegionsProConditions.prototype.setFieldState = function (fieldsStates) {
-        var newFieldsName = fieldsStates.map(function (item) { return item.name; });
-        var oldFieldsStates = this.state.fieldsStates.filter(function (item) { return !newFieldsName.includes(item.name); });
-        this.setState({ fieldsStates: __spread(oldFieldsStates, fieldsStates) });
-    };
-    /**
-     * 设置指定元素value值
-     *
-     * @template T value 类型
-     * @param {string} fieldName JsonProperty.name
-     * @param {T} value
-     * @memberof QueryConditions
-     */
-    LegionsProConditions.prototype.setFieldsValue = function (fieldsValues) {
-        if (Array.isArray(fieldsValues) && fieldsValues.length) {
-            var vmModels_1 = __assign({}, this.state.vmModel);
-            fieldsValues.map(function (item) {
-                if (vmModels_1.hasOwnProperty(item.fieldName)) {
-                    vmModels_1[item.fieldName] = item.value;
-                }
-            });
-            this.setState({ vmModel: vmModels_1 });
-            this.viewStore.setVmModel(vmModels_1);
-        }
+    LegionsProConditions.prototype.setFieldsValues = function (name, callback) {
+        this.viewStore._setQueryState(name, function (value) {
+            callback(value);
+        });
     };
     LegionsProConditions.prototype.initVModel = function () {
-        var query = this.props.query;
         var data = {};
         var prams = {};
-        query.map(function (item) {
+        this.props.query.map(function (item) {
+            var name = item.containerProps.name;
             if (!(item instanceof ConditionSearchModel) && item.jsonProperty) {
                 if (isArray(item.conditionsProps.defaultValue)) {
-                    data[item.containerProps.name] = __spread(item.conditionsProps.defaultValue);
+                    if (item instanceof ConditionRangePickerModel) {
+                        data[name] = item.conditionsProps.defaultValue.map(function (m) {
+                            if (moment.isMoment(m)) {
+                                return moment(m).format(item.conditionsProps.format || 'YYYY-MM-DD HH:mm:ss');
+                            }
+                            return m;
+                        });
+                    }
+                    else {
+                        data[name] = __spread(item.conditionsProps.defaultValue);
+                    }
                 }
                 else {
-                    data[item.containerProps.name] = item.conditionsProps.defaultValue || item.conditionsProps.value;
+                    var defaultValue = item.conditionsProps.defaultValue;
+                    var value = item.conditionsProps.value;
+                    if (item instanceof ConditionCheckBoxModel) {
+                        defaultValue = item.conditionsProps.defaultChecked;
+                        value = item.conditionsProps.checked || item.conditionsProps.value;
+                    }
+                    var newValue = null;
+                    if (item instanceof ConditionDateModel) {
+                        var format = item.conditionsProps.format || 'YYYY-MM-DD HH:mm:ss';
+                        if (moment.isMoment(defaultValue)) {
+                            newValue = moment(defaultValue).format(format);
+                        }
+                        else if (moment.isMoment(value)) {
+                            newValue = moment(value).format(format);
+                        }
+                        data[name] = newValue;
+                    }
+                    else {
+                        data[name] = defaultValue || value;
+                    }
                 }
-                prams[item.jsonProperty] = data[item.containerProps.name];
+                prams[item.jsonProperty] = data[name];
             }
         });
-        this.setState({
-            vmModel: data,
-            queryPrams: prams
-        });
-        this.viewStore.setVmModel(data);
+        this.queryPrams = prams;
+        this.viewStore._setVmModel(data);
     };
     /**
      * 把组件元素结果映射至查询条件
@@ -472,78 +489,93 @@ var LegionsProConditions = /** @class */ (function (_super) {
      */
     LegionsProConditions.prototype.mapQueryValue = function () {
         var _this = this;
-        var query = this.props.query;
-        var prams = this.state.queryPrams;
-        query.map(function (item) {
+        var computedQuery = this.viewStore.computedQuery;
+        var prams = this.queryPrams;
+        computedQuery.map(function (item) {
             if (!(item instanceof ConditionSearchModel)) {
-                prams[item.jsonProperty] = _this.state.vmModel[item.containerProps.name];
+                prams[item.jsonProperty] = _this.vmModel[item.containerProps.name];
             }
         });
-        this.setState({
-            queryPrams: prams
-        });
-        this.viewStore.setQuery(__assign(__assign({}, this.viewStore.computedQuery), prams));
+        this.queryPrams = prams;
     };
     LegionsProConditions.prototype.reset = function () {
         var _this = this;
-        var data = this.state.vmModel;
+        var data = this.vmModel;
         /* let data = {...this.viewStore.computedVmModel} */
+        var computedQuery = this.viewStore.computedQuery;
         Object.keys(data).forEach(function (key) {
-            var entity = _this.props.query.find(function (item) { return item.containerProps.name === key; });
+            var entity = computedQuery.find(function (item) { return item.containerProps.name === key; });
             if (entity && !(entity instanceof ConditionSearchModel) && !entity.conditionsProps.isNotReset) {
                 if (entity.conditionsProps.onReset) {
                     data[key] = entity.conditionsProps.onReset(key, data[key]);
                 }
                 else {
-                    data[key] = entity.conditionsProps.defaultValue || '';
+                    var defaultValue_1 = entity.conditionsProps.defaultValue;
+                    var format = entity.conditionsProps['format'] || 'YYYY-MM-DD';
+                    if (moment.isMoment(defaultValue_1)) {
+                        data[key] = moment(defaultValue_1).format(format);
+                    }
+                    else if (Array.isArray(defaultValue_1) && defaultValue_1.length >= 2) {
+                        data[key] = [moment(defaultValue_1[0]).format(format), moment(defaultValue_1[1]).format(format)];
+                    }
+                    else {
+                        data[key] = defaultValue_1 || '';
+                    }
+                    _this.setFieldsValues(entity.containerProps.name, function (value) {
+                        value.conditionsProps['value'] = defaultValue_1;
+                    });
                 }
             }
         });
-        this.setState({
-            vmModel: data
-        });
-        this.viewStore.setVmModel(data);
+        this.viewStore._setVmModel(data);
         this.mapQueryValue();
     };
     LegionsProConditions.prototype.handleChangeDate = function (component, datas, dateString) {
         var name = component.containerProps.name;
-        var value = dateString;
-        var data = this.state.vmModel;
-        //@ts-ignore
-        if (Array.isArray(datas) && datas.length === 0) { // 日期多选
-            data[name] = [];
-        }
-        else {
-            data[name] = value;
-        }
-        this.setState({
-            vmModel: data
+        var data = this.vmModel;
+        this.setFieldsValues(name, function (value) {
+            value.conditionsProps['value'] = datas;
         });
-        this.viewStore.setVmModel(__assign({}, data));
+        data[name] = dateString;
         if (component instanceof ConditionDateModel) {
-            //@ts-ignore
-            component.conditionsProps.onChange && component.conditionsProps.onChange.call(this, datas, dateString);
+            component.conditionsProps.onChange && component.conditionsProps.onChange.call(this, {
+                date: datas,
+                dateString: dateString
+            }, {
+                viewState: cloneDeep(data),
+                parameter: cloneDeep(this.queryPrams),
+            }, this.viewStore);
         }
         else if (component instanceof ConditionRangePickerModel) {
-            //@ts-ignore
-            component.conditionsProps.onChange && component.conditionsProps.onChange.call(this, datas, dateString);
+            component.conditionsProps.onChange && component.conditionsProps.onChange.call(this, {
+                date: datas,
+                dateString: dateString
+            }, {
+                viewState: cloneDeep(data),
+                parameter: cloneDeep(this.queryPrams),
+            }, this.viewStore);
         }
+        this.viewStore._setVmModel(data);
     };
     LegionsProConditions.prototype.handleChangeChx = function (component, even) {
         var value = even.target.checked;
-        var data = this.state.vmModel;
-        data[component.containerProps.name] = value;
-        this.setState({
-            vmModel: data
+        var data = this.vmModel;
+        var name = component.containerProps.name;
+        data[name] = value;
+        this.setFieldsValues(name, function (value) {
+            value.conditionsProps.value = value;
         });
-        this.viewStore.setVmModel(__assign({}, data));
-        component.conditionsProps.onChange && component.conditionsProps.onChange.call(this, even, cloneDeep(data));
+        component.conditionsProps.onChange && component.conditionsProps.onChange.call(this, even, {
+            viewState: cloneDeep(data),
+            parameter: cloneDeep(this.queryPrams),
+        }, this.viewStore);
+        this.viewStore._setVmModel(data);
     };
     LegionsProConditions.prototype.handleSelectSearch = function (component, value) {
         var props = component.conditionsProps;
         props.onSearch && props.onSearch(value);
     };
-    LegionsProConditions.prototype.handleChangeSelect = function (component, even, keyValue) {
+    LegionsProConditions.prototype.handleChangeSelect = function (component, even) {
         var value = even;
         var props = component.conditionsProps;
         var name = component.containerProps.name;
@@ -558,7 +590,7 @@ var LegionsProConditions = /** @class */ (function (_super) {
         if (isArray(even)) {
             value = even;
         }
-        var data = this.state.vmModel;
+        var data = this.vmModel;
         if (props.mode === 'combobox') {
             var entity = props.options.find(function (item) { return item.key === value; });
             if (props.labelInValue) {
@@ -576,24 +608,26 @@ var LegionsProConditions = /** @class */ (function (_super) {
                 data[name] = '';
             }
         }
-        this.setState({
-            vmModel: data
+        this.setFieldsValues(name, function (value) {
+            value.conditionsProps.value = data[name];
         });
-        this.viewStore.setVmModel(__assign({}, data));
-        //@ts-ignore
-        props.onChange && props.onChange.call(this, even, keyValue, cloneDeep(data));
+        props.onChange && props.onChange.call(this, {
+            viewState: cloneDeep(data),
+            parameter: cloneDeep(this.queryPrams),
+        }, this.viewStore);
+        this.viewStore._setVmModel(data);
     };
     /**
      * 重置数据
      *
      * @memberof QueryConditions
      */
-    LegionsProConditions.prototype.handleReset = function (h) {
+    LegionsProConditions.prototype.handleReset = function () {
         this.reset();
         this.mapQueryValue();
-        var item = this.props.query.find(function (item) { return item instanceof ConditionSearchModel; });
+        var item = this.viewStore.computedQuery.find(function (item) { return item instanceof ConditionSearchModel; });
         if (item && item instanceof ConditionSearchModel) {
-            item.conditionsProps.onReset && item.conditionsProps.onReset.call(this, cloneDeep(this.state.queryPrams), this.viewStore);
+            item.conditionsProps.onReset && item.conditionsProps.onReset.call(this, cloneDeep(this.queryPrams), this.viewStore);
         }
     };
     /**
@@ -603,12 +637,11 @@ var LegionsProConditions = /** @class */ (function (_super) {
      */
     LegionsProConditions.prototype.handleSearch = function () {
         this.mapQueryValue();
-        var item = this.props.query.find(function (item) { return item instanceof ConditionSearchModel; });
+        var item = this.viewStore.computedQuery.find(function (item) { return item instanceof ConditionSearchModel; });
         if (item && item instanceof ConditionSearchModel) {
-            console.log(item, 'item');
-            item.conditionsProps.onSearch && item.conditionsProps.onSearch.call(this, cloneDeep(this.state.queryPrams), this.viewStore);
+            item.conditionsProps.onSearch && item.conditionsProps.onSearch.call(this, cloneDeep(this.queryPrams), this.viewStore);
         }
-        this.consoleLog('handleSearch', { stateParams: cloneDeep(this.state.queryPrams) });
+        this.consoleLog('handleSearch', { stateParams: cloneDeep(this.queryPrams) });
     };
     /**
      * 回车搜索
@@ -616,32 +649,35 @@ var LegionsProConditions = /** @class */ (function (_super) {
      * @param {Function} onEnter
      * @memberof QueryConditions
      */
-    LegionsProConditions.prototype.handleEnter = function (onEnter) {
-        onEnter && onEnter.call(this, this.state.vmModel);
+    LegionsProConditions.prototype.handleEnter = function (com) {
+        var onEnter = com.conditionsProps['onEnter'];
+        onEnter && onEnter.call(this, {
+            viewState: cloneDeep(this.vmModel),
+            parameter: cloneDeep(this.queryPrams),
+        }, this.viewStore);
         this.handleSearch();
     };
     LegionsProConditions.prototype.handleToggle = function () {
         var _this = this;
+        var onToggle = function (toggle) {
+            var queryDom = document.querySelector("." + _this.uid);
+            var height = findDOMNode(queryDom).clientHeight;
+            _this.viewStore.domHeight = height;
+            _this.props.onCollapse && _this.props.onCollapse(toggle, _this.viewStore);
+            _this.props.onDidMount && _this.props.onDidMount({ height: height, uid: _this.uid });
+        };
         if (this.state.collapsed) {
             this.setState({
                 collapsed: false
             }, function () {
-                var queryDom = document.querySelector("." + _this.uid);
-                var height = findDOMNode(queryDom).clientHeight;
-                _this.viewStore.domHeight = height;
-                _this.props.onToggle && _this.props.onToggle(false, _this.viewStore);
-                _this.props.onDidMount && _this.props.onDidMount({ height: height, uid: _this.uid });
+                onToggle(false);
             });
         }
         else {
             this.setState({
                 collapsed: true
             }, function () {
-                var queryDom = document.querySelector("." + _this.uid);
-                var height = findDOMNode(queryDom).clientHeight;
-                _this.viewStore.domHeight = height;
-                _this.props.onToggle && _this.props.onToggle(false, _this.viewStore);
-                _this.props.onDidMount && _this.props.onDidMount({ height: height, uid: _this.uid });
+                onToggle(true);
             });
         }
     };
@@ -658,17 +694,32 @@ var LegionsProConditions = /** @class */ (function (_super) {
         if (typeof even === 'object') {
             value = even.target.value;
         }
-        var data = this.state.vmModel;
+        var data = this.vmModel;
         data[name] = value;
         if (component instanceof ConditionTextModel) {
             data[name] = this.formatTrim(value);
         }
-        this.setState({
-            vmModel: data
+        this.setFieldsValues(name, function (value) {
+            value.conditionsProps['value'] = data[name];
         });
-        this.viewStore.setVmModel(__assign({}, data));
-        //@ts-ignore
-        props.onChange && props.onChange.call(this, even, cloneDeep(data));
+        props['onChange'] && props.onChange.call(this, even, {
+            viewState: cloneDeep(data),
+            parameter: cloneDeep(this.queryPrams),
+        }, this.viewStore);
+        this.viewStore._setVmModel(data);
+    };
+    LegionsProConditions.prototype.handleGroupChxBox = function (component, checkedValue) {
+        var data = this.vmModel;
+        var name = component.containerProps.name;
+        data[name] = checkedValue;
+        this.setFieldsValues(name, function (value) {
+            value.conditionsProps.value = checkedValue;
+        });
+        component.conditionsProps.onChange && component.conditionsProps.onChange.call(this, checkedValue, {
+            viewState: cloneDeep(data),
+            parameter: cloneDeep(this.queryPrams),
+        }, this.viewStore);
+        this.viewStore._setVmModel(data);
     };
     LegionsProConditions.prototype.renderComponent = function (component) {
         if (component instanceof ConditionTextAreaModel) {
@@ -698,9 +749,17 @@ var LegionsProConditions = /** @class */ (function (_super) {
         else if (component instanceof ConditionSearchModel) {
             return this.renderSearch(component);
         }
+        else if (component instanceof ConditionGroupCheckBoxModel) {
+            return this.renderGroupChxBox(component);
+        }
         else {
             throw new Error("\n            ProConditions: Unknown query. query = " + JSON.stringify(component));
         }
+    };
+    LegionsProConditions.prototype.renderGroupChxBox = function (component) {
+        var conditionsProps = component.conditionsProps, containerProps = component.containerProps, jsonProperty = component.jsonProperty;
+        var labelSpan = conditionsProps.labelSpan, defaultValue = conditionsProps.defaultValue, visable = conditionsProps.visable, display = conditionsProps.display, _a = conditionsProps.value, value = _a === void 0 ? defaultValue : _a, prop = __rest(conditionsProps, ["labelSpan", "defaultValue", "visable", "display", "value"]);
+        return React.createElement(Checkbox.Group, __assign({}, prop, { value: value, onChange: this.handleGroupChxBox.bind(this, component) }));
     };
     LegionsProConditions.prototype.renderInput = function (component) {
         var _this = this;
@@ -709,22 +768,17 @@ var LegionsProConditions = /** @class */ (function (_super) {
         if (this.viewStore && this.viewStore.computedSize === 'small') {
             placeholder = '';
         }
-        var labelSpan = conditionsProps.labelSpan, defaultValue = conditionsProps.defaultValue, prop = __rest(conditionsProps, ["labelSpan", "defaultValue"]);
-        var onEnter = conditionsProps.onEnter;
-        var vmValue = this.state.vmModel[containerProps.name];
-        /* const vmValue  = this.viewStore.computedVmModel[JsonProperty.name] */
-        var suffix = vmValue ? React.createElement(Icon, { type: "close-circle", onClick: function () {
-                var state = _this.state.vmModel;
-                /* let state ={...this.viewStore.computedVmModel} */
+        var labelSpan = conditionsProps.labelSpan, defaultValue = conditionsProps.defaultValue, _a = conditionsProps.value, value = _a === void 0 ? defaultValue : _a, visable = conditionsProps.visable, display = conditionsProps.display, prop = __rest(conditionsProps, ["labelSpan", "defaultValue", "value", "visable", "display"]);
+        var suffix = value ? React.createElement(Icon, { type: "close-circle", onClick: function () {
+                var state = _this.vmModel;
                 state[containerProps.name] = '';
-                _this.setState({
-                    vmModel: state
+                _this.setFieldsValues(containerProps.name, function (value) {
+                    value.conditionsProps.value = '';
                 });
-                _this.viewStore.setVmModel(state);
                 _this.mapQueryValue();
             } }) : null;
-        return (React.createElement(Tooltip, { trigger: "focus", title: (this.formatTrim(vmValue)) ? React.createElement("pre", null, vmValue.replace('↵', ',')) : null, placement: "topLeft" },
-            React.createElement(Input, __assign({ maxLength: '50' }, prop, { suffix: suffix, value: vmValue, onPressEnter: this.handleEnter.bind(this, onEnter), onChange: this.handleChange.bind(this, component), placeholder: placeholder }))));
+        return (React.createElement(Tooltip, { trigger: "focus", title: (this.formatTrim(value)) ? React.createElement("pre", null, value.replace('↵', ',')) : null, placement: "topLeft" },
+            React.createElement(Input, __assign({ maxLength: '50', suffix: suffix }, prop, { value: value, onPressEnter: this.handleEnter.bind(this, component), onChange: this.handleChange.bind(this, component), placeholder: placeholder }))));
     };
     LegionsProConditions.prototype.renderInputTextArea = function (component) {
         var conditionsProps = component.conditionsProps, containerProps = component.containerProps, jsonProperty = component.jsonProperty;
@@ -732,20 +786,22 @@ var LegionsProConditions = /** @class */ (function (_super) {
         if (this.viewStore && this.viewStore.computedSize === 'small') {
             placeholder = '';
         }
-        var labelSpan = conditionsProps.labelSpan, defaultValue = conditionsProps.defaultValue, prop = __rest(conditionsProps, ["labelSpan", "defaultValue"]);
+        var labelSpan = conditionsProps.labelSpan, defaultValue = conditionsProps.defaultValue, _a = conditionsProps.value, value = _a === void 0 ? defaultValue : _a, visable = conditionsProps.visable, display = conditionsProps.display, prop = __rest(conditionsProps, ["labelSpan", "defaultValue", "value", "visable", "display"]);
         var themProps = __rest(prop, ["onReset"]);
         var onEnter = conditionsProps.onEnter;
-        var vmValue = this.state.vmModel[containerProps.name];
-        /* const vmValue  = this.viewStore.computedVmModel[JsonProperty.name] */
-        return (React.createElement(Tooltip, { overlayClassName: "legions-pro-query-tooltip", trigger: "focus", title: (this.formatTrim(vmValue)) ? React.createElement("pre", null, vmValue.replace('↵', ',')) : null, placement: "topLeft" },
-            React.createElement(TextArea, __assign({ maxLength: 1500, autosize: { minRows: 1, maxRows: 1 } }, themProps, { value: vmValue, onPressEnter: this.handleEnter.bind(this, onEnter), onChange: this.handleChange.bind(this, component), placeholder: placeholder }))));
+        return (React.createElement(Tooltip, { overlayClassName: "legions-pro-query-tooltip", trigger: "focus", title: (this.formatTrim(value)) ? React.createElement("pre", null, value.replace('↵', ',')) : null, placement: "topLeft" },
+            React.createElement(TextArea, __assign({ maxLength: 1500, autosize: { minRows: 1, maxRows: 1 } }, themProps, { value: value, onPressEnter: this.handleEnter.bind(this, onEnter), onChange: this.handleChange.bind(this, component), placeholder: placeholder }))));
     };
     LegionsProConditions.prototype.renderSelect = function (component) {
         var conditionsProps = component.conditionsProps, containerProps = component.containerProps, jsonProperty = component.jsonProperty;
         var placeholder = conditionsProps.placeholder;
         var newData = conditionsProps.options;
-        var labelSpan = conditionsProps.labelSpan, defaultValue = conditionsProps.defaultValue, prop = __rest(conditionsProps, ["labelSpan", "defaultValue"]);
-        var vmValue = this.state.vmModel[containerProps.name];
+        var labelSpan = conditionsProps.labelSpan, defaultValue = conditionsProps.defaultValue, visable = conditionsProps.visable, display = conditionsProps.display, _a = conditionsProps.value, value = _a === void 0 ? defaultValue : _a, prop = __rest(conditionsProps
+        /* let vmValue = this.viewStore.computedVmModel[JsonProperty.name] */
+        /* if (isObservableArray(vmValue) && vmValue.length === 0) {
+            vmValue =[]
+        } */
+        , ["labelSpan", "defaultValue", "visable", "display", "value"]);
         /* let vmValue = this.viewStore.computedVmModel[JsonProperty.name] */
         /* if (isObservableArray(vmValue) && vmValue.length === 0) {
             vmValue =[]
@@ -761,61 +817,46 @@ var LegionsProConditions = /** @class */ (function (_super) {
         React.createElement("div", null,
             React.createElement(LegionsProSelect
             // notFoundContent={prop.loading? <Spin size="small" /> : null}
-            , __assign({}, prop, { style: { width: '100%' }, placeholder: placeholder, onSearch: this.handleSelectSearch.bind(this, component), onChange: this.handleChangeSelect.bind(this, component), value: vmValue, options: newData, allowClear: true, showSearch: true, defaultActiveFirstOption: true, optionFilterProp: "children" }))));
+            , __assign({}, prop, { style: { width: '100%' }, placeholder: placeholder, onSearch: this.handleSelectSearch.bind(this, component), onChange: this.handleChangeSelect.bind(this, component), value: value, options: newData, allowClear: true, showSearch: true, defaultActiveFirstOption: true, optionFilterProp: "children" }))));
     };
     LegionsProConditions.prototype.renderDate = function (component) {
         var conditionsProps = component.conditionsProps, containerProps = component.containerProps, jsonProperty = component.jsonProperty;
         var placeholder = conditionsProps.placeholder;
-        var labelSpan = conditionsProps.labelSpan, defaultValue = conditionsProps.defaultValue, prop = __rest(conditionsProps, ["labelSpan", "defaultValue"]);
-        var vmValue = this.state.vmModel[containerProps.name];
-        /* const vmValue  = this.viewStore.computedVmModel[JsonProperty.name] */
-        var value = vmValue;
-        value = value ? moment(value, prop.format) : void 0;
+        var labelSpan = conditionsProps.labelSpan, defaultValue = conditionsProps.defaultValue, visable = conditionsProps.visable, display = conditionsProps.display, _a = conditionsProps.value, value = _a === void 0 ? defaultValue : _a, prop = __rest(conditionsProps, ["labelSpan", "defaultValue", "visable", "display", "value"]);
         return (React.createElement(DatePicker, __assign({}, prop, { style: { width: '100%' }, placeholder: placeholder, value: value, onChange: this.handleChangeDate.bind(this, component) })));
     };
     LegionsProConditions.prototype.renderDateRange = function (component) {
         var conditionsProps = component.conditionsProps, containerProps = component.containerProps, jsonProperty = component.jsonProperty;
-        var labelSpan = conditionsProps.labelSpan, defaultValue = conditionsProps.defaultValue, prop = __rest(conditionsProps, ["labelSpan", "defaultValue"]);
+        var labelSpan = conditionsProps.labelSpan, defaultValue = conditionsProps.defaultValue, visable = conditionsProps.visable, display = conditionsProps.display, _a = conditionsProps.value, value = _a === void 0 ? defaultValue : _a, prop = __rest(conditionsProps, ["labelSpan", "defaultValue", "visable", "display", "value"]);
         var placeholder = conditionsProps.placeholder;
-        var vmValue = this.state.vmModel[containerProps.name];
-        /*  const vmValue  = this.viewStore.computedVmModel[JsonProperty.name] */
-        var value = vmValue;
-        value = (value && value.length) ? [moment(value[0], prop.format), moment(value[1], prop.format)] : [void 0, void 0];
         return (React.createElement(RangePicker, __assign({ allowClear: true }, prop, { value: value, onChange: this.handleChangeDate.bind(this, component), placeholder: placeholder })));
     };
     LegionsProConditions.prototype.renderChxBox = function (component) {
         var conditionsProps = component.conditionsProps, containerProps = component.containerProps, jsonProperty = component.jsonProperty;
-        var labelSpan = conditionsProps.labelSpan, prop = __rest(conditionsProps, ["labelSpan"]);
-        var placeholder = conditionsProps.placeholder;
-        var vmValue = this.state.vmModel[containerProps.name];
-        /* const vmValue  = this.viewStore.computedVmModel[JsonProperty.name] */
-        var value = vmValue === '' ? false : vmValue;
-        return (React.createElement(Checkbox, { onChange: this.handleChangeChx.bind(this, component), checked: value }, conditionsProps.label));
+        var labelSpan = conditionsProps.labelSpan, visable = conditionsProps.visable, display = conditionsProps.display, prop = __rest(conditionsProps, ["labelSpan", "visable", "display"]);
+        return (React.createElement(Checkbox, __assign({}, prop, { onChange: this.handleChangeChx.bind(this, component) }), conditionsProps.label));
     };
     LegionsProConditions.prototype.renderInputNumber = function (component) {
         var _this = this;
         var conditionsProps = component.conditionsProps, containerProps = component.containerProps, jsonProperty = component.jsonProperty;
-        var labelSpan = conditionsProps.labelSpan, defaultValue = conditionsProps.defaultValue, prop = __rest(conditionsProps, ["labelSpan", "defaultValue"]);
+        var labelSpan = conditionsProps.labelSpan, defaultValue = conditionsProps.defaultValue, display = conditionsProps.display, visable = conditionsProps.visable, prop = __rest(conditionsProps, ["labelSpan", "defaultValue", "display", "visable"]);
         var placeholder = conditionsProps.placeholder;
         if (this.viewStore && this.viewStore.computedSize === 'small') {
             placeholder = '';
         }
         var onEnter = conditionsProps.onEnter;
-        var vmValue = this.state.vmModel[containerProps.name];
         /* const vmValue  = this.viewStore.computedVmModel[JsonProperty.name] */
         return (React.createElement(InputNumber, __assign({}, prop, { onKeyDown: function (value) {
                 if (value && value['key'] && value['key'] === 'Enter') {
                     _this.handleEnter.call(_this, onEnter);
                 }
-            }, style: { width: '100%' }, value: vmValue, onChange: this.handleChange.bind(this, component), placeholder: placeholder })));
+            }, defaultValue: defaultValue, style: { width: '100%' }, onChange: this.handleChange.bind(this, component), placeholder: placeholder })));
     };
     LegionsProConditions.prototype.renderRadioButton = function (component) {
         var conditionsProps = component.conditionsProps, containerProps = component.containerProps, jsonProperty = component.jsonProperty;
-        var labelSpan = conditionsProps.labelSpan, defaultValue = conditionsProps.defaultValue, options = conditionsProps.options, prop = __rest(conditionsProps, ["labelSpan", "defaultValue", "options"]);
+        var labelSpan = conditionsProps.labelSpan, defaultValue = conditionsProps.defaultValue, display = conditionsProps.display, options = conditionsProps.options, visable = conditionsProps.visable, prop = __rest(conditionsProps, ["labelSpan", "defaultValue", "display", "options", "visable"]);
         var newData = options;
-        var vmValue = this.state.vmModel[containerProps.name];
-        /* const vmValue  = this.viewStore.computedVmModel[JsonProperty.name] */
-        return (React.createElement(RadioGroup, __assign({}, prop, { style: { width: '100%' }, value: vmValue, onChange: this.handleChange.bind(this, component) }), newData && newData.map(function (item) {
+        return (React.createElement(RadioGroup, __assign({}, prop, { style: { width: '100%' }, defaultValue: defaultValue, onChange: this.handleChange.bind(this, component) }), newData && newData.map(function (item) {
             return (React.createElement(RadioButton, { key: item.value + "-" + containerProps.name, disabled: item.disabled, value: item.value }, item.label));
         })));
     };
@@ -833,29 +874,37 @@ var LegionsProConditions = /** @class */ (function (_super) {
         return React.createElement(React.Fragment, null,
             React.createElement(Row, { gutter: 8, type: "flex" },
                 React.createElement(Col, { span: 6 },
-                    React.createElement(Button, { type: "primary", icon: 'search', onClick: this.handleSearch.bind(this), style: { borderColor: "#46b8da", color: "white" } }, "" + '搜索')),
+                    React.createElement(Button, { type: "primary", icon: 'search', onClick: this.handleSearch.bind(this), style: { borderColor: "#46b8da", color: "white" } }, component.conditionsProps.searchText || '搜索')),
                 React.createElement(Col, { span: 6 },
-                    React.createElement(Dropdown.Button, { type: "ghost", onClick: this.handleReset.bind(this), overlay: menu }, "\u91CD\u7F6E")),
-                React.createElement(Col, { span: 4 }, React.createElement(Button, { style: { width: '100%', padding: '0 2px' }, 
-                    //@ts-ignore
-                    title: "\u5237\u65B0" },
-                    React.createElement(Icon, { type: "sync", title: "\u5237\u65B0" }))),
+                    React.createElement(Dropdown.Button, { type: "ghost", onClick: this.handleReset.bind(this), overlay: menu }, component.conditionsProps.resetText || '重置')),
+                React.createElement(Col, { span: 4 },
+                    React.createElement(Button, { onClick: function () {
+                            var item = _this.props.query.find(function (item) { return item instanceof ConditionSearchModel; });
+                            if (item && item instanceof ConditionSearchModel) {
+                                item.conditionsProps.onRefresh && item.conditionsProps.onRefresh.call(_this, cloneDeep(_this.queryPrams), _this.viewStore);
+                            }
+                        }, style: { width: '100%', padding: '0 2px' }, 
+                        //@ts-ignore
+                        title: "\u5237\u65B0" },
+                        React.createElement(Icon, { type: "sync", title: "\u5237\u65B0" }))),
                 React.createElement(Col, { span: 8 },
                     React.createElement(Button, { type: "ghost", icon: this.state.collapsed ? 'down' : 'up', onClick: this.handleToggle.bind(this), style: { backgroundColor: "#fff", borderColor: "#46b8da" } }, this.state.collapsed ? '收起' : '展开'))));
     };
-    LegionsProConditions.prototype.renderLabel = function (component) {
-        if (!(component instanceof ConditionSearchModel)) {
-            return (this.viewStore.computedSize === 'small' ? React.createElement("label", { title: component.conditionsProps.label, style: {
-                    float: 'left', marginLeft: '5px', marginRight: '3px',
-                    position: 'absolute', zIndex: 999, background: '#fff',
-                    height: '20px', lineHeight: '20px',
-                    color: '#999', top: '-3px', fontSize: 10,
-                    //@ts-ignore
-                    webkitTransform: 'scale(0.9)'
-                } }, component instanceof ConditionRadioButtonModel ? '' : component.conditionsProps.label) :
-                React.createElement("label", { 
-                    //@ts-ignore
-                    htmlFor: component.containerProps.name, title: component.conditionsProps.label, style: { lineHeight: '28px', position: 'absolute', right: '0px' } }, component.conditionsProps.label));
+    LegionsProConditions.prototype.renderLabel = function (component, labelSpan) {
+        if (!(component instanceof ConditionSearchModel) && !(component instanceof ConditionCheckBoxModel) && !(component instanceof ConditionGroupCheckBoxModel)) {
+            var label = component.conditionsProps.label;
+            var name_1 = component.containerProps.name;
+            return (this.viewStore.computedSize !== 'small' ? React.createElement(Col, { className: "legions-pro-query-label", span: labelSpan },
+                React.createElement("label", { htmlFor: name_1, title: label, style: { lineHeight: '28px', position: 'absolute', right: '0px' } }, label)) :
+                React.createElement("label", { htmlFor: name_1, title: label, style: {
+                        marginLeft: '5px', marginRight: '3px',
+                        position: 'absolute', zIndex: 999, background: '#fff',
+                        height: '20px', lineHeight: '20px',
+                        color: '#999', top: '-11px', fontSize: 10,
+                        WebkitTransform: 'scale(0.9)'
+                    } },
+                    label,
+                    ":"));
         }
         return null;
     };
@@ -872,7 +921,7 @@ var LegionsProConditions = /** @class */ (function (_super) {
         }
     };
     LegionsProConditions.prototype.renderSearchComponent = function () {
-        var searchItem = this.props.query.find(function (item) { return item instanceof ConditionSearchModel; });
+        var searchItem = this.viewStore.computedQuery.find(function (item) { return item instanceof ConditionSearchModel; });
         var show = [];
         if (searchItem && !Array.isArray(searchItem)) {
             show.push(searchItem);
@@ -881,16 +930,18 @@ var LegionsProConditions = /** @class */ (function (_super) {
     };
     LegionsProConditions.prototype.renderShowComponent = function (hide) {
         var _this = this;
-        var searchItem = this.props.query.find(function (item) { return item instanceof ConditionSearchModel; });
+        var searchItem = this.viewStore.computedQuery.find(function (item) { return item instanceof ConditionSearchModel; });
         var searchSpan = 0;
         if (searchItem && !Array.isArray(searchItem)) {
             searchSpan = this.getQueryItemSpan(searchItem);
         }
         var unUsedSpan = 24 - searchSpan;
         var show = [];
-        this.props.query.filter(function (item) { return !(item instanceof ConditionSearchModel); }).map(function (item) {
+        this.viewStore.computedQuery.filter(function (item) { return !(item instanceof ConditionSearchModel); }).map(function (item) {
             var currSpan = _this.getQueryItemSpan(item);
-            if (unUsedSpan >= currSpan) {
+            var visable = item.conditionsProps['visable'];
+            visable = visable === void 0 ? true : visable;
+            if (unUsedSpan >= currSpan && visable) {
                 show.push(item);
                 unUsedSpan = unUsedSpan - currSpan;
             }
@@ -904,10 +955,13 @@ var LegionsProConditions = /** @class */ (function (_super) {
         var _this = this;
         return list.map(function (item) {
             var labelSpan = (item instanceof ConditionCheckBoxModel || (item instanceof ConditionSearchModel)) ? 1 : (item.conditionsProps.labelSpan || 4);
-            var offset = item instanceof ConditionCheckBoxModel ? { offset: 1 } : {};
-            return React.createElement(Col, __assign({}, item.containerProps.col, { key: item.containerProps.name, style: { paddingBottom: '6px' } }),
-                (item instanceof ConditionCheckBoxModel) || (item instanceof ConditionSearchModel) ? null : React.createElement(Col, { className: "legions-pro-query-label", span: labelSpan }, _this.renderLabel(item)),
-                React.createElement(Col, __assign({ style: { lineHeight: '28px' } }, offset, { span: 24 - labelSpan }), _this.renderComponent(item)));
+            if (_this.viewStore.computedSize === 'small') {
+                labelSpan = 0;
+            }
+            var _a = item.containerProps.col, offset = _a.offset, pull = _a.pull, push = _a.push, col = __rest(_a, ["offset", "pull", "push"]);
+            return React.createElement(Col, __assign({}, col, { key: item.containerProps.uuid, style: { paddingBottom: '10px' } }),
+                _this.renderLabel(item, labelSpan),
+                React.createElement(Col, { style: { lineHeight: '28px' }, span: 24 - labelSpan }, _this.renderComponent(item)));
         });
     };
     LegionsProConditions.prototype.render = function () {
@@ -921,9 +975,19 @@ var LegionsProConditions = /** @class */ (function (_super) {
        options&&options.props.onSearch&&options.props.onSearch(val)
     },200) */
     LegionsProConditions.ProConditions = ProConditions;
+    LegionsProConditions.ConditionSelectModel = ConditionSelectModel;
+    LegionsProConditions.ConditionTextNumberModel = ConditionTextNumberModel;
+    LegionsProConditions.ConditionRadioButtonModel = ConditionRadioButtonModel;
+    LegionsProConditions.ConditionTextAreaModel = ConditionTextAreaModel;
+    LegionsProConditions.ConditionTextModel = ConditionTextModel;
+    LegionsProConditions.ConditionDateModel = ConditionDateModel;
+    LegionsProConditions.ConditionSearchModel = ConditionSearchModel;
+    LegionsProConditions.ConditionRangePickerModel = ConditionRangePickerModel;
+    LegionsProConditions.ConditionCheckBoxModel = ConditionCheckBoxModel;
+    LegionsProConditions.ConditionGroupCheckBoxModel = ConditionGroupCheckBoxModel;
     LegionsProConditions.defaultProps = {
         size: 'default',
-        defaultToggle: false,
+        defaultCollapsed: true,
     };
     LegionsProConditions = __decorate([
         bind({ store: ProQueryConditionStore }),

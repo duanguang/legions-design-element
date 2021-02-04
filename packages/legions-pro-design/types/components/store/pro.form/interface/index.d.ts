@@ -187,7 +187,7 @@ export interface ISelectAutoQuery<Model = {}> {
      * 当外部数据不确定时，此时我们需要一个适配器转换从接口中取到的数据，用于绑定下拉选项
      * @memberof ISelectAutoQuery
      */
-    transform: (value: observablePromise.PramsResult<any>) => {
+    transform: (value: observablePromise.PramsResult<SelectKeyValue>) => {
         total: number;
         data: IAntdSelectOption[];
     };

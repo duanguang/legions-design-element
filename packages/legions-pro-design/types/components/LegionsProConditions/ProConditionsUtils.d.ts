@@ -1,5 +1,5 @@
 import React from 'react';
-import { IQueryCheckBoxProps, IQueryDateProps, IQueryRadioButtonProps, IQueryRangePickerProps, IQuerySelectProps, IQueryTextAreaProps, IQueryTextNumberProps, IQueryTextProps } from './interface';
+import { IQueryCheckBoxProps, IQueryDateProps, IQueryGroupCheckBoxProps, IQueryRadioButtonProps, IQueryRangePickerProps, IQuerySelectProps, IQueryTextAreaProps, IQueryTextNumberProps, IQueryTextProps } from './interface';
 import { ColSize } from 'antd/lib/grid/col';
 import { IViewQueryConditionStore } from '../store/pro.query.conditions/interface';
 interface ColProps {
@@ -25,6 +25,8 @@ interface ColProps {
 interface IContainerProps {
     col: ColProps;
     name: string;
+    /** 只读 */
+    readonly uuid?: string;
 }
 export declare class ConditionSelectModel {
     containerProps: IContainerProps;
@@ -68,14 +70,11 @@ interface IQuerySearchConfigProps {
     /** 重置按钮的文本*/
     resetText?: string;
     /**收起按钮的 render */
-    collapseRender?: (collapsed: boolean, showCollapseButton?: boolean) => React.ReactNode;
-    /** 默认是否收起	 */
-    defaultCollapsed?: boolean;
-    /** 收起按钮的事件 */
-    onCollapse?: (collapsed: boolean) => void;
+    readonly collapseRender?: (collapsed: boolean, showCollapseButton?: boolean) => React.ReactNode;
     /** 自定义操作栏 */
-    onSearch: (value: any, viewEntity?: IViewQueryConditionStore) => void;
-    onReset?: (value: any, viewEntity?: IViewQueryConditionStore) => void;
+    readonly onSearch: (params: any, viewEntity?: IViewQueryConditionStore) => void;
+    readonly onReset?: (params: any, viewEntity?: IViewQueryConditionStore) => void;
+    readonly onRefresh?: (params: any, viewEntity?: IViewQueryConditionStore) => void;
 }
 export declare class ConditionSearchModel {
     containerProps: IContainerProps;
@@ -93,6 +92,12 @@ export declare class ConditionCheckBoxModel {
     conditionsProps: IQueryCheckBoxProps;
     jsonProperty: string;
     constructor(containerProps: IContainerProps, conditionsProps: IQueryCheckBoxProps, jsonProperty: string);
+}
+export declare class ConditionGroupCheckBoxModel {
+    containerProps: IContainerProps;
+    conditionsProps: IQueryGroupCheckBoxProps;
+    jsonProperty: string;
+    constructor(containerProps: IContainerProps, conditionsProps: IQueryGroupCheckBoxProps, jsonProperty: string);
 }
 interface IRenderComponentBaseParams<T> {
     /**
@@ -119,7 +124,7 @@ interface IRenderComponentParams<T> extends IRenderComponentBaseParams<T> {
     jsonProperty: string;
 }
 export interface IProConditions {
-    componentModel: ConditionSelectModel | ConditionTextNumberModel | ConditionRadioButtonModel | ConditionTextAreaModel | ConditionTextModel | ConditionDateModel | ConditionRangePickerModel | ConditionSearchModel;
+    componentModel: ConditionSelectModel | ConditionTextNumberModel | ConditionRadioButtonModel | ConditionTextAreaModel | ConditionTextModel | ConditionDateModel | ConditionRangePickerModel | ConditionSearchModel | ConditionGroupCheckBoxModel;
 }
 export declare class ProConditions<Store, global = {}> {
     readonly global: global;
@@ -128,6 +133,8 @@ export declare class ProConditions<Store, global = {}> {
         store?: any;
         global?: global;
     });
+    private createUid;
+    private createContainerProps;
     getConditionsConfig(componentConfigKey: string): IProConditions['componentModel'];
     renderSelectConfig(options: IRenderComponentParams<IQuerySelectProps>): ConditionSelectModel;
     renderTextNumberConfig(options: IRenderComponentParams<IQueryTextNumberProps>): ConditionTextNumberModel;
@@ -137,6 +144,7 @@ export declare class ProConditions<Store, global = {}> {
     renderDateConfig(options: IRenderComponentParams<IQueryDateProps>): ConditionDateModel;
     renderRangePickerConfig(options: IRenderComponentParams<IQueryRangePickerProps>): ConditionRangePickerModel;
     renderCheckBoxConfig(options: IRenderComponentParams<IQueryCheckBoxProps>): ConditionCheckBoxModel;
+    renderGroupCheckBoxConfig(options: IRenderComponentParams<IQueryGroupCheckBoxProps>): ConditionGroupCheckBoxModel;
     renderSearchConfig(options: IRenderComponentBaseParams<IQuerySearchConfigProps>): ConditionSearchModel;
 }
 export {};

@@ -3,7 +3,8 @@ import { observablePromise } from 'legions/store-utils';
 import { ViewModel } from 'brain-store-utils';
 import { HeadersPrams } from 'legions/fetch';
 import { IAntdSelectOption } from '../../../interface/antd';
-import { HlQueryConditionView } from '../HlQueryConditionView';
+import { ConditionView } from '../conditionView';
+import { SelectKeyValue, KeyValue } from '../../../models';
 declare type Proxify<T> = {
     [P in keyof T]: T[P];
 };
@@ -68,21 +69,19 @@ export interface ISelectAutoQuery<Model = {}> {
      */
     options?: HeadersPrams & Object;
     /**
-     *
-     * 数据模型
-     *
-     * 一般用于定义接口返回结构
-     * @type {Model}
-     * @memberof ISelectAutoQuery
-     */
-    model: Model;
+         * 转换服务端数据
+         *
+         *
+         * 如果不想写model,则通过此函数先把数据转换成约定结构，在由底层固定model去转换
+         */
+    mappingEntity: (that: SelectKeyValue, responseData: any) => KeyValue[];
     /**
      * 下拉数据绑定前转换绑定数据结构
      *
      * 当外部数据不确定时，此时我们需要一个适配器转换从接口中取到的数据，用于绑定下拉选项
      * @memberof ISelectAutoQuery
      */
-    transform: (value: observablePromise.PramsResult<any>) => {
+    transform: (value: observablePromise.PramsResult<SelectKeyValue>) => {
         total: number;
         data: IAntdSelectOption[];
     };
@@ -102,5 +101,5 @@ export interface ISelectAutoQuery<Model = {}> {
     */
     isInitialize?: boolean;
 }
-export declare type IViewQueryConditionStore<Query = {}> = ViewModel<HlQueryConditionView<Query>> & Proxify<HlQueryConditionView<Query>>;
+export declare type IViewQueryConditionStore<Query = {}> = ViewModel<ConditionView<Query>> & Proxify<ConditionView<Query>>;
 export {};

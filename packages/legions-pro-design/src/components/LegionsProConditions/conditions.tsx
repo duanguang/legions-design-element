@@ -70,8 +70,6 @@ interface IProps<Query = {}> {
     }) => void,
     /**
       *  组件componentWillMount 执行
-      *
-      * @memberof IHLTableProps
       */
     onReady?: (instance: IQueryConditionsInstance<Query>) => void;
 
@@ -83,7 +81,7 @@ interface IProps<Query = {}> {
      * @type {boolean}
      * @memberof IProps
      */
-    defaultToggle: boolean;
+    defaultCollapsed?: boolean;
     /**
      * 主要用于当父组件中存在多个搜索组件时，标记key 来保证父级组件中搜索组件唯一
      * 持久化查询输入值时，保证值绝对唯一，生成hash 存入数据库，并且作为查询主键
@@ -93,21 +91,12 @@ interface IProps<Query = {}> {
      */
     uniqueKeys?: string;
     ondragger?: (item: any[],key: string) => React.ReactElement;
-    onToggle?: (collapsed: boolean,viewEntity?: IViewQueryConditionStore) => void;
+    /** 收起按钮的事件 */
+    onCollapse?: (collapsed: boolean,viewEntity?: IViewQueryConditionStore) => void;
 }
-
-
-
-
-
-
 interface IState {
-    vmModel: any
-    queryPrams: any
-    fieldsStates: { name: string,state: IFieldsState }[],
     collapsed: boolean
 }
-
 @bind({ store: ProQueryConditionStore })
 @observer
 export default class LegionsProConditions<Query = {}> extends React.Component<IProps<Query>,IState>{
@@ -115,6 +104,16 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
        options&&options.props.onSearch&&options.props.onSearch(val)
     },200) */
     static ProConditions = ProConditions
+    static ConditionSelectModel = ConditionSelectModel;
+    static ConditionTextNumberModel = ConditionTextNumberModel;
+    static ConditionRadioButtonModel = ConditionRadioButtonModel;
+    static ConditionTextAreaModel = ConditionTextAreaModel;
+    static ConditionTextModel = ConditionTextModel;
+    static ConditionDateModel = ConditionDateModel;
+    static ConditionSearchModel = ConditionSearchModel;
+    static ConditionRangePickerModel = ConditionRangePickerModel;
+    static ConditionCheckBoxModel = ConditionCheckBoxModel;
+    static ConditionGroupCheckBoxModel = ConditionGroupCheckBoxModel;
     resize = debounce(() => {
         const queryDom = document.querySelector(`.${this.uid}`);
         if (queryDom && findDOMNode(queryDom) && this.viewStore) {
@@ -122,37 +121,38 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
         }
     },500)
     timeId = new Date().getTime()
-    uid = `Query${shortHash(this.timeId)}`
+    uid = `Query${shortHash(this.timeId)}`;
+    queryPrams = {};
     // @ts-ignore
     /* MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver
     observer= null */
     constructor(props) {
         super(props)
         this.state = {
-            vmModel: {},
-            queryPrams: {},
-            fieldsStates: [],
-            collapsed: true,
+            collapsed: this.props.defaultCollapsed,
         }
         if (this.props['uniqueUid']) {
             this.uid = `Query${shortHash(this.props['uniqueUid'])}`
         }
         else {
-            this.uid = `Query${this.props.store.HlQueryConditionContainer.size}${shortHash(`${this.timeId}${this.props.store.HlQueryConditionContainer.size}`)}`
-            if (this.props.store.HlQueryConditionContainer.has(this.uid)) {
+            this.uid = `Query${this.props.store.ConditionContainer.size}${shortHash(`${this.timeId}${this.props.store.ConditionContainer.size}`)}`
+            if (this.props.store.ConditionContainer.has(this.uid)) {
                 this.timeId = new Date().getTime()
-                this.uid = `Query${this.props.store.HlQueryConditionContainer.size}${shortHash(`${this.timeId}${this.props.store.HlQueryConditionContainer.size}`)}`
+                this.uid = `Query${this.props.store.ConditionContainer.size}${shortHash(`${this.timeId}${this.props.store.ConditionContainer.size}`)}`
             }
         }
         this.consoleLog('constructor')
     }
     //@ts-ignore
     get viewStore() {
-        return this.props.store.HlQueryConditionContainer.get(this.uid)
+        return this.props.store.ConditionContainer.get(this.uid)
+    }
+    get vmModel() {
+       return this.viewStore.computedVmModel;
     }
     static defaultProps = {
         size: 'default',
-        defaultToggle: false,
+        defaultCollapsed:true,
     }
     consoleLog(type: string,logObj?: Object) {
         const obj = logObj || {}
@@ -162,24 +162,19 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
         }
     }
     componentWillMount() {
-        if (!this.props.store.HlQueryConditionContainer.has(this.uid)) {
+        if (!this.props.store.ConditionContainer.has(this.uid)) {
             this.props.store.add(this.uid);
             this.initVModel();
+            this.viewStore._initQuery(this.props.query);
         }
-        else {
-            this.setState({ vmModel: { ...this.viewStore.computedVmModel } })
-        }
-        this.viewStore.setSize(this.props.size);
+        this.viewStore._setSize(this.props.size);
         this.props.onReady && this.props.onReady({
             store: this.props.store,uid: this.uid,viewModel: this.viewStore,methods: {
                 reset: () => {
-                    this.reset()
+                    this.handleReset()
                 },
-                setFieldsValue: (fieldsValues: { fieldName: string,value: any }[]) => {
-                    this.setFieldsValue(fieldsValues)
-                },
-                setFieldState: (fieldsStates: { name: string,state: IFieldsState }[]) => {
-                    this.setFieldState(fieldsStates)
+                setFieldsValues: (name: string,callback: (value: IProConditions['componentModel']) => void)=>{
+                    this.setFieldsValues(name,callback);
                 },
                 getQuerySelectOption: (name: string,optionKey: string) => {
                     const selectConfigs = this.props.query.filter((item) => item instanceof ConditionSelectModel);
@@ -207,7 +202,7 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
                         options: newData,
                     }
                 },
-                onSelectSearch: (name: string,params: {
+                onRrmoteSearch: (name: string,params: {
                     pageIndex: number;
                     pageSize?: number;
                     keyWords?: string;
@@ -217,13 +212,8 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
                     if (index > -1) {
                         const item = selectConfigs[index].conditionsProps as IQuerySelectProps;
                         if (item.autoQuery) {
-                            this.viewStore.dispatchRequest(name,item.autoQuery,params)
-                        } else {
-                            console.warn('此下拉框组件并没有开启自动托管请求配置信息,请检查')
+                            this.viewStore._dispatchRequest(name,item.autoQuery,params)
                         }
-                    }
-                    else {
-                        console.warn('搜索条件配置数据找不到此名称的下拉组件,请检查')
                     }
                 }
             }
@@ -260,7 +250,7 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
             if (item instanceof ConditionSelectModel) {
                 const props = item.conditionsProps as IQuerySelectProps;
                 if (props.autoQuery && (props.autoQuery.isInitialize === void 0 || props.autoQuery.isInitialize)) {
-                    this.viewStore.dispatchRequest(item.containerProps.name,props.autoQuery,{
+                    this.viewStore._dispatchRequest(item.containerProps.name,props.autoQuery,{
                         pageIndex: 1,
                     })
                 }
@@ -278,44 +268,15 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
             }
         }
     }
-    /**
-     * 设置指定元素显示隐藏
-     *
-     * @template T state 类型
-     * @param {string} name JsonProperty.name
-     * @param {T} state
-     * @memberof QueryConditions
-     */
-    setFieldState(fieldsStates: { name: string,state: IFieldsState }[]) {
-        let newFieldsName = fieldsStates.map(item => item.name)
-        const oldFieldsStates = this.state.fieldsStates.filter(item => !newFieldsName.includes(item.name))
-        this.setState({ fieldsStates: [...oldFieldsStates,...fieldsStates] })
-    }
-    /**
-     * 设置指定元素value值
-     *
-     * @template T value 类型
-     * @param {string} fieldName JsonProperty.name
-     * @param {T} value
-     * @memberof QueryConditions
-     */
-    setFieldsValue(fieldsValues: { fieldName: string,value: any }[]) {
-        if (Array.isArray(fieldsValues) && fieldsValues.length) {
-            const vmModels: Object = { ...this.state.vmModel };
-            fieldsValues.map((item) => {
-                if (vmModels.hasOwnProperty(item.fieldName)) {
-                    vmModels[item.fieldName] = item.value;
-                }
-            })
-            this.setState({ vmModel: vmModels })
-            this.viewStore.setVmModel(vmModels)
-        }
+    setFieldsValues(name: string,callback: (value: IProConditions['componentModel']) => void) {
+        this.viewStore._setQueryState(name,(value) => {
+            callback(value);
+        });
     }
     initVModel() {
-        const { query } = this.props;
         let data = {}
         let prams = {}
-        query.map((item) => {
+        this.props.query.map((item) => {
             const name = item.containerProps.name;
             if (!(item instanceof ConditionSearchModel) && item.jsonProperty) {
                 if (isArray(item.conditionsProps.defaultValue)) {
@@ -356,11 +317,8 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
                 prams[item.jsonProperty] = data[name];
             }
         })
-        this.setState({
-            vmModel: data,
-            queryPrams: prams
-        })
-        this.viewStore.setVmModel(data)
+        this.queryPrams = prams;
+        this.viewStore._setVmModel(data)
     }
     /**
      * 把组件元素结果映射至查询条件
@@ -368,74 +326,85 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
      * @memberof QueryConditions
      */
     mapQueryValue() {
-        const { query } = this.props
-        let prams = this.state.queryPrams
-        query.map((item) => {
+        const { computedQuery } = this.viewStore
+        let prams = this.queryPrams
+        computedQuery.map((item) => {
             if (!(item instanceof ConditionSearchModel)) {
-                prams[item.jsonProperty] = this.state.vmModel[item.containerProps.name]
+                prams[item.jsonProperty] = this.vmModel[item.containerProps.name]
             }
         })
-        this.setState({
-            queryPrams: prams
-        })
-        this.viewStore.setQuery({ ...this.viewStore.computedQuery,...prams })
+        this.queryPrams = prams;
     }
     reset() {
-        let data = this.state.vmModel
-        /* let data = {...this.viewStore.computedVmModel} */
+        let data = this.vmModel
+    /* let data = {...this.viewStore.computedVmModel} */
+        const { computedQuery } = this.viewStore
         Object.keys(data).forEach((key) => {
-            let entity = this.props.query.find((item) => item.containerProps.name === key)
+            let entity = computedQuery.find((item) => item.containerProps.name === key)
             if (entity && !(entity instanceof ConditionSearchModel) && !entity.conditionsProps.isNotReset) {
                 if (entity.conditionsProps.onReset) {
                     data[key] = entity.conditionsProps.onReset(key,data[key]);
                 }
                 else {
-                    data[key] = entity.conditionsProps.defaultValue || ''
+                    const defaultValue = entity.conditionsProps.defaultValue;
+                    const format = entity.conditionsProps['format'] || 'YYYY-MM-DD';
+                    if (moment.isMoment(defaultValue)) {
+                        data[key] = moment(defaultValue).format(format)
+                    } else if (Array.isArray(defaultValue) && defaultValue.length>=2) {
+                        data[key]=[ moment(defaultValue[0]).format(format), moment(defaultValue[1]).format(format)]
+                    }
+                    else {
+                        data[key] = defaultValue || ''
+                    }
+                    this.setFieldsValues(entity.containerProps.name,(value) => {
+                        value.conditionsProps['value']=defaultValue
+                    })
                 }
             }
 
         })
-        this.setState({
-            vmModel: data
-        })
-        this.viewStore.setVmModel(data)
+        this.viewStore._setVmModel(data);
         this.mapQueryValue();
     }
     handleChangeDate(component: ConditionDateModel | ConditionRangePickerModel,datas: moment.Moment | [moment.Moment,moment.Moment],dateString: string) {
         const name = component.containerProps.name;
-        let value = dateString;
-        let data = this.state.vmModel
-        //@ts-ignore
-        if (Array.isArray(datas) && datas.length === 0) { // 日期多选
-            data[name] = []
-        }
-        else {
-            data[name] = value
-        }
-        this.setState({
-            vmModel: data
+        let data = this.vmModel;
+        this.setFieldsValues(name,(value) => {
+            value.conditionsProps['value'] = datas;
         })
-        this.viewStore.setVmModel({ ...data })
+        data[name] = dateString
         if (component instanceof ConditionDateModel) {
             component.conditionsProps.onChange && component.conditionsProps.onChange.call(this,{
                 date:datas,dateString
-            },cloneDeep(data),this.viewStore)
+            },{
+                viewState: cloneDeep(data),
+                parameter:cloneDeep(this.queryPrams),
+            },this.viewStore)
         }
         else if (component instanceof ConditionRangePickerModel) {
             component.conditionsProps.onChange && component.conditionsProps.onChange.call(this,{
                 date:datas,dateString
-            },cloneDeep(data),this.viewStore)
+            },{
+                viewState: cloneDeep(data),
+                parameter:cloneDeep(this.queryPrams),
+            },this.viewStore)
         }
+        this.viewStore._setVmModel(data);
     }
     handleChangeChx(component: ConditionCheckBoxModel,even: React.ChangeEvent<HTMLInputElement>) {
-        let value = even.target.checked
-        let data = this.state.vmModel
-        data[component.containerProps.name] = value
-        this.setState({
-            vmModel: data
+        let value = even.target.checked;
+        let data = this.vmModel;
+        const name=component.containerProps.name
+        data[name] = value;
+
+        this.setFieldsValues(name,(value:ConditionCheckBoxModel) => {
+            value.conditionsProps.value = value;
         })
-        this.viewStore.setVmModel({ ...data })
-        component.conditionsProps.onChange && component.conditionsProps.onChange.call(this,even,cloneDeep(data))
+        component.conditionsProps.onChange && component.conditionsProps.onChange.call(this,even,{
+            viewState: cloneDeep(data),
+            parameter:cloneDeep(this.queryPrams),
+        },this.viewStore)
+        this.viewStore._setVmModel(data);
     }
     handleSelectSearch(component: ConditionSelectModel,value) {
         const props = component.conditionsProps;
@@ -456,7 +425,7 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
         if (isArray(even)) {
             value = even
         }
-        let data = this.state.vmModel
+        let data = this.vmModel
         if (props.mode === 'combobox') {
             let entity = props.options.find((item) => item.key === value)
             if (props.labelInValue) {
@@ -473,23 +442,26 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
                 data[name] = '';
             }
         }
-        this.setState({
-            vmModel: data
+        this.setFieldsValues(name,(value:ConditionSelectModel) => {
+            value.conditionsProps.value = data[name];
         })
-        this.viewStore.setVmModel({ ...data })
-        props.onChange && props.onChange.call(this,cloneDeep(data),this.viewStore);
+        props.onChange && props.onChange.call(this,{
+            viewState: cloneDeep(data),
+            parameter:cloneDeep(this.queryPrams),
+        },this.viewStore);
+        this.viewStore._setVmModel(data);
     }
     /**
      * 重置数据
      *
      * @memberof QueryConditions
      */
-    handleReset(h) {
+    handleReset() {
         this.reset();
         this.mapQueryValue();
-        const item = this.props.query.find((item) => item instanceof ConditionSearchModel);
+        const item =this.viewStore.computedQuery.find((item) => item instanceof ConditionSearchModel);
         if (item && item instanceof ConditionSearchModel) {
-            item.conditionsProps.onReset && item.conditionsProps.onReset.call(this,cloneDeep(this.state.queryPrams),this.viewStore)
+            item.conditionsProps.onReset && item.conditionsProps.onReset.call(this,cloneDeep(this.queryPrams),this.viewStore)
         }
     }
     /**
@@ -499,13 +471,12 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
      */
     handleSearch() {
         this.mapQueryValue()
-        const item = this.props.query.find((item) => item instanceof ConditionSearchModel);
+        const item = this.viewStore.computedQuery.find((item) => item instanceof ConditionSearchModel);
 
         if (item && item instanceof ConditionSearchModel) {
-            console.log(item,'item');
-            item.conditionsProps.onSearch && item.conditionsProps.onSearch.call(this,cloneDeep(this.state.queryPrams),this.viewStore)
+            item.conditionsProps.onSearch && item.conditionsProps.onSearch.call(this,cloneDeep(this.queryPrams),this.viewStore)
         }
-        this.consoleLog('handleSearch',{ stateParams: cloneDeep(this.state.queryPrams) })
+        this.consoleLog('handleSearch',{ stateParams: cloneDeep(this.queryPrams) })
     }
     /**
      * 回车搜索
@@ -513,30 +484,33 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
      * @param {Function} onEnter
      * @memberof QueryConditions
      */
-    handleEnter(onEnter: Function) {
-        onEnter && onEnter.call(this,this.state.vmModel)
+    handleEnter(com: IProConditions['componentModel']) {
+        const onEnter = com.conditionsProps['onEnter'];
+        onEnter && onEnter.call(this,{
+            viewState: cloneDeep(this.vmModel),
+            parameter:cloneDeep(this.queryPrams),
+        },this.viewStore)
         this.handleSearch()
     }
     handleToggle() {
+        const onToggle = (toggle:boolean) => {
+            const queryDom = document.querySelector(`.${this.uid}`);
+            const height = findDOMNode(queryDom).clientHeight;
+            this.viewStore.domHeight = height;
+            this.props.onCollapse && this.props.onCollapse(toggle,this.viewStore)
+            this.props.onDidMount && this.props.onDidMount({ height,uid: this.uid })
+        }
         if (this.state.collapsed) {
             this.setState({
                 collapsed: false
             },() => {
-                const queryDom = document.querySelector(`.${this.uid}`);
-                const height = findDOMNode(queryDom).clientHeight;
-                this.viewStore.domHeight = height;
-                this.props.onToggle && this.props.onToggle(false,this.viewStore)
-                this.props.onDidMount && this.props.onDidMount({ height,uid: this.uid })
+                    onToggle(false);
             })
         } else {
             this.setState({
                 collapsed: true
             },() => {
-                const queryDom = document.querySelector(`.${this.uid}`);
-                const height = findDOMNode(queryDom).clientHeight;
-                this.viewStore.domHeight = height;
-                this.props.onToggle && this.props.onToggle(false,this.viewStore)
-                this.props.onDidMount && this.props.onDidMount({ height,uid: this.uid })
+                onToggle(true);
             })
         }
     }
@@ -553,26 +527,32 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
         if (typeof even === 'object') {
             value = even.target.value
         }
-
-        let data = this.state.vmModel
+        let data = this.vmModel
         data[name] = value
         if (component instanceof ConditionTextModel) {
             data[name] = this.formatTrim(value)
         }
-        this.setState({
-            vmModel: data
+        this.setFieldsValues(name,(value) => {
+            value.conditionsProps['value']= data[name]
         })
-        this.viewStore.setVmModel({ ...data })
-        props['onChange']&&props.onChange.call(this,even,cloneDeep(data),this.viewStore)
+        props['onChange']&&props.onChange.call(this,even,{
+            viewState: cloneDeep(data),
+            parameter:cloneDeep(this.queryPrams),
+        },this.viewStore)
+        this.viewStore._setVmModel(data);
     }
     handleGroupChxBox(component:ConditionGroupCheckBoxModel,checkedValue: Array<CheckboxValueType>) {
-        let data = this.state.vmModel
-        data[component.containerProps.name] = checkedValue
-        this.setState({
-            vmModel: data
+        let data = this.vmModel;
+        const name = component.containerProps.name
+        data[name] = checkedValue;
+        this.setFieldsValues(name,(value:ConditionGroupCheckBoxModel) => {
+            value.conditionsProps.value = checkedValue;
         })
-        this.viewStore.setVmModel({ ...data })
-        component.conditionsProps.onChange && component.conditionsProps.onChange.call(this,checkedValue,cloneDeep(data),this.viewStore)
+        component.conditionsProps.onChange && component.conditionsProps.onChange.call(this,checkedValue,{
+            viewState: cloneDeep(data),
+            parameter:cloneDeep(this.queryPrams),
+        },this.viewStore)
+        this.viewStore._setVmModel(data);
     }
     renderComponent(component: IProConditions['componentModel']) {
         if (component instanceof ConditionTextAreaModel) {
@@ -612,10 +592,9 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
     }
     renderGroupChxBox(component: ConditionGroupCheckBoxModel) {
         const { conditionsProps,containerProps,jsonProperty } = component;
-        const { labelSpan,defaultValue,...prop } = conditionsProps
-        const vmValue = this.state.vmModel[containerProps.name];
+        const { labelSpan,defaultValue,visable,display,value=defaultValue,...prop } = conditionsProps
         return <Checkbox.Group {...prop}
-            value={vmValue}
+            value={value}
             onChange={this.handleGroupChxBox.bind(this,component)} />
     }
     renderInput(component: ConditionTextModel) {
@@ -624,31 +603,26 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
         if (this.viewStore && this.viewStore.computedSize === 'small') {
             placeholder = ''
         }
-        const { labelSpan,defaultValue,...prop } = conditionsProps
-        const onEnter = conditionsProps.onEnter;
-        const vmValue = this.state.vmModel[containerProps.name]
-        /* const vmValue  = this.viewStore.computedVmModel[JsonProperty.name] */
-        const suffix = vmValue ? <Icon type="close-circle" onClick={() => {
-            let state = this.state.vmModel;
-            /* let state ={...this.viewStore.computedVmModel} */
+        const { labelSpan,defaultValue,value=defaultValue,visable,display,...prop } = conditionsProps
+        const suffix = value ? <Icon type="close-circle" onClick={() => {
+            let state = this.vmModel;
             state[containerProps.name] = ''
-            this.setState({
-                vmModel: state
+            this.setFieldsValues(containerProps.name,(value:ConditionTextModel) => {
+                value.conditionsProps.value=''
             })
-            this.viewStore.setVmModel(state)
             this.mapQueryValue()
         }} /> : null;
         return (
             <Tooltip
                 trigger="focus"
-                title={(this.formatTrim(vmValue)) ? <pre>{vmValue.replace('↵',',')}</pre> : null}
+                title={(this.formatTrim(value)) ? <pre>{value.replace('↵',',')}</pre> : null}
                 placement="topLeft">
                 <Input
                     maxLength={'50'}
-                    {...prop}
                     suffix={suffix}
-                    value={vmValue}
-                    onPressEnter={this.handleEnter.bind(this,onEnter)}
+                    {...prop}
+                    value={value}
+                    onPressEnter={this.handleEnter.bind(this,component)}
                     onChange={this.handleChange.bind(this,component)}
                     placeholder={placeholder}
                 >
@@ -662,22 +636,20 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
         if (this.viewStore && this.viewStore.computedSize === 'small') {
             placeholder = ''
         }
-        const { labelSpan,defaultValue,...prop } = conditionsProps
+        const { labelSpan,defaultValue,value=defaultValue,visable,display,...prop } = conditionsProps
         const { onReset,...themProps } = prop;
         const onEnter = conditionsProps.onEnter;
-        const vmValue = this.state.vmModel[containerProps.name]
-        /* const vmValue  = this.viewStore.computedVmModel[JsonProperty.name] */
         return (
             <Tooltip
                 overlayClassName="legions-pro-query-tooltip"
                 trigger="focus"
-                title={(this.formatTrim(vmValue)) ? <pre>{vmValue.replace('↵',',')}</pre> : null}
+                title={(this.formatTrim(value)) ? <pre>{value.replace('↵',',')}</pre> : null}
                 placement="topLeft">
                 <TextArea
                     maxLength={1500}
                     autosize={{ minRows: 1,maxRows: 1 }}
                     {...themProps}
-                    value={vmValue}
+                    value={value}
                     onPressEnter={this.handleEnter.bind(this,onEnter)}
                     onChange={this.handleChange.bind(this,component)}
                     placeholder={placeholder}
@@ -691,8 +663,7 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
         const { conditionsProps,containerProps,jsonProperty } = component;
         const placeholder = conditionsProps.placeholder as string
         let newData = conditionsProps.options as Array<ISelectProps>
-        const { labelSpan,defaultValue,...prop } = conditionsProps
-        const vmValue = this.state.vmModel[containerProps.name]
+        const { labelSpan,defaultValue,visable,display,value=defaultValue,...prop } = conditionsProps
         /* let vmValue = this.viewStore.computedVmModel[JsonProperty.name] */
         /* if (isObservableArray(vmValue) && vmValue.length === 0) {
             vmValue =[]
@@ -713,7 +684,7 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
                     placeholder={placeholder}
                     onSearch={this.handleSelectSearch.bind(this,component)}
                     onChange={this.handleChangeSelect.bind(this,component)}
-                    value={vmValue}
+                    value={value}
                     options={newData}
                     allowClear
                     showSearch
@@ -728,11 +699,7 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
     renderDate(component: ConditionDateModel) {
         const { conditionsProps,containerProps,jsonProperty } = component;
         const placeholder = conditionsProps.placeholder as string
-        const { labelSpan,defaultValue,...prop } = conditionsProps
-        const vmValue = this.state.vmModel[containerProps.name]
-        /* const vmValue  = this.viewStore.computedVmModel[JsonProperty.name] */
-        let value = vmValue
-        value = value ? moment(value,prop.format) : void 0
+        const { labelSpan,defaultValue,visable,display,value=defaultValue,...prop } = conditionsProps
         return (<DatePicker
             {...prop}
             style={{ width: '100%' }}
@@ -744,13 +711,8 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
     }
     renderDateRange(component: ConditionRangePickerModel) {
         const { conditionsProps,containerProps,jsonProperty } = component;
-        const { labelSpan,defaultValue,...prop } = conditionsProps
+        const { labelSpan,defaultValue,visable,display,value=defaultValue,...prop } = conditionsProps
         const placeholder = conditionsProps.placeholder as [string,string]
-        const vmValue = this.state.vmModel[containerProps.name]
-        /*  const vmValue  = this.viewStore.computedVmModel[JsonProperty.name] */
-        let value = vmValue
-        value = (value && value.length) ? [moment(value[0],prop.format),moment(value[1],prop.format)] : [void 0,void 0]
-
         return (<RangePicker
             allowClear={true}
             {...prop}
@@ -763,25 +725,23 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
     }
     renderChxBox(component: ConditionCheckBoxModel) {
         const { conditionsProps,containerProps,jsonProperty } = component;
-        const { labelSpan,...prop } = conditionsProps
-        const vmValue = this.state.vmModel[containerProps.name]
-        /* const vmValue  = this.viewStore.computedVmModel[JsonProperty.name] */
-        let value = vmValue === '' ? false : vmValue
+        const { labelSpan,visable,display,...prop } = conditionsProps
         return (<Checkbox
+            {...prop}
             onChange={this.handleChangeChx.bind(this,component)}
-            checked={value}>
+            
+        >
             {conditionsProps.label}
         </Checkbox>)
     }
     renderInputNumber(component: ConditionTextNumberModel) {
         const { conditionsProps,containerProps,jsonProperty } = component;
-        const { labelSpan,defaultValue,...prop } = conditionsProps
+        const { labelSpan,defaultValue,display,visable,...prop } = conditionsProps
         let placeholder = conditionsProps.placeholder as string
         if (this.viewStore && this.viewStore.computedSize === 'small') {
             placeholder = ''
         }
         const onEnter = conditionsProps.onEnter;
-        const vmValue = this.state.vmModel[containerProps.name]
         /* const vmValue  = this.viewStore.computedVmModel[JsonProperty.name] */
         return (
             <InputNumber
@@ -791,8 +751,8 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
                         this.handleEnter.call(this,onEnter);
                     }
                 }}
+                defaultValue={defaultValue}
                 style={{ width: '100%' }}
-                value={vmValue}
                 onChange={this.handleChange.bind(this,component)}
                 placeholder={placeholder}
             >
@@ -800,15 +760,14 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
     }
     renderRadioButton(component: ConditionRadioButtonModel) {
         const { conditionsProps,containerProps,jsonProperty } = component;
-        const { labelSpan,defaultValue,options,...prop } = conditionsProps
+        const { labelSpan,defaultValue,display,options,visable,...prop } = conditionsProps
         const newData = options as Array<IRadioButtonProps>
-        const vmValue = this.state.vmModel[containerProps.name]
-        /* const vmValue  = this.viewStore.computedVmModel[JsonProperty.name] */
         return (
             <RadioGroup
                 {...prop}
                 style={{ width: '100%' }}
-                value={vmValue}
+                defaultValue={defaultValue}
+                
                 onChange={this.handleChange.bind(this,component)}
             >
                 {newData && newData.map((item) => {
@@ -838,19 +797,27 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
                     icon={'search'}
                     onClick={this.handleSearch.bind(this)}
                     style={{ borderColor: `#46b8da`,color: `white` }}
-                >{`${'搜索'}`}
-                </Button></Col>
+                >{component.conditionsProps.searchText||'搜索'}
+                </Button>
+                </Col>
                 <Col span={6} >
                     <Dropdown.Button type="ghost" onClick={this.handleReset.bind(this)} overlay={menu}>
-                        重置
+                    {component.conditionsProps.resetText||'重置'}
                         </Dropdown.Button>
                 </Col>
                 <Col span={4} >
-                    {<Button style={{ width: '100%',padding: '0 2px' }}
+                    <Button
+                        onClick={() => {
+                            const item = this.props.query.find((item) => item instanceof ConditionSearchModel);
+                            if (item && item instanceof ConditionSearchModel) {
+                                item.conditionsProps.onRefresh && item.conditionsProps.onRefresh.call(this,cloneDeep(this.queryPrams),this.viewStore)
+                            }
+                         }}
+                         style={{ width: '100%',padding: '0 2px' }}
                         //@ts-ignore
                         title="刷新">
                         <Icon type="sync" title="刷新" />
-                    </Button>}
+                    </Button>
                 </Col>
                 <Col span={8}>
                     <Button
@@ -870,7 +837,7 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
     }
     renderLabel(component: IProConditions['componentModel'],labelSpan: number) {
         if (!(component instanceof ConditionSearchModel) && !(component instanceof ConditionCheckBoxModel)&&!(component instanceof ConditionGroupCheckBoxModel)) {
-            let label = component.conditionsProps['label'];
+            let label = component.conditionsProps.label;
             const name = component.containerProps.name;
             return (
                 this.viewStore.computedSize !== 'small' ? <Col className="legions-pro-query-label" span={labelSpan}>
@@ -911,7 +878,7 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
         }
     }
     renderSearchComponent() {
-        const searchItem = this.props.query.find((item) => item instanceof ConditionSearchModel)
+        const searchItem = this.viewStore.computedQuery.find((item) => item instanceof ConditionSearchModel)
         let show: IProConditions['componentModel'][] = []
         if (searchItem && !Array.isArray(searchItem)) {
             show.push(searchItem)
@@ -919,16 +886,18 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
         return this.renderQueryComponent(show);
     }
     renderShowComponent(hide: IProConditions['componentModel'][]) {
-        const searchItem = this.props.query.find((item) => item instanceof ConditionSearchModel)
+        const searchItem = this.viewStore.computedQuery.find((item) => item instanceof ConditionSearchModel)
         let searchSpan = 0;
         if (searchItem && !Array.isArray(searchItem)) {
             searchSpan = this.getQueryItemSpan(searchItem)
         }
         let unUsedSpan = 24 - searchSpan;
         let show: IProConditions['componentModel'][] = []
-        this.props.query.filter((item) => !(item instanceof ConditionSearchModel)).map((item) => {
+        this.viewStore.computedQuery.filter((item) => !(item instanceof ConditionSearchModel)).map((item) => {
             const currSpan = this.getQueryItemSpan(item);
-            if (unUsedSpan >= currSpan) {
+            let visable: boolean = item.conditionsProps['visable']
+            visable = visable === void 0 ? true : visable;
+            if (unUsedSpan >= currSpan&&visable) {
                 show.push(item);
                 unUsedSpan = unUsedSpan - currSpan;
             } else {
@@ -943,13 +912,14 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
             if (this.viewStore.computedSize === 'small') {
                 labelSpan = 0;
             }
-            const {offset,pull,push,...col} = item.containerProps.col
-            return <Col {...col} key={item.containerProps.name} style={{ paddingBottom: '10px' }}>
-                {this.renderLabel(item,labelSpan)}
-                <Col style={{ lineHeight: '28px' }}  span={24 - labelSpan}>
-                    {this.renderComponent(item)}
-                </Col>
-            </Col>
+            const { offset,pull,push,...col } = item.containerProps.col;
+           
+            return <Col {...col} key={item.containerProps.uuid} style={{ paddingBottom: '10px' }}>
+                        {this.renderLabel(item,labelSpan)}
+                        <Col style={{ lineHeight: '28px' }}  span={24 - labelSpan}>
+                            {this.renderComponent(item)}
+                        </Col>
+                    </Col>
         })
     }
     render() {

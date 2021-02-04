@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-29 16:44:16
- * @LastEditTime: 2021-01-13 10:27:29
+ * @LastEditTime: 2021-02-04 16:17:22
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/store/pro.query.conditions/index.ts
@@ -15,7 +15,8 @@ import { observable, action, StoreModules } from 'legions/store';
 import { observableViewModel, observablePromise } from 'legions/store-utils';
 import { ViewModel } from 'brain-store-utils';
 import { computed,ObservableMap } from 'mobx';
-import { HlQueryConditionView } from './HlQueryConditionView';
+import { ConditionView } from './conditionView';
+import { IProConditions } from '../../LegionsProConditions/ProConditionsUtils';
 type Proxify<T> = { [P in keyof T]: T[P] };
 
 @StoreModules
@@ -23,18 +24,20 @@ export  class ProQueryConditionStore<Query = {}> extends StoreBase {
     static meta: IStoreBaseMeta = {
         ...StoreBase.meta,
     };
+    @observable private viewModelQuery=observableViewModel<ConditionView<Query>>(new ConditionView())
     constructor(context) {
         super(context);
     }
-    @observable HlQueryConditionContainer = observable.map<string,ViewModel<HlQueryConditionView<Query>> & Proxify<HlQueryConditionView<Query>>>();
+    @observable ConditionContainer = observable.map<string,ViewModel<ConditionView<Query>> & Proxify<ConditionView<Query>>>();
 
     @action add(uid: string) {
-        this.HlQueryConditionContainer.set(uid, observableViewModel<HlQueryConditionView<Query>>(new HlQueryConditionView()));
+        this.viewModelQuery = observableViewModel<ConditionView<Query>>(new ConditionView())
+        this.ConditionContainer.set(uid, this.viewModelQuery);
     }
     @action delete(uid: string) {
-        this.HlQueryConditionContainer.delete(uid);
+        this.ConditionContainer.delete(uid);
     }
     @action get(uid: string) {
-        return this.HlQueryConditionContainer.get(uid);
+        return this.ConditionContainer.get(uid);
     }
 }
