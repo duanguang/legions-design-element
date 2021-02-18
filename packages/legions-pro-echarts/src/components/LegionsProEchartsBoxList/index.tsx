@@ -13,6 +13,7 @@ import { Progress,Col,Row } from 'antd';
 import './style/index.less';
 import LegionsProEchartsBox from '../LegionsProEchartsBox';
 import LegionsProLineOverflow from '../LegionsProLineOverflow';
+import LegionsProEchartsProgress from '../LegionsProEchartsProgress';
 interface ColumnProps<T> {
     title?: React.ReactNode;
     key?: string;
@@ -104,11 +105,7 @@ export default class LegionsProEchartsBoxList<T = {}> extends React.Component<IP
                                     style={{marginTop:-2}}
                                     className={`${renderItems.className}`}
                                 >
-                                    <Progress
-                                        percent={item[keys]}
-                                        showInfo={true}
-                                        style={{color:'#00E6FC'}}
-                                    ></Progress>
+                                    <LegionsProEchartsProgress percent={item[keys]}></LegionsProEchartsProgress>
                                 </Col>)
                             }
                         }

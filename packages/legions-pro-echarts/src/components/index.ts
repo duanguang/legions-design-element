@@ -20,3 +20,4 @@ export { default as LegionsProEchartsLiquidFill }  from './LegionsProEchartsLiqu
 export { default as LegionsProEchartsMap }  from './LegionsProEchartsMap';
 export { default as LegionsProEchartsTable }  from './LegionsProEchartsTable';
 export { default as LegionsProEchartsProgress } from './LegionsProEchartsProgress';
+export { default as LegionsProLineOverflow} from './LegionsProLineOverflow'
