@@ -6,6 +6,7 @@ import { LayoutBaseDemo } from './pro.echarts.layout/base';
 import { LayoutFullDemo } from './pro.echarts.layout/full';
 import { ListBaseDemo } from './pro.echarts.table/base';
 import { LegionsProEchartsMapDemo } from './pro.echarts.map';
+import { ProProgressDemo } from './pro.progress/base';
 
 
 export default class App extends React.Component {
@@ -27,6 +28,7 @@ export default class App extends React.Component {
                 <Route path="/map" component={LegionsProEchartsMapDemo}></Route>
                 <Route path="/box" component={LegionsProEchartsBoxDemo}></Route>
                 <Route path="/chart" component={LegionsProEchartsChartPieDemo}></Route>
+                <Route path="/progress" component={ProProgressDemo}></Route>
             </Switch>
         );
     }
