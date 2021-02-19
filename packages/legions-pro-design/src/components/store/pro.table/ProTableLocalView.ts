@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-07 17:21:19
- * @LastEditTime: 2021-01-14 15:47:50
+ * @LastEditTime: 2021-02-19 18:37:14
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/store/pro.table/ProTableLocalView.ts
@@ -40,19 +40,17 @@ export class ProTableLocalView {
         );
         // @ts-ignore
         let model: any = {};
-        if (typeof autoQuery.model === 'object') {
+        if (autoQuery.mappingEntity) {
           model = {
             //@ts-ignore
             model: LegionsProTable.ProTableBaseClass.pageListEntity,
             onBeforTranform: (value) => {
               return {
                 responseData: value,
-                mappingEntity:autoQuery.model['mappingEntity'],
+                mappingEntity:autoQuery['mappingEntity'],
               }
             }
           }
-        } else {
-          model= {model:autoQuery.model}
         }
         if (autoQuery.method === 'post') {
           return server.post<PageListEntity<any>, any>({

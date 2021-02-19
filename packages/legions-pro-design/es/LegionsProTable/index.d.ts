@@ -3,29 +3,17 @@ import './style/index.less';
 import { TableColumnConfig } from 'antd/lib/table/Table';
 import { IViewModelProTableStore, ITableAutoQuery } from '../store/pro.table/interface';
 import { SelectionDecorator } from '../interface/antd';
-import { ITableColumnConfig, IExportCsv, IProTableProps } from './interface';
+import { ITableColumnConfig, IExportCsv, IProTableProps, ICustomColumnsConfig } from './interface';
 import { ISchedule } from '../store/interface';
 import { InstanceLegionsProModal } from '../LegionsProModal/interface';
-import { LoggerManager } from 'legions-lunar/legion.plugin.sdk';
 import { ProTableBaseClass } from './ProTableBaseClass';
 interface IState {
-    /**
-         * 指定选中项的 key 数组
-         *
-         * @type {string[]}
-         * @memberof IState
-         */
-    selectedRowKeys: string[];
-    taskName?: string;
-}
-declare class ViewUI {
-    taskName: string;
 }
 export default class LegionsProTable<TableRow = {}, Model = {}> extends React.Component<IProTableProps<TableRow, Model>, IState> {
     timeId: number;
     uid: string;
     /**
-     * uid 的值绝对唯一，且每次初始生成表单都是相同值
+     * uid 的值绝对唯一，且每次初始生成table都是相同值
      *
      * @memberof HLForm
      */
@@ -39,7 +27,6 @@ export default class LegionsProTable<TableRow = {}, Model = {}> extends React.Co
     viewModel: IViewModelProTableStore;
     tableThead: string;
     clientHeight: number;
-    viewUI: import("brain-store-utils").ViewModel<ViewUI> & import("brain-store-utils").Proxify<ViewUI>;
     modalRef: InstanceLegionsProModal;
     customColumnsModalRef: InstanceLegionsProModal;
     selections: SelectionDecorator[];
@@ -53,20 +40,21 @@ export default class LegionsProTable<TableRow = {}, Model = {}> extends React.Co
         rowSelectionClickType: string;
         isOpenRowSelection: boolean;
         type: string;
-        data: any[];
+        dataSource: any[];
         total: number;
         loading: boolean;
         displayType: string;
         isOpenCustomColumns: boolean;
         pageSizeOptions: string[];
     };
-    /** 开启自定义列，同步数据到服务端所需要的查询和保存接口地址信息 */
-    static customColumnsConfig: {
-        /** 编辑自定义信息同步到服务端接口地址 */
-        editApi: string;
-        /** 从服务端查询自定义列信息接口地址 */
-        queryApi: string;
-    };
+    /** 开启自定义列数据同步接口信息-全局配置(当全局和局部存在冲突时，优先局部配置数据)
+     *
+     * 同步数据到服务端所需要的查询和保存接口地址信息 */
+    static customColumnsConfig: ICustomColumnsConfig;
+    /** 开启自定义列数据同步接口信息-局部配置(当全局和局部存在冲突时，优先局部配置数据)
+     *
+     * 同步数据到服务端所需要的查询和保存接口地址信息 */
+    customColumnsConfig: ICustomColumnsConfig;
     /**
      * 列表组件基类
      *
@@ -81,6 +69,7 @@ export default class LegionsProTable<TableRow = {}, Model = {}> extends React.Co
      */
     static ProTableBaseClass: typeof ProTableBaseClass;
     constructor(props: any);
+    get uuid(): string;
     get getViewStore(): import("brain-store-utils").ViewModel<import("../store/pro.table/ProTableView").ProTableView> & {
         userInfo: {
             userName: string;
@@ -91,28 +80,29 @@ export default class LegionsProTable<TableRow = {}, Model = {}> extends React.Co
         readonly computedUid: string;
         pageIndex: number;
         pageSize: number;
-        selectedRows: any[];
-        expandRow?: string;
-        type?: "checkbox" | "radio";
-        rowSelectionClickType?: "radio" | "check";
+        selectedRowKeys: string[] | number[];
+        _expandRow?: string;
+        _type?: "radio" | "checkbox";
+        _rowSelectionClickType?: "radio" | "check";
         columns?: (TableColumnConfig<{}> & import("../store/pro.table/interface").ITableColumnConfig)[];
-        obTableListCustom: import("../models").TableColumnsContainerEntity;
+        _obTableListCustom: import("../models").TableColumnsContainerEntity;
         tableBodyDomClientHeight: number;
         bodyExternalContainer: import("../store/pro.table/interface").IObservableMap<string, {
             height: number;
         }>;
         isAdaptiveHeight: boolean;
-        scroll: import("../store/pro.table/interface").IScroll;
         bodyStyle: React.CSSProperties;
         tempDynamicAddData: any[];
         bodyContainerHeight: number;
-        pagination: boolean;
+        _pagination: boolean;
         bodyExternalHeight: number;
-        renderData: any[];
+        _renderData: any[];
         queryParams: any;
-        isOpenRowChange: boolean;
-        isOpenRowSelection: boolean;
+        _isOpenRowChange: boolean;
+        _isOpenRowSelection: boolean;
         _tableContainerWidth: number;
+        _uniqueKey: string;
+        readonly computedSelectedRows: any[];
         readonly calculateBody: {};
         readonly computedShowColumns: import("../store/pro.table/interface").IShowColumns[];
         readonly computedUnShowColumns: import("../store/pro.table/interface").IShowColumns[];
@@ -120,17 +110,16 @@ export default class LegionsProTable<TableRow = {}, Model = {}> extends React.Co
         readonly computedRenderColumns: (TableColumnConfig<{}> & import("../store/pro.table/interface").ITableColumnConfig)[];
         readonly tableXAutoWidth: React.ReactText;
         readonly computedTotal: number;
-        filterColumns: () => void;
-        moveRightShowColumns: (Columns: string[]) => void;
-        moveLeftShowColumns: (Columns: string[]) => void;
-        orderSortRightShowColumns: (Columns: string[]) => void;
-        orderSortLeftShowColumns: (Columns: string[]) => void;
-        setLocalStorageShowColumnsKeys: (modulesName?: string) => void;
-        getLocalStorageShowColumns: () => import("../store/pro.table/interface").IShowColumns[];
-        setLocalStorageShowColumns: (url: string) => void;
-        editTableColumns: (modulesUid: string, customColumns: import("../models").TableListColumns[], url: any) => Promise<void>;
-        queryTableColumns: (modulesUid: string, url: any) => Promise<void>;
-        setTableModulesName: (tableModulesName: string) => void;
+        _filterColumns: () => void;
+        _moveRightShowColumns: (Columns: string[]) => void;
+        _moveLeftShowColumns: (Columns: string[]) => void;
+        _orderSortRightShowColumns: (Columns: string[]) => void;
+        _orderSortLeftShowColumns: (Columns: string[]) => void;
+        _setLocalStorageShowColumnsKeys: (modulesName: string, uid: string) => void;
+        _getLocalStorageShowColumns: () => import("../store/pro.table/interface").IShowColumns[];
+        _setLocalStorageShowColumns: (url: string) => void;
+        _editTableColumns: (modulesUid: string, customColumns: import("../models").TableListColumns[], url: any) => Promise<void>;
+        _queryTableColumns: (modulesUid: string, url: any) => Promise<void>;
         setTotal: (total: number) => void;
         updateOpenRowChange: (isOpenRowChange: boolean) => void;
     };
@@ -142,7 +131,7 @@ export default class LegionsProTable<TableRow = {}, Model = {}> extends React.Co
             pageSize: number;
         }) => void;
     };
-    consoleLog(type: Parameters<typeof LoggerManager['report']>[0]['type'], logObj?: Object): void;
+    consoleLog(type: string, logObj?: Object): void;
     logger(type: Parameters<LegionsProTable['consoleLog']>[0], logObj?: Object): void;
     search(options?: {
         pageIndex?: number;
@@ -156,9 +145,15 @@ export default class LegionsProTable<TableRow = {}, Model = {}> extends React.Co
     exportCsv(prams?: Partial<IExportCsv>): void;
     tranMapColumns(columns?: (TableColumnConfig<{}> & ITableColumnConfig)[]): (TableColumnConfig<{}> & ITableColumnConfig)[];
     createHeaderInnerNode(): void;
+    inintSelectedRows(selectedRows?: string[] | number[]): void;
     initPagination(): void;
+    private initProps;
+    private onReady;
     componentWillMount(): void;
     destroyPortal(): void;
+    private initCustomColumns;
+    /** 是否设置自定义列服务端同步接口配置信息 */
+    private isSettingColumnApiConfig;
     componentWillUnmount(): void;
     componentDidMount(): Promise<void>;
     setTableContainerWidth(): void;

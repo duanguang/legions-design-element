@@ -1,7 +1,7 @@
 /// <reference types="react" />
 import { TableColumnsContainerEntity } from '../../models';
 import { editTableColumns } from '../../services';
-import { IScroll, IShowColumns, ITableColumnConfig, IObservableMap } from './interface';
+import { IShowColumns, ITableColumnConfig, IObservableMap } from './interface';
 import { TableColumnConfig } from '../../interface/antd';
 export declare class ProTableView {
     userInfo: {
@@ -30,25 +30,25 @@ export declare class ProTableView {
      *
      * @memberof ProTableView
      */
-    selectedRows: any[];
+    selectedRowKeys: string[] | number[];
     /**
      *
      * 展开行数据
      * @memberof ProTableView
      */
-    expandRow?: string;
+    _expandRow?: string;
     /**
      *
      * 表格行选中方式
      * @memberof ProTableView
      */
-    type?: 'checkbox' | 'radio';
+    _type?: 'checkbox' | 'radio';
     /**
      * 表格行单击选中方式
      *
      * @memberof ProTableView
      */
-    rowSelectionClickType?: 'radio' | 'check';
+    _rowSelectionClickType?: 'radio' | 'check';
     /**
      * 表格列配置
      *
@@ -83,7 +83,7 @@ export declare class ProTableView {
      * @private
      * @memberof ProTableView
      */
-    obTableListCustom: TableColumnsContainerEntity;
+    _obTableListCustom: TableColumnsContainerEntity;
     /**
      *
      * table 模块名称，如果设置此值，请保持绝对唯一
@@ -112,13 +112,6 @@ export declare class ProTableView {
      * @memberof ProTableView
      */
     isAdaptiveHeight: boolean;
-    /**
-     *
-     * 横向或纵向支持滚动，也可用于指定滚动区域的宽高度
-     * @type {IScroll}
-     * @memberof ProTableView
-     */
-    scroll: IScroll;
     bodyStyle: React.CSSProperties;
     /**
      * 存储动态添加表格行的数据
@@ -139,7 +132,7 @@ export declare class ProTableView {
      * @type {boolean}
      * @memberof ProTableView
      */
-    pagination: boolean;
+    _pagination: boolean;
     /**
      * 外部容器需要扣除的
      *
@@ -151,7 +144,7 @@ export declare class ProTableView {
      *
      * @memberof ProTableView
      */
-    renderData: any[];
+    _renderData: any[];
     private total;
     /**
      * 查询条件
@@ -161,17 +154,24 @@ export declare class ProTableView {
     /**
      *
      * 是否开启行单击选中数据，内部私有数据，请勿调用
+     *
+     * 默认值 true(开启)
      * @memberof ProTableView
      */
-    isOpenRowChange: boolean;
+    _isOpenRowChange: boolean;
     /** 是否开启行选中功能，比如开启checkbox ，radio */
-    isOpenRowSelection: boolean;
+    _isOpenRowSelection: boolean;
     /**
      * 表格容器宽度,私有变量
      *
      * @memberof ProTableView
      */
     _tableContainerWidth: number;
+    _uniqueKey: string;
+    /**
+    * 行选中详细数据
+    */
+    get computedSelectedRows(): any[];
     get calculateBody(): {};
     /**
      * 显示列
@@ -207,55 +207,55 @@ export declare class ProTableView {
      * @readonly
      * @memberof ProTableView
      */
-    get tableXAutoWidth(): import("antd/lib/checkbox/Group").CheckboxValueType;
+    get tableXAutoWidth(): import("react").ReactText;
     get computedTotal(): number;
     /**
      *
      * 根据源数据对显示和隐藏列进行过滤
      * @memberof ProTableView
      */
-    filterColumns(): void;
+    _filterColumns(): void;
     /**
      * 从显示列移除
      *
      * @param {string[]} Columns
      * @memberof ProTableView
      */
-    moveRightShowColumns(Columns: string[]): void;
+    _moveRightShowColumns(Columns: string[]): void;
     /**
      * 从显示列接收移除的列
      *
      * @param {string[]} Columns
      * @memberof ProTableView
      */
-    moveLeftShowColumns(Columns: string[]): void;
+    _moveLeftShowColumns(Columns: string[]): void;
     /**
      * 对显示列进行排序
      *
      * @param {*} Columns
      * @memberof ProTableView
      */
-    orderSortRightShowColumns(Columns: string[]): void;
+    _orderSortRightShowColumns(Columns: string[]): void;
     /**
      *
      * 对隐藏列排序
      * @param {string[]} Columns
      * @memberof ProTableView
      */
-    orderSortLeftShowColumns(Columns: string[]): void;
-    setLocalStorageShowColumnsKeys(modulesName?: string): void;
+    _orderSortLeftShowColumns(Columns: string[]): void;
+    _setLocalStorageShowColumnsKeys(modulesName: string, uid: string): void;
     /**
      * 获取显示列缓存信息
      *
      * @memberof ProTableView
      */
-    getLocalStorageShowColumns(): IShowColumns[];
+    _getLocalStorageShowColumns(): IShowColumns[];
     /**
      *
      * 设置显示列缓存信息并同步到服务端
      * @memberof ProTableView
      */
-    setLocalStorageShowColumns(url: string): void;
+    _setLocalStorageShowColumns(url: string): void;
     /**
      * 同步自定义列信息到服务端
      *
@@ -263,27 +263,26 @@ export declare class ProTableView {
      * @param {Parameters<typeof editTableColumns>[1]} customColumns
      * @memberof ProTableView
      */
-    editTableColumns(modulesUid: string, customColumns: Parameters<typeof editTableColumns>[1], url: any): Promise<void>;
+    _editTableColumns(modulesUid: string, customColumns: Parameters<typeof editTableColumns>[1], url: any): Promise<void>;
     /**
      * 查询自定义列配置数据
      *
      * @param {string} modulesUid
      * @memberof ProTableView
      */
-    queryTableColumns(modulesUid: string, url: any): Promise<void>;
-    /**
-     * 设置表格模块唯一名称
-     *
-     * @param {string} tableModulesName
-     * @memberof ProTableView
-     */
-    setTableModulesName(tableModulesName: string): void;
+    _queryTableColumns(modulesUid: string, url: any): Promise<void>;
     setTotal(total: number): void;
     /**
      *
-     * 控制开启或者取消行选中
+     * 开启或者取消单击行选中
      * @param {boolean} isOpenRowChange
      * @memberof ProTableView
      */
     updateOpenRowChange(isOpenRowChange: boolean): void;
+    /**
+     *
+     * 开启或者取消行选中
+     * @param {boolean} isOpenRowChange
+     */
+    updateOpenRowSelection(isOpenRowSelection: boolean): void;
 }

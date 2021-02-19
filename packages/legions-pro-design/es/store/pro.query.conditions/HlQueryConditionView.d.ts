@@ -1,22 +1,43 @@
 import { IObservableMap, ISelectAutoQuery, ISelectOptions } from './interface';
-import { IProConditions } from '../../LegionsProConditions/ProConditionsUtils';
-export declare class ConditionView<Query = {}> {
-    constructor(uid?: string);
-    private uid;
+export declare class HlQueryConditionView<Query = {}> {
     /**
      * 查询条件
      *
      * @type {Object}
-     * @memberof ConditionView
+     * @memberof HlQueryConditionView
      */
     private query;
     /**
      *
      * 转换成接口所需数据
      * @type {Query}
-     * @memberof ConditionView
+     * @memberof HlQueryConditionView
      */
     tranQuery: Query;
+    /**
+     *
+     * 搜索条件左侧组件集合
+     * @private
+     * @type {React.ReactNode[]}
+     * @memberof HlQueryConditionView
+     */
+    private queryLeftComponent;
+    /**
+     * 搜索条件右侧组件集合
+     *
+     * @private
+     * @type {React.ReactNode[]}
+     * @memberof HlQueryConditionView
+     */
+    private queryRightComponent;
+    /**
+     * 动态排版区域组件
+     *
+     * @private
+     * @type {JSX.Element}
+     * @memberof HlQueryConditionView
+     */
+    private queryContentComponent;
     /**
      * 组件在 dom 树的真实高度
      * 自动获取的
@@ -30,7 +51,7 @@ export declare class ConditionView<Query = {}> {
      *
      * 容器宽度
      * @type {number}
-     * @memberof ConditionView
+     * @memberof HlQueryConditionView
      */
     widthContainer: number;
     /**
@@ -38,13 +59,34 @@ export declare class ConditionView<Query = {}> {
      * 搜索条件组件数据模型
      * @private
      * @type {Object}
-     * @memberof ConditionView
+     * @memberof HlQueryConditionView
      */
     private vmModel;
     private size;
     selectOptions: IObservableMap<string, ISelectOptions>;
-    get computedQuery(): Array<IProConditions['componentModel']>;
+    get computedQuery(): Query;
     get computedVmModel(): any;
+    /**
+     * 搜索条件右侧组件集合
+     *
+     * @readonly
+     * @memberof HlQueryConditionView
+     */
+    get computedLeftComponent(): JSX.Element;
+    /**
+     * 动态排布区域组件
+     *
+     * @readonly
+     * @memberof HlQueryConditionView
+     */
+    get computedContentComponent(): JSX.Element;
+    /**
+     *
+     * 搜索左侧组件集合
+     * @readonly
+     * @memberof HlQueryConditionView
+     */
+    get computedRightComponent(): JSX.Element;
     get computedSize(): "small" | "default";
     /**
      * xs: 宽度<768px 响应式栅格，可为栅格数或一个包含其他属性的对象
@@ -64,21 +106,15 @@ export declare class ConditionView<Query = {}> {
      * @param {Object} model
      * @memberof HlQueryConditionView
      */
-    _setVmModel(model: Object): void;
-    _clearQuery(): void;
-    _firstInitQuery(query: Array<IProConditions['componentModel']>): void;
-    _initQuery(query: Array<IProConditions['componentModel']>, options?: {
-        isCache: boolean;
-    }): void;
-    /** 改变搜索条件配置数据 */
-    _setQueryState(name: string, callback: (value: IProConditions['componentModel']) => void): void;
-    private _getQueryItem;
-    _setSize(size: 'small' | 'default'): void;
-    _dispatchRequest(name: string, autoQuery: ISelectAutoQuery, options?: {
+    setVmModel(model: Object): void;
+    setLeftComponent(left?: JSX.Element): void;
+    setRightComponent(right?: JSX.Element): void;
+    setContentComponent(content?: JSX.Element): void;
+    setQuery(query: Query): void;
+    setSize(size: 'small' | 'default'): void;
+    dispatchRequest(name: string, autoQuery: ISelectAutoQuery, options?: {
         pageIndex: number;
         pageSize?: number;
         keyWords?: string;
-        /** 接口请求完成触发 */
-        callback?: (value: any) => void;
     }): void;
 }

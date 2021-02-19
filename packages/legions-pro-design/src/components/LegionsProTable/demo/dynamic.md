@@ -1,7 +1,7 @@
 ---
 order: 4
 title:
-  zh-CN: 表格尺寸
+  zh-CN: 动态表格
   en-US: Size
 ---
 
@@ -63,6 +63,7 @@ class ProTableDemo extends LegionsProTable.ProTableBaseClass<IProps,IState,{},{}
     }
   }
   handleSizeChange = (e) => {
+    console.log(e,'e');
     this.setState({ size: e.target.value });
   }
   render() {
@@ -81,7 +82,7 @@ class ProTableDemo extends LegionsProTable.ProTableBaseClass<IProps,IState,{},{}
         </Row>
       <LegionsProTable
       <{},ResponseVModelNameDataEntity>
-      {...this.state}
+     
         onReady={value => {
           this.tableRef = value;
           this.tableRef.viewModel.isAdaptiveHeight = false;
@@ -93,14 +94,6 @@ class ProTableDemo extends LegionsProTable.ProTableBaseClass<IProps,IState,{},{}
           this.tableRef.viewModel.bodyExternalContainer.set('other', {
             height: 70,
           });
-        }}
-        selectedRowKeys={
-          this.tableRef &&
-          this.tableRef.viewModel.selectedRows.map(item => item.id)
-        }
-        scroll={{
-          x: this.tableRef && this.tableRef.viewModel.tableXAutoWidth,
-          y: 300,
         }}
         autoQuery={{
             params: (pageIndex,pageSize) => {
@@ -128,13 +121,10 @@ class ProTableDemo extends LegionsProTable.ProTableBaseClass<IProps,IState,{},{}
             },
             method: 'get',
             ApiUrl: 'http://192.168.200.171:3001/mock/115/getUsers',
-            model: {
-              mappingEntity: (that,res) => {
+            mappingEntity: (that,res) => {
                 that.result = that.transformRows(res['data'],ResponseVModelNameDataEntity)
               }
-            },
         }}
-        pagination={true}
         columns={this.columnsData}
         /* 真实环境中会自动生成，演示专用*/
         uniqueUid="demo/table/dynamic"

@@ -1,3 +1,4 @@
+import { Row } from 'antd';
 import PropTypes from 'prop-types';
 import React,{ Component } from 'react';
 import SortableJS from 'sortablejs';
@@ -407,18 +408,23 @@ export default class LegionsProDragger extends Component<IProps> {
             tag: Component,
             options, // eslint-disable-line
             onChange, // eslint-disable-line
+            //@ts-ignore
+            style,
+            children,
             ...props
         } = this.props;
-
         return (
             // @ts-ignore
             <Component
+                style={{width:'100%',display:'inline-block'}}
                 {...props}
                 //@ts-ignore
                 ref={node => {
                     this.node = node;
                 }}
-            />
+            >
+                {this.props.children}
+            </Component>
         );
     }
 }

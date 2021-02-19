@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-07 16:49:31
- * @LastEditTime: 2021-02-04 18:21:30
+ * @LastEditTime: 2021-02-05 17:31:40
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/store/pro.query.conditions/conditionView.ts
@@ -17,7 +17,13 @@ import { IObservableMap,ISelectAutoQuery,ISelectOptions } from './interface';
 import { cloneDeep } from 'lodash'
 import { IProConditions } from '../../LegionsProConditions/ProConditionsUtils';
 import { SelectKeyValue } from '../../models';
+import { legionsThirdpartyPlugin } from 'legions-thirdparty-plugin';
+import {setStorageItems,getStorageItem} from 'legions-utils-tool/storage'
 export class ConditionView<Query = {}> {
+    constructor(uid: string='') {
+        this.uid = uid;
+    }
+    @observable private uid=''
     /**
      * 查询条件
      *
@@ -117,13 +123,51 @@ export class ConditionView<Query = {}> {
     @action _setVmModel(model: Object) {
         this.vmModel = JSON.stringify(model)
     }
-    @action _initQuery(query:Array<IProConditions['componentModel']>) {
+    @action _clearQuery() {
+        this.query.clear();
+    }
+    @action _firstInitQuery(query: Array<IProConditions['componentModel']>) {
+        let caches:string[] = JSON.parse(getStorageItem(this.uid,'[]'))
+        console.log(caches,'caches');
+        const newQuery :Array<IProConditions['componentModel']>= [];
+        query.map((item) => {
+            newQuery.push(void 0)
+        })
+        if (caches.length) {
+            caches = caches.filter((item)=>query.find((id)=>id.containerProps.uuid==item));
+            caches.map((item,_index) => {
+                const itmIndex = query.findIndex((w) => item === w.containerProps.uuid);
+                if (_index === itmIndex) {
+                    newQuery[_index] = query[_index]
+                }
+                else {
+                    if (itmIndex > -1) {
+                        const cacheQueryItem = query[itmIndex]
+                        if (cacheQueryItem) {
+                            newQuery[_index] = cacheQueryItem;
+
+                        }
+                    }
+                }
+            })
+        }
+    }
+    @action _initQuery(query: Array<IProConditions['componentModel']>,options?: {
+        isCache: boolean;
+
+    }) {
+        const caches:string[]=[]
         query.map((item) => {
             const id = item.containerProps.uuid;
             if (!this.query.has(id)) {
                 this.query.set(id,item);
             }
         })
+        if (options && options.isCache) {
+            if (!legionsThirdpartyPlugin.plugins.dexie) {
+                setStorageItems(this.uid,JSON.stringify(caches))
+            }
+        }
     }
     /** 改变搜索条件配置数据 */
     @action _setQueryState(name:string,callback: (value: IProConditions['componentModel']) => void) {

@@ -25,7 +25,6 @@ import { bind, observer } from 'legions/store-react';
 import { LegionsProTable, LegionsProPageContainer } from 'legions-pro-design';
 
 
-
  class ResponseVModelNameDataEntity {
   @JsonProperty('key')
   key = void 0;
@@ -71,7 +70,7 @@ class ProTableDemo extends LegionsProTable.ProTableBaseClass<IProps,IState,{},{}
         <Row>
         <Form layout="inline">
             <FormItem label="Size">
-              <Radio.Group size="default" value={this.state.size} onChange={this.handleSizeChange}>
+             <Radio.Group size="default" value={this.state.size} onChange={this.handleSizeChange}>
                 <Radio.Button value="default">Default</Radio.Button>
                 <Radio.Button value="middle">Middle</Radio.Button>
                 <Radio.Button value="small">Small</Radio.Button>
@@ -93,14 +92,6 @@ class ProTableDemo extends LegionsProTable.ProTableBaseClass<IProps,IState,{},{}
           this.tableRef.viewModel.bodyExternalContainer.set('other', {
             height: 70,
           });
-        }}
-        selectedRowKeys={
-          this.tableRef &&
-          this.tableRef.viewModel.selectedRows.map(item => item.id)
-        }
-        scroll={{
-          x: this.tableRef && this.tableRef.viewModel.tableXAutoWidth,
-          y: 300,
         }}
         autoQuery={{
             params: (pageIndex,pageSize) => {
@@ -128,13 +119,10 @@ class ProTableDemo extends LegionsProTable.ProTableBaseClass<IProps,IState,{},{}
             },
             method: 'get',
             ApiUrl: 'http://192.168.200.171:3001/mock/115/getUsers',
-            model: {
-              mappingEntity: (that,res) => {
+            mappingEntity: (that,res) => {
                 that.result = that.transformRows(res['data'],ResponseVModelNameDataEntity)
-              }
-            },
+            }
         }}
-        pagination={true}
         columns={this.columnsData}
         /* 真实环境中会自动生成，演示专用*/
         uniqueUid="demo/table/size"

@@ -12,7 +12,6 @@ export default collect(async (nextProps) => {
   for(let k in nextProps.data.components) {
     nextProps.data.components[k.toLocaleLowerCase()] = nextProps.data.components[k]
   }
-  console.log(nextProps,'nextProps');
   const pageData = isChangelog(pathname) ?
     nextProps.data.changelog.CHANGELOG :
     nextProps.utils.get(nextProps.data, pageDataPath);

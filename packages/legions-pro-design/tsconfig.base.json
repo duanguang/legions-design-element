@@ -19,6 +19,10 @@
         "esnext",
         "ES2015.Promise"
       ],
+      "paths": {
+        "dexie": ["src/components/interface/dexie"],
+        // "@/*": ["src/*"]
+      },
       "allowJs": true,
       "isolatedModules": false,
       "jsx": "react",

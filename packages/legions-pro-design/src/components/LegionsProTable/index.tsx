@@ -17,9 +17,8 @@ import {
     SelectionDecorator,
     PaginationProps
 } from '../interface/antd';
-import { ITableColumnConfig,IExportCsv, IProTableProps } from './interface';
+import { ITableColumnConfig,IExportCsv, IProTableProps, ICustomColumnsConfig } from './interface';
 import { ISchedule } from '../store/interface';
-import { IQuery} from '../LegionsProQueryConditions/interface';
 import moment from 'moment';
 import LegionsProTableCustomColumns from '../LegionsProTableCustomColumns';
 import LegionsProLineOverflow from '../LegionsProLineOverflow';
@@ -34,6 +33,7 @@ import { legionsPlugins,LoggerManager } from 'legions-lunar/legion.plugin.sdk';
 import { cloneDeep } from 'lodash';
 import { InstanceProTable } from './interface';
 import { ProTableBaseClass } from './ProTableBaseClass';
+import invariant from 'invariant';
 const serialize = require('serialize-javascript');
 const baseCls = `legions-pro-table`
 
@@ -41,28 +41,6 @@ const baseCls = `legions-pro-table`
 
 interface IState {
 
-    /**
-         * 指定选中项的 key 数组
-         *
-         * @type {string[]}
-         * @memberof IState
-         */
-    selectedRowKeys: string[],
-    taskName?: string
-}
-
-/* class Calculate{
-     @observable  test=1
-
-     @observable.ref userlist =[]
-     @observable title={a:1}
-    @computed
-    get usersCount() {
-        return this.userlist.length
-    }
-} */
-class ViewUI {
-    @observable taskName = ''
 }
 const errorMessage = {
     uniqueKey: 'Each record in table should have a unique `uniqueKey` prop,' + 'or set `uniqueKey` to an unique primary key.',
@@ -75,7 +53,7 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
     timeId = new Date().getTime()
     uid = ''
     /**
-     * uid 的值绝对唯一，且每次初始生成表单都是相同值
+     * uid 的值绝对唯一，且每次初始生成table都是相同值
      *
      * @memberof HLForm
      */
@@ -89,7 +67,6 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
     viewModel: IViewModelProTableStore = null;
     tableThead = `table-thead${this.uid}`;
     clientHeight = document.body.clientHeight;
-    viewUI = observableViewModel<ViewUI>(new ViewUI());
     modalRef: InstanceLegionsProModal = null;
     customColumnsModalRef: InstanceLegionsProModal = null;
     selections: SelectionDecorator[] = [];
@@ -103,17 +80,17 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
             runInAction(() => {
                 const data = this.props.autoQuery.transform(this.getLocalViewStore.obState);
                 if (data) {
-                    this.props.store.HlTableContainer.get(uid).renderData = data.data.slice();
+                    this.props.store.HlTableContainer.get(uid)._renderData = data.data.slice();
                     this.props.store.HlTableContainer.get(uid).setTotal(data.total)
                     /* this.forceUpdate&&this.forceUpdate() */
                 }
                 this.getLocalViewStore.loading = false;
             })
-            this.consoleLog('hlTable-watchData',{ uid });
+            this.consoleLog('watchData',{ uid });
             this.logger('hlTable-watchData',{
                 uid,apiResult: toJS(this.getLocalViewStore.obState),
                 apiParams: this.props.autoQuery.params(this.getViewStore.pageIndex,this.getViewStore.pageSize),
-            },
+                },
             );
         }
     }
@@ -122,55 +99,28 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
     resize = debounce(() => {
         this.viewModel.bodyContainerHeight = document.body.clientHeight
     },500)
-    /* lodaMore = debounce(() => {
-        const end = this.getViewStore.flag + 100;
-        const data = this.props.data.slice(this.getViewStore.flag,end);
-        if (data.length) {
-            data.map((item) => {
-                const index = this.getViewStore.renderData.findIndex((entity) => entity[this.props.uniqueKey] === item[this.props.uniqueKey])
-                if (index < 0) {
-                    this.getViewStore.renderData.push(item);
-                }
-            })
-            this.getViewStore.renderData = [... this.getViewStore.renderData]
-            this.getViewStore.flag = end;
-        }
-    },500) */
-    /* viewTodo=observableViewModel<Calculate>(new Calculate()) */
-    /* lodaMore = debounce((mode: 'next' | 'pre') => {
-        const totalPage = parseInt(((this.props.total + this.viewModel.pageSize - 1) / this.viewModel.pageSize).toString())
-        if (mode === 'next') {
-            if (this.viewModel.pageIndex < totalPage) {
-                this.viewModel.pageIndex = this.viewModel.pageIndex + 1;
-                this.props.onPagingQuery && this.props.onPagingQuery(this.viewModel.pageIndex,this.viewModel.pageSize,false);
-            }
-        }
-        if (mode === 'pre') {
-            if (this.viewModel.pageIndex > 1 && this.viewModel.pageIndex <= totalPage) {
-                this.viewModel.pageIndex = this.viewModel.pageIndex - 1;
-                this.props.onPagingQuery && this.props.onPagingQuery(this.viewModel.pageIndex,this.viewModel.pageSize,false);
-            }
-        }
-
-    },500) */
     static defaultProps = {
         rowSelectionClickType: 'radio',
         isOpenRowSelection: true,
         type: 'checkbox',
-        data: [],
+        dataSource: [],
         total: 0,
         loading: false,
         displayType: 'smallData',
         isOpenCustomColumns: true,
         pageSizeOptions: ['5','10','20','40','60','80','100','200','500'],
     }
-    /** 开启自定义列，同步数据到服务端所需要的查询和保存接口地址信息 */
-    static customColumnsConfig: {
-        /** 编辑自定义信息同步到服务端接口地址 */
-        editApi: string;
-        /** 从服务端查询自定义列信息接口地址 */
-        queryApi: string;
-    } = {
+    /** 开启自定义列数据同步接口信息-全局配置(当全局和局部存在冲突时，优先局部配置数据)
+     * 
+     * 同步数据到服务端所需要的查询和保存接口地址信息 */
+    static customColumnsConfig: ICustomColumnsConfig = {
+        editApi: '',
+        queryApi:'',
+    }
+    /** 开启自定义列数据同步接口信息-局部配置(当全局和局部存在冲突时，优先局部配置数据)
+     * 
+     * 同步数据到服务端所需要的查询和保存接口地址信息 */
+    customColumnsConfig: ICustomColumnsConfig = {
         editApi: '',
         queryApi:'',
     }
@@ -189,20 +139,18 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
     static ProTableBaseClass = ProTableBaseClass;
     constructor(props) {
         super(props)
-        this.state = {
-            selectedRowKeys: [],
-            taskName: '',
-        };
-        this.uid = `table${this.props.store.HlTableContainer.size}${shortHash(`${this.timeId}${this.props.store.HlTableContainer.size}`)}`
+        this.uid = this.uuid;
         if (this.props.store.HlTableContainer.has(this.freezeuid)) {
             this.timeId = new Date().getTime()
-            this.uid = `table${this.props.store.HlTableContainer.size}${shortHash(`${this.timeId}${this.props.store.HlTableContainer.size}`)}`
+            this.uid = this.uuid;
         }
         this.traceId = this.uid;
         this.freezeuid = this.uid;
-        this.tableThead = `table-thead${this.uid}`
-        if (this.props['uniqueUid']) {
-            this.decryptionfreezeuid = `${this.props['uniqueUid']}`
+        this.tableThead = `table-thead${this.uid}`;
+        const keys= 'uniqueUid'
+        invariant(this.props[keys],`[legionsProTable]:props.${keys} cannot be empty`);
+        if (this.props[keys]) {
+            this.decryptionfreezeuid = `${this.props[keys]}`
             this.freezeuid = shortHash(this.decryptionfreezeuid)
             this.props.store.add(this.freezeuid,this.props.tableModulesName,this.uid)
             if (!this.props.store.HlTableLocalStateContainer.has(this.freezeuid)) {
@@ -218,7 +166,14 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
         if (!this.props.store.HlTableContainer.has(this.freezeuid)) {
             this.props.store.add(this.freezeuid,this.props.tableModulesName,this.uid)
         }
-        this.consoleLog('hlTable-constructor');
+        this.initPagination();
+        this.initProps();
+        this.onReady();
+        this.inintSelectedRows()
+        this.consoleLog('constructor');
+    }
+    get uuid() {
+        return `table${this.props.store.HlTableContainer.size}${shortHash(`${this.timeId}${this.props.store.HlTableContainer.size}`)}`
     }
     get getViewStore() {
         return this.props.store.HlTableContainer.get(this.freezeuid)
@@ -226,7 +181,7 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
     get getLocalViewStore() {
         return this.props.store.HlTableLocalStateContainer.get(this.freezeuid)
     }
-    consoleLog(type: Parameters<typeof LoggerManager['report']>[0]['type'],logObj?: Object) {
+    consoleLog(type: string,logObj?: Object) {
         const obj = logObj || {}
         const logConent = {
             storeView: { ...this.getViewStore },
@@ -236,7 +191,8 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
             props: toJS(this.props),
         }
         LoggerManager.consoleLog({
-            type,
+            //@ts-ignore
+            type:`LegionsProTable-${type}`,
             logConent,
             methodsName: 'onHLTableCycle',
         })
@@ -246,7 +202,7 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
         if (typeof this.props.onLogRecord === 'function') {
             const obj = logObj || {}
             const viewStoreKeys = ['calculateBody','bodyContainerHeight',
-                'bodyExternalHeight','computedRenderColumns','_tableContainerWidth','renderData','tableBodyDomClientHeight','tableXAutoWidth']
+                'bodyExternalHeight','computedRenderColumns','_tableContainerWidth','_renderData','tableBodyDomClientHeight','tableXAutoWidth']
             const viewStore = {}
             viewStoreKeys.map((item) => {
                 if (isObservable(this.getViewStore[item])) {
@@ -259,9 +215,9 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
             const logConent = {
                 ...viewStore,
                 ...obj,
-                /* props: cloneDeep(toJS(props)), */
             }
             LoggerManager.report({
+                //@ts-ignore
                 type,
                 content: serialize(logConent,{ ignoreFunction: false }),
                 traceId: this.traceId,
@@ -280,16 +236,11 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
             } else {
                 this.getViewStore.pageIndex = 1;
             }
-            this.setState({
-                selectedRowKeys: [],/**  切换页大小 初始化行选择数据*/
-            },() => {
-                this.getViewStore.selectedRows = [];
-                this.getLocalViewStore.dispatchRequest(this.props.autoQuery,Object.assign({
-                    pageIndex: this.getViewStore.pageIndex,
-                    pageSize: this.getViewStore.pageSize,
-                },options))
-            })
-
+            this.getViewStore.selectedRowKeys = [];
+            this.getLocalViewStore.dispatchRequest(this.props.autoQuery,Object.assign({
+                pageIndex: this.getViewStore.pageIndex,
+                pageSize: this.getViewStore.pageSize,
+            },options))
         }
     }
     /**
@@ -313,51 +264,18 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
             columns = this.viewModel.computedRenderColumns;
             /* columns = this.viewModel.computedRenderColumns; */
             if (this.props.displayType === 'bigData') {
-                datas = this.props.data
+                datas = this.props.dataSource
             } else {
-                datas = this.viewModel.renderData.map((item) => {
+                datas = this.viewModel._renderData.map((item) => {
                     return item
                 });
             }
         }
         let newColumns = columns.filter((item) => { return item.isExport !== false });
-        /* exportCsv({
-            ...prams,
-            filename: prams.filename,
-            columns: newColumns,
-            data: datas,
-        }) */
-        /* const newArr = [];
-        datas.map((item) => {
-            let dataItem = {}
-            for(let key in item){
-                const newItem = newColumns.filter((entity) => entity['dataIndex'] === key)
-                if (newItem&&newItem.length) {
-                    dataItem[newItem[0]['title']] = item[key]
-                }
-            }
-            if (dataItem) {
-              newArr.push(dataItem)
-            }
-        }) */
         legionsThirdpartyPlugin.plugins.excel.exportJsonToExcel({ data: datas,columns: newColumns,filename: prams.filename,autoWidth: true })
-
-        // @ts-ignore
-        // excel.export_json_to_excel({data:newArr,key:newColumns.map((item)=>item['title']),filename:prams.filename,autoWidth:true})
     }
     //@ts-ignore
     tranMapColumns(columns: (TableColumnConfig<{}> & ITableColumnConfig)[] = this.props.columns) {
-        /* return columns.map((item) => {
-            let newItem = { key: item.dataIndex, ...item };
-            if (!item.render) {
-                newItem = {
-                    ...newItem, render: (text, record) => {
-                        return <HlLineOverflow width={item.width} text={record[item.dataIndex]}></HlLineOverflow>
-                    }
-                }
-            }
-            return newItem;
-        }) */
         return columns.map((item) => {
             if (!item.render && item.tooltip) {
                 let newItem = { key: item.dataIndex,...item };
@@ -379,44 +297,58 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
             ele.firstElementChild.insertBefore(div,ele.firstElementChild.firstElementChild)
         }
     }
+    inintSelectedRows(selectedRows:string[]|number[]=this.props.selectedRowKeys) {
+        if (Array.isArray(selectedRows) && selectedRows.length) {
+            const store = this.getViewStore;
+            store.selectedRowKeys = [];
+            selectedRows.forEach((item:string|number) => {
+                if (typeof item === 'string' || typeof item === 'number') {
+                    //@ts-ignore
+                    store.selectedRowKeys.push(item);
+                }
+            })
+        }
+    }
     initPagination() {
         const paginationProps: PaginationProps | boolean = this.props.pagination
-        const store = this.props.store.HlTableContainer.get(this.freezeuid)
+        const store = this.getViewStore
+        store.pageIndex = 1
+        store.pageSize = this.props.pageSize || store.pageSize
         if ((typeof paginationProps === 'boolean')) {
-            store.pagination = paginationProps
+            store._pagination = paginationProps
         }
         else if (this.props.autoQuery) {
-            store.pagination = true
+            store._pagination = true
         }
         else if (this.props.onPagingQuery && paginationProps === void 0) {
-            store.pagination = true;
+            store._pagination = true;
         }
         else if (!this.props.onPagingQuery && paginationProps === void 0) {
-            store.pagination = false;
+            store._pagination = false;
         }
 
     }
-    componentWillMount() {
-        const store = this.props.store.HlTableContainer.get(this.freezeuid)
-        store.pageIndex = 1
-        store.pageSize = this.props.pageSize || store.pageSize
-        this.initPagination()
+    private initProps() {
+        const store = this.getViewStore
         if ((typeof this.props.isOpenRowChange === 'boolean' && !this.props.isOpenRowChange)) {
-            store.isOpenRowChange = false
-        }
-        if (!this.props.onRowChange && this.props.isOpenRowChange === void 0) { /** 历史问题， 当行选择函数没有传递时，表示关闭行选择 */
-            store.isOpenRowChange = false;
-            console.log(store.isOpenRowChange);
+            store._isOpenRowChange = false
         }
         if ((typeof this.props.isOpenRowSelection === 'boolean' && !this.props.isOpenRowSelection)) {
-            store.isOpenRowSelection = false
-        }
-        if (!this.props.onRowChange && this.props.isOpenRowSelection === void 0) {
-            store.isOpenRowSelection = false;
+            store._isOpenRowSelection = false
         }
         this.viewModel = store;
-        this.viewModel.scroll = this.props.scroll;
+        store._uniqueKey = this.props.uniqueKey;
         this.viewModel.bodyStyle = Object.assign({},this.props.bodyStyle)
+        const customColumnsConfig = this.props.customColumnsConfig;
+
+        if (customColumnsConfig && customColumnsConfig.editApi && customColumnsConfig.queryApi) {
+            this.customColumnsConfig = customColumnsConfig;
+        } else if (LegionsProTable.customColumnsConfig.editApi && LegionsProTable.customColumnsConfig.queryApi) {
+            this.customColumnsConfig = LegionsProTable.customColumnsConfig;
+        }
+    }
+    private onReady() {
+        const store = this.getViewStore
         this.props.onReady && this.props.onReady({
             store: this.props.store,
             uid: this.freezeuid,
@@ -448,10 +380,13 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
                 }
             }
         })
+    }
+    componentWillMount() {
+        
         if (this.props.autoQuery) {
             this.subscription = this.props.store.schedule([this.log.bind(this,this.freezeuid)])
         }
-        this.consoleLog('hlTable-componentWillMount')
+        this.consoleLog('componentWillMount')
         /* this.subscription.unsubscribe() */
     }
     destroyPortal() {
@@ -459,6 +394,39 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
         if (this.node) {
             unmountComponentAtNode(this.node);
         }
+    }
+    private async initCustomColumns() {
+        if (this.props.isOpenCustomColumns) {
+            this.selections.push({
+                key: 'custom-columns',
+                text: this.renderButtonCusttomColumns(),
+                onSelect: (changeableRowKeys) => {
+                },
+            })
+            this.viewModel._setLocalStorageShowColumnsKeys(this.props.tableModulesName,this.freezeuid);
+            if (this.isSettingColumnApiConfig()) {
+                await this.viewModel._queryTableColumns(this.viewModel.computedStorageShowColumnsKeys,this.customColumnsConfig.queryApi);
+                if (this.viewModel._obTableListCustom) {
+                    if (!this.viewModel._obTableListCustom.result || (this.viewModel._obTableListCustom.result && this.viewModel._obTableListCustom.result.customColumns.length === 0)) {
+                        this.getViewStore._filterColumns();
+                        const body = this.viewModel.computedShowColumns.map((item) => {
+                            return { dataIndex: item.dataIndex,title: item.title }
+                        })
+                        if (body.length) {
+                            await this.viewModel._editTableColumns(this.viewModel.computedStorageShowColumnsKeys,body,this.customColumnsConfig.editApi)
+                        }
+                    }
+                }
+            } 
+            this.getViewStore._filterColumns();
+        }
+    }
+    /** 是否设置自定义列服务端同步接口配置信息 */
+    private isSettingColumnApiConfig() {
+        if (this.customColumnsConfig.editApi && this.customColumnsConfig.queryApi) {
+            return true;
+        }
+        return false;
     }
     componentWillUnmount() {
         /* this.props.store.delete(this.freezeuid); */
@@ -468,7 +436,7 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
         window.removeEventListener && window.removeEventListener('resize',this.resize.bind(this))
         this.subscription && this.subscription.unsubscribe()
         this.destroyPortal()
-        this.consoleLog('hlTable-componentWillUnmount')
+        this.consoleLog('componentWillUnmount')
     }
     async componentDidMount() {
         const table = document.querySelector(`.${this.uid}`);
@@ -481,70 +449,25 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
             this.setTabletBody()
         }
         this.getViewStore.columns = this.tranMapColumns();
-        if (this.props.tableModulesName && this.props.isOpenCustomColumns) {
-            if (LegionsProTable.customColumnsConfig.editApi && LegionsProTable.customColumnsConfig.queryApi) {
-                this.viewModel.setLocalStorageShowColumnsKeys(this.props.tableModulesName)
-                await this.viewModel.queryTableColumns(this.viewModel.computedStorageShowColumnsKeys,LegionsProTable.customColumnsConfig.queryApi)
-                if (!this.viewModel.obTableListCustom.result || (this.viewModel.obTableListCustom.result && this.viewModel.obTableListCustom.result.customColumns.length === 0)) {
-                    this.getViewStore.filterColumns();
-                    const body = this.viewModel.computedShowColumns.map((item) => {
-                        return { dataIndex: item.dataIndex,title: item.title }
-                    })
-                    if (body.length) {
-                        await this.viewModel.editTableColumns(this.viewModel.computedStorageShowColumnsKeys,body,LegionsProTable.customColumnsConfig.editApi)
-                    }
-                }
-                if (this.props.isOpenCustomColumns) {
-                    this.selections.push({
-                        key: 'custom-columns',
-                        text: this.renderButtonCusttomColumns(),
-                        onSelect: (changeableRowKeys) => {
-                        },
-                    })
-                }
-                this.getViewStore.filterColumns();
-            } else {
-                console.error('请配置自定义列数据同步及查询接口信息')
+        await this.initCustomColumns();
+        if (this.props.visibleExportLoacl === void 0 || this.props.visibleExportLoacl) {
+            const _index = this.selections.findIndex((item) => item.key === 'export-excel');
+            if (_index < 0) {
+                this.selections.push({
+                    key: 'export-excel',
+                    text: <Button size="small" >导出当页<Icon type="download" /></Button>,
+                    onSelect: (changeableRowKeys) => {
+                        this.exportCsv({ filename: `${moment().format('YYYYMMDDHHmmss')}-${this.viewModel.pageIndex}` })
+                    },
+                })
             }
-            
-        }
-        if (this.props.visibleExportLoacl) {
-            this.selections.push({
-                key: 'export-excel',
-                text: <Button size="small" >导出当页<Icon type="download" /></Button>,
-                onSelect: (changeableRowKeys) => {
-                    this.exportCsv({ filename: `${moment().format('YYYYMMDDHHmmss')}-${this.viewModel.pageIndex}` })
-                },
-            })
         }
         if (this.props.onExportAll) { // 兼容历史问题，之前是onExportAll 传入此方法开启导出当页和全部，现在需要导出当页分开控制
-            if (this.props.visibleExportLoacl === void 0 || this.props.visibleExportLoacl) {
-                const _index = this.selections.findIndex((item) => item.key === 'export-excel');
-                if (_index < 0) {
-                    this.selections.push({
-                        key: 'export-excel',
-                        text: <Button size="small" >导出当页<Icon type="download" /></Button>,
-                        onSelect: (changeableRowKeys) => {
-                            this.exportCsv({ filename: `${moment().format('YYYYMMDDHHmmss')}-${this.viewModel.pageIndex}` })
-                        },
-                    })
-                }
-            }
             this.selections.push({
                 key: 'export-all-excel',
                 text: <Button size="small" >导出全部<Icon type="download" /></Button>,
                 onSelect: (changeableRowKeys) => {
-                    /* OpenConfirm({
-                        title:'导出数据',
-                        content:(((taskName:string) => <Input value={taskName} onChange={(value) => {
-                             this.setState({taskName:value.target.value})
-                             
-                        }}></Input>)(this.state.taskName))
-                    }) */
-                    this.modalRef.viewModel.title = '导出数据'
-                    this.modalRef.viewModel.visible = true;
-                    //this.props.onExportAll(this.viewModel.computedStorageShowColumnsKeys);
-
+                    this.props.onExportAll()
                 },
             })
         }
@@ -560,7 +483,7 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
                 const scrollTop = even.target.scrollTop;
                 // @ts-ignore
                 const offsetHeight = even.target.offsetHeight;
-                if (this.props.data.length === this.viewModel.renderData.length&&this.props.displayType==='smallData'&&this.props.onPagingQuery) {
+                if (this.props.data.length === this.viewModel._renderData.length&&this.props.displayType==='smallData'&&this.props.onPagingQuery) {
                     if ((offsetHeight >= (scrollHeight - scrollTop))&&scrollTop) { // 滚动到底部
                        this.lodaMore('next');
                     }
@@ -572,21 +495,18 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
             }) */
         }
         this.setTableContainerWidth();
-        const data = this.props.data;
+        const data = this.props.dataSource;
         if (this.props.autoQuery) {
             // @ts-ignore
             data = this.getLocalViewStore.obData;
         }
         if (data) {
-            /* this.getViewStore.renderData = this.props.data.map((item,index) => {
-                return {...item,uniqueKey:`${this.viewModel.pageIndex}${index+1}`}
-            }) */
             if (this.props.displayType === 'smallData') {
-                /* this.getViewStore.renderData = [...this.props.data] */
-                this.getViewStore.renderData = [...data]
+                /* this.getViewStore._renderData = [...this.props.data] */
+                this.getViewStore._renderData = [...data]
                 this.getViewStore.setTotal(this.props.total || 0)
             }
-            if (this.getViewStore.renderData.length) {
+            if (this.getViewStore._renderData.length) {
                 const UniqueKey = this.isHasUniqueKeyData()
                 const Repeat = this.isChkRepeatUniqueKeyData()
                 warningOnce(UniqueKey,errorMessage.uniqueKey)
@@ -604,7 +524,7 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
             const span = document.createElement('span');
             this.node = span;
             if (thead.querySelector('th')) {
-                const RootContainer = this.getViewStore.isOpenRowSelection && this.props.type === 'checkbox' ? '.ant-table-selection-down' : 'span'
+                const RootContainer = this.getViewStore._isOpenRowSelection && this.props.type === 'checkbox' ? '.ant-table-selection-down' : 'span'
                 const spanth = thead.querySelector('th').querySelector(RootContainer);
                 if (spanth) {
                     spanth.appendChild(this.node)
@@ -612,7 +532,7 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
                 }
             }
         }
-        this.consoleLog('hlTable-componentDidMount');
+        this.consoleLog('componentDidMount');
     }
 
     setTableContainerWidth() {
@@ -640,7 +560,7 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
         const index = this.selections.findIndex((item) => item.key === 'export-excel')
         const menu = (
             <Menu>
-                {(this.props.isOpenCustomColumns && this.props.tableModulesName) && <Menu.Item key="3">{this.renderButtonCusttomColumns()}</Menu.Item>}
+                {(this.props.isOpenCustomColumns) && <Menu.Item key="3">{this.renderButtonCusttomColumns()}</Menu.Item>}
                 {index > -1 && <Menu.Item key="1"><Button size="small" onClick={this.exportCurrPageData}>导出当页<Icon type="download" /></Button></Menu.Item>}
                 {this.props.onExportAll && <Menu.Item key="2"><Button size="small" onClick={this.exportAllData}>导出全部<Icon type="download" /></Button></Menu.Item>}
 
@@ -708,63 +628,43 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
             this.setTabletBody()
         }
         this.node && this.renderPortal();
-        this.consoleLog('hlTable-componentDidUpdate')
+        this.consoleLog('componentDidUpdate')
     }
     //@ts-ignore
     componentWillReceiveProps(nextProps: IProTableProps) {
         if (this.props.selectedRowKeys && this.props.selectedRowKeys !== nextProps.selectedRowKeys) {
             let data = []
             if (this.props.autoQuery && this.props.displayType === 'smallData') {
-                data = (this.getViewStore.renderData && this.getViewStore.renderData.length) ? this.getViewStore.renderData : [];
+                data = (this.getViewStore._renderData && this.getViewStore._renderData.length) ? this.getViewStore._renderData : [];
             }
             else {
-                data = (nextProps.data && nextProps.data.length) ? nextProps.data : []
+                data = (nextProps.dataSource && nextProps.dataSource.length) ? nextProps.dataSource : []
             }
             // @ts-ignore
             let newSelectedRows = data.filter(v => nextProps.selectedRowKeys.includes(v[this.props.uniqueKey]))
             let newSelectedRowKeys = newSelectedRows.map((item) => item[this.props.uniqueKey])
             const selectedRowKeys = [...newSelectedRowKeys]
-            this.setState({ selectedRowKeys })
-        }
-        if (this.props.scroll && !this.deepComparisonObject(this.props.scroll,nextProps.scroll)) {
-            this.viewModel.scroll = nextProps.scroll
+            this.getViewStore.selectedRowKeys = selectedRowKeys;
         }
         if (this.props.bodyStyle && !this.deepComparisonObject(this.props.bodyStyle,nextProps.bodyStyle)) {
             this.viewModel.bodyStyle = nextProps.bodyStyle
         }
-        if (nextProps.data !== this.props.data && nextProps.data && !this.props.autoQuery) {
-            /* this.getViewStore.renderData = nextProps.data.map((item,index) => {
-                return {...item,uniqueKey:`${this.viewModel.pageIndex}${index+1}`}
-            }) */
+        if (nextProps.dataSource !== this.props.dataSource && nextProps.dataSource && !this.props.autoQuery) {
             /**  主要解决当渲染数据和传入数据不一致时，无需通过传入数据值来刷新渲染数据 */
             if (this.props.displayType === 'smallData') {
-                this.getViewStore.renderData = [...this.props.autoQuery ? [] : nextProps.data]
+                this.getViewStore._renderData = [...this.props.autoQuery ? [] : nextProps.dataSource]
             }
-            if (this.getViewStore.renderData.length) {
+            if (this.getViewStore._renderData.length) {
                 const UniqueKey = this.isHasUniqueKeyData()
                 const Repeat = this.isChkRepeatUniqueKeyData()
                 warningOnce(UniqueKey,errorMessage.uniqueKey)
                 warningOnce(!Repeat,errorMessage.Repeat)
             }
         }
-        /* if (nextProps.total !== this.props.total&&!this.props.autoQuery) {
-           this.getViewStore.setTotal(nextProps.total)
-        } */
         if (this.props.columns !== nextProps.columns) {
             this.getViewStore.columns = this.tranMapColumns(nextProps.columns);
         }
-        this.consoleLog('hlTable-componentWillReceiveProps');
-        /* if (this.props.total !== nextProps.total) {
-            console.log(this.props.total, nextProps.total)
-            const totalPage = parseInt(((nextProps.total + this.viewModel.pageSize - 1) / this.viewModel.pageSize).toString());
-            if (this.viewModel.pageIndex > totalPage) {
-                this.viewModel.pageIndex = totalPage
-            }
-        } */
-        /* if(this.props.pageIndex!==nextProps.pageIndex){ 暂时取消
-            this.setState({pageIndex:nextProps.pageIndex})
-        } */
-
+        this.consoleLog('componentWillReceiveProps');
     }
 
     /**
@@ -786,7 +686,7 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
      * @memberof HLTable
      */
     isHasUniqueKeyData(): boolean {
-        const result = this.viewModel.renderData.every((item) => this.props.uniqueKey in item);
+        const result = this.viewModel._renderData.every((item) => this.props.uniqueKey in item);
         return result
     }
     /**
@@ -798,36 +698,34 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
     isChkRepeatUniqueKeyData(): boolean {
         let isSame = false;
         let obj = {};
-        for (var i = 0; i < this.viewModel.renderData.length; i++) {
-            if (this.viewModel.renderData[i][this.props.uniqueKey] in obj) {
+        for (var i = 0; i < this.viewModel._renderData.length; i++) {
+            if (this.viewModel._renderData[i][this.props.uniqueKey] in obj) {
                 isSame = true;
                 break;
             } else {
-                obj[this.viewModel.renderData[i][this.props.uniqueKey]] = this.viewModel.renderData[i][this.props.uniqueKey];
+                obj[this.viewModel._renderData[i][this.props.uniqueKey]] = this.viewModel._renderData[i][this.props.uniqueKey];
             }
         }
         return isSame
     }
     onSelectChange = (selectedRowKeys,selectedRows) => {
-        let dataleng = this.props.data ? this.props.data.length : 0;
+        let dataleng = this.props.dataSource ? this.props.dataSource.length : 0;
         if (this.props.autoQuery) {
-            dataleng = this.getViewStore.renderData.length
+            dataleng = this.getViewStore._renderData.length
         }
-        if (this.getViewStore.renderData.length === dataleng) {
-            this.setState({ selectedRowKeys },() => {
-                this.props.store.get(this.freezeuid).selectedRows = selectedRows
-                this.props.onRowChange && this.props.onRowChange(selectedRows)
-            });
+        if (this.getViewStore._renderData.length === dataleng) {
+            this.getViewStore.selectedRowKeys = selectedRowKeys;
+            this.props.onRowChange && this.props.onRowChange(selectedRows)
         }
     }
     onRowClick(record,index,event) {
-        if (this.getViewStore.isOpenRowChange) {
+        if (this.getViewStore._isOpenRowChange) {
             this.selectRow(record)
             this.props.onRowClick && this.props.onRowClick(record,index,event)
         }
     }
     onRowClassName(record,index): string {
-        const RowIndex = this.state.selectedRowKeys.findIndex((item) => item === record[this.props.uniqueKey]);
+        const RowIndex = this.getViewStore.selectedRowKeys.findIndex((item) => item === record[this.props.uniqueKey]);
         const getCheckboxPropsItem = this.getCheckboxPropsItem(record)
         if (RowIndex > -1) {
             return 'row-color'
@@ -847,8 +745,8 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
         return null
     }
     selectedRowsCheck(record) {
-        let selectedRows = [...this.props.store.get(this.freezeuid).selectedRows];
-        let selectedRowKeys = [...this.state.selectedRowKeys]
+        let selectedRows = [...this.getViewStore.computedSelectedRows];
+        let selectedRowKeys = [...this.getViewStore.selectedRowKeys]
         const selectedRow = selectedRows.find((item) => item[this.props.uniqueKey] === record[this.props.uniqueKey])
         if (selectedRowKeys.indexOf(record[this.props.uniqueKey]) >= 0) {
             selectedRowKeys.splice(selectedRowKeys.indexOf(record[this.props.uniqueKey]),1);
@@ -867,8 +765,7 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
             }
             selectedRows.push(record);
         }
-        this.setState({ selectedRowKeys });
-        this.props.store.get(this.freezeuid).selectedRows = selectedRows
+        this.getViewStore.selectedRowKeys = selectedRowKeys as string[]|number[];
         this.props.onRowChange && this.props.onRowChange(selectedRows)
     }
     selectRow = record => {
@@ -897,8 +794,8 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
                     初次打开页面不加载数据，请组合条件进行搜索</div>
                 }
             }
-            else if (this.getLocalViewStore && this.getLocalViewStore.obState.isResolved && this.getViewStore.renderData.length === 0) {
-                if (!this.getLocalViewStore.obState.value.success && this.getLocalViewStore.obState.value.message) {
+            else if (this.getLocalViewStore && this.getLocalViewStore.obState.isResolved && this.getViewStore._renderData.length === 0) {
+                if (this.getLocalViewStore.obState.value&&!this.getLocalViewStore.obState.value.success && this.getLocalViewStore.obState.value.message) {
                     return {
                         emptyText: <div className="no-data-tip"><Icon style={{ color: '#95cef9',fontSize: '20px',paddingRight: '5px',verticalAlign: 'middle' }} type="search" />
                             {this.getLocalViewStore.obState.value.message}</div>
@@ -918,57 +815,47 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
         }
     }
     render() {
-        const { selectedRowKeys } = this.state
-        const store = this.props.store.get(this.freezeuid)
-        const alreadyRowsLen = store.selectedRows.length
-        const { onRowChange } = this.props
+        const store = this.getViewStore;
+        const { selectedRowKeys } = store;
+        const alreadyRowsLen = store.computedSelectedRows.length
         let locale = null
         if (this.props.autoQuery) {
             locale = {
                 locale: this.renderlocale(),
             }
         }
-        this.consoleLog('hlTable-render');
-        //@ts-ignore
-        const rowSelection: TableRowSelection<{}> = (this.getViewStore.isOpenRowSelection) ? {
+        this.consoleLog('render');
+        const rowSelection: TableRowSelection<{}> = (this.getViewStore._isOpenRowSelection) ? {
             ...this.props.rowSelection,
-            selectedRowKeys,
+            selectedRowKeys:[...selectedRowKeys] as string[]|number[],
             hideDefaultSelections: true,
             type: this.props.type,
             selections: this.selections as SelectionDecorator[],
             onChange: this.onSelectChange.bind(this),
             onSelectAll: (selected,selectedRows,changeRows) => {
-                if (this.getViewStore.renderData.length <= this.props.data.length) { // 主要用于大数据table 性能问题，每次只加载部分数据，这时全选时自动选择全部数据
+                if (this.getViewStore._renderData.length <= this.props.dataSource.length) { // 主要用于大数据table 性能问题，每次只加载部分数据，这时全选时自动选择全部数据
                     if (selected) {
-                        const newData = this.props.data.filter((item) => {
+                        const newData = this.props.dataSource.filter((item) => {
                             const getCheckboxPropsItem = this.getCheckboxPropsItem(item)
                             return ((!getCheckboxPropsItem || (getCheckboxPropsItem && !getCheckboxPropsItem['disabled'])))
                         })
                         const selectedRowKey = newData.map((item) => item[this.props.uniqueKey])
-                        this.setState({ selectedRowKeys: selectedRowKey },() => {
-                            const data = [...newData]
-                            this.getViewStore.selectedRows = data
-                            this.props.onRowChange && this.props.onRowChange(this.getViewStore.selectedRows)
-                        });
+                        store.selectedRowKeys = selectedRowKey;
+                        this.props.onRowChange && this.props.onRowChange(this.getViewStore.computedSelectedRows)
                     }
                     else {
-                        this.setState({ selectedRowKeys: [] },() => {
-                            this.getViewStore.selectedRows = []
-                            this.props.onRowChange && this.props.onRowChange(this.getViewStore.selectedRows)
-                        });
+                        store.selectedRowKeys = [];
+                        this.props.onRowChange && this.props.onRowChange(this.getViewStore.computedSelectedRows)
                     }
                 }
             },
             onSelectInvert: () => {
-                this.setState({ selectedRowKeys: [] },() => {
-                    this.getViewStore.selectedRows = []
-                })
+                store.selectedRowKeys = [];
             },
         }:null;
         const paginationProps: PaginationProps | boolean = this.props.pagination
         const pagination: PaginationProps | boolean = {
             pageSizeOptions: this.props.pageSizeOptions,
-            /* total: this.props.total, */
             total: this.props.autoQuery ? this.getViewStore.computedTotal : this.props.total,
             current: store.pageIndex,
             showQuickJumper: true,
@@ -976,12 +863,9 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
             showSizeChanger: true,
             size: (paginationProps && typeof paginationProps === 'object') ? paginationProps.size : '',
             onChange: (pageIndex,pageSize) => {
-                this.setState({
-                    selectedRowKeys: [],/**  切换页码 初始化行选择数据*/
-                })
+                store.selectedRowKeys = [];/**  切换页码 初始化行选择数据*/
                 this.props.store.get(this.freezeuid).pageIndex = pageIndex
                 this.props.store.get(this.freezeuid).pageSize = pageSize
-                this.props.store.get(this.freezeuid).selectedRows = []
                 this.props.onPagingQuery && this.props.onPagingQuery(pageIndex,pageSize,false)
                 if (this.props.autoQuery && this.getLocalViewStore) {
                     this.getLocalViewStore.dispatchRequest(this.props.autoQuery,{
@@ -991,12 +875,9 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
                 }
             },
             onShowSizeChange: (current: number,pageSize) => {
-                this.setState({
-                    selectedRowKeys: [],/**  切换页大小 初始化行选择数据*/
-                })
+                store.selectedRowKeys = [];/**  切换页大小 初始化行选择数据*/
                 this.props.store.get(this.freezeuid).pageIndex = current
                 this.props.store.get(this.freezeuid).pageSize = pageSize
-                this.props.store.get(this.freezeuid).selectedRows = []
                 this.props.onPagingQuery && this.props.onPagingQuery(current,pageSize,true)
                 if (this.props.autoQuery && this.getLocalViewStore) {
                     this.getLocalViewStore.dispatchRequest(this.props.autoQuery,{
@@ -1007,9 +888,8 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
             },
             showTotal: total => `${alreadyRowsLen > 0 ? `已选择${alreadyRowsLen}条数据` : ''} 共 ${total} 条数据`
         }
-        /* console.log(this.getViewStore.renderData) */
-        /* const bodyStyle = (this.viewModel.isAdaptiveHeight && this.getViewStore.renderData && this.getViewStore.renderData.length > 0) ? { ...this.viewModel.bodyStyle,...this.viewModel.calculateBody } : this.viewModel.bodyStyle */
-        const bodyStyle = (this.viewModel.isAdaptiveHeight && this.getViewStore.renderData && this.getViewStore.renderData.length > 0) ? { ...this.viewModel.bodyStyle,...this.viewModel.calculateBody } : this.viewModel.bodyStyle
+        /* const bodyStyle = (this.viewModel.isAdaptiveHeight && this.getViewStore._renderData && this.getViewStore._renderData.length > 0) ? { ...this.viewModel.bodyStyle,...this.viewModel.calculateBody } : this.viewModel.bodyStyle */
+        const bodyStyle = (this.viewModel.isAdaptiveHeight && this.getViewStore._renderData && this.getViewStore._renderData.length > 0) ? { ...this.viewModel.bodyStyle,...this.viewModel.calculateBody } : this.viewModel.bodyStyle
         return <Row className={baseCls}>
             <Col>
                 <div className={`containers ${this.uid} ${this.viewModel.isAdaptiveHeight ? 'adaptiveHeight' : ''}`}>
@@ -1017,47 +897,35 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
                         /* size="small" */
                         {...locale}
                         {...this.props}
-                        scroll={this.viewModel.scroll}
+                        scroll={{...{
+                            x: store.tableXAutoWidth,
+                            y: 300,
+                        },...this.props.scroll}}
                         columns={this.viewModel.computedRenderColumns}
                         bordered
                         bodyStyle={bodyStyle}
                         rowClassName={this.onRowClassName.bind(this)}
-                        pagination={(this.getViewStore.pagination) ? pagination : false}
+                        pagination={(this.getViewStore._pagination) ? pagination : false}
                         loading={{ tip: 'loading',spinning: this.props.autoQuery ? this.getLocalViewStore.loading : this.props.loading }}
                         rowKey={this.props.uniqueKey}
                         // locale={{emptyText:<span>2222</span>}}
                         onRowClick={this.onRowClick.bind(this)}
                         rowSelection={rowSelection}
-                        dataSource={[...this.getViewStore.renderData]}
+                        dataSource={[...this.getViewStore._renderData]}
                         onChange={(pagination,filters,sorter: { column: { sorter: boolean | ((a: any,b: any) => number) }; columnKey: string; field: string; order: "ascend" | "descend" }) => {
                             if (sorter.column && sorter.column.sorter && typeof sorter.column.sorter === 'boolean' && this.props.displayType === 'smallData') {
                                 const sorterFn = this.getSorterFn(sorter.order,(a,b) => {
                                     return compare(a[sorter.columnKey],b[sorter.columnKey]);
                                 });
-                                const data = this.viewModel.renderData.map((item) => { return item });
-                                this.viewModel.renderData = [...data.sort(sorterFn)]
+                                const data = this.viewModel._renderData.map((item) => { return item });
+                                this.viewModel._renderData = [...data.sort(sorterFn)]
                             }
                             this.props.onChange && this.props.onChange(pagination,filters,sorter)
                         }}
                     />
                 </div>
             </Col>
-            <LegionsProModal
-                onOk={() => {
-                    if (!this.viewUI.taskName) {
-                        message.warning('请输入任务名称')
-                        return;
-                    }
-                    this.props.onExportAll && this.props.onExportAll(this.props.tableModulesName,this.viewUI.taskName)
-                    this.modalRef.viewModel.visible = false;
-                }}
-                onReady={(value) => {
-                    this.modalRef = value;
-                }}>
-                <Input value={this.viewUI.taskName} placeholder="请输入任务名称" onChange={(value) => {
-                    this.viewUI.taskName = value.target.value
-                }}></Input>
-            </LegionsProModal>
+           
             {this.props.isOpenCustomColumns && <LegionsProTableCustomColumns
                 customColumnsConfig={{
                     queryApi: LegionsProTable.customColumnsConfig.queryApi,

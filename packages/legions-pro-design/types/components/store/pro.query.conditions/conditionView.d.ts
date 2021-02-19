@@ -1,6 +1,8 @@
 import { IObservableMap, ISelectAutoQuery, ISelectOptions } from './interface';
 import { IProConditions } from '../../LegionsProConditions/ProConditionsUtils';
 export declare class ConditionView<Query = {}> {
+    constructor(uid?: string);
+    private uid;
     /**
      * 查询条件
      *
@@ -63,7 +65,11 @@ export declare class ConditionView<Query = {}> {
      * @memberof HlQueryConditionView
      */
     _setVmModel(model: Object): void;
-    _initQuery(query: Array<IProConditions['componentModel']>): void;
+    _clearQuery(): void;
+    _firstInitQuery(query: Array<IProConditions['componentModel']>): void;
+    _initQuery(query: Array<IProConditions['componentModel']>, options?: {
+        isCache: boolean;
+    }): void;
     /** 改变搜索条件配置数据 */
     _setQueryState(name: string, callback: (value: IProConditions['componentModel']) => void): void;
     private _getQueryItem;

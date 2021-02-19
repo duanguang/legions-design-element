@@ -192,7 +192,7 @@ export interface IProTableProps<TableRow = {}, Model = {}> extends TableProps<Ta
      * @memberof IHLTableProps
      */
     uniqueKey: string;
-    data: Array<TableRow>;
+    dataSource?: Array<TableRow>;
     /**
      * 分页事件(触发情况1：切换页码；情况2：切换每页条数)
      * 传递此函数则会启动分页
@@ -238,15 +238,20 @@ export interface IProTableProps<TableRow = {}, Model = {}> extends TableProps<Ta
      */
     type?: 'checkbox' | 'radio';
     /**
-     *  组件componentWillMount 执行
+     *  组件constructor 执行
      *
      * @memberof IHLTableProps
      */
     onReady?: (instance: InstanceProTable) => void;
     /**
      * table 模块名称，如果设置此值，请保持绝对唯一
-     * 如果不设置，则系统自动生成，系统生成缺陷，当列配置顺序，值发生变化，之前缓存的信息就会自动失效
+     *
+     * 如果不设置，则默认由系统生成的唯一值加用户id
+     *
+     * 如果不设置，则系统自动生成，系统生成缺陷，当table 组件移动位置，值发生变化，之前缓存的信息就会自动失效
+     *
      * 要求唯一原因，会根据此名称生成hash用作自定义列缓存信息键名
+     *
      * @type {string}
      * @memberof IProps
      */
@@ -270,7 +275,7 @@ export interface IProTableProps<TableRow = {}, Model = {}> extends TableProps<Ta
      *
      * @memberof IHLTableProps
      */
-    onExportAll?: (moduleCode: string, taskName: string) => void;
+    onExportAll?: () => void;
     /**
      * 传入此配置信息将自动托管请求接口
      *
@@ -315,6 +320,10 @@ export interface IProTableProps<TableRow = {}, Model = {}> extends TableProps<Ta
      * @memberof IHLTableProps
      */
     visibleExportLoacl?: boolean;
+    /** 开启自定义列数据同步接口信息-局部配置(当全局和局部存在冲突时，优先局部配置数据)
+       *
+       * 同步数据到服务端所需要的查询和保存接口地址信息 */
+    customColumnsConfig?: ICustomColumnsConfig;
     onLogRecord?: (params: {
         modulesPath?: string;
         type: string;
@@ -324,5 +333,11 @@ export interface IProTableProps<TableRow = {}, Model = {}> extends TableProps<Ta
         traceId: string;
         browserEnvironment: string;
     }) => void;
+}
+export interface ICustomColumnsConfig {
+    /** 编辑自定义信息同步到服务端接口地址 */
+    editApi: string;
+    /** 从服务端查询自定义列信息接口地址 */
+    queryApi: string;
 }
 export {};

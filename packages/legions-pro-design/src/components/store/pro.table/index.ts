@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-26 11:35:17
- * @LastEditTime: 2021-01-13 10:27:04
+ * @LastEditTime: 2021-02-19 16:55:40
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/store/pro.table/index.ts
@@ -71,7 +71,6 @@ export  class ProTableStore extends StoreBase {
     const store = this.HlTableContainer.get(uid);
     store.pageIndex = options.pageIndex || 1;
     store.pageSize = options.pageSize || 20;
-    store.selectedRows = options.selectedRows || [];
     if (options.isAdaptiveHeight !== void 0) {
       store.isAdaptiveHeight = options.isAdaptiveHeight;
     }

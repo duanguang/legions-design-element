@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-07 17:17:41
- * @LastEditTime: 2021-01-14 15:39:46
+ * @LastEditTime: 2021-02-19 18:38:00
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/store/pro.table/interface/index.ts
@@ -71,19 +71,8 @@ export interface ITableAutoQuery<Model = {}> {
    */
   options?: HeadersPrams & { [key: string]: string }&request.HeadersPrams;
 
-  /**
-   * 数据模型配置
-   *
-   * @type {Model}
-   * @memberof IAutoQuery
-   */
-  model: {
-    /** 埋点配置项，暂时不用 */
-    model?: ClassOf<Model>,
-    /** 映射数据至===>result */
-    mappingEntity: (that: PageListEntity<Model>,responseData: any) => void;
-  }|Model;
-
+  /** 映射数据至===>result */
+  mappingEntity: (that: PageListEntity<Model>,responseData: any) => void;
   /**
    *
    * 授权令牌，一般泛指接口权限

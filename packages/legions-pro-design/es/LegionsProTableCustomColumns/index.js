@@ -107,7 +107,7 @@ var LegionsProTableCustomColumns = /** @class */ (function (_super) {
                                     get: function (sortable) {
                                         // const order = localStorage.getItem(sortable.options.group.name);
                                         /* const order = localStorage.getItem(this.viewStore.computedStorageShowColumnsKeys); */
-                                        return _this.viewStore.getLocalStorageShowColumns();
+                                        return _this.viewStore._getLocalStorageShowColumns();
                                     },
                                     /**
                                      * Save the order of elements. Called onEnd (when the item is dropped).
@@ -117,7 +117,7 @@ var LegionsProTableCustomColumns = /** @class */ (function (_super) {
                                         // 从显示列往全部列拖动时触发
                                         /* let order = sortable.toArray(); */
                                         // localStorage.setItem(sortable.options.group.name,order.join('|'));
-                                        _this.viewStore.setLocalStorageShowColumns(_this.props.customColumnsConfig.editApi);
+                                        _this.viewStore._setLocalStorageShowColumns(_this.props.customColumnsConfig.editApi);
                                     }
                                 }
                             }, onChange: function (items) {
@@ -212,12 +212,12 @@ var LegionsProTableCustomColumns = /** @class */ (function (_super) {
                                         }
                                     }
                                     if (_this.viewStore.computedShowColumns.length === items.length) { // 表示在当前区域做排序处理
-                                        _this.viewStore.orderSortRightShowColumns(items);
-                                        _this.viewStore.setLocalStorageShowColumns(_this.props.customColumnsConfig.editApi);
+                                        _this.viewStore._orderSortRightShowColumns(items);
+                                        _this.viewStore._setLocalStorageShowColumns(_this.props.customColumnsConfig.editApi);
                                         /* localStorage.setItem(this.viewStore.computedStorageShowColumnsKeys,JSON.stringify(this.viewStore.computedShowColumns)); */
                                     }
                                     else {
-                                        _this.viewStore.moveRightShowColumns(items);
+                                        _this.viewStore._moveRightShowColumns(items);
                                     }
                                 }
                                 else {

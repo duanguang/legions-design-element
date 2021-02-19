@@ -17,6 +17,7 @@ import { cloneDeep } from 'lodash';
 import { HlLabeledValue } from 'legions-lunar/model';
 import { getInjector } from 'legions/store';
 import { isArray } from 'legions-utils-tool/type.validation';
+import LegionsProDragger from '../LegionsProDragger';
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -518,11 +519,20 @@ var LegionsProConditions = /** @class */ (function (_super) {
                     else if (Array.isArray(defaultValue_1) && defaultValue_1.length >= 2) {
                         data[key] = [moment(defaultValue_1[0]).format(format), moment(defaultValue_1[1]).format(format)];
                     }
+                    else if (entity instanceof ConditionCheckBoxModel) {
+                        data[key] = entity.conditionsProps.defaultChecked;
+                        defaultValue_1 = data[key];
+                    }
                     else {
                         data[key] = defaultValue_1 || '';
                     }
                     _this.setFieldsValues(entity.containerProps.name, function (value) {
-                        value.conditionsProps['value'] = defaultValue_1;
+                        if (value instanceof ConditionCheckBoxModel) {
+                            value.conditionsProps.checked = defaultValue_1;
+                        }
+                        else {
+                            value.conditionsProps['value'] = defaultValue_1;
+                        }
                     });
                 }
             }
@@ -562,8 +572,8 @@ var LegionsProConditions = /** @class */ (function (_super) {
         var data = this.vmModel;
         var name = component.containerProps.name;
         data[name] = value;
-        this.setFieldsValues(name, function (value) {
-            value.conditionsProps.value = value;
+        this.setFieldsValues(name, function (values) {
+            values.conditionsProps.checked = value;
         });
         component.conditionsProps.onChange && component.conditionsProps.onChange.call(this, even, {
             viewState: cloneDeep(data),
@@ -796,16 +806,7 @@ var LegionsProConditions = /** @class */ (function (_super) {
         var conditionsProps = component.conditionsProps, containerProps = component.containerProps, jsonProperty = component.jsonProperty;
         var placeholder = conditionsProps.placeholder;
         var newData = conditionsProps.options;
-        var labelSpan = conditionsProps.labelSpan, defaultValue = conditionsProps.defaultValue, visable = conditionsProps.visable, display = conditionsProps.display, _a = conditionsProps.value, value = _a === void 0 ? defaultValue : _a, prop = __rest(conditionsProps
-        /* let vmValue = this.viewStore.computedVmModel[JsonProperty.name] */
-        /* if (isObservableArray(vmValue) && vmValue.length === 0) {
-            vmValue =[]
-        } */
-        , ["labelSpan", "defaultValue", "visable", "display", "value"]);
-        /* let vmValue = this.viewStore.computedVmModel[JsonProperty.name] */
-        /* if (isObservableArray(vmValue) && vmValue.length === 0) {
-            vmValue =[]
-        } */
+        var labelSpan = conditionsProps.labelSpan, defaultValue = conditionsProps.defaultValue, visable = conditionsProps.visable, display = conditionsProps.display, _a = conditionsProps.value, value = _a === void 0 ? defaultValue : _a, prop = __rest(conditionsProps, ["labelSpan", "defaultValue", "visable", "display", "value"]);
         var firstActiveValue = newData.length > 0 ? ["" + newData[0].key] : '';
         var autoObData = this.viewStore.selectOptions.get(containerProps.name);
         if (autoObData && prop.autoQuery) {
@@ -833,8 +834,8 @@ var LegionsProConditions = /** @class */ (function (_super) {
     };
     LegionsProConditions.prototype.renderChxBox = function (component) {
         var conditionsProps = component.conditionsProps, containerProps = component.containerProps, jsonProperty = component.jsonProperty;
-        var labelSpan = conditionsProps.labelSpan, visable = conditionsProps.visable, display = conditionsProps.display, prop = __rest(conditionsProps, ["labelSpan", "visable", "display"]);
-        return (React.createElement(Checkbox, __assign({}, prop, { onChange: this.handleChangeChx.bind(this, component) }), conditionsProps.label));
+        var labelSpan = conditionsProps.labelSpan, visable = conditionsProps.visable, display = conditionsProps.display, value = conditionsProps.value, defaultChecked = conditionsProps.defaultChecked, prop = __rest(conditionsProps, ["labelSpan", "visable", "display", "value", "defaultChecked"]);
+        return (React.createElement(Checkbox, __assign({}, prop, { defaultChecked: defaultChecked, onChange: this.handleChangeChx.bind(this, component) }), conditionsProps.label));
     };
     LegionsProConditions.prototype.renderInputNumber = function (component) {
         var _this = this;
@@ -866,8 +867,7 @@ var LegionsProConditions = /** @class */ (function (_super) {
         var prop = __rest(conditionsProps, []);
         var menu = (React.createElement(Menu, { selectedKeys: [this.viewStore.computedSize], onClick: function (item) {
                 var size = item.key;
-                // @ts-ignore
-                _this.viewStore.setSize(size);
+                _this.viewStore._setSize(size);
             } },
             React.createElement(Menu.Item, { key: "small" }, "\u7D27\u51D1"),
             React.createElement(Menu.Item, { key: "default" }, "\u8212\u9002")));
@@ -951,6 +951,17 @@ var LegionsProConditions = /** @class */ (function (_super) {
         });
         return this.renderQueryComponent(show);
     };
+    LegionsProConditions.prototype.renderCollapsed = function (list) {
+        var show = [];
+        list.map(function (item) {
+            var visable = item.conditionsProps['visable'];
+            visable = visable === void 0 ? true : visable;
+            if (visable) {
+                show.push(item);
+            }
+        });
+        return this.renderQueryComponent(show);
+    };
     LegionsProConditions.prototype.renderQueryComponent = function (list) {
         var _this = this;
         return list.map(function (item) {
@@ -958,18 +969,52 @@ var LegionsProConditions = /** @class */ (function (_super) {
             if (_this.viewStore.computedSize === 'small') {
                 labelSpan = 0;
             }
-            var _a = item.containerProps.col, offset = _a.offset, pull = _a.pull, push = _a.push, col = __rest(_a, ["offset", "pull", "push"]);
-            return React.createElement(Col, __assign({}, col, { key: item.containerProps.uuid, style: { paddingBottom: '10px' } }),
+            var _a = item.containerProps.col, offset = _a.offset, pull = _a.pull, push = _a.push, md = _a.md, xl = _a.xl, lg = _a.lg, sm = _a.sm, xs = _a.xs, col = __rest(_a, ["offset", "pull", "push", "md", "xl", "lg", "sm", "xs"]);
+            var span = item.containerProps.col[_this.viewStore.compuedResolution];
+            var colspan = {};
+            if (typeof span === 'number') {
+                colspan['span'] = span;
+            }
+            else if (Object.prototype.toString.call(span) === "[object Object]") {
+                colspan['span'] = span.span;
+            }
+            var uid = item.containerProps.uuid;
+            return React.createElement(Col, __assign({}, col, colspan, { "data-id": uid, "data-name": item.containerProps.name, key: uid, style: { paddingBottom: '10px', paddingLeft: '5px' } }),
                 _this.renderLabel(item, labelSpan),
                 React.createElement(Col, { style: { lineHeight: '28px' }, span: 24 - labelSpan }, _this.renderComponent(item)));
         });
     };
-    LegionsProConditions.prototype.render = function () {
+    LegionsProConditions.prototype.renderContent = function () {
         var hide = [];
-        return (React.createElement(Row, { className: baseCls + " " + this.uid, gutter: 8, type: "flex" },
+        return React.createElement(React.Fragment, null,
             this.renderShowComponent(hide),
             this.renderSearchComponent(),
-            this.state.collapsed && this.renderQueryComponent(hide)));
+            this.state.collapsed && this.renderCollapsed(hide));
+    };
+    LegionsProConditions.prototype.render = function () {
+        var _this = this;
+        return (React.createElement(Row, { className: baseCls + " " + this.uid, gutter: 8, type: "flex" }, this.props.isDragSort ? React.createElement(LegionsProDragger, { options: {
+                animation: 150,
+                group: {
+                    name: 'ProConditions',
+                    pull: true,
+                    put: true,
+                }
+            }, onChange: function (items, sort, evt) {
+                /* const dataId = evt.item.attributes['data-id'];
+                const dataName = evt.item.attributes['data-name']; */
+                var query = [];
+                if (items.length && items.length === _this.viewStore.computedQuery.length) { // 内部拖拽排序
+                    items.map(function (item) {
+                        var view = _this.viewStore.computedQuery.find(function (s) { return s.containerProps.uuid === item; });
+                        if (view) {
+                            query.push(view);
+                        }
+                    });
+                    _this.viewStore._clearQuery();
+                    _this.viewStore._initQuery(query);
+                }
+            } }, this.renderContent()) : this.renderContent()));
     };
     /* search =debounce((options,val)=>{
        options&&options.props.onSearch&&options.props.onSearch(val)

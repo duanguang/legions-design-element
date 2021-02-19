@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-10 16:14:09
- * @LastEditTime: 2021-02-04 18:33:15
+ * @LastEditTime: 2021-02-19 18:38:15
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/script/entiy.js
@@ -18,8 +18,8 @@ const array_componentsStore = [/* 'store', */,
 /* 'store/pro.form', */
 /* 'store/pro.layout' */,
 /* 'store/pro.modal' */,
-'store/pro.query.conditions',
-/* 'store/pro.table', */
+/* 'store/pro.query.conditions', */
+'store/pro.table',
 ]
 const array_component = [
 /*   'LegionsProBaiduMap', */
@@ -38,10 +38,10 @@ const array_component = [
 /* 'LegionsProPageContainer', */
   /* 'LegionsProPrint', */
   /* 'LegionsProQrCode', */
-'LegionsProConditions',
+/* 'LegionsProConditions', */
   /* 'LegionsProScrawl', */
   /* 'LegionsProSelect', */
-  /* 'LegionsProTable', */
+  'LegionsProTable',
 /*  'LegionsProTableCustomColumns', */
 /* 'LegionsProTableForm', */
 /* 'LegionsProTextArea', */

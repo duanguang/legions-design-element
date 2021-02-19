@@ -1,42 +1,52 @@
+---
+order: 0
+title:
+  zh-CN: 高级用法
+  en-US: 高级用法
+---
+
+## zh-CN
+
+筛选条件使用配置示例
+
+
+## en-US
+
+```tsx
+import create from '../../../common/components/render.tsx';
+import { Button, Row ,Col,Form} from 'antd';
 import React from 'react';
-import { bind,observer } from 'legions/store-react'
-import { Button, Row } from 'antd';
-import { LegionsProConditions, LegionsProModalForm,LegionsProPageContainer } from '../../../components';
-import { observablePromise } from 'legions/store-utils';
-import {  IQueryConditionsInstance } from 'components/LegionsProConditions/interface';
+import { bind, observer } from 'legions/store-react';
+import { LegionsProConditions } from 'legions-pro-design';
+import { IQueryConditionsInstance} from 'legions-pro-design/LegionsProConditions/interface';
+import { ClassOf } from 'legions-lunar/types/api/typescript';
+const FormItem = Form.Item;
 import moment from 'moment';
 import { observable } from 'legions/store';
 import { ObservableMap,runInAction } from 'mobx';
-import { SearchEntity } from './searchEntity';
-interface Istate{
-    visable:boolean
+
+interface IProps {}
+interface IState{
+  visibleText:boolean;
+  visible:boolean;
+  disabledText:boolean
 }
-@observer
-export default class QueryDemo extends React.Component<{},Istate>{
-    queryRef: IQueryConditionsInstance = null
-    @observable smp:ObservableMap<string,{a:{b:number}}>=observable.map()
-    constructor(props:{}) {
-        super(props)
-        this.state = {
-            visable:false,
-        }
-        runInAction(() => {
-            this.smp.set('ss',{a:{b:2}})
-        })
+class ProQueryDemo extends React.Component<IProps,IState> {
+  queryRef: IQueryConditionsInstance = null
+  constructor(props: IProps) {
+    super(props);
+    this.state={
+      visibleText: false,
+      disabledText:true,
+      visible:true,
     }
-    componentDidMount() {
- /*        this.queryRef.methods.setFieldState([
-            {name:'vmOrderNo3',state:{visable:false}},
-            {name:'vmOrderNo4',state:{visable:false}},
-            {name:'vmOrderNo7',state:{visable:false}},
-        ]) */
-    }
-    createConfig() {
-        const formUtils = new LegionsProConditions.ProConditions();
-        formUtils.renderTextConfig({
+  }
+  createConfig() {
+        const ConditionsUtils = new LegionsProConditions.ProConditions();
+        ConditionsUtils.renderTextConfig({
             containerProps: {
                 col: {
-                    md: 6,
+                    md: 4,
                     lg: 4,
                     xl: 4,
                 },
@@ -52,10 +62,10 @@ export default class QueryDemo extends React.Component<{},Istate>{
             },
             jsonProperty:'orderNo'
         })
-        formUtils.renderTextAreaConfig({
+        ConditionsUtils.renderTextAreaConfig({
             containerProps: {
                 col: {
-                    md: 6,
+                    md: 4,
                     lg: 4,
                     xl: 4,
                 },
@@ -71,12 +81,12 @@ export default class QueryDemo extends React.Component<{},Istate>{
             },
             jsonProperty:'orderNo1'
         })
-        formUtils.renderSelectConfig({
+        ConditionsUtils.renderSelectConfig({
             containerProps: {
                 col: {
-                    md: 6,
-                    lg: 4,
-                    xl: 4,
+                    md: 3,
+                    lg: 3,
+                    xl: 3,
                 },
                 name:'vmOrderNo2'
             },
@@ -96,10 +106,10 @@ export default class QueryDemo extends React.Component<{},Istate>{
             },
             jsonProperty:'orderNo2'
         })
-        formUtils.renderDateConfig({
+        ConditionsUtils.renderDateConfig({
             containerProps: {
                 col: {
-                    md: 6,
+                    md: 4,
                     lg: 4,
                     xl: 4,
                 },
@@ -119,10 +129,10 @@ export default class QueryDemo extends React.Component<{},Istate>{
             },
             jsonProperty:'orderNo3'
         })
-        formUtils.renderRangePickerConfig({
+        ConditionsUtils.renderRangePickerConfig({
             containerProps: {
                 col: {
-                    md: 6,
+                    md: 4,
                     lg: 4,
                     xl: 4,
                 },
@@ -141,17 +151,17 @@ export default class QueryDemo extends React.Component<{},Istate>{
             },
             jsonProperty:'orderNo4'
         })
-        formUtils.renderCheckBoxConfig({
+        ConditionsUtils.renderCheckBoxConfig({
             containerProps: {
                 col: {
                     md: 2,
                     lg: 2,
-                    xl: 1,
+                    xl: 2,
                 },
                 name:'vmOrderNo5'
             },
             conditionsProps: {
-                label: '删除',
+                label: '是否删除',
                 labelSpan: 5,
                 defaultChecked: true,
                 onChange: (event,value) => {
@@ -160,10 +170,10 @@ export default class QueryDemo extends React.Component<{},Istate>{
             },
             jsonProperty:'orderNo5'
         })
-        formUtils.renderTextNumberConfig({
+        ConditionsUtils.renderTextNumberConfig({
             containerProps: {
                 col: {
-                    md: 6,
+                    md: 4,
                     lg: 4,
                     xl: 4,
                 },
@@ -179,12 +189,12 @@ export default class QueryDemo extends React.Component<{},Istate>{
             },
             jsonProperty:'orderNo6'
         })
-        formUtils.renderRadioButtonConfig({
+        ConditionsUtils.renderRadioButtonConfig({
             containerProps: {
                 col: {
-                    md: 6,
-                    lg: 4,
-                    xl: 4,
+                    md: 7,
+                    lg: 5,
+                    xl: 5,
                 },
                 name:'vmOrderNo7'
             },
@@ -199,13 +209,13 @@ export default class QueryDemo extends React.Component<{},Istate>{
             },
             jsonProperty:'orderNo7'
         })
-        formUtils.renderSearchConfig({
+        ConditionsUtils.renderSearchConfig({
             containerProps: {
                 name: 'search',
                 col: {
                     md: 6,
-                    lg: 4,
-                    xl: 4,
+                    lg: 5,
+                    xl: 5,
                 }
             },
             conditionsProps: {
@@ -214,11 +224,11 @@ export default class QueryDemo extends React.Component<{},Istate>{
                 },
             }
         })
-        formUtils.renderGroupCheckBoxConfig({
+        ConditionsUtils.renderGroupCheckBoxConfig({
             containerProps: {
                 col: {
                     md: 5,
-                    lg: 2,
+                    lg: 4,
                     xl: 4,
                 },
                 name:'vmOrderNo8'
@@ -232,11 +242,11 @@ export default class QueryDemo extends React.Component<{},Istate>{
             },
             jsonProperty:'orderNo8'
         })
-        formUtils.renderSelectConfig({
+        ConditionsUtils.renderSelectConfig({
             containerProps: {
                 col: {
-                    md: 5,
-                    lg: 2,
+                    md: 4,
+                    lg: 4,
                     xl: 4,
                 },
                 name:'vmOrderNo9'
@@ -294,70 +304,84 @@ export default class QueryDemo extends React.Component<{},Istate>{
             jsonProperty:'orderNo9'
         })
         return [
-            formUtils.getConditionsConfig('vmOrderNo'),
-            formUtils.getConditionsConfig('vmOrderNo1'),
-            formUtils.getConditionsConfig('vmOrderNo2'),
-            formUtils.getConditionsConfig('vmOrderNo3'),
-            formUtils.getConditionsConfig('vmOrderNo4'),
-            formUtils.getConditionsConfig('vmOrderNo6'),
-            formUtils.getConditionsConfig('vmOrderNo7'),
-            formUtils.getConditionsConfig('vmOrderNo9'),
-            formUtils.getConditionsConfig('vmOrderNo5'),
-            formUtils.getConditionsConfig('vmOrderNo8'),
-            formUtils.getConditionsConfig('search'),
+            ConditionsUtils.getConditionsConfig('vmOrderNo'),
+            ConditionsUtils.getConditionsConfig('vmOrderNo1'),
+            ConditionsUtils.getConditionsConfig('vmOrderNo2'),
+            ConditionsUtils.getConditionsConfig('vmOrderNo3'),
+            ConditionsUtils.getConditionsConfig('vmOrderNo4'),
+            ConditionsUtils.getConditionsConfig('vmOrderNo6'),
+            ConditionsUtils.getConditionsConfig('vmOrderNo7'),
+            ConditionsUtils.getConditionsConfig('vmOrderNo9'),
+            ConditionsUtils.getConditionsConfig('vmOrderNo8'),
+            ConditionsUtils.getConditionsConfig('search'),
+            ConditionsUtils.getConditionsConfig('vmOrderNo5'),
         ]
     }
-    onChange() {
-    }
-    render() {
-        console.log(22);
-        return (
-            <div>
-                <Button onClick={() => {
-                    /* this.queryRef.methods.setFieldsValue([{ fieldName: 'vmOrderNo5',value: false },{
-                        fieldName: 'vmOrderNo6',
-                        value:2,
-                    }]) */
-                    this.queryRef.methods.setFieldsValues('vmOrderNo',(value) => {
+  render() {
+    return (
+      <Row>
+        <FormItem
+          wrapperCol={{ span: 18, offset: 1 }}
+        >
+          <Button type="primary" htmlType="submit" onClick={()=>{
+                  this.queryRef.methods.setFieldsValues('vmOrderNo',(value) => {
                         if (value instanceof LegionsProConditions.ConditionTextModel) {
-                            value.conditionsProps.label = 'sss';
-                            value.conditionsProps.value = '222';
+                            value.conditionsProps.value = '郭某嘉';
                         }
                     })
-                
-                }}> 设置指定数据值{this.smp.get('ss').a.b}</Button>
-                <Button onClick={() => {
-                    this.queryRef.methods.onRrmoteSearch('vmOrderNo9',{
-                        pageIndex: 1,
-                        ...{a:1},
+                }}>填充司机信息</Button>
+
+          <Button style={{marginLeft:'10px'}} type="primary" htmlType="submit" onClick={()=>{
+                   this.queryRef.methods.setFieldsValues('vmOrderNo',(value) => {
+                        if (value instanceof LegionsProConditions.ConditionTextModel) {
+                            value.conditionsProps.disabled = !value.conditionsProps.disabled;
+                            this.setState({
+                                disabledText:!value.conditionsProps.disabled
+                            })
+                        }
                     })
-                }}> 主动请求车牌下拉数据</Button>
-                <Button onClick={() => {
-                    const item = this.queryRef.methods.getQuerySelectOption('vmOrderNo9','103');
-                    console.log(item);
-                }}> 获取车牌数据指定项数据</Button>
-                <Button onClick={() => {
-                    this.setState({visable:!this.state.visable})
-                    this.queryRef.methods.setFieldsValues('vmOrderNo7',(value) => {
+                    
+                }}>{!this.state.disabledText?'启用司机信息':'禁用司机信息'}</Button>
+         <Button style={{marginLeft:'10px'}} type="primary" htmlType="submit" onClick={()=>{
+                  this.queryRef.methods.setFieldsValues('vmOrderNo7',(value) => {
                         if (value instanceof LegionsProConditions.ConditionRadioButtonModel) {
                             if(value.conditionsProps.visable ===void 0){
                                 value.conditionsProps.visable =true
                             }
                             value.conditionsProps.visable = !value.conditionsProps.visable;
-            
+                            this.setState({
+                                visibleText:!value.conditionsProps.visable
+                            })
                         }
                     })
-                }}>设置指定元素隐藏/隐藏</Button>
-                <Row style={{ marginTop: '10px' }}><LegionsProConditions
-                    onReady={(value) => {
-                        this.queryRef = value;
-                    }}
-                    defaultCollapsed
-                    /* isDragSort */
-                    query={this.createConfig()}></LegionsProConditions>
-                </Row>
-                
-            </div>
-        )
-    }
+                 
+                }}>{!this.state.visibleText?'隐藏城市':'显示城市'}</Button>       
+                <Button style={{marginLeft:'10px'}} type="primary" htmlType="submit" onClick={()=>{
+                   this.queryRef.methods.onRrmoteSearch('vmOrderNo9',{
+                        pageIndex: 1,
+                        ...{a:1},
+                    })
+                }}>主动请求远程下拉数据</Button>  
+                <Button style={{marginLeft:'10px'}} onClick={() => {
+                    const item = this.queryRef.methods.getQuerySelectOption('vmOrderNo9','103');
+                    console.log(item);
+                }}> 获取远程下拉项指定项数据</Button>     
+        </FormItem>
+         <LegionsProConditions
+            onReady={(value) => {
+                this.queryRef = value;
+            }}
+            defaultCollapsed
+            query={this.createConfig()}></LegionsProConditions>
+      
+      </Row>
+     
+    );
+  }
 }
+const root = props => {
+  return <ProQueryDemo></ProQueryDemo>;
+};
+const app = create();
+ReactDOM.render(React.createElement(app.start(root)), mountNode);
+```

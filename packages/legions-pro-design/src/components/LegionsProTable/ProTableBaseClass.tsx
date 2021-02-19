@@ -1,14 +1,13 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-13 11:06:29
- * @LastEditTime: 2021-02-03 21:39:57
+ * @LastEditTime: 2021-02-18 16:55:22
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProTable/ProTableBaseClass.tsx
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
 import React from 'react';
-import { IQuery } from '../LegionsProConditions/interface';
 import { observable,action,StoreModules, } from 'legions/store';
 import { ObservableMap,toJS } from 'mobx';
 import * as mobx from 'mobx';
@@ -16,6 +15,7 @@ import { TableColumnConfig } from '../interface/antd';
 import { InstanceProTable } from './interface';
 import { PageListEntity } from './pageListEntity';
 import { ClassOf } from 'legions-lunar/types/api/typescript';
+
 /**
  * 列表组件基类
  *
@@ -33,27 +33,12 @@ export class ProTableBaseClass<P,S,Columns = {},QueryParams = any> extends React
     tableRef: InstanceProTable = null;
     //@ts-ignore
     queryPrams: QueryParams = {}
-    @observable private queryDataMap = observable.map<string,IQuery>();
     @observable private columnsDataMap = observable.map<string,TableColumnConfig<Columns>>();
-    @observable queryData: Array<IQuery> = [];
+    /** 列描述数据对象*/
     @observable columnsData: Array<TableColumnConfig<Columns>> = [];
+    
     constructor(props:P) { 
         super(props)
-        this.queryDataMap.observe(chan => {
-            if (mobx['useStrict']) {
-                // @ts-ignore
-                if (this.queryDataMap.values().length) {
-                    //@ts-ignore
-                    this.queryData = this.queryDataMap.values()
-                }
-            } else if (mobx['configure']) { 
-                const values:IQuery[] = [];
-                this.queryDataMap.forEach((item, key) => {
-                  values.push(item);
-                });
-                this.queryData = values;
-            }
-        })
         this.columnsDataMap.observe(chan => {
             if (mobx['useStrict']) {
                 // @ts-ignore
@@ -101,17 +86,6 @@ export class ProTableBaseClass<P,S,Columns = {},QueryParams = any> extends React
         if (this.columnsDataMap.has(key)) {
             const old = this.columnsDataMap.get(key);
             this.columnsDataMap.set(key,{...old,...column});
-        }
-    }
-    @action pushQuery(key:string,query:IQuery) {
-        if (!this.queryDataMap.has(key)) {
-            this.queryDataMap.set(key,query);
-        }
-    }
-    @action updateQuery(key: string,query:IQuery) {
-        if (this.queryDataMap.has(key)) {
-            const old = this.queryDataMap.get(key);
-            this.queryDataMap.set(key,{...old,...query});
         }
     }
     /**
@@ -166,12 +140,4 @@ export class ProTableBaseClass<P,S,Columns = {},QueryParams = any> extends React
     onOpenCustomColumns = () => {
         this.tableRef.methods.openCustomColumns();
     };
-    /* createModel<Model>(model:Model) {
-        const models: PageListEntity<Model> = new PageListEntity({
-            model,
-            filtersListData: (value) => {
-                return value['result']
-            }
-       })
-    } */
 }

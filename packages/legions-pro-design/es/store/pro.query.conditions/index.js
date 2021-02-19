@@ -10,6 +10,8 @@ import { computed } from 'mobx';
 import { LegionsFetch } from '../../core';
 import { cloneDeep } from 'lodash';
 import { SelectKeyValue } from '../../models';
+import { legionsThirdpartyPlugin } from 'legions-thirdparty-plugin';
+import { getStorageItem, setStorageItems } from 'legions-utils-tool/storage';
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -89,14 +91,16 @@ function __values(o) {
 /*
  * @Author: duanguang
  * @Date: 2021-01-07 16:49:31
- * @LastEditTime: 2021-02-04 18:21:30
+ * @LastEditTime: 2021-02-05 17:31:40
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/store/pro.query.conditions/conditionView.ts
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
 var ConditionView = /** @class */ (function () {
-    function ConditionView() {
+    function ConditionView(uid) {
+        if (uid === void 0) { uid = ''; }
+        this.uid = '';
         /**
          * 查询条件
          *
@@ -130,6 +134,7 @@ var ConditionView = /** @class */ (function () {
         this.vmModel = null;
         this.size = 'default';
         this.selectOptions = observable.map();
+        this.uid = uid;
     }
     Object.defineProperty(ConditionView.prototype, "computedQuery", {
         get: function () {
@@ -210,14 +215,48 @@ var ConditionView = /** @class */ (function () {
     ConditionView.prototype._setVmModel = function (model) {
         this.vmModel = JSON.stringify(model);
     };
-    ConditionView.prototype._initQuery = function (query) {
+    ConditionView.prototype._clearQuery = function () {
+        this.query.clear();
+    };
+    ConditionView.prototype._firstInitQuery = function (query) {
+        var caches = JSON.parse(getStorageItem(this.uid, '[]'));
+        console.log(caches, 'caches');
+        var newQuery = [];
+        query.map(function (item) {
+            newQuery.push(void 0);
+        });
+        if (caches.length) {
+            caches = caches.filter(function (item) { return query.find(function (id) { return id.containerProps.uuid == item; }); });
+            caches.map(function (item, _index) {
+                var itmIndex = query.findIndex(function (w) { return item === w.containerProps.uuid; });
+                if (_index === itmIndex) {
+                    newQuery[_index] = query[_index];
+                }
+                else {
+                    if (itmIndex > -1) {
+                        var cacheQueryItem = query[itmIndex];
+                        if (cacheQueryItem) {
+                            newQuery[_index] = cacheQueryItem;
+                        }
+                    }
+                }
+            });
+        }
+    };
+    ConditionView.prototype._initQuery = function (query, options) {
         var _this = this;
+        var caches = [];
         query.map(function (item) {
             var id = item.containerProps.uuid;
             if (!_this.query.has(id)) {
                 _this.query.set(id, item);
             }
         });
+        if (options && options.isCache) {
+            if (!legionsThirdpartyPlugin.plugins.dexie) {
+                setStorageItems(this.uid, JSON.stringify(caches));
+            }
+        }
     };
     /** 改变搜索条件配置数据 */
     ConditionView.prototype._setQueryState = function (name, callback) {
@@ -277,6 +316,10 @@ var ConditionView = /** @class */ (function () {
     __decorate([
         observable,
         __metadata("design:type", Object)
+    ], ConditionView.prototype, "uid", void 0);
+    __decorate([
+        observable,
+        __metadata("design:type", Object)
     ], ConditionView.prototype, "query", void 0);
     __decorate([
         observable,
@@ -331,7 +374,19 @@ var ConditionView = /** @class */ (function () {
     __decorate([
         action,
         __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], ConditionView.prototype, "_clearQuery", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
         __metadata("design:paramtypes", [Array]),
+        __metadata("design:returntype", void 0)
+    ], ConditionView.prototype, "_firstInitQuery", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [Array, Object]),
         __metadata("design:returntype", void 0)
     ], ConditionView.prototype, "_initQuery", null);
     __decorate([
@@ -364,7 +419,7 @@ var ConditionView = /** @class */ (function () {
 /*
  * @Author: duanguang
  * @Date: 2020-12-29 16:44:16
- * @LastEditTime: 2021-02-04 16:17:22
+ * @LastEditTime: 2021-02-05 16:44:19
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/store/pro.query.conditions/index.ts
@@ -379,7 +434,7 @@ var ProQueryConditionStore = /** @class */ (function (_super) {
         return _this;
     }
     ProQueryConditionStore.prototype.add = function (uid) {
-        this.viewModelQuery = observableViewModel(new ConditionView());
+        this.viewModelQuery = observableViewModel(new ConditionView(uid));
         this.ConditionContainer.set(uid, this.viewModelQuery);
     };
     ProQueryConditionStore.prototype.delete = function (uid) {

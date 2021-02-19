@@ -73,11 +73,11 @@ class ProTableDemo extends LegionsProTable.ProTableBaseClass<IProps,IState,{},{}
     this.setState({ type: e.target.value });
   }
   handleOpenRowSelectionChange = (e) => {
-    this.tableRef.viewModel.isOpenRowSelection=e.target.value
+    this.tableRef.viewModel.updateOpenRowSelection(e.target.value)
     this.setState({ isOpenRowSelection: e.target.value });
   }
   handleisOpenRowChange = (e) => {
-    this.tableRef.viewModel.isOpenRowChange=e.target.value
+    this.tableRef.viewModel.updateOpenRowChange(e.target.value)
     this.setState({ isOpenRowChange: e.target.value });
   }
   handleisRowSelectionChange = (e) => {
@@ -87,6 +87,7 @@ class ProTableDemo extends LegionsProTable.ProTableBaseClass<IProps,IState,{},{}
     this.setState({ isOpenCustomColumns: e.target.value });
   }
   render() {
+    const {isOpenRowChange,isOpenRowSelection,...state} =this.state;
     return (
       <Row>
         <Row>
@@ -115,19 +116,12 @@ class ProTableDemo extends LegionsProTable.ProTableBaseClass<IProps,IState,{},{}
                 <Radio.Button value="radio">单选</Radio.Button>
               </Radio.Group>
             </FormItem>
-            <FormItem label="行选中启/关">
-              <Radio.Group size={true} value={this.state.isOpenCustomColumns} onChange={this.handleOpenCustomColumns}>
-                <Radio.Button value={true}>是</Radio.Button>
-                <Radio.Button value={false}>否</Radio.Button>
-              </Radio.Group>
-            </FormItem>
           </Form>
         </Row>
       <LegionsProTable
       <{},ResponseVModelNameDataEntity>
-        {...this.state}
-        isOpenRowSelection={true}
-         isOpenRowChange={true}
+        {...state}
+
          onReady={value => {
           this.tableRef = value;
           this.tableRef.viewModel.isAdaptiveHeight = false;
@@ -139,14 +133,6 @@ class ProTableDemo extends LegionsProTable.ProTableBaseClass<IProps,IState,{},{}
           this.tableRef.viewModel.bodyExternalContainer.set('other', {
             height: 70,
           });
-        }}
-        selectedRowKeys={
-          this.tableRef &&
-          this.tableRef.viewModel.selectedRows.map(item => item.id)
-        }
-        scroll={{
-          x: this.tableRef && this.tableRef.viewModel.tableXAutoWidth,
-          y: 300,
         }}
         autoQuery={{
             params: (pageIndex,pageSize) => {
@@ -174,13 +160,10 @@ class ProTableDemo extends LegionsProTable.ProTableBaseClass<IProps,IState,{},{}
             },
             method: 'get',
             ApiUrl: 'http://192.168.200.171:3001/mock/115/getUsers',
-            model: {
-              mappingEntity: (that,res) => {
-                that.result = that.transformRows(res['data'],ResponseVModelNameDataEntity)
-              }
-            },
+            mappingEntity: (that,res) => {
+              that.result = that.transformRows(res['data'],ResponseVModelNameDataEntity)
+            }
         }}
-        tableModulesName="sss"
         pagination={true}
         columns={this.columnsData}
         /* 真实环境中会自动生成，演示专用*/

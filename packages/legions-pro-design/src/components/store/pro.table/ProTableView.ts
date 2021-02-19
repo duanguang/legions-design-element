@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-07 17:16:35
- * @LastEditTime: 2021-01-18 14:22:59
+ * @LastEditTime: 2021-02-19 17:35:00
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/store/pro.table/ProTableView.ts
@@ -14,9 +14,10 @@ import {
   runInAction,
   isComputed,
   ObservableMap,
+  isObservableArray,
 } from 'mobx';
 import * as mobx from 'mobx';
-import { TableColumnsContainerEntity } from '../../models';
+import { TableColumnsContainerEntity,TableListColumns } from '../../models';
 import { shortHash } from 'legions-lunar/object-hash';
 import { queryTableColumns, editTableColumns } from '../../services';
 import {
@@ -71,9 +72,6 @@ export class ProTableView {
       this.uid = uid;
       this.userInfo = user;
     });
-    /* autorun(() => {
-            console.log(this.obTableListCustom.state,'this.obTableListCustom') 
-         })() */
   }
   @observable private uid = '';
   @computed get computedUid() {
@@ -93,33 +91,35 @@ export class ProTableView {
    */
   @observable pageSize = 20;
 
+ 
+
   /**
-   * 行选中数据
+   * 行选中数据 
    *
    * @memberof ProTableView
    */
-  @observable selectedRows = [];
+  @observable selectedRowKeys:string[]|number[] = []
 
   /**
    *
    * 展开行数据
    * @memberof ProTableView
    */
-  @observable expandRow? = '';
+  @observable _expandRow? = '';
 
   /**
    *
    * 表格行选中方式
    * @memberof ProTableView
    */
-  @observable type?: 'checkbox' | 'radio' = null;
+  @observable _type?: 'checkbox' | 'radio' = null;
 
   /**
    * 表格行单击选中方式
    *
    * @memberof ProTableView
    */
-  @observable rowSelectionClickType?: 'radio' | 'check' = null;
+  @observable _rowSelectionClickType?: 'radio' | 'check' = null;
 
   /**
    * 表格列配置
@@ -160,7 +160,7 @@ export class ProTableView {
    * @memberof ProTableView
    */
   @observable
-  obTableListCustom: TableColumnsContainerEntity = new TableColumnsContainerEntity();
+  _obTableListCustom: TableColumnsContainerEntity = new TableColumnsContainerEntity();
   /**
    *
    * table 模块名称，如果设置此值，请保持绝对唯一
@@ -195,13 +195,6 @@ export class ProTableView {
    */
   @observable isAdaptiveHeight = false;
 
-  /**
-   *
-   * 横向或纵向支持滚动，也可用于指定滚动区域的宽高度
-   * @type {IScroll}
-   * @memberof ProTableView
-   */
-  @observable scroll: IScroll = { x: true, y: 300 };
 
   @observable.ref bodyStyle: React.CSSProperties;
 
@@ -226,7 +219,7 @@ export class ProTableView {
    * @type {boolean}
    * @memberof ProTableView
    */
-  @observable pagination: boolean = true;
+  @observable _pagination: boolean = true;
 
   /**
    * 外部容器需要扣除的
@@ -240,7 +233,7 @@ export class ProTableView {
    *
    * @memberof ProTableView
    */
-  @observable renderData = [];
+  @observable _renderData = [];
 
   @observable private total = 0;
   /**
@@ -252,12 +245,14 @@ export class ProTableView {
   /**
    *
    * 是否开启行单击选中数据，内部私有数据，请勿调用
+   * 
+   * 默认值 true(开启)
    * @memberof ProTableView
    */
-  @observable isOpenRowChange = true;
+  @observable _isOpenRowChange = true;
 
   /** 是否开启行选中功能，比如开启checkbox ，radio */
-  @observable isOpenRowSelection = true;
+  @observable _isOpenRowSelection = true;
 
   /**
    * 表格容器宽度,私有变量
@@ -265,9 +260,23 @@ export class ProTableView {
    * @memberof ProTableView
    */
   @observable _tableContainerWidth = 0;
+
+  @observable _uniqueKey = '';
+
+   /**
+   * 行选中详细数据
+   */
+  @computed get computedSelectedRows() {
+    if ((Array.isArray(this._renderData) || isObservableArray(this._renderData)) && this._renderData.length) {
+      //@ts-ignore
+      let newSelectedRows = this._renderData.filter(v => this.selectedRowKeys.includes(v[this._uniqueKey]))
+      return newSelectedRows;
+    }
+    return [];
+  }
   @computed get calculateBody() {
     let bodyStyle = {};
-    const paginationHeight = this.pagination ? 64 : 0;
+    const paginationHeight = this._pagination ? 64 : 0;
     const maxHeight =
       this.bodyContainerHeight - this.bodyExternalHeight - paginationHeight;
     if (bodyStyle['maxHeight']) {
@@ -423,18 +432,19 @@ export class ProTableView {
    * 根据源数据对显示和隐藏列进行过滤
    * @memberof ProTableView
    */
-  @action filterColumns() {
+  @action _filterColumns() {
     this.unShowColumns = [];
     if (
-      this.obTableListCustom.success &&
-      this.obTableListCustom.result &&
-      this.obTableListCustom.result.modulesUid ===
+      this._obTableListCustom &&
+      this._obTableListCustom.success &&
+      this._obTableListCustom.result &&
+      this._obTableListCustom.result.modulesUid ===
         this.computedStorageShowColumnsKeys &&
-      this.obTableListCustom.result.customColumns.length
+      this._obTableListCustom.result.customColumns.length
     ) {
       localStorage.setItem(
         this.computedStorageShowColumnsKeys,
-        JSON.stringify(this.obTableListCustom.result.customColumns)
+        JSON.stringify(this._obTableListCustom.result.customColumns)
       ); // 同步服务端列配置数据到缓存
     }
     this.showColumns =
@@ -461,18 +471,8 @@ export class ProTableView {
           dataIndex: item.dataIndex,
           title: item.label || (item.title as string),
         }); // 全部列
-        /* else {
-                      this.unShowColumns.push({dataIndex:item.dataIndex,title:(item.label||item.title as string)})
-                  } */
       });
     } else {
-      /* this.columns.map((item) => {
-                  const index = this.showColumns.findIndex((entity) => entity.dataIndex === item.dataIndex)
-                  if (!item.noChecked&&index>-1 ) {
-                      this.showColumns.splice(index,1);
-                      localStorage.setItem(this.computedStorageShowColumnsKeys,JSON.stringify(this.showColumns));
-                  }
-              }) */
       this.columns.map(item => {
         this.unShowColumns.push({
           dataIndex: item.dataIndex,
@@ -487,8 +487,7 @@ export class ProTableView {
    * @param {string[]} Columns
    * @memberof ProTableView
    */
-  @action moveRightShowColumns(Columns: string[]) {
-    // const newColumns = this.columns.filter(v => Columns.includes(v.dataIndex)).map((item) => { return { dataIndex: item.dataIndex,title: (item.label || item.title as string) } })
+  @action _moveRightShowColumns(Columns: string[]) {
     this.showColumns = [];
     Columns.map(item => {
       const entity = this.columns.find(model => model.dataIndex === item);
@@ -507,8 +506,7 @@ export class ProTableView {
    * @param {string[]} Columns
    * @memberof ProTableView
    */
-  @action moveLeftShowColumns(Columns: string[]) {
-    // const newColumns = this.columns.filter(v => Columns.includes(v.dataIndex)).map((item) => { return { dataIndex: item.dataIndex,title: (item.label || item.title as string) } })
+  @action _moveLeftShowColumns(Columns: string[]) {
     this.unShowColumns = [];
     Columns.map(item => {
       const entity = this.columns.find(model => model.dataIndex === item);
@@ -527,8 +525,7 @@ export class ProTableView {
    * @param {*} Columns
    * @memberof ProTableView
    */
-  @action orderSortRightShowColumns(Columns: string[]) {
-    // const newColumns = this.columns.filter(v => Columns.includes(v.dataIndex)).map((item) => { return { dataIndex: item.dataIndex,title: (item.label || item.title as string) } })
+  @action _orderSortRightShowColumns(Columns: string[]) {
     this.showColumns = [];
     Columns.map(item => {
       const entity = this.columns.find(model => model.dataIndex === item);
@@ -547,7 +544,7 @@ export class ProTableView {
    * @param {string[]} Columns
    * @memberof ProTableView
    */
-  @action orderSortLeftShowColumns(Columns: string[]) {
+  @action _orderSortLeftShowColumns(Columns: string[]) {
     this.unShowColumns = [];
     Columns.map(item => {
       const entity = this.columns.find(model => model.dataIndex === item);
@@ -559,40 +556,33 @@ export class ProTableView {
       }
     });
   }
-  @action setLocalStorageShowColumnsKeys(modulesName?: string) {
+  @action _setLocalStorageShowColumnsKeys(modulesName: string,uid: string) {
+    let userUid = '';
+    try {
+      if (this.userInfo && this.userInfo.userUid) {
+        userUid = this.userInfo.userUid;
+      }
+    }
+    catch (e) {}
     if (modulesName) {
-      // 如果自定义了模块名称，则使用自定义的
-      let userUid = '';
-      try {
-        if (this.userInfo && this.userInfo.userUid) {
-          userUid = this.userInfo.userUid;
-        }
-      } catch (e) {}
       this.localStorageShowColumnsKeys = `${shortHash(
         `${modulesName}${userUid}`
       )}`;
       this.tableModulesName = `${modulesName}`;
     }
-    /* else {
-              if (!this.localStorageShowColumnsKeys) {
-                  const obj = this.columns.map((item) => {
-                       return {dataIndex:item.dataIndex}
-                  })
-                  if (obj.length) {
-                     this.localStorageShowColumnsKeys =  `${shortHash(obj)}`
-                  } else {
-                      console.warn('表格列配置数据为空，似乎无法列数据生成唯一hash')
-                  }
-              }
-          } */
+    else if (!modulesName && uid) {
+      this.localStorageShowColumnsKeys = `${shortHash(
+        `${uid}${userUid}`
+      )}`;
+      this.tableModulesName = `${uid}`;
+    }
   }
-
   /**
    * 获取显示列缓存信息
    *
    * @memberof ProTableView
    */
-  @action getLocalStorageShowColumns(): IShowColumns[] {
+  @action _getLocalStorageShowColumns(): IShowColumns[] {
     const order = localStorage.getItem(this.computedStorageShowColumnsKeys);
     if (order) {
       return JSON.parse(order);
@@ -605,7 +595,7 @@ export class ProTableView {
    * 设置显示列缓存信息并同步到服务端
    * @memberof ProTableView
    */
-  @action setLocalStorageShowColumns(url: string) {
+  @action _setLocalStorageShowColumns(url: string) {
     if (this.computedStorageShowColumnsKeys) {
       localStorage.setItem(
         this.computedStorageShowColumnsKeys,
@@ -614,7 +604,7 @@ export class ProTableView {
       const body = this.computedShowColumns.map(item => {
         return { dataIndex: item.dataIndex, title: item.title };
       });
-      this.editTableColumns(this.computedStorageShowColumnsKeys, body, url);
+      this._editTableColumns(this.computedStorageShowColumnsKeys, body, url);
     }
   }
 
@@ -625,12 +615,12 @@ export class ProTableView {
    * @param {Parameters<typeof editTableColumns>[1]} customColumns
    * @memberof ProTableView
    */
-  @action async editTableColumns(
+  @action async _editTableColumns(
     modulesUid: string,
     customColumns: Parameters<typeof editTableColumns>[1],
     url
   ) {
-    this.obTableListCustom = await editTableColumns(
+    this._obTableListCustom = await editTableColumns(
       modulesUid,
       customColumns,
       url
@@ -643,18 +633,8 @@ export class ProTableView {
    * @param {string} modulesUid
    * @memberof ProTableView
    */
-  @action async queryTableColumns(modulesUid: string, url) {
-    this.obTableListCustom = await queryTableColumns(modulesUid,url);
-  }
-
-  /**
-   * 设置表格模块唯一名称
-   *
-   * @param {string} tableModulesName
-   * @memberof ProTableView
-   */
-  @action setTableModulesName(tableModulesName: string) {
-    this.tableModulesName = tableModulesName;
+  @action async _queryTableColumns(modulesUid: string, url) {
+    this._obTableListCustom = await queryTableColumns(modulesUid,url);
   }
   @action setTotal(total: number) {
     this.total = total;
@@ -662,11 +642,19 @@ export class ProTableView {
 
   /**
    *
-   * 控制开启或者取消行选中
+   * 开启或者取消单击行选中
    * @param {boolean} isOpenRowChange
    * @memberof ProTableView
    */
   @action updateOpenRowChange(isOpenRowChange: boolean) {
-    this.isOpenRowChange = isOpenRowChange;
+    this._isOpenRowChange = isOpenRowChange;
+  }
+  /**
+   *
+   * 开启或者取消行选中
+   * @param {boolean} isOpenRowChange
+   */
+  @action updateOpenRowSelection(isOpenRowSelection: boolean) {
+    this._isOpenRowSelection = isOpenRowSelection;
   }
 }

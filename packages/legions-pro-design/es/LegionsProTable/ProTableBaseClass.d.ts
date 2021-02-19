@@ -1,5 +1,4 @@
 import React from 'react';
-import { IQuery } from '../LegionsProConditions/interface';
 import { TableColumnConfig } from '../interface/antd';
 import { InstanceProTable } from './interface';
 import { PageListEntity } from './pageListEntity';
@@ -19,9 +18,8 @@ export declare class ProTableBaseClass<P, S, Columns = {}, QueryParams = any> ex
     static pageListEntity: typeof PageListEntity;
     tableRef: InstanceProTable;
     queryPrams: QueryParams;
-    private queryDataMap;
     private columnsDataMap;
-    queryData: Array<IQuery>;
+    /** 列描述数据对象*/
     columnsData: Array<TableColumnConfig<Columns>>;
     constructor(props: P);
     /**
@@ -41,8 +39,6 @@ export declare class ProTableBaseClass<P, S, Columns = {}, QueryParams = any> ex
      * @memberof ProTableBaseClass
      */
     updateColumns(key: string, column: TableColumnConfig<Columns>): void;
-    pushQuery(key: string, query: IQuery): void;
-    updateQuery(key: string, query: IQuery): void;
     /**
      * 刷新表格项数据
      *

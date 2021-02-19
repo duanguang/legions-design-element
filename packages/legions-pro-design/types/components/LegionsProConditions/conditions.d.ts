@@ -6,9 +6,9 @@ import { IViewQueryConditionStore, ISelectAutoQuery } from '../store/pro.query.c
 import { IQueryConditionsInstance } from './interface';
 import { ConditionCheckBoxModel, ConditionDateModel, ConditionGroupCheckBoxModel, ConditionRadioButtonModel, ConditionRangePickerModel, ConditionSearchModel, ConditionSelectModel, ConditionTextAreaModel, ConditionTextModel, ConditionTextNumberModel, IProConditions, ProConditions } from './ProConditionsUtils';
 import { CheckboxValueType } from 'antd/lib/checkbox/Group';
-interface IProps<Query = {}> {
+interface IProps {
     query: Array<IProConditions['componentModel']>;
-    store?: ProQueryConditionStore<Query>;
+    store?: ProQueryConditionStore;
     /**
      *
      * 组件完成渲染时执行，有DOM结构，执行的钩子函数
@@ -31,7 +31,7 @@ interface IProps<Query = {}> {
     /**
       *  组件componentWillMount 执行
       */
-    onReady?: (instance: IQueryConditionsInstance<Query>) => void;
+    onReady?: (instance: IQueryConditionsInstance) => void;
     size?: 'default' | 'small';
     /**
      * 默认是否展开 折叠区域内容
@@ -48,14 +48,15 @@ interface IProps<Query = {}> {
      * @memberof IProps
      */
     uniqueKeys?: string;
-    ondragger?: (item: any[], key: string) => React.ReactElement;
+    /** 是否拖拽排序 */
+    isDragSort?: boolean;
     /** 收起按钮的事件 */
     onCollapse?: (collapsed: boolean, viewEntity?: IViewQueryConditionStore) => void;
 }
 interface IState {
     collapsed: boolean;
 }
-export default class LegionsProConditions<Query = {}> extends React.Component<IProps<Query>, IState> {
+export default class LegionsProConditions<Query = {}> extends React.Component<IProps, IState> {
     static ProConditions: typeof ProConditions;
     static ConditionSelectModel: typeof ConditionSelectModel;
     static ConditionTextNumberModel: typeof ConditionTextNumberModel;
@@ -72,18 +73,22 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
     uid: string;
     queryPrams: {};
     constructor(props: any);
-    get viewStore(): import("brain-store-utils").ViewModel<import("../store/pro.query.conditions/conditionView").ConditionView<Query>> & {
-        tranQuery: Query;
+    get viewStore(): import("brain-store-utils").ViewModel<import("../store/pro.query.conditions/conditionView").ConditionView<{}>> & {
+        tranQuery: {};
         domHeight: number;
         widthContainer: number;
         selectOptions: import("../store/pro.query.conditions/interface").IObservableMap<string, import("../store/pro.query.conditions/interface").ISelectOptions>;
-        readonly computedQuery: (ConditionSelectModel | ConditionTextNumberModel | ConditionRadioButtonModel | ConditionTextAreaModel | ConditionTextModel | ConditionDateModel | ConditionRangePickerModel | ConditionSearchModel | ConditionGroupCheckBoxModel)[];
+        readonly computedQuery: (ConditionSelectModel | ConditionTextNumberModel | ConditionRadioButtonModel | ConditionTextAreaModel | ConditionTextModel | ConditionDateModel | ConditionSearchModel | ConditionRangePickerModel | ConditionGroupCheckBoxModel)[];
         readonly computedVmModel: any;
         readonly computedSize: "small" | "default";
         readonly compuedResolution: "xs" | "sm" | "md" | "lg" | "xl";
         _setVmModel: (model: Object) => void;
-        _initQuery: (query: (ConditionSelectModel | ConditionTextNumberModel | ConditionRadioButtonModel | ConditionTextAreaModel | ConditionTextModel | ConditionDateModel | ConditionRangePickerModel | ConditionSearchModel | ConditionGroupCheckBoxModel)[]) => void;
-        _setQueryState: (name: string, callback: (value: ConditionSelectModel | ConditionTextNumberModel | ConditionRadioButtonModel | ConditionTextAreaModel | ConditionTextModel | ConditionDateModel | ConditionRangePickerModel | ConditionSearchModel | ConditionGroupCheckBoxModel) => void) => void;
+        _clearQuery: () => void;
+        _firstInitQuery: (query: (ConditionSelectModel | ConditionTextNumberModel | ConditionRadioButtonModel | ConditionTextAreaModel | ConditionTextModel | ConditionDateModel | ConditionSearchModel | ConditionRangePickerModel | ConditionGroupCheckBoxModel)[]) => void;
+        _initQuery: (query: (ConditionSelectModel | ConditionTextNumberModel | ConditionRadioButtonModel | ConditionTextAreaModel | ConditionTextModel | ConditionDateModel | ConditionSearchModel | ConditionRangePickerModel | ConditionGroupCheckBoxModel)[], options?: {
+            isCache: boolean;
+        }) => void;
+        _setQueryState: (name: string, callback: (value: ConditionSelectModel | ConditionTextNumberModel | ConditionRadioButtonModel | ConditionTextAreaModel | ConditionTextModel | ConditionDateModel | ConditionSearchModel | ConditionRangePickerModel | ConditionGroupCheckBoxModel) => void) => void;
         _setSize: (size: "small" | "default") => void;
         _dispatchRequest: (name: string, autoQuery: ISelectAutoQuery<{}>, options?: {
             pageIndex: number;
@@ -156,7 +161,9 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
     getQueryItemSpan(item: IProConditions['componentModel']): number;
     renderSearchComponent(): JSX.Element[];
     renderShowComponent(hide: IProConditions['componentModel'][]): JSX.Element[];
+    renderCollapsed(list: IProConditions['componentModel'][]): JSX.Element[];
     renderQueryComponent(list: IProConditions['componentModel'][]): JSX.Element[];
+    renderContent(): JSX.Element;
     render(): JSX.Element;
 }
 export {};

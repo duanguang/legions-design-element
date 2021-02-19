@@ -79,14 +79,6 @@ class ProTableDemo extends LegionsProTable.ProTableBaseClass<IProps,IState,{},{}
             height: 70,
           });
         }}
-        selectedRowKeys={
-          this.tableRef &&
-          this.tableRef.viewModel.selectedRows.map(item => item.id)
-        }
-        scroll={{
-          x: this.tableRef && this.tableRef.viewModel.tableXAutoWidth,
-          y: 300,
-        }}
         rowSelection={{
             getCheckboxProps: (record) => {
                 return {
@@ -120,13 +112,10 @@ class ProTableDemo extends LegionsProTable.ProTableBaseClass<IProps,IState,{},{}
             },
             method: 'get',
             ApiUrl: 'http://192.168.200.171:3001/mock/115/getUsers',
-            model: {
-              mappingEntity: (that,res) => {
+            mappingEntity: (that,res) => {
                 that.result = that.transformRows(res['data'],ResponseVModelNameDataEntity)
-              }
-            },
+            }
         }}
-        pagination={true}
         columns={this.columnsData}
         /* 真实环境中会自动生成，演示专用*/
         uniqueUid="demo/table/disabled"

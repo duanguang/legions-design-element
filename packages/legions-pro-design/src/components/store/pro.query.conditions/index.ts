@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-29 16:44:16
- * @LastEditTime: 2021-02-04 16:17:22
+ * @LastEditTime: 2021-02-05 16:44:19
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/store/pro.query.conditions/index.ts
@@ -31,7 +31,7 @@ export  class ProQueryConditionStore<Query = {}> extends StoreBase {
     @observable ConditionContainer = observable.map<string,ViewModel<ConditionView<Query>> & Proxify<ConditionView<Query>>>();
 
     @action add(uid: string) {
-        this.viewModelQuery = observableViewModel<ConditionView<Query>>(new ConditionView())
+        this.viewModelQuery = observableViewModel<ConditionView<Query>>(new ConditionView(uid))
         this.ConditionContainer.set(uid, this.viewModelQuery);
     }
     @action delete(uid: string) {

@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-29 10:21:54
- * @LastEditTime: 2021-01-19 15:46:22
+ * @LastEditTime: 2021-02-05 16:32:00
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/db/SelectDatabase.ts
@@ -9,13 +9,13 @@
  */
 import { Database } from './Database';
 import { legionsThirdpartyPlugin } from 'legions-thirdparty-plugin';
-import {ISelectDatabaseDB} from './interface'
+import { ISelectDatabaseDB } from './interface'
 //
 // Declare Database
 //
 export class SelectDatabaseDB extends Database {
   //@ts-ignore Dexie.Table<ISelectDatabaseDB, number>;
-  public selectItem: any; // id is number in this case
+  public selectItem: Dexie; // id is number in this case
 
   /**
    *Creates an instance of SelectDatabase.

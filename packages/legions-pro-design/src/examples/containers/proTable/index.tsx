@@ -1,4 +1,4 @@
-import { Button,Row } from 'antd';
+import { Button,Radio,Row } from 'antd';
 import React from 'react';
 import { bind,observer } from 'legions/store-react';
 import { LegionsProTable,LegionsProPageContainer } from '../../../components';
@@ -12,13 +12,16 @@ LegionsProTable.customColumnsConfig.editApi = `${HttpConfig.bffService}/table/ed
 LegionsProTable.customColumnsConfig.queryApi = `${HttpConfig.bffService}/table/query`;
 interface IProps { }
 @observer
-export class ProTable extends LegionsProTable.ProTableBaseClass<IProps,{},{},{}> {
+export class ProTable extends LegionsProTable.ProTableBaseClass<IProps,{size:any},{},{}> {
 
   @observable status = {
     color: 'red'
   }
   constructor(props: IProps) {
     super(props)
+    this.state = {
+      size:'default'
+    }
     this.pushColumns('name',{
       title: '姓名',
       width: '100px',
@@ -38,6 +41,9 @@ export class ProTable extends LegionsProTable.ProTableBaseClass<IProps,{},{},{}>
       }
     })
   }
+  handleSizeChange = (e) => {
+    this.setState({ size: e.target.value });
+  }
   render() {
     return (<LegionsProPageContainer
       query={null}
@@ -51,9 +57,20 @@ export class ProTable extends LegionsProTable.ProTableBaseClass<IProps,{},{},{}>
               this.status.color = 'blue';
             })
           }}>改变地址栏颜色</Button>
+          <Button onClick={() => {
+            this.tableRef.viewModel.selectedRowKeys = [];
+          }}>清空选中行</Button>
+          <Button onClick={() => {
+            this.tableRef.viewModel.selectedRowKeys = ['John Brown'];
+          }}>选中行</Button>
+          <Radio.Group size="default" value={this.state.size} onChange={this.handleSizeChange}>
+                <Radio.Button value="default">Default</Radio.Button>
+                <Radio.Button value="middle">Middle</Radio.Button>
+                <Radio.Button value="small">Small</Radio.Button>
+              </Radio.Group>
           <LegionsProTable
             <{},ResponseVModelNameDataEntity>
-            customColumnsConfig={{ editApi: '',queryApi: '' }}
+            {...this.state}
             onReady={value => {
               this.tableRef = value;
               this.tableRef.viewModel.isAdaptiveHeight = false;
@@ -66,17 +83,10 @@ export class ProTable extends LegionsProTable.ProTableBaseClass<IProps,{},{},{}>
                 height: 70,
               });
             }}
-            selectedRowKeys={this.tableRef && this.tableRef.viewModel.selectedRows.map(item => item.id)}
-            scroll={{
-              x: this.tableRef && this.tableRef.viewModel.tableXAutoWidth,
-              y: 300,
-            }}
-            pagination={true}
             columns={this.columnsData}
             uniqueKey='name'
             tableModulesName='demo/proTable'
             isOpenCustomColumns={true}
-            isOpenRowChange={true}
             autoQuery={{
               params: (pageIndex,pageSize) => {
                 return {
@@ -111,13 +121,10 @@ export class ProTable extends LegionsProTable.ProTableBaseClass<IProps,{},{},{}>
 
               method: 'get',
               ApiUrl: 'http://192.168.200.171:3001/mock/115/getUsers',
-              model: {
-                mappingEntity: (that,res) => {
-                  that.result = that.transformRows(res['data'],ResponseVModelNameDataEntity)
-                }
-              },
+              mappingEntity: (that,res) => {
+                that.result = that.transformRows(res['data'],ResponseVModelNameDataEntity)
+              }
             }}
-
           >
           </LegionsProTable>
         </Row>

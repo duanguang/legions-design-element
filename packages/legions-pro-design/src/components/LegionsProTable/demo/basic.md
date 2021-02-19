@@ -67,14 +67,6 @@ class ProTableDemo extends LegionsProTable.ProTableBaseClass<IProps,{},{},{}> {
             height: 70,
           });
         }}
-        selectedRowKeys={
-          this.tableRef &&
-          this.tableRef.viewModel.selectedRows.map(item => item.id)
-        }
-        scroll={{
-          x: this.tableRef && this.tableRef.viewModel.tableXAutoWidth,
-          y: 300,
-        }}
         autoQuery={{
             params: (pageIndex,pageSize) => {
               return {
@@ -101,13 +93,10 @@ class ProTableDemo extends LegionsProTable.ProTableBaseClass<IProps,{},{},{}> {
             },
             method: 'get',
             ApiUrl: 'http://192.168.200.171:3001/mock/115/getUsers',
-            model: {
-              mappingEntity: (that,res) => {
+            mappingEntity: (that,res) => {
                 that.result = that.transformRows(res['data'],ResponseVModelNameDataEntity)
-              }
-            },
+            }
         }}
-        pagination={true}
         columns={this.columnsData}
         uniqueUid="mock/115/getUsers"
         uniqueKey="name"

@@ -5,7 +5,7 @@
   */
 import React from 'react';
 import ReactDOM, { unmountComponentAtNode, findDOMNode, unstable_renderSubtreeIntoContainer } from 'react-dom';
-import { message, Menu, Button, Icon, Dropdown, Row, Col, Table, Input } from 'antd';
+import { message, Menu, Button, Icon, Dropdown, Row, Col, Table } from 'antd';
 import './style/index.less';
 import { bind, observer } from 'legions/store-react';
 import { ProTableStore } from '../store/pro.table';
@@ -16,9 +16,7 @@ import { debounce } from 'legions-utils-tool/debounce';
 import moment from 'moment';
 import LegionsProTableCustomColumns from '../LegionsProTableCustomColumns';
 import LegionsProLineOverflow from '../LegionsProLineOverflow';
-import LegionsProModal from '../LegionsProModal';
-import { useStrict, configure, toJS, observable as observable$1, isObservable, runInAction } from 'mobx';
-import { observableViewModel } from 'legions/store-utils';
+import { useStrict, toJS, configure, isObservable, runInAction } from 'mobx';
 import { legionsThirdpartyPlugin } from 'legions-thirdparty-plugin';
 import { LoggerManager } from 'legions-lunar/legion.plugin.sdk';
 import { cloneDeep } from 'lodash';
@@ -194,9 +192,8 @@ var ProTableBaseClass = /** @class */ (function (_super) {
         _this.tableRef = null;
         //@ts-ignore
         _this.queryPrams = {};
-        _this.queryDataMap = observable.map();
         _this.columnsDataMap = observable.map();
-        _this.queryData = [];
+        /** 列描述数据对象*/
         _this.columnsData = [];
         /**
          * 搜索查询
@@ -230,22 +227,6 @@ var ProTableBaseClass = /** @class */ (function (_super) {
         _this.onOpenCustomColumns = function () {
             _this.tableRef.methods.openCustomColumns();
         };
-        _this.queryDataMap.observe(function (chan) {
-            if (useStrict) {
-                // @ts-ignore
-                if (_this.queryDataMap.values().length) {
-                    //@ts-ignore
-                    _this.queryData = _this.queryDataMap.values();
-                }
-            }
-            else if (configure) {
-                var values_1 = [];
-                _this.queryDataMap.forEach(function (item, key) {
-                    values_1.push(item);
-                });
-                _this.queryData = values_1;
-            }
-        });
         _this.columnsDataMap.observe(function (chan) {
             if (useStrict) {
                 // @ts-ignore
@@ -255,11 +236,11 @@ var ProTableBaseClass = /** @class */ (function (_super) {
                 }
             }
             else if (configure) {
-                var values_2 = [];
+                var values_1 = [];
                 _this.columnsDataMap.forEach(function (item, key) {
-                    values_2.push(item);
+                    values_1.push(item);
                 });
-                _this.columnsData = toJS(values_2);
+                _this.columnsData = toJS(values_1);
             }
         });
         return _this;
@@ -296,17 +277,6 @@ var ProTableBaseClass = /** @class */ (function (_super) {
             this.columnsDataMap.set(key, __assign(__assign({}, old), column));
         }
     };
-    ProTableBaseClass.prototype.pushQuery = function (key, query) {
-        if (!this.queryDataMap.has(key)) {
-            this.queryDataMap.set(key, query);
-        }
-    };
-    ProTableBaseClass.prototype.updateQuery = function (key, query) {
-        if (this.queryDataMap.has(key)) {
-            var old = this.queryDataMap.get(key);
-            this.queryDataMap.set(key, __assign(__assign({}, old), query));
-        }
-    };
     /**
      * 刷新表格项数据
      *
@@ -324,15 +294,7 @@ var ProTableBaseClass = /** @class */ (function (_super) {
     __decorate([
         observable,
         __metadata("design:type", Object)
-    ], ProTableBaseClass.prototype, "queryDataMap", void 0);
-    __decorate([
-        observable,
-        __metadata("design:type", Object)
     ], ProTableBaseClass.prototype, "columnsDataMap", void 0);
-    __decorate([
-        observable,
-        __metadata("design:type", Array)
-    ], ProTableBaseClass.prototype, "queryData", void 0);
     __decorate([
         observable,
         __metadata("design:type", Array)
@@ -352,46 +314,62 @@ var ProTableBaseClass = /** @class */ (function (_super) {
     __decorate([
         action,
         __metadata("design:type", Function),
-        __metadata("design:paramtypes", [String, Object]),
-        __metadata("design:returntype", void 0)
-    ], ProTableBaseClass.prototype, "pushQuery", null);
-    __decorate([
-        action,
-        __metadata("design:type", Function),
-        __metadata("design:paramtypes", [String, Object]),
-        __metadata("design:returntype", void 0)
-    ], ProTableBaseClass.prototype, "updateQuery", null);
-    __decorate([
-        action,
-        __metadata("design:type", Function),
         __metadata("design:paramtypes", [String, Function]),
         __metadata("design:returntype", void 0)
     ], ProTableBaseClass.prototype, "refreshColumns", null);
     return ProTableBaseClass;
 }(React.Component));
 
+/**
+ * Copyright (c) 2013-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+/**
+ * Use invariant() to assert state which your program assumes to be true.
+ *
+ * Provide sprintf-style format (only %s is supported) and arguments
+ * to provide information about what broke and what you were
+ * expecting.
+ *
+ * The invariant message will be stripped in production, but the invariant
+ * will remain to ensure logic does not differ in production.
+ */
+
+var invariant = function(condition, format, a, b, c, d, e, f) {
+  if (process.env.NODE_ENV !== 'production') {
+    if (format === undefined) {
+      throw new Error('invariant requires an error message argument');
+    }
+  }
+
+  if (!condition) {
+    var error;
+    if (format === undefined) {
+      error = new Error(
+        'Minified exception occurred; use the non-minified dev environment ' +
+        'for the full error message and additional helpful warnings.'
+      );
+    } else {
+      var args = [a, b, c, d, e, f];
+      var argIndex = 0;
+      error = new Error(
+        format.replace(/%s/g, function() { return args[argIndex++]; })
+      );
+      error.name = 'Invariant Violation';
+    }
+
+    error.framesToPop = 1; // we don't care about invariant's own frame
+    throw error;
+  }
+};
+
+var browser = invariant;
+
 var serialize = require('serialize-javascript');
 var baseCls = "legions-pro-table";
-/* class Calculate{
-     @observable  test=1
-
-     @observable.ref userlist =[]
-     @observable title={a:1}
-    @computed
-    get usersCount() {
-        return this.userlist.length
-    }
-} */
-var ViewUI = /** @class */ (function () {
-    function ViewUI() {
-        this.taskName = '';
-    }
-    __decorate([
-        observable$1,
-        __metadata("design:type", Object)
-    ], ViewUI.prototype, "taskName", void 0);
-    return ViewUI;
-}());
 var errorMessage = {
     uniqueKey: 'Each record in table should have a unique `uniqueKey` prop,' + 'or set `uniqueKey` to an unique primary key.',
     Repeat: 'uniqueKey[接口数据作为唯一字段不可靠，建议前端自己生成唯一字段。开发环境检测，如果用的接口数据字段作为唯一值，也请确保绝对唯一]:存在相同数据,请认真检查数据是否绝对唯一，否则会引发部分功能异常'
@@ -403,7 +381,7 @@ var LegionsProTable = /** @class */ (function (_super) {
         _this.timeId = new Date().getTime();
         _this.uid = '';
         /**
-         * uid 的值绝对唯一，且每次初始生成表单都是相同值
+         * uid 的值绝对唯一，且每次初始生成table都是相同值
          *
          * @memberof HLForm
          */
@@ -417,7 +395,6 @@ var LegionsProTable = /** @class */ (function (_super) {
         _this.viewModel = null;
         _this.tableThead = "table-thead" + _this.uid;
         _this.clientHeight = document.body.clientHeight;
-        _this.viewUI = observableViewModel(new ViewUI());
         _this.modalRef = null;
         _this.customColumnsModalRef = null;
         _this.selections = [];
@@ -431,13 +408,13 @@ var LegionsProTable = /** @class */ (function (_super) {
                 runInAction(function () {
                     var data = _this.props.autoQuery.transform(_this.getLocalViewStore.obState);
                     if (data) {
-                        _this.props.store.HlTableContainer.get(uid).renderData = data.data.slice();
+                        _this.props.store.HlTableContainer.get(uid)._renderData = data.data.slice();
                         _this.props.store.HlTableContainer.get(uid).setTotal(data.total);
                         /* this.forceUpdate&&this.forceUpdate() */
                     }
                     _this.getLocalViewStore.loading = false;
                 });
-                _this.consoleLog('hlTable-watchData', { uid: uid });
+                _this.consoleLog('watchData', { uid: uid });
                 _this.logger('hlTable-watchData', {
                     uid: uid,
                     apiResult: toJS(_this.getLocalViewStore.obState),
@@ -450,6 +427,13 @@ var LegionsProTable = /** @class */ (function (_super) {
         _this.resize = debounce(function () {
             _this.viewModel.bodyContainerHeight = document.body.clientHeight;
         }, 500);
+        /** 开启自定义列数据同步接口信息-局部配置(当全局和局部存在冲突时，优先局部配置数据)
+         *
+         * 同步数据到服务端所需要的查询和保存接口地址信息 */
+        _this.customColumnsConfig = {
+            editApi: '',
+            queryApi: '',
+        };
         /**
          * 导出当页数据
          *
@@ -463,15 +447,13 @@ var LegionsProTable = /** @class */ (function (_super) {
             _this.modalRef.viewModel.visible = true;
         };
         _this.onSelectChange = function (selectedRowKeys, selectedRows) {
-            var dataleng = _this.props.data ? _this.props.data.length : 0;
+            var dataleng = _this.props.dataSource ? _this.props.dataSource.length : 0;
             if (_this.props.autoQuery) {
-                dataleng = _this.getViewStore.renderData.length;
+                dataleng = _this.getViewStore._renderData.length;
             }
-            if (_this.getViewStore.renderData.length === dataleng) {
-                _this.setState({ selectedRowKeys: selectedRowKeys }, function () {
-                    _this.props.store.get(_this.freezeuid).selectedRows = selectedRows;
-                    _this.props.onRowChange && _this.props.onRowChange(selectedRows);
-                });
+            if (_this.getViewStore._renderData.length === dataleng) {
+                _this.getViewStore.selectedRowKeys = selectedRowKeys;
+                _this.props.onRowChange && _this.props.onRowChange(selectedRows);
             }
         };
         _this.selectRow = function (record) {
@@ -490,20 +472,18 @@ var LegionsProTable = /** @class */ (function (_super) {
                 return 0;
             };
         };
-        _this.state = {
-            selectedRowKeys: [],
-            taskName: '',
-        };
-        _this.uid = "table" + _this.props.store.HlTableContainer.size + shortHash("" + _this.timeId + _this.props.store.HlTableContainer.size);
+        _this.uid = _this.uuid;
         if (_this.props.store.HlTableContainer.has(_this.freezeuid)) {
             _this.timeId = new Date().getTime();
-            _this.uid = "table" + _this.props.store.HlTableContainer.size + shortHash("" + _this.timeId + _this.props.store.HlTableContainer.size);
+            _this.uid = _this.uuid;
         }
         _this.traceId = _this.uid;
         _this.freezeuid = _this.uid;
         _this.tableThead = "table-thead" + _this.uid;
-        if (_this.props['uniqueUid']) {
-            _this.decryptionfreezeuid = "" + _this.props['uniqueUid'];
+        var keys = 'uniqueUid';
+        browser(_this.props[keys], "[legionsProTable]:props." + keys + " cannot be empty");
+        if (_this.props[keys]) {
+            _this.decryptionfreezeuid = "" + _this.props[keys];
             _this.freezeuid = shortHash(_this.decryptionfreezeuid);
             _this.props.store.add(_this.freezeuid, _this.props.tableModulesName, _this.uid);
             if (!_this.props.store.HlTableLocalStateContainer.has(_this.freezeuid)) {
@@ -519,10 +499,21 @@ var LegionsProTable = /** @class */ (function (_super) {
         if (!_this.props.store.HlTableContainer.has(_this.freezeuid)) {
             _this.props.store.add(_this.freezeuid, _this.props.tableModulesName, _this.uid);
         }
-        _this.consoleLog('hlTable-constructor');
+        _this.initPagination();
+        _this.initProps();
+        _this.onReady();
+        _this.inintSelectedRows();
+        _this.consoleLog('constructor');
         return _this;
     }
     LegionsProTable_1 = LegionsProTable;
+    Object.defineProperty(LegionsProTable.prototype, "uuid", {
+        get: function () {
+            return "table" + this.props.store.HlTableContainer.size + shortHash("" + this.timeId + this.props.store.HlTableContainer.size);
+        },
+        enumerable: false,
+        configurable: true
+    });
     Object.defineProperty(LegionsProTable.prototype, "getViewStore", {
         get: function () {
             return this.props.store.HlTableContainer.get(this.freezeuid);
@@ -541,7 +532,8 @@ var LegionsProTable = /** @class */ (function (_super) {
         var obj = logObj || {};
         var logConent = __assign(__assign({ storeView: __assign({}, this.getViewStore) }, obj), { store: this.props.store, that: toJS(this), props: toJS(this.props) });
         LoggerManager.consoleLog({
-            type: type,
+            //@ts-ignore
+            type: "LegionsProTable-" + type,
             logConent: logConent,
             methodsName: 'onHLTableCycle',
         });
@@ -551,7 +543,7 @@ var LegionsProTable = /** @class */ (function (_super) {
         if (typeof this.props.onLogRecord === 'function') {
             var obj = logObj || {};
             var viewStoreKeys = ['calculateBody', 'bodyContainerHeight',
-                'bodyExternalHeight', 'computedRenderColumns', '_tableContainerWidth', 'renderData', 'tableBodyDomClientHeight', 'tableXAutoWidth'];
+                'bodyExternalHeight', 'computedRenderColumns', '_tableContainerWidth', '_renderData', 'tableBodyDomClientHeight', 'tableXAutoWidth'];
             var viewStore_1 = {};
             viewStoreKeys.map(function (item) {
                 if (isObservable(_this.getViewStore[item])) {
@@ -564,6 +556,7 @@ var LegionsProTable = /** @class */ (function (_super) {
             var _a = this.props, store = _a.store, columns = _a.columns, props = __rest(_a, ["store", "columns"]);
             var logConent = __assign(__assign({}, viewStore_1), obj);
             LoggerManager.report({
+                //@ts-ignore
                 type: type,
                 content: serialize(logConent, { ignoreFunction: false }),
                 traceId: this.traceId,
@@ -573,7 +566,6 @@ var LegionsProTable = /** @class */ (function (_super) {
         }
     };
     LegionsProTable.prototype.search = function (options) {
-        var _this = this;
         if (this.props.autoQuery && this.getLocalViewStore) {
             if (options && options.pageIndex) { /** 如果主动设置页码，则以主动设置为准 */
                 this.getViewStore.pageIndex = options.pageIndex;
@@ -581,15 +573,11 @@ var LegionsProTable = /** @class */ (function (_super) {
             else {
                 this.getViewStore.pageIndex = 1;
             }
-            this.setState({
-                selectedRowKeys: [],
-            }, function () {
-                _this.getViewStore.selectedRows = [];
-                _this.getLocalViewStore.dispatchRequest(_this.props.autoQuery, Object.assign({
-                    pageIndex: _this.getViewStore.pageIndex,
-                    pageSize: _this.getViewStore.pageSize,
-                }, options));
-            });
+            this.getViewStore.selectedRowKeys = [];
+            this.getLocalViewStore.dispatchRequest(this.props.autoQuery, Object.assign({
+                pageIndex: this.getViewStore.pageIndex,
+                pageSize: this.getViewStore.pageSize,
+            }, options));
         }
     };
     /**
@@ -614,52 +602,20 @@ var LegionsProTable = /** @class */ (function (_super) {
             columns = this.viewModel.computedRenderColumns;
             /* columns = this.viewModel.computedRenderColumns; */
             if (this.props.displayType === 'bigData') {
-                datas = this.props.data;
+                datas = this.props.dataSource;
             }
             else {
-                datas = this.viewModel.renderData.map(function (item) {
+                datas = this.viewModel._renderData.map(function (item) {
                     return item;
                 });
             }
         }
         var newColumns = columns.filter(function (item) { return item.isExport !== false; });
-        /* exportCsv({
-            ...prams,
-            filename: prams.filename,
-            columns: newColumns,
-            data: datas,
-        }) */
-        /* const newArr = [];
-        datas.map((item) => {
-            let dataItem = {}
-            for(let key in item){
-                const newItem = newColumns.filter((entity) => entity['dataIndex'] === key)
-                if (newItem&&newItem.length) {
-                    dataItem[newItem[0]['title']] = item[key]
-                }
-            }
-            if (dataItem) {
-              newArr.push(dataItem)
-            }
-        }) */
         legionsThirdpartyPlugin.plugins.excel.exportJsonToExcel({ data: datas, columns: newColumns, filename: prams.filename, autoWidth: true });
-        // @ts-ignore
-        // excel.export_json_to_excel({data:newArr,key:newColumns.map((item)=>item['title']),filename:prams.filename,autoWidth:true})
     };
     //@ts-ignore
     LegionsProTable.prototype.tranMapColumns = function (columns) {
         if (columns === void 0) { columns = this.props.columns; }
-        /* return columns.map((item) => {
-            let newItem = { key: item.dataIndex, ...item };
-            if (!item.render) {
-                newItem = {
-                    ...newItem, render: (text, record) => {
-                        return <HlLineOverflow width={item.width} text={record[item.dataIndex]}></HlLineOverflow>
-                    }
-                }
-            }
-            return newItem;
-        }) */
         return columns.map(function (item) {
             if (!item.render && item.tooltip) {
                 var newItem = __assign({ key: item.dataIndex }, item);
@@ -679,44 +635,59 @@ var LegionsProTable = /** @class */ (function (_super) {
             ele.firstElementChild.insertBefore(div, ele.firstElementChild.firstElementChild);
         }
     };
-    LegionsProTable.prototype.initPagination = function () {
-        var paginationProps = this.props.pagination;
-        var store = this.props.store.HlTableContainer.get(this.freezeuid);
-        if ((typeof paginationProps === 'boolean')) {
-            store.pagination = paginationProps;
-        }
-        else if (this.props.autoQuery) {
-            store.pagination = true;
-        }
-        else if (this.props.onPagingQuery && paginationProps === void 0) {
-            store.pagination = true;
-        }
-        else if (!this.props.onPagingQuery && paginationProps === void 0) {
-            store.pagination = false;
+    LegionsProTable.prototype.inintSelectedRows = function (selectedRows) {
+        if (selectedRows === void 0) { selectedRows = this.props.selectedRowKeys; }
+        if (Array.isArray(selectedRows) && selectedRows.length) {
+            var store_1 = this.getViewStore;
+            store_1.selectedRowKeys = [];
+            selectedRows.forEach(function (item) {
+                if (typeof item === 'string' || typeof item === 'number') {
+                    //@ts-ignore
+                    store_1.selectedRowKeys.push(item);
+                }
+            });
         }
     };
-    LegionsProTable.prototype.componentWillMount = function () {
-        var _this = this;
-        var store = this.props.store.HlTableContainer.get(this.freezeuid);
+    LegionsProTable.prototype.initPagination = function () {
+        var paginationProps = this.props.pagination;
+        var store = this.getViewStore;
         store.pageIndex = 1;
         store.pageSize = this.props.pageSize || store.pageSize;
-        this.initPagination();
-        if ((typeof this.props.isOpenRowChange === 'boolean' && !this.props.isOpenRowChange)) {
-            store.isOpenRowChange = false;
+        if ((typeof paginationProps === 'boolean')) {
+            store._pagination = paginationProps;
         }
-        if (!this.props.onRowChange && this.props.isOpenRowChange === void 0) { /** 历史问题， 当行选择函数没有传递时，表示关闭行选择 */
-            store.isOpenRowChange = false;
-            console.log(store.isOpenRowChange);
+        else if (this.props.autoQuery) {
+            store._pagination = true;
+        }
+        else if (this.props.onPagingQuery && paginationProps === void 0) {
+            store._pagination = true;
+        }
+        else if (!this.props.onPagingQuery && paginationProps === void 0) {
+            store._pagination = false;
+        }
+    };
+    LegionsProTable.prototype.initProps = function () {
+        var store = this.getViewStore;
+        if ((typeof this.props.isOpenRowChange === 'boolean' && !this.props.isOpenRowChange)) {
+            store._isOpenRowChange = false;
         }
         if ((typeof this.props.isOpenRowSelection === 'boolean' && !this.props.isOpenRowSelection)) {
-            store.isOpenRowSelection = false;
-        }
-        if (!this.props.onRowChange && this.props.isOpenRowSelection === void 0) {
-            store.isOpenRowSelection = false;
+            store._isOpenRowSelection = false;
         }
         this.viewModel = store;
-        this.viewModel.scroll = this.props.scroll;
+        store._uniqueKey = this.props.uniqueKey;
         this.viewModel.bodyStyle = Object.assign({}, this.props.bodyStyle);
+        var customColumnsConfig = this.props.customColumnsConfig;
+        if (customColumnsConfig && customColumnsConfig.editApi && customColumnsConfig.queryApi) {
+            this.customColumnsConfig = customColumnsConfig;
+        }
+        else if (LegionsProTable_1.customColumnsConfig.editApi && LegionsProTable_1.customColumnsConfig.queryApi) {
+            this.customColumnsConfig = LegionsProTable_1.customColumnsConfig;
+        }
+    };
+    LegionsProTable.prototype.onReady = function () {
+        var _this = this;
+        var store = this.getViewStore;
         this.props.onReady && this.props.onReady({
             store: this.props.store,
             uid: this.freezeuid,
@@ -745,16 +716,62 @@ var LegionsProTable = /** @class */ (function (_super) {
                 }
             }
         });
+    };
+    LegionsProTable.prototype.componentWillMount = function () {
         if (this.props.autoQuery) {
             this.subscription = this.props.store.schedule([this.log.bind(this, this.freezeuid)]);
         }
-        this.consoleLog('hlTable-componentWillMount');
+        this.consoleLog('componentWillMount');
         /* this.subscription.unsubscribe() */
     };
     LegionsProTable.prototype.destroyPortal = function () {
         if (this.node) {
             unmountComponentAtNode(this.node);
         }
+    };
+    LegionsProTable.prototype.initCustomColumns = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var body;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!this.props.isOpenCustomColumns) return [3 /*break*/, 4];
+                        this.selections.push({
+                            key: 'custom-columns',
+                            text: this.renderButtonCusttomColumns(),
+                            onSelect: function (changeableRowKeys) {
+                            },
+                        });
+                        this.viewModel._setLocalStorageShowColumnsKeys(this.props.tableModulesName, this.freezeuid);
+                        if (!this.isSettingColumnApiConfig()) return [3 /*break*/, 3];
+                        return [4 /*yield*/, this.viewModel._queryTableColumns(this.viewModel.computedStorageShowColumnsKeys, this.customColumnsConfig.queryApi)];
+                    case 1:
+                        _a.sent();
+                        if (!this.viewModel._obTableListCustom) return [3 /*break*/, 3];
+                        if (!(!this.viewModel._obTableListCustom.result || (this.viewModel._obTableListCustom.result && this.viewModel._obTableListCustom.result.customColumns.length === 0))) return [3 /*break*/, 3];
+                        this.getViewStore._filterColumns();
+                        body = this.viewModel.computedShowColumns.map(function (item) {
+                            return { dataIndex: item.dataIndex, title: item.title };
+                        });
+                        if (!body.length) return [3 /*break*/, 3];
+                        return [4 /*yield*/, this.viewModel._editTableColumns(this.viewModel.computedStorageShowColumnsKeys, body, this.customColumnsConfig.editApi)];
+                    case 2:
+                        _a.sent();
+                        _a.label = 3;
+                    case 3:
+                        this.getViewStore._filterColumns();
+                        _a.label = 4;
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    /** 是否设置自定义列服务端同步接口配置信息 */
+    LegionsProTable.prototype.isSettingColumnApiConfig = function () {
+        if (this.customColumnsConfig.editApi && this.customColumnsConfig.queryApi) {
+            return true;
+        }
+        return false;
     };
     LegionsProTable.prototype.componentWillUnmount = function () {
         /* this.props.store.delete(this.freezeuid); */
@@ -764,11 +781,11 @@ var LegionsProTable = /** @class */ (function (_super) {
         window.removeEventListener && window.removeEventListener('resize', this.resize.bind(this));
         this.subscription && this.subscription.unsubscribe();
         this.destroyPortal();
-        this.consoleLog('hlTable-componentWillUnmount');
+        this.consoleLog('componentWillUnmount');
     };
     LegionsProTable.prototype.componentDidMount = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var table, body, _index, data, UniqueKey, Repeat, anttablefixed, thead, span, RootContainer, spanth;
+            var table, _index, data, UniqueKey, Repeat, anttablefixed, thead, span, RootContainer, spanth;
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -783,100 +800,49 @@ var LegionsProTable = /** @class */ (function (_super) {
                             this.setTabletBody();
                         }
                         this.getViewStore.columns = this.tranMapColumns();
-                        if (!(this.props.tableModulesName && this.props.isOpenCustomColumns)) return [3 /*break*/, 5];
-                        if (!(LegionsProTable_1.customColumnsConfig.editApi && LegionsProTable_1.customColumnsConfig.queryApi)) return [3 /*break*/, 4];
-                        this.viewModel.setLocalStorageShowColumnsKeys(this.props.tableModulesName);
-                        return [4 /*yield*/, this.viewModel.queryTableColumns(this.viewModel.computedStorageShowColumnsKeys, LegionsProTable_1.customColumnsConfig.queryApi)];
+                        return [4 /*yield*/, this.initCustomColumns()];
                     case 1:
                         _a.sent();
-                        if (!(!this.viewModel.obTableListCustom.result || (this.viewModel.obTableListCustom.result && this.viewModel.obTableListCustom.result.customColumns.length === 0))) return [3 /*break*/, 3];
-                        this.getViewStore.filterColumns();
-                        body = this.viewModel.computedShowColumns.map(function (item) {
-                            return { dataIndex: item.dataIndex, title: item.title };
-                        });
-                        if (!body.length) return [3 /*break*/, 3];
-                        return [4 /*yield*/, this.viewModel.editTableColumns(this.viewModel.computedStorageShowColumnsKeys, body, LegionsProTable_1.customColumnsConfig.editApi)];
-                    case 2:
-                        _a.sent();
-                        _a.label = 3;
-                    case 3:
-                        if (this.props.isOpenCustomColumns) {
-                            this.selections.push({
-                                key: 'custom-columns',
-                                text: this.renderButtonCusttomColumns(),
-                                onSelect: function (changeableRowKeys) {
-                                },
-                            });
-                        }
-                        this.getViewStore.filterColumns();
-                        return [3 /*break*/, 5];
-                    case 4:
-                        console.error('请配置自定义列数据同步及查询接口信息');
-                        _a.label = 5;
-                    case 5:
-                        if (this.props.visibleExportLoacl) {
-                            this.selections.push({
-                                key: 'export-excel',
-                                text: React.createElement(Button, { size: "small" },
-                                    "\u5BFC\u51FA\u5F53\u9875",
-                                    React.createElement(Icon, { type: "download" })),
-                                onSelect: function (changeableRowKeys) {
-                                    _this.exportCsv({ filename: moment().format('YYYYMMDDHHmmss') + "-" + _this.viewModel.pageIndex });
-                                },
-                            });
+                        if (this.props.visibleExportLoacl === void 0 || this.props.visibleExportLoacl) {
+                            _index = this.selections.findIndex(function (item) { return item.key === 'export-excel'; });
+                            if (_index < 0) {
+                                this.selections.push({
+                                    key: 'export-excel',
+                                    text: React.createElement(Button, { size: "small" },
+                                        "\u5BFC\u51FA\u5F53\u9875",
+                                        React.createElement(Icon, { type: "download" })),
+                                    onSelect: function (changeableRowKeys) {
+                                        _this.exportCsv({ filename: moment().format('YYYYMMDDHHmmss') + "-" + _this.viewModel.pageIndex });
+                                    },
+                                });
+                            }
                         }
                         if (this.props.onExportAll) { // 兼容历史问题，之前是onExportAll 传入此方法开启导出当页和全部，现在需要导出当页分开控制
-                            if (this.props.visibleExportLoacl === void 0 || this.props.visibleExportLoacl) {
-                                _index = this.selections.findIndex(function (item) { return item.key === 'export-excel'; });
-                                if (_index < 0) {
-                                    this.selections.push({
-                                        key: 'export-excel',
-                                        text: React.createElement(Button, { size: "small" },
-                                            "\u5BFC\u51FA\u5F53\u9875",
-                                            React.createElement(Icon, { type: "download" })),
-                                        onSelect: function (changeableRowKeys) {
-                                            _this.exportCsv({ filename: moment().format('YYYYMMDDHHmmss') + "-" + _this.viewModel.pageIndex });
-                                        },
-                                    });
-                                }
-                            }
                             this.selections.push({
                                 key: 'export-all-excel',
                                 text: React.createElement(Button, { size: "small" },
                                     "\u5BFC\u51FA\u5168\u90E8",
                                     React.createElement(Icon, { type: "download" })),
                                 onSelect: function (changeableRowKeys) {
-                                    /* OpenConfirm({
-                                        title:'导出数据',
-                                        content:(((taskName:string) => <Input value={taskName} onChange={(value) => {
-                                             this.setState({taskName:value.target.value})
-                                             
-                                        }}></Input>)(this.state.taskName))
-                                    }) */
-                                    _this.modalRef.viewModel.title = '导出数据';
-                                    _this.modalRef.viewModel.visible = true;
-                                    //this.props.onExportAll(this.viewModel.computedStorageShowColumnsKeys);
+                                    _this.props.onExportAll();
                                 },
                             });
                         }
                         window.addEventListener && window.addEventListener('resize', this.resize.bind(this));
                         if (findDOMNode(this).getElementsByClassName('ant-table-body')) ;
                         this.setTableContainerWidth();
-                        data = this.props.data;
+                        data = this.props.dataSource;
                         if (this.props.autoQuery) {
                             // @ts-ignore
                             data = this.getLocalViewStore.obData;
                         }
                         if (data) {
-                            /* this.getViewStore.renderData = this.props.data.map((item,index) => {
-                                return {...item,uniqueKey:`${this.viewModel.pageIndex}${index+1}`}
-                            }) */
                             if (this.props.displayType === 'smallData') {
-                                /* this.getViewStore.renderData = [...this.props.data] */
-                                this.getViewStore.renderData = __spread(data);
+                                /* this.getViewStore._renderData = [...this.props.data] */
+                                this.getViewStore._renderData = __spread(data);
                                 this.getViewStore.setTotal(this.props.total || 0);
                             }
-                            if (this.getViewStore.renderData.length) {
+                            if (this.getViewStore._renderData.length) {
                                 UniqueKey = this.isHasUniqueKeyData();
                                 Repeat = this.isChkRepeatUniqueKeyData();
                                 warningOnce(UniqueKey, errorMessage.uniqueKey);
@@ -895,7 +861,7 @@ var LegionsProTable = /** @class */ (function (_super) {
                             span = document.createElement('span');
                             this.node = span;
                             if (thead.querySelector('th')) {
-                                RootContainer = this.getViewStore.isOpenRowSelection && this.props.type === 'checkbox' ? '.ant-table-selection-down' : 'span';
+                                RootContainer = this.getViewStore._isOpenRowSelection && this.props.type === 'checkbox' ? '.ant-table-selection-down' : 'span';
                                 spanth = thead.querySelector('th').querySelector(RootContainer);
                                 if (spanth) {
                                     spanth.appendChild(this.node);
@@ -903,7 +869,7 @@ var LegionsProTable = /** @class */ (function (_super) {
                                 }
                             }
                         }
-                        this.consoleLog('hlTable-componentDidMount');
+                        this.consoleLog('componentDidMount');
                         return [2 /*return*/];
                 }
             });
@@ -921,7 +887,7 @@ var LegionsProTable = /** @class */ (function (_super) {
     LegionsProTable.prototype.renderPortal = function () {
         var index = this.selections.findIndex(function (item) { return item.key === 'export-excel'; });
         var menu = (React.createElement(Menu, null,
-            (this.props.isOpenCustomColumns && this.props.tableModulesName) && React.createElement(Menu.Item, { key: "3" }, this.renderButtonCusttomColumns()),
+            (this.props.isOpenCustomColumns) && React.createElement(Menu.Item, { key: "3" }, this.renderButtonCusttomColumns()),
             index > -1 && React.createElement(Menu.Item, { key: "1" },
                 React.createElement(Button, { size: "small", onClick: this.exportCurrPageData },
                     "\u5BFC\u51FA\u5F53\u9875",
@@ -990,7 +956,7 @@ var LegionsProTable = /** @class */ (function (_super) {
             this.setTabletBody();
         }
         this.node && this.renderPortal();
-        this.consoleLog('hlTable-componentDidUpdate');
+        this.consoleLog('componentDidUpdate');
     };
     //@ts-ignore
     LegionsProTable.prototype.componentWillReceiveProps = function (nextProps) {
@@ -998,55 +964,36 @@ var LegionsProTable = /** @class */ (function (_super) {
         if (this.props.selectedRowKeys && this.props.selectedRowKeys !== nextProps.selectedRowKeys) {
             var data = [];
             if (this.props.autoQuery && this.props.displayType === 'smallData') {
-                data = (this.getViewStore.renderData && this.getViewStore.renderData.length) ? this.getViewStore.renderData : [];
+                data = (this.getViewStore._renderData && this.getViewStore._renderData.length) ? this.getViewStore._renderData : [];
             }
             else {
-                data = (nextProps.data && nextProps.data.length) ? nextProps.data : [];
+                data = (nextProps.dataSource && nextProps.dataSource.length) ? nextProps.dataSource : [];
             }
             // @ts-ignore
             var newSelectedRows = data.filter(function (v) { return nextProps.selectedRowKeys.includes(v[_this.props.uniqueKey]); });
             var newSelectedRowKeys = newSelectedRows.map(function (item) { return item[_this.props.uniqueKey]; });
             var selectedRowKeys = __spread(newSelectedRowKeys);
-            this.setState({ selectedRowKeys: selectedRowKeys });
-        }
-        if (this.props.scroll && !this.deepComparisonObject(this.props.scroll, nextProps.scroll)) {
-            this.viewModel.scroll = nextProps.scroll;
+            this.getViewStore.selectedRowKeys = selectedRowKeys;
         }
         if (this.props.bodyStyle && !this.deepComparisonObject(this.props.bodyStyle, nextProps.bodyStyle)) {
             this.viewModel.bodyStyle = nextProps.bodyStyle;
         }
-        if (nextProps.data !== this.props.data && nextProps.data && !this.props.autoQuery) {
-            /* this.getViewStore.renderData = nextProps.data.map((item,index) => {
-                return {...item,uniqueKey:`${this.viewModel.pageIndex}${index+1}`}
-            }) */
+        if (nextProps.dataSource !== this.props.dataSource && nextProps.dataSource && !this.props.autoQuery) {
             /**  主要解决当渲染数据和传入数据不一致时，无需通过传入数据值来刷新渲染数据 */
             if (this.props.displayType === 'smallData') {
-                this.getViewStore.renderData = __spread(this.props.autoQuery ? [] : nextProps.data);
+                this.getViewStore._renderData = __spread(this.props.autoQuery ? [] : nextProps.dataSource);
             }
-            if (this.getViewStore.renderData.length) {
+            if (this.getViewStore._renderData.length) {
                 var UniqueKey = this.isHasUniqueKeyData();
                 var Repeat = this.isChkRepeatUniqueKeyData();
                 warningOnce(UniqueKey, errorMessage.uniqueKey);
                 warningOnce(!Repeat, errorMessage.Repeat);
             }
         }
-        /* if (nextProps.total !== this.props.total&&!this.props.autoQuery) {
-           this.getViewStore.setTotal(nextProps.total)
-        } */
         if (this.props.columns !== nextProps.columns) {
             this.getViewStore.columns = this.tranMapColumns(nextProps.columns);
         }
-        this.consoleLog('hlTable-componentWillReceiveProps');
-        /* if (this.props.total !== nextProps.total) {
-            console.log(this.props.total, nextProps.total)
-            const totalPage = parseInt(((nextProps.total + this.viewModel.pageSize - 1) / this.viewModel.pageSize).toString());
-            if (this.viewModel.pageIndex > totalPage) {
-                this.viewModel.pageIndex = totalPage
-            }
-        } */
-        /* if(this.props.pageIndex!==nextProps.pageIndex){ 暂时取消
-            this.setState({pageIndex:nextProps.pageIndex})
-        } */
+        this.consoleLog('componentWillReceiveProps');
     };
     /**
      *
@@ -1067,7 +1014,7 @@ var LegionsProTable = /** @class */ (function (_super) {
      */
     LegionsProTable.prototype.isHasUniqueKeyData = function () {
         var _this = this;
-        var result = this.viewModel.renderData.every(function (item) { return _this.props.uniqueKey in item; });
+        var result = this.viewModel._renderData.every(function (item) { return _this.props.uniqueKey in item; });
         return result;
     };
     /**
@@ -1079,26 +1026,26 @@ var LegionsProTable = /** @class */ (function (_super) {
     LegionsProTable.prototype.isChkRepeatUniqueKeyData = function () {
         var isSame = false;
         var obj = {};
-        for (var i = 0; i < this.viewModel.renderData.length; i++) {
-            if (this.viewModel.renderData[i][this.props.uniqueKey] in obj) {
+        for (var i = 0; i < this.viewModel._renderData.length; i++) {
+            if (this.viewModel._renderData[i][this.props.uniqueKey] in obj) {
                 isSame = true;
                 break;
             }
             else {
-                obj[this.viewModel.renderData[i][this.props.uniqueKey]] = this.viewModel.renderData[i][this.props.uniqueKey];
+                obj[this.viewModel._renderData[i][this.props.uniqueKey]] = this.viewModel._renderData[i][this.props.uniqueKey];
             }
         }
         return isSame;
     };
     LegionsProTable.prototype.onRowClick = function (record, index, event) {
-        if (this.getViewStore.isOpenRowChange) {
+        if (this.getViewStore._isOpenRowChange) {
             this.selectRow(record);
             this.props.onRowClick && this.props.onRowClick(record, index, event);
         }
     };
     LegionsProTable.prototype.onRowClassName = function (record, index) {
         var _this = this;
-        var RowIndex = this.state.selectedRowKeys.findIndex(function (item) { return item === record[_this.props.uniqueKey]; });
+        var RowIndex = this.getViewStore.selectedRowKeys.findIndex(function (item) { return item === record[_this.props.uniqueKey]; });
         var getCheckboxPropsItem = this.getCheckboxPropsItem(record);
         if (RowIndex > -1) {
             return 'row-color';
@@ -1120,8 +1067,8 @@ var LegionsProTable = /** @class */ (function (_super) {
     };
     LegionsProTable.prototype.selectedRowsCheck = function (record) {
         var _this = this;
-        var selectedRows = __spread(this.props.store.get(this.freezeuid).selectedRows);
-        var selectedRowKeys = __spread(this.state.selectedRowKeys);
+        var selectedRows = __spread(this.getViewStore.computedSelectedRows);
+        var selectedRowKeys = __spread(this.getViewStore.selectedRowKeys);
         var selectedRow = selectedRows.find(function (item) { return item[_this.props.uniqueKey] === record[_this.props.uniqueKey]; });
         if (selectedRowKeys.indexOf(record[this.props.uniqueKey]) >= 0) {
             selectedRowKeys.splice(selectedRowKeys.indexOf(record[this.props.uniqueKey]), 1);
@@ -1142,8 +1089,7 @@ var LegionsProTable = /** @class */ (function (_super) {
             }
             selectedRows.push(record);
         }
-        this.setState({ selectedRowKeys: selectedRowKeys });
-        this.props.store.get(this.freezeuid).selectedRows = selectedRows;
+        this.getViewStore.selectedRowKeys = selectedRowKeys;
         this.props.onRowChange && this.props.onRowChange(selectedRows);
     };
     //@ts-ignore
@@ -1156,8 +1102,8 @@ var LegionsProTable = /** @class */ (function (_super) {
                         "\u521D\u6B21\u6253\u5F00\u9875\u9762\u4E0D\u52A0\u8F7D\u6570\u636E\uFF0C\u8BF7\u7EC4\u5408\u6761\u4EF6\u8FDB\u884C\u641C\u7D22")
                 };
             }
-            else if (this.getLocalViewStore && this.getLocalViewStore.obState.isResolved && this.getViewStore.renderData.length === 0) {
-                if (!this.getLocalViewStore.obState.value.success && this.getLocalViewStore.obState.value.message) {
+            else if (this.getLocalViewStore && this.getLocalViewStore.obState.isResolved && this.getViewStore._renderData.length === 0) {
+                if (this.getLocalViewStore.obState.value && !this.getLocalViewStore.obState.value.success && this.getLocalViewStore.obState.value.message) {
                     return {
                         emptyText: React.createElement("div", { className: "no-data-tip" },
                             React.createElement(Icon, { style: { color: '#95cef9', fontSize: '20px', paddingRight: '5px', verticalAlign: 'middle' }, type: "search" }),
@@ -1181,48 +1127,38 @@ var LegionsProTable = /** @class */ (function (_super) {
     };
     LegionsProTable.prototype.render = function () {
         var _this = this;
-        var selectedRowKeys = this.state.selectedRowKeys;
-        var store = this.props.store.get(this.freezeuid);
-        var alreadyRowsLen = store.selectedRows.length;
-        var onRowChange = this.props.onRowChange;
+        var store = this.getViewStore;
+        var selectedRowKeys = store.selectedRowKeys;
+        var alreadyRowsLen = store.computedSelectedRows.length;
         var locale = null;
         if (this.props.autoQuery) {
             locale = {
                 locale: this.renderlocale(),
             };
         }
-        this.consoleLog('hlTable-render');
-        //@ts-ignore
-        var rowSelection = (this.getViewStore.isOpenRowSelection) ? __assign(__assign({}, this.props.rowSelection), { selectedRowKeys: selectedRowKeys, hideDefaultSelections: true, type: this.props.type, selections: this.selections, onChange: this.onSelectChange.bind(this), onSelectAll: function (selected, selectedRows, changeRows) {
-                if (_this.getViewStore.renderData.length <= _this.props.data.length) { // 主要用于大数据table 性能问题，每次只加载部分数据，这时全选时自动选择全部数据
+        this.consoleLog('render');
+        var rowSelection = (this.getViewStore._isOpenRowSelection) ? __assign(__assign({}, this.props.rowSelection), { selectedRowKeys: __spread(selectedRowKeys), hideDefaultSelections: true, type: this.props.type, selections: this.selections, onChange: this.onSelectChange.bind(this), onSelectAll: function (selected, selectedRows, changeRows) {
+                if (_this.getViewStore._renderData.length <= _this.props.dataSource.length) { // 主要用于大数据table 性能问题，每次只加载部分数据，这时全选时自动选择全部数据
                     if (selected) {
-                        var newData_1 = _this.props.data.filter(function (item) {
+                        var newData = _this.props.dataSource.filter(function (item) {
                             var getCheckboxPropsItem = _this.getCheckboxPropsItem(item);
                             return ((!getCheckboxPropsItem || (getCheckboxPropsItem && !getCheckboxPropsItem['disabled'])));
                         });
-                        var selectedRowKey = newData_1.map(function (item) { return item[_this.props.uniqueKey]; });
-                        _this.setState({ selectedRowKeys: selectedRowKey }, function () {
-                            var data = __spread(newData_1);
-                            _this.getViewStore.selectedRows = data;
-                            _this.props.onRowChange && _this.props.onRowChange(_this.getViewStore.selectedRows);
-                        });
+                        var selectedRowKey = newData.map(function (item) { return item[_this.props.uniqueKey]; });
+                        store.selectedRowKeys = selectedRowKey;
+                        _this.props.onRowChange && _this.props.onRowChange(_this.getViewStore.computedSelectedRows);
                     }
                     else {
-                        _this.setState({ selectedRowKeys: [] }, function () {
-                            _this.getViewStore.selectedRows = [];
-                            _this.props.onRowChange && _this.props.onRowChange(_this.getViewStore.selectedRows);
-                        });
+                        store.selectedRowKeys = [];
+                        _this.props.onRowChange && _this.props.onRowChange(_this.getViewStore.computedSelectedRows);
                     }
                 }
             }, onSelectInvert: function () {
-                _this.setState({ selectedRowKeys: [] }, function () {
-                    _this.getViewStore.selectedRows = [];
-                });
+                store.selectedRowKeys = [];
             } }) : null;
         var paginationProps = this.props.pagination;
         var pagination = {
             pageSizeOptions: this.props.pageSizeOptions,
-            /* total: this.props.total, */
             total: this.props.autoQuery ? this.getViewStore.computedTotal : this.props.total,
             current: store.pageIndex,
             showQuickJumper: true,
@@ -1230,12 +1166,9 @@ var LegionsProTable = /** @class */ (function (_super) {
             showSizeChanger: true,
             size: (paginationProps && typeof paginationProps === 'object') ? paginationProps.size : '',
             onChange: function (pageIndex, pageSize) {
-                _this.setState({
-                    selectedRowKeys: [],
-                });
+                store.selectedRowKeys = []; /**  切换页码 初始化行选择数据*/
                 _this.props.store.get(_this.freezeuid).pageIndex = pageIndex;
                 _this.props.store.get(_this.freezeuid).pageSize = pageSize;
-                _this.props.store.get(_this.freezeuid).selectedRows = [];
                 _this.props.onPagingQuery && _this.props.onPagingQuery(pageIndex, pageSize, false);
                 if (_this.props.autoQuery && _this.getLocalViewStore) {
                     _this.getLocalViewStore.dispatchRequest(_this.props.autoQuery, {
@@ -1245,12 +1178,9 @@ var LegionsProTable = /** @class */ (function (_super) {
                 }
             },
             onShowSizeChange: function (current, pageSize) {
-                _this.setState({
-                    selectedRowKeys: [],
-                });
+                store.selectedRowKeys = []; /**  切换页大小 初始化行选择数据*/
                 _this.props.store.get(_this.freezeuid).pageIndex = current;
                 _this.props.store.get(_this.freezeuid).pageSize = pageSize;
-                _this.props.store.get(_this.freezeuid).selectedRows = [];
                 _this.props.onPagingQuery && _this.props.onPagingQuery(current, pageSize, true);
                 if (_this.props.autoQuery && _this.getLocalViewStore) {
                     _this.getLocalViewStore.dispatchRequest(_this.props.autoQuery, {
@@ -1261,39 +1191,28 @@ var LegionsProTable = /** @class */ (function (_super) {
             },
             showTotal: function (total) { return (alreadyRowsLen > 0 ? "\u5DF2\u9009\u62E9" + alreadyRowsLen + "\u6761\u6570\u636E" : '') + " \u5171 " + total + " \u6761\u6570\u636E"; }
         };
-        /* console.log(this.getViewStore.renderData) */
-        /* const bodyStyle = (this.viewModel.isAdaptiveHeight && this.getViewStore.renderData && this.getViewStore.renderData.length > 0) ? { ...this.viewModel.bodyStyle,...this.viewModel.calculateBody } : this.viewModel.bodyStyle */
-        var bodyStyle = (this.viewModel.isAdaptiveHeight && this.getViewStore.renderData && this.getViewStore.renderData.length > 0) ? __assign(__assign({}, this.viewModel.bodyStyle), this.viewModel.calculateBody) : this.viewModel.bodyStyle;
+        /* const bodyStyle = (this.viewModel.isAdaptiveHeight && this.getViewStore._renderData && this.getViewStore._renderData.length > 0) ? { ...this.viewModel.bodyStyle,...this.viewModel.calculateBody } : this.viewModel.bodyStyle */
+        var bodyStyle = (this.viewModel.isAdaptiveHeight && this.getViewStore._renderData && this.getViewStore._renderData.length > 0) ? __assign(__assign({}, this.viewModel.bodyStyle), this.viewModel.calculateBody) : this.viewModel.bodyStyle;
         return React.createElement(Row, { className: baseCls },
             React.createElement(Col, null,
                 React.createElement("div", { className: "containers " + this.uid + " " + (this.viewModel.isAdaptiveHeight ? 'adaptiveHeight' : '') },
                     React.createElement(Table
                     /* size="small" */
-                    , __assign({}, locale, this.props, { scroll: this.viewModel.scroll, columns: this.viewModel.computedRenderColumns, bordered: true, bodyStyle: bodyStyle, rowClassName: this.onRowClassName.bind(this), pagination: (this.getViewStore.pagination) ? pagination : false, loading: { tip: 'loading', spinning: this.props.autoQuery ? this.getLocalViewStore.loading : this.props.loading }, rowKey: this.props.uniqueKey, 
+                    , __assign({}, locale, this.props, { scroll: __assign({
+                            x: store.tableXAutoWidth,
+                            y: 300,
+                        }, this.props.scroll), columns: this.viewModel.computedRenderColumns, bordered: true, bodyStyle: bodyStyle, rowClassName: this.onRowClassName.bind(this), pagination: (this.getViewStore._pagination) ? pagination : false, loading: { tip: 'loading', spinning: this.props.autoQuery ? this.getLocalViewStore.loading : this.props.loading }, rowKey: this.props.uniqueKey, 
                         // locale={{emptyText:<span>2222</span>}}
-                        onRowClick: this.onRowClick.bind(this), rowSelection: rowSelection, dataSource: __spread(this.getViewStore.renderData), onChange: function (pagination, filters, sorter) {
+                        onRowClick: this.onRowClick.bind(this), rowSelection: rowSelection, dataSource: __spread(this.getViewStore._renderData), onChange: function (pagination, filters, sorter) {
                             if (sorter.column && sorter.column.sorter && typeof sorter.column.sorter === 'boolean' && _this.props.displayType === 'smallData') {
                                 var sorterFn = _this.getSorterFn(sorter.order, function (a, b) {
                                     return compare(a[sorter.columnKey], b[sorter.columnKey]);
                                 });
-                                var data = _this.viewModel.renderData.map(function (item) { return item; });
-                                _this.viewModel.renderData = __spread(data.sort(sorterFn));
+                                var data = _this.viewModel._renderData.map(function (item) { return item; });
+                                _this.viewModel._renderData = __spread(data.sort(sorterFn));
                             }
                             _this.props.onChange && _this.props.onChange(pagination, filters, sorter);
                         } })))),
-            React.createElement(LegionsProModal, { onOk: function () {
-                    if (!_this.viewUI.taskName) {
-                        message.warning('请输入任务名称');
-                        return;
-                    }
-                    _this.props.onExportAll && _this.props.onExportAll(_this.props.tableModulesName, _this.viewUI.taskName);
-                    _this.modalRef.viewModel.visible = false;
-                }, onReady: function (value) {
-                    _this.modalRef = value;
-                } },
-                React.createElement(Input, { value: this.viewUI.taskName, placeholder: "\u8BF7\u8F93\u5165\u4EFB\u52A1\u540D\u79F0", onChange: function (value) {
-                        _this.viewUI.taskName = value.target.value;
-                    } })),
             this.props.isOpenCustomColumns && React.createElement(LegionsProTableCustomColumns, { customColumnsConfig: {
                     queryApi: LegionsProTable_1.customColumnsConfig.queryApi,
                     editApi: LegionsProTable_1.customColumnsConfig.editApi,
@@ -1302,49 +1221,20 @@ var LegionsProTable = /** @class */ (function (_super) {
                 } }));
     };
     var LegionsProTable_1;
-    /* lodaMore = debounce(() => {
-        const end = this.getViewStore.flag + 100;
-        const data = this.props.data.slice(this.getViewStore.flag,end);
-        if (data.length) {
-            data.map((item) => {
-                const index = this.getViewStore.renderData.findIndex((entity) => entity[this.props.uniqueKey] === item[this.props.uniqueKey])
-                if (index < 0) {
-                    this.getViewStore.renderData.push(item);
-                }
-            })
-            this.getViewStore.renderData = [... this.getViewStore.renderData]
-            this.getViewStore.flag = end;
-        }
-    },500) */
-    /* viewTodo=observableViewModel<Calculate>(new Calculate()) */
-    /* lodaMore = debounce((mode: 'next' | 'pre') => {
-        const totalPage = parseInt(((this.props.total + this.viewModel.pageSize - 1) / this.viewModel.pageSize).toString())
-        if (mode === 'next') {
-            if (this.viewModel.pageIndex < totalPage) {
-                this.viewModel.pageIndex = this.viewModel.pageIndex + 1;
-                this.props.onPagingQuery && this.props.onPagingQuery(this.viewModel.pageIndex,this.viewModel.pageSize,false);
-            }
-        }
-        if (mode === 'pre') {
-            if (this.viewModel.pageIndex > 1 && this.viewModel.pageIndex <= totalPage) {
-                this.viewModel.pageIndex = this.viewModel.pageIndex - 1;
-                this.props.onPagingQuery && this.props.onPagingQuery(this.viewModel.pageIndex,this.viewModel.pageSize,false);
-            }
-        }
-
-    },500) */
     LegionsProTable.defaultProps = {
         rowSelectionClickType: 'radio',
         isOpenRowSelection: true,
         type: 'checkbox',
-        data: [],
+        dataSource: [],
         total: 0,
         loading: false,
         displayType: 'smallData',
         isOpenCustomColumns: true,
         pageSizeOptions: ['5', '10', '20', '40', '60', '80', '100', '200', '500'],
     };
-    /** 开启自定义列，同步数据到服务端所需要的查询和保存接口地址信息 */
+    /** 开启自定义列数据同步接口信息-全局配置(当全局和局部存在冲突时，优先局部配置数据)
+     *
+     * 同步数据到服务端所需要的查询和保存接口地址信息 */
     LegionsProTable.customColumnsConfig = {
         editApi: '',
         queryApi: '',

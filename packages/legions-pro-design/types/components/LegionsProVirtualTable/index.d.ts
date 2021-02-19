@@ -60,7 +60,7 @@ export default class LegionsProVirtualTable extends Component<IProTableProps, IS
         onFilterDropdownVisibleChange?: (visible: boolean) => void;
         sorter: boolean | ((a: any, b: any) => number);
         colSpan?: number;
-        width?: import("antd/lib/checkbox/Group").CheckboxValueType;
+        width?: React.ReactText;
         className?: string;
         fixed?: boolean | "left" | "right";
         filterIcon?: React.ReactNode;
