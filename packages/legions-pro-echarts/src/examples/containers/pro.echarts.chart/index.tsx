@@ -7,11 +7,11 @@ import LegionsProEchartsBox from '../../../components/LegionsProEchartsBox';
 import LegionsProEchartsChartBar from '../../../components/LegionsProEchartsChartBar';
 import LegionsProEchartsChartCard from '../../../components/LegionsProEchartsChartCard';
 import { Button, Col,Row } from 'antd';
-import { LegionsProEchartsCol } from '../../../components/LegionsProEchartsCol';
 import LegionsProEchartsLiquidFill from '../../../components/LegionsProEchartsLiquidFill';
 import { StockModeContainerEntity } from 'examples/models/mockEntity';
 import { observablePromise } from 'legions/store-utils';
 import { IExtendsOption } from 'components/interface/interface';
+const { ProRow, ProCol } = LegionsProEchartsLayout;
 export class LegionsProEchartsChartPieDemo extends React.Component {
     //@ts-ignore
     chartsRef: echarts.ECharts = null;
@@ -104,12 +104,12 @@ export class LegionsProEchartsChartPieDemo extends React.Component {
     }
 
     render() {
-        console.log(...[{a:'a',b:[{c:'1'},{d:'2'}]}],'test')
-        return <LegionsProEchartsLayout>
+        return <LegionsProEchartsLayout gutter={6}>
+            <ProRow>
             <Button onClick={()=>{
                 this.pieMethod.methods.onSearch({pageSize:10})
             }}>test</Button>
-            <LegionsProEchartsCol xs={{
+            <ProCol xs={{
                 span:24
             }} sm={6} md={8} lg={5} xl={5} >
                 <LegionsProEchartsBox
@@ -136,8 +136,8 @@ export class LegionsProEchartsChartPieDemo extends React.Component {
                         }}
                     ></LegionsProEchartsChartPie>
                 </LegionsProEchartsBox>
-            </LegionsProEchartsCol>
-            <LegionsProEchartsCol xs={{
+            </ProCol>
+            <ProCol xs={{
                 span:24
             }} sm={6} md={8} lg={5} xl={5} >
                 <LegionsProEchartsBox
@@ -153,7 +153,7 @@ export class LegionsProEchartsChartPieDemo extends React.Component {
                         }}
                         onChartReady={(instance,methodRef) => {
                             this.chartsRef = instance;
-                            this.pieMethod = methodRef
+                            this.pieMethod = methodRef!
                         }}
                         autoQuery={{
                             model: StockModeContainerEntity,
@@ -183,8 +183,8 @@ export class LegionsProEchartsChartPieDemo extends React.Component {
                         }}
                     ></LegionsProEchartsChartPie>
                 </LegionsProEchartsBox>
-            </LegionsProEchartsCol>
-            <LegionsProEchartsCol xs={24} sm={{
+            </ProCol>
+            <ProCol xs={24} sm={{
                 span: 8,
                 offset:1,
             }} md={{span:7,offset:1}} lg={{span:6,offset:1}} xl={{span:6,offset:1}}>
@@ -193,8 +193,8 @@ export class LegionsProEchartsChartPieDemo extends React.Component {
                     title="折线图">
                     <LegionsProEchartsChartLine option={this.lineOptions}></LegionsProEchartsChartLine>
                 </LegionsProEchartsBox>
-            </LegionsProEchartsCol>
-            <LegionsProEchartsCol xs={24} sm={{span:8,offset:1}} md={{span:7,offset:1}} lg={{span:6,offset:1}} xl={{span:6,offset:1}}>
+            </ProCol>
+            <ProCol xs={24} sm={{span:8,offset:1}} md={{span:7,offset:1}} lg={{span:6,offset:1}} xl={{span:6,offset:1}}>
                 <LegionsProEchartsBox title="折线图自动托管数据">
                     <LegionsProEchartsChartLine
                         option={{ xAxis: {
@@ -202,7 +202,7 @@ export class LegionsProEchartsChartPieDemo extends React.Component {
                         }}}
                         onChartReady={(instance,extendsOption)=>{
                             this.lineAutoRef = instance
-                            this.lineAutoMethod = extendsOption
+                            this.lineAutoMethod = extendsOption!
                         }}
                         autoQuery={{
                             model: StockModeContainerEntity,
@@ -237,8 +237,8 @@ export class LegionsProEchartsChartPieDemo extends React.Component {
                             }
                         }}></LegionsProEchartsChartLine>
                 </LegionsProEchartsBox>
-            </LegionsProEchartsCol>
-            <LegionsProEchartsCol xs={24} sm={{span:8,offset:1}} md={{span:7,offset:1}} lg={{span:5,offset:1}} xl={{span:5,offset:1}}>
+            </ProCol>
+            <ProCol xs={24} sm={{span:8,offset:1}} md={{span:7,offset:1}} lg={{span:5,offset:1}} xl={{span:5,offset:1}}>
                 <LegionsProEchartsBox
                     style={{ height: '240px',paddingBottom: 5 }}
                     title="柱状图">
@@ -247,9 +247,9 @@ export class LegionsProEchartsChartPieDemo extends React.Component {
                         toolbox:{ feature: {}},
                     }}></LegionsProEchartsChartBar>
                 </LegionsProEchartsBox>
-            </LegionsProEchartsCol>
+            </ProCol>
 
-            <LegionsProEchartsCol xs={24} sm={{span:8,offset:1}} md={{span:7,offset:1}} lg={{span:5,offset:1}} xl={{span:5,offset:1}}>
+            <ProCol xs={24} sm={{span:8,offset:1}} md={{span:7,offset:1}} lg={{span:5,offset:1}} xl={{span:5,offset:1}}>
                 <LegionsProEchartsBox
                     style={{ height: '240px',paddingBottom: 5 }}
                     title="柱状图数据自动托管">
@@ -297,22 +297,23 @@ export class LegionsProEchartsChartPieDemo extends React.Component {
                             }
                         }}></LegionsProEchartsChartBar>
                 </LegionsProEchartsBox>
-            </LegionsProEchartsCol>
+            </ProCol>
 
-            <LegionsProEchartsCol xs={24} sm={{span:8}} md={{span:6}} lg={{span:5,offset:1}} xl={{span:5,offset:1}}>
+            <ProCol xs={24} sm={{span:8}} md={{span:6}} lg={{span:5,offset:1}} xl={{span:5,offset:1}}>
                 <LegionsProEchartsBox
                     style={{ height: '240px',paddingBottom: 5 }}
                     >
                     <LegionsProEchartsChartCard total={126} title={'本月新增审核企业'}></LegionsProEchartsChartCard>
                 </LegionsProEchartsBox>
-            </LegionsProEchartsCol>
-            <LegionsProEchartsCol xs={24} sm={{span:8}} md={{span:6}} lg={{span:5,offset:1}} xl={{span:5,offset:1}}>
+            </ProCol>
+            <ProCol xs={24} sm={{span:8}} md={{span:6}} lg={{span:5,offset:1}} xl={{span:5,offset:1}}>
                 <LegionsProEchartsBox
                     style={{ height: '260px',paddingBottom: 5 }}
                     >
                     <LegionsProEchartsLiquidFill option={this.liquidFillOptions}></LegionsProEchartsLiquidFill>
                 </LegionsProEchartsBox>
-            </LegionsProEchartsCol>
+            </ProCol>
+            </ProRow>
         </LegionsProEchartsLayout>
     }
 }

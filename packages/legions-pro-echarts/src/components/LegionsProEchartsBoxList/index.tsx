@@ -13,6 +13,7 @@ import { Progress,Col,Row } from 'antd';
 import './style/index.less';
 import LegionsProEchartsBox from '../LegionsProEchartsBox';
 import LegionsProLineOverflow from '../LegionsProLineOverflow';
+import LegionsProEchartsProgress from '../LegionsProEchartsProgress';
 interface ColumnProps<T> {
     title?: React.ReactNode;
     key?: string;
@@ -45,6 +46,7 @@ class IProps<T> {
      * 默认值key
      */
     rowKey: string | ((record: T, index: number) => string)='key';
+    noContent?:string = '无数据';
 }
 const proLayoutPrefix = 'legions-pro-echarts';
 /** 可视化界面容器盒子列表组件 */
@@ -52,7 +54,7 @@ export default class LegionsProEchartsBoxList<T = {}> extends React.Component<IP
     //@ts-ignore
     static defaultProps: Readonly<IProps> = new IProps()
     renderContent() {
-        const { dataSource,rowKey } = this.props;
+        const { dataSource,rowKey,noContent } = this.props;
         const renderRowKeys = (item:T,index) => {
             if (typeof rowKey === 'function') {
                 return rowKey(item,index)
@@ -61,60 +63,76 @@ export default class LegionsProEchartsBoxList<T = {}> extends React.Component<IP
                 return item[rowKey];
             }
         }
-        return dataSource.map((item,index) => {
-            const hasOwnProperty = item['hasOwnProperty'];
-            const renderCells = () => {
-                const cells: any[] = [];
-                Object.keys(item).forEach((keys) => {
-                    const renderItems = this.props.columns.find((fitem) => hasOwnProperty && (keys === fitem.dataIndex || keys === fitem.key))
-                    if (renderItems) {
-                        if (renderItems.render === void 0) {
-                            cells.push(
-                                <LegionsProLineOverflow text={item[keys]}>
-                                    <Col span={renderItems.colSpan || 3}
-                                        offset={renderItems.offset || 2}
-                                        className={`box-lit-title-text-overflow  ${renderItems.className || 'box-lit-title'}`}>
-                                        {item[keys]}
-                                    </Col>
-                                </LegionsProLineOverflow>
-                            )
+        if(dataSource.length > 0 ){
+            return dataSource.map((item,index) => {
+                const hasOwnProperty = item['hasOwnProperty'];
+                const renderCells = () => {
+                    const cells: any[] = [];
+                    Object.keys(item).forEach((keys) => {
+                        const renderItems = this.props.columns.find((fitem) => hasOwnProperty && (keys === fitem.dataIndex || keys === fitem.key))
+                        if (renderItems) {
+                            if (renderItems.render === void 0) {
+                                if(renderItems.tooltip){
+                                    cells.push(
+                                        <LegionsProLineOverflow text={item[keys]}>
+                                            <Col span={renderItems.colSpan || 3}
+                                                offset={renderItems.offset || 2}
+                                                className={`box-lit-title-text-overflow  ${renderItems.className || 'box-lit-title'}`}>
+                                                {item[keys]}
+                                            </Col>
+                                        </LegionsProLineOverflow>
+                                    )
+                                }else{
+                                    cells.push(
+                                        <Col span={renderItems.colSpan || 3}
+                                            offset={renderItems.offset || 2}
+                                            className={`${renderItems.className || 'box-lit-title'}`}>
+                                            {item[keys]}
+                                        </Col>
+                                    )
+                                }
+                            }
+                            else if (typeof renderItems.render === 'function') {
+                                cells.push(<Col span={renderItems.colSpan || 3}
+                                    offset={renderItems.offset || 2}
+                                    className={`${renderItems.className}`}>
+                                    {renderItems.render(keys,item,index)}
+                                </Col>)
+                            }
+                            else if (renderItems.render === 'proportion') {
+                                cells.push(<Col span={renderItems.colSpan || 3}
+                                    offset={renderItems.offset || 2}
+                                    style={{marginTop:-2}}
+                                    className={`${renderItems.className}`}
+                                >
+                                    <LegionsProEchartsProgress percent={item[keys]}></LegionsProEchartsProgress>
+                                </Col>)
+                            }
                         }
-                        else if (typeof renderItems.render === 'function') {
-                            cells.push(<Col span={renderItems.colSpan || 3}
-                                offset={renderItems.offset || 2}
-                                className={`${renderItems.className}`}>
-                                {renderItems.render(keys,item,index)}
-                            </Col>)
-                        }
-                        else if (renderItems.render === 'proportion') {
-                            cells.push(<Col span={renderItems.colSpan || 3}
-                                offset={renderItems.offset || 2}
-                                className={`${renderItems.className}`}
-                            >
-                                <Progress
-                                    percent={item[keys]}
-                                    /* style={{ width: '40%' }} */
-                                    showInfo={true}
-                                    style={{color:'#00E6FC'}}
-                                ></Progress>
-                            </Col>)
-                        }
-                    }
-                })
-                return cells;
-            }
-            return <div className="box-lit-top-singleRowList" key={`${renderRowKeys(item,index)}`}><div className="box-lit-item">
-                <div className="box-lit-item-Top">
-                    <Col span={2} className={'box-lit-serial-number'}
-                        style={index + 1 > 3 ? { backgroundColor: '#00E6FC' } : { backgroundColor: '#db8848' }}
-                    >
-                        {index + 1}
-                    </Col>
-                    {renderCells()}
+                    })
+                    return cells;
+                }
+                return <div className="box-lit-top-singleRowList" key={`${renderRowKeys(item,index)}`}><div className="box-lit-item">
+                    <div className="box-lit-item-Top">
+                        <Col span={2} className={'box-lit-serial-number'}
+                            style={{ backgroundColor: index + 1 > 3 ? '#00E6FC' : '#db8848'}}
+                        >
+                            {index + 1}
+                        </Col>
+                        {renderCells()}
+                    </div>
+                </div>
+                </div>
+            })
+        }else{
+            return <div className="box-lit-top-singleRowList">
+                <div className="box-lit-item">
+                    <div className="box-lit-item-Top">
+                        <Col span={24} style={{textAlign:'center',color:'#176279'}}>{noContent}</Col>
+                    </div>
                 </div>
             </div>
-            </div>
-        })
+        }
     }
     renderProBoxTitle() {
         const { boxTitle,columns } = this.props;
@@ -122,7 +140,7 @@ export default class LegionsProEchartsBoxList<T = {}> extends React.Component<IP
         if (Array.isArray(ColumnProps)) {
             const arr: ColumnProps<T>[] = ColumnProps as ColumnProps<T>[]
             return <Row>
-                <Col span={1}></Col>
+                <Col span={2} style={{width:24}}></Col>
                 {arr.map((item) => {
                     return <Col key={`${item.dataIndex}-${item.title}`}
                         span={item.colSpan || 3}
@@ -143,9 +161,10 @@ export default class LegionsProEchartsBoxList<T = {}> extends React.Component<IP
         }
         return (
             <LegionsProEchartsBox style={newBoxStyle}
-                title={this.renderProBoxTitle()}>
+                title={this.renderProBoxTitle()}
+            >
                 <div className={`${proLayoutPrefix}-box-list`}>
-                    {this.renderContent()}
+                   {this.renderContent()}
                 </div>
             </LegionsProEchartsBox>
         )

@@ -1,8 +1,8 @@
 ---
 category: Components
-type: Layout
-title: Box
-subtitle: 容器
+type: Charts
+title: Table
+subtitle: 表格
 ---
 
 基础容器
@@ -10,7 +10,7 @@ subtitle: 容器
 ## API
 
 ```jsx
-<LegionsProEchartsBox title="标题" height="260px"></LegionsProEchartsBox>
+<LegionsProEchartsList></LegionsProEchartsList>
 ```
 
 ### LegionsProEchartsBox props

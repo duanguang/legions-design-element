@@ -1,90 +1,77 @@
-import React,{ Component } from 'react';
 import echarts from 'echarts/lib/echarts';
-import isEqual from 'fast-deep-equal';
-import { bind,clear } from 'size-sensor';
-import {LegionsProEchartsPropsTypes } from '../interface/interface';
+import { isEqual, pick } from 'lodash';
+import React, { Component } from 'react';
+import { bind, clear } from 'size-sensor';
+import { LegionsProEchartsPropsTypes } from '../interface/interface';
 interface ILegionsProEchartsReactCore extends LegionsProEchartsPropsTypes {
     echarts: typeof echarts
 }
-const pick = (obj,keys) => {
-    const r = {};
-    keys.forEach((key) => {
-        r[key] = obj[key];
-    });
-    return r;
-};
 export default class LegionsProEchartsCore<P = {}> extends Component<LegionsProEchartsPropsTypes & P> {
     static defaultProps: Readonly<LegionsProEchartsPropsTypes> = new LegionsProEchartsPropsTypes()
     echartsLib: typeof echarts;
-    echartsElement: HTMLDivElement | HTMLCanvasElement;
+    echartsElement: HTMLDivElement;
     constructor(props: ILegionsProEchartsReactCore&P) {
         super(props);
-        this.echartsLib = props.echarts; // the echarts object.
+        this.echartsLib = props.echarts;
         // @ts-ignore
-        this.echartsElement = null; // echarts div element
+        this.echartsElement = null;
     }
-    // first add
     componentDidMount() {
         this.rerender();
     }
-    // update
     componentDidUpdate(prevProps) {
-        // 判断是否需要 setOption，由开发者自己来确定。默认为 true
+        /* 判断是否需要 setOption，由开发者自己来确定。默认为 true */
         if (typeof this.props.shouldSetOption === 'function' && !this.props.shouldSetOption(prevProps,this.props)) {
             return;
         }
-
-        // 以下属性修改的时候，需要 dispose 之后再新建
-        // 1. 切换 theme 的时候
-        // 2. 修改 opts 的时候
-        // 3. 修改 onEvents 的时候，这样可以取消所有之前绑定的事件 issue #151
+        /* 以下属性修改的时候，需要销售实例之后再重建 */
+        /* 1. 切换 theme 的时候 */
+        /* 2. 修改 opts 的时候 */
+        /* 3. 修改 onEvents 的时候，这样可以取消所有之前绑定的事件 issue #151 */
         if (
             !isEqual(prevProps.theme,this.props.theme) ||
             !isEqual(prevProps.opts,this.props.opts) ||
             !isEqual(prevProps.onEvents,this.props.onEvents
             )
         ) {
+            /* 销毁实例 */
             this.dispose();
-
-            this.rerender(); // 重建
+            /* 重建实例 */
+            this.rerender();
             return;
         }
 
-        // 当这些属性保持不变的时候，不 setOption
-        const pickKeys = ['option','notMerge','lazyUpdate','showLoading','loadingOption'];
+        /* 当这些属性保持不变的时候，不 setOption */
+        const pickKeys = ['option','loading','loadingOption'];
         if (isEqual(pick(this.props,pickKeys),pick(prevProps,pickKeys))) {
             return;
         }
 
-        const echartObj = this.renderEchartDom();
-        // 样式修改的时候，可能会导致大小变化，所以触发一下 resize
+        /* 样式修改的时候，可能会导致大小变化，所以触发一下resize */
         if (!isEqual(prevProps.style,this.props.style) || !isEqual(prevProps.className,this.props.className)) {
             try {
+                const echartObj = this.renderEchartDom();
                 echartObj.resize();
             } catch (e) {
                 console.warn(e);
             }
         }
     }
-    /** 获取Echarts实例，没有则初始化 */
-    getEchartsInstance = () => {
-        return this.echartsLib.getInstanceByDom(this.echartsElement) ||
-            this.echartsLib.init(this.echartsElement,this.props.theme,this.props.opts);
-    }
-    // render the dom
     renderEchartDom = () => {
-        // init the echart object
-        const echartObj = this.getEchartsInstance();
-        // set the echart option
+        /* 获取Echarts实例，没有则初始化 */
+        const echartObj = this.echartsLib.getInstanceByDom(this.echartsElement) || this.echartsLib.init(this.echartsElement, this.props.theme, this.props.opts);
+        /* 初始配置 */
         echartObj.setOption(this.props.option || {},{ ...this.props.setOptionConfig });
-        // set loading mask
-        if (this.props.loading) echartObj.showLoading(void 0,this.props.loadingOption || void 0);
-        else echartObj.hideLoading();
+        /* 是否显示lading状态 */
+        if (this.props.loading) {
+            echartObj.showLoading(void 0, this.props.loadingOption)
+        }else {
+            echartObj.hideLoading();
+        }
         return echartObj
     };
     rerender = () => {
         const { onEvents,onChartReady } = this.props;
-
         const echartObj = this.renderEchartDom();
         this.bindEvents(echartObj,onEvents || {});
         // @ts-ignore on chart ready
@@ -128,8 +115,6 @@ export default class LegionsProEchartsCore<P = {}> extends Component<LegionsProE
             } catch (e) {
                 console.warn(e);
             }
-            // dispose echarts instance
-            /* this.echartsLib.dispose(this.echartsElement); */
             echarts.dispose(this.echartsElement);
         }
     };
@@ -138,8 +123,7 @@ export default class LegionsProEchartsCore<P = {}> extends Component<LegionsProE
         const newStyle = { height: '100%', ...style };
         return (
             <div
-                //@ts-ignore
-                ref={(e) => { this.echartsElement = e; }}
+                ref={(e: HTMLDivElement) => { this.echartsElement = e }}
                 style={newStyle}
                 className={`legions-pro-echarts ${className}`}
             />

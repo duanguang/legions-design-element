@@ -1,27 +1,24 @@
 ---
 category: Components
-type: General
-title: LineOverFlow
-subtitle: 行超出隐藏
+type: Charts
+title: Tooltip
+subtitle: 文字提示
 ---
 
-球状液体填充通常用来表示百分比，比如流量使用占比，销售数据占比等
-
-## 何时使用
-
-当需要显示百分占比，使用此展示比传统数字百分比在视觉上效果更佳
+简单的文字提示气泡框
 
 ## API
 
-液体填充的属性说明如下：
+```jsx
+<LegionsProLineOverflow text={'prompt text'}>气泡框</LegionsProLineOverflow>
+```
+
+### LegionsProEchartsBox props
 
 | 属性 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| option | 液体填充[配置对象](#option) | echarts.EChartOption | - |
-
-### option
-
-| 属性 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| title | 标题文本 | `{text:string}[]` | - |
-| series | [系列列表](https://echarts.apache.org/zh/option.html#series) | `{data:[{name:string;value:string|number},number,number,number],label:{show:boolean}}[]` | - |
+| text | 提示文字 | string\|React.ReactNode | 无 |
+| autoAdjustOverflow | 气泡被遮挡时自动调整位置 | boolean | true |
+| placement | 气泡框位置，可选 top left right bottom topLeft topRight bottomLeft bottomRight leftTop leftBottom rightTop rightBottom |  string | leftTop |
+| trigger | 触发行为，可选 hover/focus/click |  string | hover |
+| defaultVisible | 默认是否显隐 |  boolean | false |

@@ -1,27 +1,45 @@
 ---
 category: Components
 type: Layout
+cols: 1
 title: Layout
-subtitle: 布局
+subtitle: 页面容器
 ---
 
-球状液体填充通常用来表示百分比，比如流量使用占比，销售数据占比等
+基础容器布局
 
 ## 何时使用
 
-当需要显示百分占比，使用此展示比传统数字百分比在视觉上效果更佳
+初始化布局和大屏背景
 
 ## API
 
-液体填充的属性说明如下：
+```jsx
+<LegionsProEchartsLayout gutter={6}>
+    <ProRow>
+        <ProCol span={12}></ProCol>
+        <ProCol span={12}></ProCol>
+    </ProRow>
+</LegionsProEchartsLayout>
+```
+
+### LegionsProEchartsLayout
 
 | 属性 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| option | 液体填充[配置对象](#option) | echarts.EChartOption | - |
+| isFullScreen | 是否只显示一屏 false:超出出现滚动条, true:铺满一屏 | boolean | false |
+| isFillFullScreen | 背景色填满整个body | boolean | true |
+| gutter | 子元素上下左右间隔 | number | 0 |
+| gutterDeep | gutter遍历的深度，默认5级children | number | 5 |
 
-### option
+### ProCol
 
 | 属性 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| title | 标题文本 | `{text:string}[]` | - |
-| series | [系列列表](https://echarts.apache.org/zh/option.html#series) | `{data:[{name:string;value:string|number},number,number,number],label:{show:boolean}}[]` | - |
+| ySpan | 竖向栅格占位格数，仅在父窗口有固定高度的情况下生效 | number | 0
+
+### ProRow
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| ySpan | 竖向栅格占位格数，仅在父窗口有固定高度的情况下生效 | number | 0

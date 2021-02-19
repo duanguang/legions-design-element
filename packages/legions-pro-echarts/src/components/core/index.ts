@@ -4,9 +4,10 @@
  * @Date: 2020-12-18 16:08:25
  * @LastEditTime: 2020-12-18 16:08:58
  * @LastEditors: duanguang
- * @Description: 
+ * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-echarts/src/components/core/index.ts
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
 export { MORE_IOCN } from './constant.icon';
+export { prefixCls } from './constant.com';
 export { LegionsFetch } from './legionsFetch';

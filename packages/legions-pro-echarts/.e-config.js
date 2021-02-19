@@ -41,7 +41,7 @@ module.exports = function (configs) {
         },
       },
     }),
-    apps: ['examples', 'examples'],
+    apps: ['examples'],
     entries: ['src/examples/index'],
     webpack: {
       dllConfig: {
@@ -94,6 +94,7 @@ module.exports = function (configs) {
           exclude: /export .* was not found in/,
         }),
       ],
+      cssLoaders: { exclude: [path.resolve('./src/components')] },
       extend: (loaders, { isDev, loaderType, projectType, transform }) => {
         if (loaderType === 'JsLoader') {
           loaders.push({
@@ -122,28 +123,22 @@ module.exports = function (configs) {
           const nodeModulesPath=path.resolve('../../', 'node_modules')
           const newLoaders = [
             {
-              test: /\.css$/,
-              use: transform.execution(null, null, null),
-              include: [path.join(process.cwd(), 'node_modules')],
-            },
-            {
               test: /\.less/,
               use: transform.execution(null, {
                   loader: 'less-loader',
                   options: { javascriptEnabled: true },
               }),
               include: [path.resolve(nodeModulesPath, 'antd')],
-          },
-            /* {
-              test: new RegExp(`^(?!.*\\.modules).*\\.less`),
-              use: transform.execution(null, {
-                loader: 'less-loader',
-                options: { javascriptEnabled: true },
-              },transform.LoaderOptions),
-              include: [
-                path.join(process.cwd(), 'components'),
-              ],
-            }, */
+            },
+            {
+                test: /\.less/,
+                use: [ 'style-loader',
+                    { loader: 'css-loader', options: { importLoaders: 1 } },
+                    transform.LoaderOptions,
+                    { loader: 'less-loader', options: { javascriptEnabled: true } },
+                ],
+                include: [path.resolve('./src/components')],
+            },
           ];
           newLoaders.map(item => {
             loaders.push(item);

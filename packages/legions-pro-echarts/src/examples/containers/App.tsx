@@ -1,13 +1,12 @@
-import { LegionsProEchartsLayout } from 'components';
-import { Route,Switch } from 'legions/router';
+import { Route, Switch } from 'legions/router';
 import React from 'react';
-/* import '../assets/css/theme.less'; */
-import '../assets/css/theme.less'
-/* import { LegionsProEchartsMapDemo } from './pro.echarts.map';
-import { LegionsProEchartsLayoutDemo } from './pro.echarts.layout'; */
 import { LegionsProEchartsBoxDemo } from './pro.echarts.box';
 import { LegionsProEchartsChartPieDemo } from './pro.echarts.chart';
+import { LayoutBaseDemo } from './pro.echarts.layout/base';
+import { LayoutFullDemo } from './pro.echarts.layout/full';
+import { ListBaseDemo } from './pro.echarts.table/base';
 import { LegionsProEchartsMapDemo } from './pro.echarts.map';
+import { ProProgressDemo } from './pro.progress/base';
 
 
 export default class App extends React.Component {
@@ -20,16 +19,16 @@ export default class App extends React.Component {
     render() {
         return (
             <Switch>
-
+                 {/* 页面容器，容器超出显示滚动条 */}
+                <Route path="/layoutBase" component={LayoutBaseDemo}></Route>
+                 {/* 页面容器，满屏显示，超出隐藏 */}
+                <Route path="/layoutFull" component={LayoutFullDemo}></Route>
+                 {/* 列表 */}
+                <Route path="/listBase" component={ListBaseDemo}></Route>
                 <Route path="/map" component={LegionsProEchartsMapDemo}></Route>
                 <Route path="/box" component={LegionsProEchartsBoxDemo}></Route>
                 <Route path="/chart" component={LegionsProEchartsChartPieDemo}></Route>
-                <Route path="/layout" component={LegionsProEchartsLayout}></Route>
-                {/* <Route path="/chart" component={LegionsProEchartsChartPieDemo}></Route> */}
-                {/* <Route component={() => {
-                        return <div>hello world</div>
-                    }}/> */}
-                {this.props.children}
+                <Route path="/progress" component={ProProgressDemo}></Route>
             </Switch>
         );
     }

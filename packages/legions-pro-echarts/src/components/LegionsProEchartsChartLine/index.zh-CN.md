@@ -1,8 +1,8 @@
 ---
 category: Components
 type: Charts
-title: Pie
-subtitle: 饼图
+title: Line
+subtitle: 折线图
 ---
 
 球状液体填充通常用来表示百分比，比如流量使用占比，销售数据占比等
