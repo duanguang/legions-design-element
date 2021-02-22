@@ -6,6 +6,7 @@ import { LayoutBaseDemo } from './pro.echarts.layout/base';
 import { LayoutFullDemo } from './pro.echarts.layout/full';
 import { ListBaseDemo } from './pro.echarts.table/base';
 import { ProProgressDemo } from './pro.progress/base';
+import { ProPieDemo } from './pro.echart.pie/base';
 
 export default class App extends React.Component {
     unstable_handleError(e) {
@@ -29,6 +30,7 @@ export default class App extends React.Component {
                 <Route path="/chart" component={LegionsProEchartsChartPieDemo}></Route>
                  {/* 进度条 */}
                 <Route path="/progress" component={ProProgressDemo}></Route>
+                <Route path="/pie" component={ProPieDemo}></Route>
             </Switch>
         );
     }

@@ -52,20 +52,32 @@ export default class LegionsProEchartsChartPie extends React.Component<LegionsPr
             },
             legend: {
                 bottom: 30,
-                itemWidth: 12,
-                itemHeight: 5,
+                itemWidth: 10,
+                itemHeight: 4,
             },
             series: [
                 {
                     type: 'pie',
                     radius: '40%',
                     center: ['50%', '40%'],
+                    itemStyle: {
+                        borderRadius: 0,
+                        borderColor: 'rgba(12,13,41,0.4)',
+                        borderWidth: 2
+                    },
                     selectedOffset: 1.5,
-                    data:[],
+                    data:this.props.data || [],
                     label: {
                         show: true,
-                        formatter: '{b} \n{d}%',
+                        formatter: '{b}\n{d}%',
                     },
+                    emphasis: {
+                        itemStyle: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
                 },
             ],
         };
