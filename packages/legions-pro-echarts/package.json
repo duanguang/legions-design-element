@@ -14,7 +14,6 @@
   "typings": "types/index.d.ts",
   "peerDependencies": {},
   "dependencies": {
-    "@types/echarts": "^4.4.1",
     "legions-utils-tool": "^0.0.10",
     "legions": "^1.0.9-rc.2",
     "legions-thirdparty-plugin": "^0.0.8",
@@ -22,8 +21,8 @@
     "legions-decorator": "^0.0.4",
     "legions-control-container": "^0.0.5",
     "size-sensor": "^1.0.0",
-    "echarts": "^4.4.0",
-    "echarts-gl": "^1.1.1"
+    "echarts": "^5.0.0",
+    "echarts-gl": "^2.0.0"
   },
   "devDependencies": {
     "@types/jest": "^24.0.25",

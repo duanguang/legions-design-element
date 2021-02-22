@@ -10,7 +10,6 @@
 import React from 'react';
 import { LegionsEchartsAutoQueryParams, LegionsProEchartsPropsTypes } from '../interface/interface';
 import echarts from 'echarts/lib/echarts';
-import 'echarts/lib/chart/pie';
 
 export class LegionsProEchartsCardProps{
     title?: string = '';

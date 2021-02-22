@@ -1,4 +1,4 @@
-import echarts from 'echarts/lib/echarts';
+import * as echarts from 'echarts/core';
 import { isEqual, pick } from 'lodash';
 import React, { Component } from 'react';
 import { bind, clear } from 'size-sensor';

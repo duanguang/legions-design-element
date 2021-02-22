@@ -7,17 +7,17 @@
  * @FilePath: /legions-design-element/packages/legions-pro-echarts/src/components/LegionsProEchartsWaterDropBall/liquidFillView.ts
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
-import echarts from 'echarts/lib/echarts';
+import * as echarts from 'echarts/core';
 import { createSymbol } from 'echarts/lib/util/symbol';
 import { liquidFillLayout } from './liquidFillLayout';
 const numberUtil = echarts['number'];
-const parsePercent = numberUtil.parsePercent;
+const parsePercent = (() => void 0) as any;
 
 function getShallow(model, path) {
   return model && model.getShallow(path);
 }
 export function liquidFillView() {
-   echarts['extendChartView']({
+   echarts.extendChartView({
     type: 'liquidFill',
     dispose: function () {
         // dispose nothing here
@@ -204,7 +204,7 @@ export function liquidFillView() {
             if (symbol) {
                 // customed symbol path
                 if (symbol.indexOf('path://') === 0) {
-                    let path = echarts.graphic['makePath'](symbol.slice(7), {});
+                    let path = echarts.graphic.makePath(symbol.slice(7), {});
                     let bouding = path.getBoundingRect();
                     let w = bouding.width;
                     let h = bouding.height;
@@ -298,7 +298,7 @@ export function liquidFillView() {
 
             return group;
         }
-         
+
         /**
          * wave shape
          */
@@ -346,7 +346,7 @@ export function liquidFillView() {
             let hoverStyle = itemModel.getModel('emphasis.itemStyle')
                 .getItemStyle();
             hoverStyle.lineWidth = 0;
-            echarts.graphic['setHoverStyle'](wave, hoverStyle);
+            /* echarts.graphic['setHoverStyle'](wave, hoverStyle); */
 
             // clip out the part outside the circle
             let clip = getPath(radius, true);

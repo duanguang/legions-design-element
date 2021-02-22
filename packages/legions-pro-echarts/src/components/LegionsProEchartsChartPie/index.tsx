@@ -7,23 +7,23 @@
  * @FilePath: /legions-design-element/packages/legions-pro-echarts/src/components/LegionsProEchartsChartPie/index.tsx
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
-import React from 'react';
-import  LegionsProEcharts from '../LegionsProEcharts';
-import { LegionsEchartsAutoQueryParams, LegionsProEchartsPropsTypes } from '../interface/interface';
-import echarts from 'echarts/lib/echarts';
-import { HeadersPrams } from 'legions/fetch';
-import 'echarts/lib/chart/pie';
-import { observablePromise,observableViewModel } from 'brain-store-utils';
-import { observable } from 'mobx';
-import { LegionsFetch } from '../core';
-import { merge } from 'lodash';
+import { observablePromise, observableViewModel } from 'brain-store-utils';
+import { PieChart, PieSeriesOption } from 'echarts/charts';
+import * as echarts from 'echarts/core';
 import { observer } from 'legions/store-react';
+import { merge } from 'lodash';
+import { observable } from 'mobx';
+import React from 'react';
+import { LegionsFetch } from '../core';
+import { LegionsEchartsAutoQueryParams, LegionsProEchartsPropsTypes } from '../interface/interface';
+import LegionsProEcharts, { ProEchartsOption } from '../LegionsProEcharts';
+echarts.use([PieChart])
 
 export class LegionsProEchartsPieProps extends LegionsProEchartsPropsTypes {
     /** 数据 */
-    data?: echarts.EChartOption.SeriesPie.DataObject[] = [{value: 100, name: 'demo'}];
+    data?: ProEchartsOption<PieSeriesOption>['data'][] = [{value: 100, name: 'demo'}];
     /** 配置项 */
-    option?: echarts.EChartOption = {};
+    option?: ProEchartsOption<PieSeriesOption> = {};
     /** 请求托管 */
     autoQuery?: LegionsEchartsAutoQueryParams
 }
@@ -44,7 +44,7 @@ export default class LegionsProEchartsChartPie extends React.Component<LegionsPr
         return []
     }
     /** 配置项 */
-    get option(): echarts.EChartOption {
+    get option(): ProEchartsOption<PieSeriesOption> {
         return  {
             tooltip: {
                 trigger: 'item',

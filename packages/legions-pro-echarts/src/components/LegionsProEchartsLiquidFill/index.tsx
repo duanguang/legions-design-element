@@ -10,7 +10,7 @@
 import React from 'react';
 import  LegionsProEcharts from '../LegionsProEcharts';
 import { LegionsEchartsAutoQueryParams, LegionsProEchartsPropsTypes, Weaken } from '../interface/interface';
-import echarts from 'echarts/lib/echarts';
+import * as echarts from 'echarts/lib/echarts';
 import { HeadersPrams } from 'legions/fetch';
 import { observablePromise,observableViewModel } from 'brain-store-utils';
 import { observable } from 'mobx';

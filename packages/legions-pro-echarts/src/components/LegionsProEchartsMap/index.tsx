@@ -4,7 +4,7 @@ import React from 'react';
 import  LegionsProEcharts from '../LegionsProEcharts';
 import { LegionsProEchartsPropsTypes } from '../interface/interface'
 import { merge } from 'lodash';
-const world = require('echarts/map/json/world.json');
+const world = require('./world.json');
 const nameCN = require('../locale/country-name-zh.json')
 import 'echarts-gl';
 export class LegionsProEchartsMapProps extends LegionsProEchartsPropsTypes{

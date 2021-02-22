@@ -3,14 +3,14 @@
  * @Date: 2020-12-17 10:26:11
  * @LastEditTime: 2020-12-18 11:06:26
  * @LastEditors: duanguang
- * @Description: 
+ * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-echarts/src/components/LegionsProEchartsLiquidFill/liquidFillSeries.ts
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
 import completeDimensions from 'echarts/lib/data/helper/completeDimensions';
-import echarts from 'echarts/lib/echarts';
+import * as echarts from 'echarts/core';
 
-export function liquidFillSeries() { 
+export function liquidFillSeries() {
     echarts['extendSeriesModel']({
         type: 'series.liquidFill',
         visualColorAccessPath: 'textStyle.normal.color',
@@ -112,7 +112,7 @@ export function liquidFillSeries() {
                     formatter: '1000',
                 } */
             },
-    
+
             emphasis: {
                 itemStyle: {
                     opacity: 0.8

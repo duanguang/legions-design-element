@@ -3,11 +3,11 @@
  * @Date: 2020-12-17 09:50:50
  * @LastEditTime: 2020-12-17 17:31:54
  * @LastEditors: duanguang
- * @Description: 
+ * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-echarts/src/components/LegionsProEchartsWaterDropBall/liquidFillLayout.ts
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
-import echarts from 'echarts/lib/echarts';
+import * as echarts from 'echarts/core';
 
 /**
  * Using Bezier curves to fit sine wave.
@@ -123,7 +123,7 @@ export function liquidFillLayout(opt: any) {
                 ctx.bezierCurveTo(pos[0][0] + left, -pos[0][1] + shape.waterLevel,
                     pos[1][0] + left, -pos[1][1] + shape.waterLevel,
                     pos[2][0] + left, -pos[2][1] + shape.waterLevel);
-    
+
                 if (c === curves - 1) {
                     waveRight = pos[2][0];
                 }
@@ -156,7 +156,7 @@ export function liquidFillLayout(opt: any) {
                 ctx.lineTo(left, shape.cy + shape.radiusY);
                 ctx.lineTo(left, shape.waterLevel);
             }
-    
+
             ctx.closePath();
         }
     })
