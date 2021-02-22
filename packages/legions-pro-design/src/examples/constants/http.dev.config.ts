@@ -6,4 +6,6 @@ export const HttpConfigDev={
     /* domainTms: 'http://192.168.100.132:8088/', */
     domain3pl: 'https://qa3pl.hoolinks.com/',
     bffService: 'https://test-bff.hoolinks.com',
+    domainScm: 'https://qa-scm.hoolinks.com/',
+    domain404: 'http://localhost:8002/app/hoolins-system-web/scm#404',
 }

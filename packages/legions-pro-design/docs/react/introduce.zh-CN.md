@@ -1,11 +1,11 @@
 ---
 order: 0
-title: Legions Pro Echarts of React
+title: Legions Pro Design of React
 ---
 
-Echarts 定义了基础的可视化规范，对应也提供了大量的基础组件。但是对于中后台类应用，我们希望提供更高程度的抽象，提供更上层的设计规范，并且对应提供相应的组件使得开发者可以快速搭建出高质量的页面。
+Legions Pro Design 定义了基础业务组件规范，对应也提供了大量的通用业务组件。但是对于中后台类应用，我们希望提供更高程度的抽象，提供更上层的设计规范，并且对应提供相应的组件使得开发者可以快速搭建出高质量的页面。
 
-在 ProErcharts 中我们内置了一系列的设计规范，预设了常用的逻辑。在这个基础上我们同样提供了灵活的支持。我们希望通过 Pro 系列组件提供快速高效大家高质量中后台应用的能力，进一步扩展 Echarts 的能力，欢迎使用并提出宝贵的意见。
+在 ProDesign 中，预设了常用的逻辑。在这个基础上我们同样提供了灵活的支持。我们希望通过 Pro 系列组件提供快速高效大家高质量中后台应用的能力，进一步扩展 ProDesign 的能力，欢迎使用并提出宝贵的意见。
 
 <div class="pic-plus">
   <img width="150" src="https://t.alipayobjects.com/images/rmsweb/T11aVgXc4eXXXXXXXX.svg">
@@ -53,11 +53,11 @@ Echarts 定义了基础的可视化规范，对应也提供了大量的基础组
 **我们推荐使用 npm 或 yarn 的方式进行开发**，不仅可在开发环境轻松调试，也可放心地在生产环境打包部署使用，享受整个生态圈和工具链带来的诸多好处。
 
 ```bash
-$ npm install legions-pro-echarts --save
+$ npm install legions-pro-design --save
 ```
 
 ```bash
-$ yarn add legions-pro-echarts
+$ yarn add legions-pro-design
 ```
 
 如果你的网络环境不佳，推荐使用 [cnpm](https://github.com/cnpm/cnpm)。
@@ -71,14 +71,14 @@ $ yarn add legions-pro-echarts
 ## 示例
 
 ```jsx
-import { LegionsProEchartsLiquidFill } from 'legions-pro-echarts';
-ReactDOM.render(<LegionsProEchartsLiquidFill option={{}} />, mountNode);
+import { LegionsProTable } from 'legions-pro-design';
+ReactDOM.render(<LegionsProTable />, mountNode);
 ```
 
 引入样式：
 
 ```jsx
-import 'legions-pro-echarts/dist/legions-pro-echarts.css';  // or 'legions-pro-echarts/dist/legions-pro-echarts.less'
+import 'legions-pro-design/dist/legions-pro-design.css';  // or 'legions-pro-echarts/dist/legions-pro-echarts.less'
 ```
 
 ### 按需加载
@@ -91,7 +91,7 @@ import 'legions-pro-echarts/dist/legions-pro-echarts.css';  // or 'legions-pro-e
    // .babelrc or babel-loader option
    {
      "plugins": [
-       ["import", { "libraryName": "legions-pro-echarts", "style": "css" }] // `style: true` 会加载 less 文件
+       ["import", { "libraryName": "legions-pro-design", "style": "css" }] // `style: true` 会加载 less 文件
      ]
    }
    ```
@@ -100,14 +100,14 @@ import 'legions-pro-echarts/dist/legions-pro-echarts.css';  // or 'legions-pro-e
 
    ```jsx
    // babel-plugin-import 会帮助你加载 JS 和 CSS
-   import { LegionsProEchartsLiquidFill } from 'legions-pro-echarts';
+   import { LegionsProTable } from 'legions-pro-design';
    ```
 
 - 手动引入
 
    ```jsx
-   import {LegionsProEchartsLiquidFill} from 'legions-pro-echarts/lib/LegionsProEchartsLiquidFill';  // 加载 JS
-   import 'legions-pro-echarts/lib/LegionsProEchartsLiquidFill/style/css';        // 加载 CSS
+   import LegionsProTable from 'legions-pro-design/es/LegionsProTable';  // 加载 JS
+   import 'legions-pro-design/lib/LegionsProTable/style/css';        // 加载 CSS
    ```
 
 ### TypeScript

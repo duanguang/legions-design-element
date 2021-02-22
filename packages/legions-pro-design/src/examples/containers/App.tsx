@@ -3,6 +3,7 @@ import React from 'react';
 /* import '../assets/css/theme.less'; */
 import '../assets/css/theme.less'
 import { ProForm } from './proForm';
+import { ProLayout } from './proLayout';
 import { ProModal } from './proModal';
 import QueryDemo from './proQuery';
 /* import { LegionsProEchartsMapDemo } from './pro.echarts.map';
@@ -29,6 +30,7 @@ export default class App extends React.Component {
                 <Route path="/tform" component={ProTabsForm}></Route>
                 <Route path="/modal" component={ProModal}></Route>
                 <Route path="/query" component={QueryDemo}></Route>
+                <Route path="/layout" component={ProLayout}></Route>
                 {/* <Route path="/chart" component={LegionsProEchartsChartPieDemo}></Route> */}
                 {/* <Route component={() => {
                         return <div>hello world</div>

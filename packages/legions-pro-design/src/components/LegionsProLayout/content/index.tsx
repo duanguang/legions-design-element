@@ -62,7 +62,7 @@ interface IProps extends IUserInfo {
 }
 class ViewModels {
   @observable iframeHeight = 500
-  @observable dropdown = observable.map<{ visible: boolean,uid: string,tabkey: string,isAddContextmenu: boolean }>()
+  @observable dropdown = observable.map<string,{ visible: boolean,uid: string,tabkey: string,isAddContextmenu: boolean }>()
 }
 interface IState{
 }
@@ -98,7 +98,8 @@ export default class ContentPart extends React.Component<IProps,IState> {
   }
   /** 添加页签悬浮窗 */
   addContextmenu() {
-    this.viewModel.dropdown.keys().map((item) => {
+    const keys = this.viewModel.dropdown.keys();
+    for (let item of keys) {
       const view = this.viewModel.dropdown.get(item)
       if (view) {
         const dropdownElm = ReactDOM.findDOMNode(this.refs[view.uid])
@@ -121,11 +122,12 @@ export default class ContentPart extends React.Component<IProps,IState> {
 
         }
       }
-    })
+    }
   }
   /** 移除全部页签悬浮窗 */
   removeAllContextmenu() {
-    this.viewModel.dropdown.keys().map((item) => {
+    const keys = this.viewModel.dropdown.keys();
+    for (let item of keys) { 
       const view = this.viewModel.dropdown.get(item)
       if (view) {
         const dropdownElm = ReactDOM.findDOMNode(this.refs[view.uid])
@@ -138,7 +140,7 @@ export default class ContentPart extends React.Component<IProps,IState> {
           focusUnbind(el.parentElement.parentElement,this.handleOutside.bind(this,item),styles.outSide)
         }
       }
-    })
+    }
   }
   /** 移除页签悬浮窗dom 元素 */
   removeContextmenu(itemKey) {
@@ -159,11 +161,12 @@ export default class ContentPart extends React.Component<IProps,IState> {
     even.preventDefault()
     this.viewModel.dispatchAction(() => {
       this.viewModel.dropdown.get(tabkey).visible = true;
-      this.viewModel.dropdown.keys().map((item) => {
+      const keys = this.viewModel.dropdown.keys();
+      for (let item of keys) {
         if (item !== tabkey) {
           this.viewModel.dropdown.get(item).visible = false
         }
-      })
+      }
     })
   }
   /** 在页签元素之外单击关闭悬浮窗 */
@@ -181,7 +184,11 @@ export default class ContentPart extends React.Component<IProps,IState> {
     const { key } = even;
     if (key === 'closeOther') {
       const keys = this.viewModel.dropdown.keys();
-      const tabkeys = keys.filter((item) => item !== tabkey)
+      const keysList: string[] = []
+      for (let item of keys) {
+        keysList.push(item)
+      }
+      const tabkeys = keysList.filter((item) => item !== tabkey)
       this.handleEdit(tabkeys,'remove')
     }
     else if (key === 'closeCurr') {
@@ -209,11 +216,11 @@ export default class ContentPart extends React.Component<IProps,IState> {
   renderTabPaneElement() {
     const { store } = this.props;
    
-    return store.panes.map((pane) => {
+    return store.panes.map((pane,index) => {
       let routerPath = store.proxySanbox.getRouterPath(pane);
       const appid=store.proxySanbox.createMicroAppId(pane)
       const keys = `${pane.sandbox.appName}-${appid}`
-     return <TabPane
+      return <TabPane
        data-id={`${keys}-legions`}
        data-service={keys}
        data-app={pane.sandbox.appName}
@@ -221,7 +228,7 @@ export default class ContentPart extends React.Component<IProps,IState> {
        data-mode={pane.loadingMode}
         style={{ outline: 'none' }}
         tab={this.renderTitleElement(pane.title,store.activeKey,pane.key)}
-        key={pane.key}
+        key={`${pane.key}`}
         closable={pane.closable}
       >
         {this.renderContentElement(pane)}
@@ -251,24 +258,27 @@ export default class ContentPart extends React.Component<IProps,IState> {
     let render = [];
     if (activeKey === currKey) {
       render.push(
-        <span key="t-0" className={`${classNames({
+        <span key={currKey} className={`${classNames({
           [styles['tag-dot-inner']]: true,
           [styles['tag-dot-innerblue']]: true,
         })}`} />
       );
     } else {
-      render.push(<span key="t-0" className={styles['tag-dot-inner']} />);
+      render.push(<span key={currKey} className={styles['tag-dot-inner']} />);
     }
     render.push(
       <Dropdown trigger={['click']}
         ref={`${this.viewModel.dropdown.get(currKey).uid}`}
         overlay={this.renderDropMenuElement(currKey)}
+        key={`dropdown${currKey}`}
         visible={this.viewModel.dropdown.get(currKey).visible}
         placement="bottomLeft"><span key={currKey}
           id={currKey}
           ref={`${this.viewModel.dropdown.get(currKey).uid}${this.viewModel.dropdown.get(currKey).tabkey}`}>{title}
         </span></Dropdown>);
-    return render;
+    return <React.Fragment key={currKey}>
+      {render}
+    </React.Fragment>;
   }
   renderLayoutContentElement() {
     const { store } = this.props;
@@ -368,9 +378,15 @@ export default class ContentPart extends React.Component<IProps,IState> {
     }
     return (
       <Content {...this.computedContentClassProps()}>
-        {this.props.userEntity !== void 0 ? <Spin tip="Loading..." spinning={loading}>
-          {this.renderLayoutContentElement()}
-        </Spin> : this.renderLayoutContentElement()}
+        {
+            /** 菜单数据加载完毕之后再渲染content区域 */
+            this.props.menuStore.obMenuList.isResolved && (
+                /** 更具用户信息判断时候暂时loading状态 */
+                this.props.userEntity !== void 0 ? <Spin tip="Loading..." spinning={loading}>
+                {this.renderLayoutContentElement()}
+                </Spin> : this.renderLayoutContentElement()
+            )
+        }
       </Content>
     );
   }

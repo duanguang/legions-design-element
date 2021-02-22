@@ -28,14 +28,14 @@ import set from 'lodash/set'
 import has from 'lodash/has'
 /** 分割符，用于给表单字段添加下标时使用 */
 export const HLTableFormSeparator = '___';
-interface IHlFormConfig<F> extends Partial<IProFormProps<F>>,Weaken<Partial<IProFormProps<F>>,'controls' | 'onGetForm'> {
+interface IHlFormConfig<F> extends Partial<IProFormProps<F>>,Weaken<Partial<IProFormProps<F>>,'controls' | 'onReady'> {
     /**
     * 获取表单数据模型
     * form  即将废弃，请formRef.viewModel.form 获取 
     *
     * @memberof IHLFormProps
     */
-    onGetForm?: (
+   onReady?: (
         /**即将废弃，请formRef.viewModel.form 获取 */
         form: WrappedFormUtils,
         formRef?: InstanceForm) => void;
@@ -115,7 +115,7 @@ export default class LegionsProTableForm<T = {},F = {}> extends LegionsProForm.C
         // @ts-ignore
         this.rules = ruleClassDeclaration['createFormRules']<ruleClassDeclaration>(ruleClassDeclaration); */
         this.state = {
-            data: this.tranformData(cloneDeep(toJS(this.props.proTableConfig.data))),
+            data: this.tranformData(cloneDeep(toJS(this.props.proTableConfig.dataSource))),
             recordEditData: new Map(),
         }
     }
@@ -146,14 +146,14 @@ export default class LegionsProTableForm<T = {},F = {}> extends LegionsProForm.C
         })
     }
     componentWillReceiveProps(nextProps: ProTableFormProps<T,F>) {
-        const { proTableConfig: { data = [] } } = this.props;
-        const { proTableConfig: { data: nextData = [] } } = nextProps;
+        const { proTableConfig: { dataSource = [] } } = this.props;
+        const { proTableConfig: { dataSource: nextData = [] } } = nextProps;
         /** 列表长度变化时，清空缓存 */
-        if (data.length !== nextData.length) {
+        if (dataSource.length !== nextData.length) {
             this.fieldsOtherCache.clear()
             this.recordCache.clear()
         }
-        if (nextData !== data) {
+        if (nextData !== dataSource) {
             this.setState({
                 data: this.tranformData(cloneDeep(toJS(nextData)))
             })
@@ -188,7 +188,7 @@ export default class LegionsProTableForm<T = {},F = {}> extends LegionsProForm.C
         else if (control instanceof  LegionsProForm.LabelWithInputNumberModel) {
             return super.createFormInputNumber(key,newControl,form,uid,formRef);
         }
-        else if (control instanceof LegionsProForm.LabelWithSelectModel || control instanceof LegionsProForm.LabelWithHLSelectModel) {
+        else if (control instanceof LegionsProForm.LabelWithSelectModel) {
             return super.createFormSelect(key,newControl,form,uid,formRef);
         }
         else if (control instanceof LegionsProForm.LabelWithRenderModel) {
@@ -257,7 +257,7 @@ export default class LegionsProTableForm<T = {},F = {}> extends LegionsProForm.C
                     const { data } = this.state
                     return formRef && <LegionsProTable<T>
                         {...proTableConfig}
-                        data={data}
+                        dataSource={data}
                         onPagingQuery={(page: number,pageSize: number,isChangePageSize?: boolean) => {
                             const { proTableConfig } = this.props;
                             /** 触发表单的setFields，实现table分页切换时，表单数据不异常 */
@@ -325,7 +325,7 @@ export default class LegionsProTableForm<T = {},F = {}> extends LegionsProForm.C
                     uniqueUid={this.props['uniqueUid']}
                     onGetForm={(form,formRef) => {
                         this.formRef = formRef;
-                        proFormConfig.onGetForm && proFormConfig.onGetForm(form,{
+                        proFormConfig.onReady && proFormConfig.onReady(form,{
                             ...formRef,methods: {
                                 updateRecordEditData: this.updateRecordEditData
                             }

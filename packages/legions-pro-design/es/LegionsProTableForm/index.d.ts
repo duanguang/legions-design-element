@@ -7,14 +7,14 @@ import { InstanceForm } from '../LegionsProForm/interface';
 import { IProFormProps } from '../LegionsProForm/HlForm';
 /** 分割符，用于给表单字段添加下标时使用 */
 export declare const HLTableFormSeparator = "___";
-interface IHlFormConfig<F> extends Partial<IProFormProps<F>>, Weaken<Partial<IProFormProps<F>>, 'controls' | 'onGetForm'> {
+interface IHlFormConfig<F> extends Partial<IProFormProps<F>>, Weaken<Partial<IProFormProps<F>>, 'controls' | 'onReady'> {
     /**
     * 获取表单数据模型
     * form  即将废弃，请formRef.viewModel.form 获取
     *
     * @memberof IHLFormProps
     */
-    onGetForm?: (
+    onReady?: (
     /**即将废弃，请formRef.viewModel.form 获取 */
     form: WrappedFormUtils, formRef?: InstanceForm) => void;
     controls: any[];

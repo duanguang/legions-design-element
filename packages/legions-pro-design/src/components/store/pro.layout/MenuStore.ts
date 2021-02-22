@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-31 10:34:43
- * @LastEditTime: 2021-01-07 17:52:53
+ * @LastEditTime: 2021-02-22 14:58:42
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/store/pro.layout/MenuStore.ts
@@ -59,7 +59,7 @@ export default class MenuStore extends StoreBase<IContext> {
   /** 菜单展开选项值集合 */
   @observable.ref openKeys: string[] = getStorageItem(OPENKEYS_STORAGE_KEY, []);
 
-  @observable obMenuList = observablePromise<MenuContainerEntity<MenuEntity>>();
+  @observable obMenuList = observablePromise<MenuContainerEntity>();
 
   /** 选中菜单项数据 */
   @observable selectedKeys = getStorageItem(SELECTED_STORAGE_KEY, []);

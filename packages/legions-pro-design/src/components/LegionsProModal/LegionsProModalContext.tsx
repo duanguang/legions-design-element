@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-02-02 10:10:12
- * @LastEditTime: 2021-02-02 10:24:08
+ * @LastEditTime: 2021-02-22 15:24:14
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProModal/LegionsProModalContext.tsx
@@ -30,7 +30,6 @@ export class LegionsProModalContext extends React.Component<IProps> {
         </MobXProviderContext.Consumer>
     }
     renderContextType() {
-        console.log(this.props.modal);
         return React.cloneElement(this.props.modal||this.props.children,null,<Provider storeManage={this.context.storeManage}> {this.props.content}</Provider>)
     }
     render() {

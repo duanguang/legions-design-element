@@ -132,7 +132,7 @@ var LegionsProTableForm = /** @class */ (function (_super) {
             else if (control instanceof LegionsProForm.LabelWithInputNumberModel) {
                 return _super.prototype.createFormInputNumber.call(_this, key, newControl, form, uid, formRef);
             }
-            else if (control instanceof LegionsProForm.LabelWithSelectModel || control instanceof LegionsProForm.LabelWithHLSelectModel) {
+            else if (control instanceof LegionsProForm.LabelWithSelectModel) {
                 return _super.prototype.createFormSelect.call(_this, key, newControl, form, uid, formRef);
             }
             else if (control instanceof LegionsProForm.LabelWithRenderModel) {
@@ -166,7 +166,7 @@ var LegionsProTableForm = /** @class */ (function (_super) {
         /** 创建行表单 */
         _this.createTable = function () {
             var formUtils = new LegionsProForm.ProFormUtils();
-            var _a = _this.props, proTableConfig = _a.proTableConfig, _b = _a.proTableConfig, columns = (_b === void 0 ? {} : _b).columns, _c = _a.proFormConfig, controls = (_c === void 0 ? {} : _c).controls;
+            var _a = _this.props, proTableConfig = _a.proTableConfig, _b = _a.proTableConfig, _c = _b === void 0 ? {} : _b, columns = _c.columns, _d = _a.proFormConfig, _e = _d === void 0 ? {} : _d, controls = _e.controls;
             /** 根据表格列名和表单字段名自动匹配渲染 */
             var newColumns = function (formRef) { return (columns || []).map(function (item, pIndex) {
                 var control = controls && controls.find(function (i) { return i.iAntdProps.id === item.dataIndex; });
@@ -192,7 +192,7 @@ var LegionsProTableForm = /** @class */ (function (_super) {
                 iFormProps: {
                     render: function (form, iAntdProps, rules, formRef) {
                         var data = _this.state.data;
-                        return formRef && React.createElement(LegionsProTable, __assign({}, proTableConfig, { data: data, onPagingQuery: function (page, pageSize, isChangePageSize) {
+                        return formRef && React.createElement(LegionsProTable, __assign({}, proTableConfig, { dataSource: data, onPagingQuery: function (page, pageSize, isChangePageSize) {
                                 var proTableConfig = _this.props.proTableConfig;
                                 /** 触发表单的setFields，实现table分页切换时，表单数据不异常 */
                                 _this.formRef.viewModel.form.setFields({});
@@ -241,7 +241,7 @@ var LegionsProTableForm = /** @class */ (function (_super) {
         // @ts-ignore
         this.rules = ruleClassDeclaration['createFormRules']<ruleClassDeclaration>(ruleClassDeclaration); */
         _this.state = {
-            data: _this.tranformData(cloneDeep(toJS(_this.props.proTableConfig.data))),
+            data: _this.tranformData(cloneDeep(toJS(_this.props.proTableConfig.dataSource))),
             recordEditData: new Map(),
         };
         return _this;
@@ -267,14 +267,14 @@ var LegionsProTableForm = /** @class */ (function (_super) {
         });
     };
     LegionsProTableForm.prototype.componentWillReceiveProps = function (nextProps) {
-        var _a = this.props.proTableConfig.data, data = _a === void 0 ? [] : _a;
-        var _b = nextProps.proTableConfig.data, nextData = _b === void 0 ? [] : _b;
+        var _a = this.props.proTableConfig.dataSource, dataSource = _a === void 0 ? [] : _a;
+        var _b = nextProps.proTableConfig.dataSource, nextData = _b === void 0 ? [] : _b;
         /** 列表长度变化时，清空缓存 */
-        if (data.length !== nextData.length) {
+        if (dataSource.length !== nextData.length) {
             this.fieldsOtherCache.clear();
             this.recordCache.clear();
         }
-        if (nextData !== data) {
+        if (nextData !== dataSource) {
             this.setState({
                 data: this.tranformData(cloneDeep(toJS(nextData)))
             });
@@ -300,7 +300,7 @@ var LegionsProTableForm = /** @class */ (function (_super) {
                 //@ts-ignore
                 uniqueUid: this.props['uniqueUid'], onGetForm: function (form, formRef) {
                     _this.formRef = formRef;
-                    proFormConfig.onGetForm && proFormConfig.onGetForm(form, __assign(__assign({}, formRef), { methods: {
+                    proFormConfig.onReady && proFormConfig.onReady(form, __assign(__assign({}, formRef), { methods: {
                             updateRecordEditData: _this.updateRecordEditData
                         } }));
                 }, mapPropsToFields: function (props) {

@@ -1,10 +1,9 @@
 import React,{ Component } from 'react'
 import { findDOMNode,unstable_renderSubtreeIntoContainer,unmountComponentAtNode } from 'react-dom'
 import { Modal,message } from 'antd';
-import { ModalProps,WrappedFormUtils } from '../interface/antd';
 import { bind,observer } from 'legions/store-react'
 import {ProModalStore  } from '../store/pro.modal';
-import { ILegionsProModalProps, InstanceLegionsProModal } from './interface';
+import { ILegionsProModalProps } from './interface';
 import { IViewModelModalStore } from '../store/pro.modal/interface';
 import { ISchedule } from '../store/interface';
 import { shortHash } from 'legions-lunar/object-hash';
@@ -18,7 +17,7 @@ const antPrefix = 'ant';
 
 
 interface IProps extends ILegionsProModalProps {
-    
+    children?: React.ReactNode
 }
 interface IState {
 
@@ -85,7 +84,7 @@ const DrawerPositionWrap = {
 
 @bind({ store: ProModalStore })
 @observer
-export default class LegionsProModal extends Component<IProps,IState> {
+ class ProModal extends Component<IProps,IState> {
     timeId = new Date().getTime()
     uid = ''
     modalContent: Element = null;
@@ -835,3 +834,15 @@ export default class LegionsProModal extends Component<IProps,IState> {
         )
     }
 }
+
+const LegionsProModal = (props: IProps) => {
+    const { children,...prop} = props;
+    return <ProModal.LegionsProModalContext content={<React.Fragment>
+        {children}
+    </React.Fragment>}>
+        <ProModal
+         {...prop}
+        ></ProModal>
+    </ProModal.LegionsProModalContext>
+}
+export default LegionsProModal;

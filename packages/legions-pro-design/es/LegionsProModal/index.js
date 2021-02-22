@@ -3,15 +3,15 @@
   * (c) 2021 duanguang
   * @license MIT
   */
-import React, { Component } from 'react';
-import { unmountComponentAtNode, unstable_renderSubtreeIntoContainer } from 'react-dom';
+import React, { useState, forwardRef, memo, Component } from 'react';
+import { unstable_batchedUpdates, unmountComponentAtNode, unstable_renderSubtreeIntoContainer } from 'react-dom';
 import { Modal } from 'antd';
 import { bind, observer } from 'legions/store-react';
 import { ProModalStore } from '../store/pro.modal';
 import { shortHash } from 'legions-lunar/object-hash';
 import styles from './style/index.modules.less';
 import './style/index.less';
-import { runInAction } from 'mobx';
+import { spy, configure, observable, runInAction } from 'mobx';
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -53,6 +53,18 @@ var __assign = function() {
     return __assign.apply(this, arguments);
 };
 
+function __rest(s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+}
+
 function __decorate(decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -64,8 +76,232 @@ function __metadata(metadataKey, metadataValue) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(metadataKey, metadataValue);
 }
 
-const maximizeSrc = 'https://gitee.com/duanguang/figure-bed/raw/master/oss/maximize.png'
-const undoSrc = 'https://gitee.com/duanguang/figure-bed/raw/master/oss/undo.png'
+if (!useState) {
+    throw new Error("mobx-react-lite requires React with Hooks support");
+}
+if (!spy) {
+    throw new Error("mobx-react-lite requires mobx at least version 4 to be available");
+}
+
+var __read = (undefined && undefined.__read) || function (o, n) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator];
+    if (!m) return o;
+    var i = m.call(o), r, ar = [], e;
+    try {
+        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+    }
+    catch (error) { e = { error: error }; }
+    finally {
+        try {
+            if (r && !r.done && (m = i["return"])) m.call(i);
+        }
+        finally { if (e) throw e.error; }
+    }
+    return ar;
+};
+function getSymbol(name) {
+    if (typeof Symbol === "function") {
+        return Symbol.for(name);
+    }
+    return "__$mobx-react " + name + "__";
+}
+var mockGlobal = {};
+function getGlobal() {
+    if (typeof window !== "undefined") {
+        return window;
+    }
+    if (typeof global !== "undefined") {
+        return global;
+    }
+    if (typeof self !== "undefined") {
+        return self;
+    }
+    return mockGlobal;
+}
+
+var observerBatchingConfiguredSymbol = getSymbol("observerBatching");
+function defaultNoopBatch(callback) {
+    callback();
+}
+function observerBatching(reactionScheduler) {
+    if (!reactionScheduler) {
+        reactionScheduler = defaultNoopBatch;
+        if ("production" !== process.env.NODE_ENV) {
+            console.warn("[MobX] Failed to get unstable_batched updates from react-dom / react-native");
+        }
+    }
+    configure({ reactionScheduler: reactionScheduler });
+    getGlobal()[observerBatchingConfiguredSymbol] = true;
+}
+
+var __assign$1 = (undefined && undefined.__assign) || function () {
+    __assign$1 = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign$1.apply(this, arguments);
+};
+
+var __read$1 = (undefined && undefined.__read) || function (o, n) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator];
+    if (!m) return o;
+    var i = m.call(o), r, ar = [], e;
+    try {
+        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+    }
+    catch (error) { e = { error: error }; }
+    finally {
+        try {
+            if (r && !r.done && (m = i["return"])) m.call(i);
+        }
+        finally { if (e) throw e.error; }
+    }
+    return ar;
+};
+
+observerBatching(unstable_batchedUpdates);
+
+function shallowEqual(objA, objB) {
+  //From: https://github.com/facebook/fbjs/blob/c69904a511b900266935168223063dd8772dfc40/packages/fbjs/src/core/shallowEqual.js
+  if (is(objA, objB)) return true;
+
+  if (typeof objA !== "object" || objA === null || typeof objB !== "object" || objB === null) {
+    return false;
+  }
+
+  var keysA = Object.keys(objA);
+  var keysB = Object.keys(objB);
+  if (keysA.length !== keysB.length) return false;
+
+  for (var i = 0; i < keysA.length; i++) {
+    if (!Object.hasOwnProperty.call(objB, keysA[i]) || !is(objA[keysA[i]], objB[keysA[i]])) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+function is(x, y) {
+  // From: https://github.com/facebook/fbjs/blob/c69904a511b900266935168223063dd8772dfc40/packages/fbjs/src/core/shallowEqual.js
+  if (x === y) {
+    return x !== 0 || 1 / x === 1 / y;
+  } else {
+    return x !== x && y !== y;
+  }
+} // based on https://github.com/mridgway/hoist-non-react-statics/blob/master/src/index.js
+
+var hasSymbol = typeof Symbol === "function" && Symbol.for; // Using react-is had some issues (and operates on elements, not on types), see #608 / #609
+
+var ReactForwardRefSymbol = hasSymbol ?
+/*#__PURE__*/
+Symbol.for("react.forward_ref") : typeof forwardRef === "function" &&
+/*#__PURE__*/
+forwardRef(function (props) {
+  return null;
+})["$$typeof"];
+var ReactMemoSymbol = hasSymbol ?
+/*#__PURE__*/
+Symbol.for("react.memo") : typeof memo === "function" &&
+/*#__PURE__*/
+memo(function (props) {
+  return null;
+})["$$typeof"];
+
+function _extends() {
+  _extends = Object.assign || function (target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i];
+
+      for (var key in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key)) {
+          target[key] = source[key];
+        }
+      }
+    }
+
+    return target;
+  };
+
+  return _extends.apply(this, arguments);
+}
+
+function _objectWithoutPropertiesLoose(source, excluded) {
+  if (source == null) return {};
+  var target = {};
+  var sourceKeys = Object.keys(source);
+  var key, i;
+
+  for (i = 0; i < sourceKeys.length; i++) {
+    key = sourceKeys[i];
+    if (excluded.indexOf(key) >= 0) continue;
+    target[key] = source[key];
+  }
+
+  return target;
+}
+
+var MobXProviderContext =
+/*#__PURE__*/
+React.createContext({});
+function Provider(props) {
+  var children = props.children,
+      stores = _objectWithoutPropertiesLoose(props, ["children"]);
+
+  var parentValue = React.useContext(MobXProviderContext);
+  var mutableProviderRef = React.useRef(_extends({}, parentValue, stores));
+  var value = mutableProviderRef.current;
+
+  if (process.env.NODE_ENV !== "production") {
+    var newValue = _extends({}, value, stores); // spread in previous state for the context based stores
+
+
+    if (!shallowEqual(value, newValue)) {
+      throw new Error("MobX Provider: The set of provided stores has changed. See: https://github.com/mobxjs/mobx-react#the-set-of-provided-stores-has-changed-error.");
+    }
+  }
+
+  return React.createElement(MobXProviderContext.Provider, {
+    value: value
+  }, children);
+}
+Provider.displayName = "MobXProvider";
+
+if (!Component) throw new Error("mobx-react requires React to be available");
+if (!observable) throw new Error("mobx-react requires mobx to be available");
+
+var LegionsProModalContext = /** @class */ (function (_super) {
+    __extends(LegionsProModalContext, _super);
+    function LegionsProModalContext() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    LegionsProModalContext.prototype.renderMobXProviderContext = function () {
+        var _this = this;
+        return React.createElement(MobXProviderContext.Consumer, null, function (context) {
+            // @ts-ignore
+            return React.cloneElement(_this.props.modal || _this.props.children, null, React.createElement(Provider, { storeManage: context.storeManage },
+                " ",
+                _this.props.content));
+        });
+    };
+    LegionsProModalContext.prototype.renderContextType = function () {
+        return React.cloneElement(this.props.modal || this.props.children, null, React.createElement(Provider, { storeManage: this.context.storeManage },
+            " ",
+            this.props.content));
+    };
+    LegionsProModalContext.prototype.render = function () {
+        return (this.renderContextType());
+    };
+    return LegionsProModalContext;
+}(React.Component));
+LegionsProModalContext.contextType = MobXProviderContext;
+
+var maximizeSrc = 'https://gitee.com/duanguang/figure-bed/raw/master/oss/maximize.png';
+var undoSrc = 'https://gitee.com/duanguang/figure-bed/raw/master/oss/undo.png';
 var antPrefix = 'ant';
 var placement = {
     right: {
@@ -128,9 +364,9 @@ var DrawerPositionWrap = {
     left: 'legions-pro-modal-drawerPositionY',
     right: 'legions-pro-modal-drawerPositionY',
 };
-var LegionsProModal = /** @class */ (function (_super) {
-    __extends(LegionsProModal, _super);
-    function LegionsProModal(props) {
+var ProModal = /** @class */ (function (_super) {
+    __extends(ProModal, _super);
+    function ProModal(props) {
         var _this = _super.call(this, props) || this;
         _this.timeId = new Date().getTime();
         _this.uid = '';
@@ -146,6 +382,7 @@ var LegionsProModal = /** @class */ (function (_super) {
         _this.contentResizableNode = null;
         _this.nodeMaximize = null;
         _this.subscription = null;
+        _this.subscriptionVisible = null;
         /**
          * antd-content 坐标轴 *
          */
@@ -170,6 +407,10 @@ var LegionsProModal = /** @class */ (function (_super) {
                     clearTimeout(timeId_1);
                 }, 0);
             }
+        };
+        _this.watchVisibleChange = function (n) {
+            var visible = _this.viewStore.visible;
+            _this.props.onVisibleChange && _this.props.onVisibleChange(visible);
         };
         /*** 拖拽移动 移动事件 */
         //@ts-ignore
@@ -440,7 +681,7 @@ var LegionsProModal = /** @class */ (function (_super) {
         _this.handleOnOk = _this.handleOnOk.bind(_this);
         return _this;
     }
-    Object.defineProperty(LegionsProModal.prototype, "getModalContentDOM", {
+    Object.defineProperty(ProModal.prototype, "getModalContentDOM", {
         get: function () {
             if (this.getModalDOM) {
                 return this.getModalDOM.querySelector("." + antPrefix + "-modal-content");
@@ -450,7 +691,7 @@ var LegionsProModal = /** @class */ (function (_super) {
         enumerable: false,
         configurable: true
     });
-    Object.defineProperty(LegionsProModal.prototype, "getModalHeaderDOM", {
+    Object.defineProperty(ProModal.prototype, "getModalHeaderDOM", {
         get: function () {
             if (this.getModalDOM) {
                 return this.getModalDOM.querySelector("." + antPrefix + "-modal-header");
@@ -461,11 +702,11 @@ var LegionsProModal = /** @class */ (function (_super) {
         configurable: true
     });
     /** 设置模态框根节点值 */
-    LegionsProModal.prototype.setModalDOM = function () {
+    ProModal.prototype.setModalDOM = function () {
         this.getModalDOM = document.querySelector("." + this.uid);
     };
     /** 取消拖拽缩放模态框尺寸事件 */
-    LegionsProModal.prototype.unbindingResizableEven = function () {
+    ProModal.prototype.unbindingResizableEven = function () {
         var modalDOM = this.getModalDOM;
         if (modalDOM) {
             if (this.getModalContentDOM) {
@@ -475,31 +716,31 @@ var LegionsProModal = /** @class */ (function (_super) {
             }
         }
     };
-    LegionsProModal.prototype.unbindingDraggableMousemoveEven = function () {
+    ProModal.prototype.unbindingDraggableMousemoveEven = function () {
         off(window, 'mousemove', this.handleDraggableMoveMove);
     };
-    LegionsProModal.prototype.unbindingDraggableMouseupEven = function () {
+    ProModal.prototype.unbindingDraggableMouseupEven = function () {
         off(window, 'mouseup', this.handleDraggableMoveEnd);
     };
-    LegionsProModal.prototype.bindingDraggableMousemoveEven = function () {
+    ProModal.prototype.bindingDraggableMousemoveEven = function () {
         on(window, 'mousemove', this.handleDraggableMoveMove);
     };
-    LegionsProModal.prototype.bindingDraggableMouseupEven = function () {
+    ProModal.prototype.bindingDraggableMouseupEven = function () {
         on(window, 'mouseup', this.handleDraggableMoveEnd);
     };
     /** window对象上绑定拖拽缩放 鼠标移动事件
      * 在触发handleResizableMouseStart即 mousedown 鼠标键在modal-content区域移动时进行绑定事件
      */
-    LegionsProModal.prototype.bindingResizableMoveMoveEven = function () {
+    ProModal.prototype.bindingResizableMoveMoveEven = function () {
         on(window, 'mousemove', this.handleResizableMoveMove);
     };
     /** window对象上绑定拖拽缩放 鼠标按键释放事件,
      * 在触发handleResizableMouseStart即 mousedown 鼠标键在modal-content区域按下时进行绑定事件*/
-    LegionsProModal.prototype.bindingResizableMouseupEven = function () {
+    ProModal.prototype.bindingResizableMouseupEven = function () {
         on(window, 'mouseup', this.handleResizableMoveEnd);
     };
     /** 模态框头部绑定拖拽移动事件 */
-    LegionsProModal.prototype.bindingDraggableHeaderMousedownEven = function () {
+    ProModal.prototype.bindingDraggableHeaderMousedownEven = function () {
         if (!this.isBinddraggableEven && this.props.draggable && this.viewStore.operaModel !== 'maximize') {
             if (this.getModalContentDOM && this.getModalHeaderDOM) {
                 var rect = this.getModalContentDOM.getBoundingClientRect();
@@ -514,7 +755,7 @@ var LegionsProModal = /** @class */ (function (_super) {
         this.coverOverfolwTranformAutoOverflow();
     };
     /** 在modal-content 节点绑定拖拽缩放鼠标移动和鼠标按键按下事件 */
-    LegionsProModal.prototype.bindingResizableContentEven = function () {
+    ProModal.prototype.bindingResizableContentEven = function () {
         if (this.getModalDOM && this.props.resizable && this.viewStore.operaModel !== 'maximize') {
             this.setAntdContentLocation({ modalDOM: this.getModalDOM, modalContent: this.getModalContentDOM });
             if (!this.isBindResizableEven) {
@@ -526,7 +767,7 @@ var LegionsProModal = /** @class */ (function (_super) {
             /* modalContent.addEventListener('mouseover',this.handleMousemove.bind(this)) */
         }
     };
-    LegionsProModal.prototype.componentWillMount = function () {
+    ProModal.prototype.componentWillMount = function () {
         this.uid = "m" + this.props.store.ModalContainer.size + shortHash("" + this.timeId + this.props.store.ModalContainer.size);
         if (this.props.store.ModalContainer.has(this.uid)) {
             this.timeId = new Date().getTime();
@@ -539,9 +780,10 @@ var LegionsProModal = /** @class */ (function (_super) {
         if (this.props.draggable) {
             this.subscription = this.props.store.schedule([this.log.bind(this)]);
         }
+        this.subscriptionVisible = this.props.store.schedule([this.watchVisibleChange.bind(this)]);
         this.props.onReady && this.props.onReady({ store: this.props.store, uid: this.uid, viewModel: view });
     };
-    LegionsProModal.prototype.componentDidMount = function () {
+    ProModal.prototype.componentDidMount = function () {
         this.setModalDOM();
         this.setModalContentInsertMaximize();
         this.clientHeight = document.body.clientHeight;
@@ -550,12 +792,12 @@ var LegionsProModal = /** @class */ (function (_super) {
         this.bindingResizableContentEven();
         this.props.footer === null ? (this.viewStore._footerHeight = 0) : (this.viewStore._footerHeight = 53);
     };
-    LegionsProModal.prototype.componentWillReceiveProps = function (nextProps) {
+    ProModal.prototype.componentWillReceiveProps = function (nextProps) {
         if (this.props.placement !== nextProps.placement && this.viewStore && nextProps.placement) {
             this.viewStore.placement = nextProps.placement;
         }
     };
-    LegionsProModal.prototype.componentDidUpdate = function () {
+    ProModal.prototype.componentDidUpdate = function () {
         this.setModalDOM();
         this.setModalContentInsertMaximize();
         this.renderMaximize();
@@ -585,9 +827,10 @@ var LegionsProModal = /** @class */ (function (_super) {
         this.bindingResizableContentEven();
         this.props.footer === null ? (this.viewStore._footerHeight = 0) : (this.viewStore._footerHeight = 53);
     };
-    LegionsProModal.prototype.componentWillUnmount = function () {
+    ProModal.prototype.componentWillUnmount = function () {
         this.props.store.delete(this.uid);
         this.subscription && this.subscription.unsubscribe();
+        this.subscriptionVisible && this.subscriptionVisible.unsubscribe();
         this.destroyPortal();
         this.unbindingResizableEven();
         if (this.getModalHeaderDOM) {
@@ -595,13 +838,13 @@ var LegionsProModal = /** @class */ (function (_super) {
         }
     };
     /** 销毁最大化按钮节点 */
-    LegionsProModal.prototype.destroyPortal = function () {
+    ProModal.prototype.destroyPortal = function () {
         if (this.nodeMaximize) {
             unmountComponentAtNode(this.nodeMaximize);
         }
     };
     /** 插入最大化按钮dom */
-    LegionsProModal.prototype.setModalContentInsertMaximize = function () {
+    ProModal.prototype.setModalContentInsertMaximize = function () {
         if (!this.nodeMaximize && this.props.modalType === 'fullscreen') { // 如果开启了全屏模式
             if (this.getModalDOM && this.getModalContentDOM) {
                 /* this.modalContent = this.getModalContentDOM; */
@@ -619,7 +862,7 @@ var LegionsProModal = /** @class */ (function (_super) {
         }
     };
     /** * 渲染全屏和还原按钮 */
-    LegionsProModal.prototype.renderMaximize = function () {
+    ProModal.prototype.renderMaximize = function () {
         var _this = this;
         if (this.nodeMaximize) {
             unstable_renderSubtreeIntoContainer(this, //代表当前组件
@@ -644,7 +887,7 @@ var LegionsProModal = /** @class */ (function (_super) {
             );
         }
     };
-    LegionsProModal.prototype.renderModalContent = function () {
+    ProModal.prototype.renderModalContent = function () {
         var styles = {};
         if (this.props.draggable) {
             styles = this.viewStore.computedDraggableContentStyles;
@@ -655,7 +898,7 @@ var LegionsProModal = /** @class */ (function (_super) {
         );
     };
     /** 往模态框ant-modal-content节点插入元素 */
-    LegionsProModal.prototype.setModadlContentInsertElement = function () {
+    ProModal.prototype.setModadlContentInsertElement = function () {
         if (this.getModalDOM && !this.contentResizableNode) {
             var antModal = this.getModalDOM.querySelector("." + antPrefix + "-modal");
             if (!this.isBindingDom) {
@@ -675,7 +918,7 @@ var LegionsProModal = /** @class */ (function (_super) {
         }
     };
     /** 同步回an-modal-content节点元素坐标轴数据 */
-    LegionsProModal.prototype.setAntdContentLocation = function (options) {
+    ProModal.prototype.setAntdContentLocation = function (options) {
         var modalDOM = null;
         var modalContent = null;
         if (options) {
@@ -708,7 +951,7 @@ var LegionsProModal = /** @class */ (function (_super) {
      * @param {MouseEvent} event
      * @memberof HLModal
      */
-    LegionsProModal.prototype.handleDraggableMoveStart = function (event) {
+    ProModal.prototype.handleDraggableMoveStart = function (event) {
         var _this = this;
         if (this.getModalDOM && this.viewStore.operaModel !== 'maximize') {
             if (this.getModalContentDOM) {
@@ -734,7 +977,7 @@ var LegionsProModal = /** @class */ (function (_super) {
     /**在进行拖拽移动时 覆盖原有overfolw:hidden行为
      * 具体进行此操作原因忘记了
      */
-    LegionsProModal.prototype.coverOverfolwTranformAutoOverflow = function () {
+    ProModal.prototype.coverOverfolwTranformAutoOverflow = function () {
         if (this.props.draggable && this.viewStore.visible) {
             var modalbody = document.querySelector('body');
             var classNames = modalbody.getAttribute('class') || '';
@@ -743,7 +986,7 @@ var LegionsProModal = /** @class */ (function (_super) {
             }
         }
     };
-    LegionsProModal.prototype.handleCancel = function (even) {
+    ProModal.prototype.handleCancel = function (even) {
         var _this = this;
         var instance = this.props.store.ModalContainer.get(this.uid);
         if (instance.cancelConfirm) {
@@ -775,11 +1018,11 @@ var LegionsProModal = /** @class */ (function (_super) {
             this.props.onCancel && this.props.onCancel(even);
         }
     };
-    LegionsProModal.prototype.handleOnOk = function (even) {
+    ProModal.prototype.handleOnOk = function (even) {
         var onOk = this.props.onOk;
         onOk && onOk(even);
     };
-    LegionsProModal.prototype.render = function () {
+    ProModal.prototype.render = function () {
         var instance = this.viewStore;
         var DrawerBodyHeight = this.props.footer === null ? '94%' : '89%';
         var draggingMouseStyles = ''; // 拖拽移动鼠标样式
@@ -794,30 +1037,33 @@ var LegionsProModal = /** @class */ (function (_super) {
             };
             draggingMouseStyles = this.viewStore.dragData.dragging ? 'legions-pro-modal-content-dragging' : 'legions-pro-modal-content-drag';
         }
-        if (this.props.modalType === 'Drawer' && this.props.resizable) {
+        if (this.props.modalType === 'drawer' && this.props.resizable) {
             drawerMaskProps = {
                 maskClosable: false,
             };
         }
         var drawerStyles = Object.assign(__assign({}, this.props.style), { paddingBottom: '0px' }, placement[this.props.placement], this.viewStore.computedResizableContentStyles);
-        return (this.props.modalType === 'Drawer' ? React.createElement(Modal, __assign({ width: (this.props.placement === 'top' || this.props.placement === 'bottom') ? '100%' : this.viewStore.width }, this.props, drawerMaskProps, { bodyStyle: __assign({ height: DrawerBodyHeight, overflow: 'auto' }, this.viewStore.computedMaximizeBodyStyle), style: drawerStyles, wrapClassName: this.uid + " " + DrawerPositionWrap[this.props.placement] + " " + (this.props.wrapClassName || '') + " " + this.viewStore.computedResizableClasses, title: this.viewStore.title, visible: this.viewStore.visible, onCancel: this.handleCancel, onOk: this.handleOnOk, okText: this.viewStore.okText, cancelText: this.viewStore.cancelText, confirmLoading: this.viewStore.confirmLoading }), this.props.children) :
-            React.createElement(Modal, __assign({ width: (this.viewStore.operaModel === 'maximize') ? '100%' : this.viewStore.width }, this.props, draggableMaskProps, { 
-                /* mask={false}
-                maskClosable={false} */
-                style: Object.assign(this.props.style || {}, draggableStyles, this.viewStore.computedMaximizeContentStyles, this.viewStore.computedResizableContentStyles), bodyStyle: Object.assign(this.props.bodyStyle || {}, this.viewStore.computedMaximizeBodyStyle), wrapClassName: this.uid + " " + (this.props.wrapClassName || '') + " " + draggingMouseStyles + " " + this.viewStore.computedResizableClasses, title: this.viewStore.title, visible: this.viewStore.visible, onCancel: this.handleCancel, onOk: this.handleOnOk, okText: this.viewStore.okText, cancelText: this.viewStore.cancelText, confirmLoading: this.viewStore.confirmLoading }), this.props.children));
+        return (this.props.modalType === 'drawer' ? React.createElement(Modal, __assign({ width: (this.props.placement === 'top' || this.props.placement === 'bottom') ? '100%' : this.viewStore.width }, this.props, drawerMaskProps, { bodyStyle: __assign({ height: DrawerBodyHeight, overflow: 'auto' }, this.viewStore.computedMaximizeBodyStyle), style: drawerStyles, wrapClassName: this.uid + " " + DrawerPositionWrap[this.props.placement] + " " + (this.props.wrapClassName || '') + " " + this.viewStore.computedResizableClasses, title: this.viewStore.title, visible: this.viewStore.visible, onCancel: this.handleCancel, onOk: this.handleOnOk, okText: this.viewStore.okText, cancelText: this.viewStore.cancelText, confirmLoading: this.viewStore.confirmLoading }), this.props.children) :
+            React.createElement(Modal, __assign({ width: (this.viewStore.operaModel === 'maximize') ? '100%' : this.viewStore.width }, this.props, draggableMaskProps, { style: Object.assign(this.props.style || {}, draggableStyles, this.viewStore.computedMaximizeContentStyles, this.viewStore.computedResizableContentStyles), bodyStyle: Object.assign(this.props.bodyStyle || {}, this.viewStore.computedMaximizeBodyStyle), wrapClassName: this.uid + " " + (this.props.wrapClassName || '') + " " + draggingMouseStyles + " " + this.viewStore.computedResizableClasses, title: this.viewStore.title, visible: this.viewStore.visible, onCancel: this.handleCancel, onOk: this.handleOnOk, okText: this.viewStore.okText, cancelText: this.viewStore.cancelText, confirmLoading: this.viewStore.confirmLoading }), this.props.children));
     };
-    LegionsProModal.defaultProps = {
-        modalType: 'Modal',
+    ProModal.defaultProps = {
+        modalType: 'modal',
         placement: 'left',
         draggable: false,
         resizable: false,
     };
-    LegionsProModal = __decorate([
+    ProModal.LegionsProModalContext = LegionsProModalContext;
+    ProModal = __decorate([
         bind({ store: ProModalStore }),
         observer,
         __metadata("design:paramtypes", [Object])
-    ], LegionsProModal);
-    return LegionsProModal;
+    ], ProModal);
+    return ProModal;
 }(Component));
+var LegionsProModal = function (props) {
+    var children = props.children, prop = __rest(props, ["children"]);
+    return React.createElement(ProModal.LegionsProModalContext, { content: React.createElement(React.Fragment, null, children) },
+        React.createElement(ProModal, __assign({}, prop)));
+};
 
 export default LegionsProModal;

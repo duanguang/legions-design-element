@@ -207,7 +207,7 @@ export declare class ProTableView {
      * @readonly
      * @memberof ProTableView
      */
-    get tableXAutoWidth(): string | number;
+    get tableXAutoWidth(): import("react").ReactText;
     get computedTotal(): number;
     /**
      *
@@ -274,9 +274,15 @@ export declare class ProTableView {
     setTotal(total: number): void;
     /**
      *
-     * 控制开启或者取消行选中
+     * 开启或者取消单击行选中
      * @param {boolean} isOpenRowChange
      * @memberof ProTableView
      */
     updateOpenRowChange(isOpenRowChange: boolean): void;
+    /**
+     *
+     * 开启或者取消行选中
+     * @param {boolean} isOpenRowChange
+     */
+    updateOpenRowSelection(isOpenRowSelection: boolean): void;
 }

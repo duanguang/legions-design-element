@@ -225,11 +225,11 @@ var LegionsProUpload = /** @class */ (function (_super) {
     };
     LegionsProUpload.prototype.getFileSize = function (fileByte) {
         var fileSizeByte = fileByte;
-        var fileSizeMsg = '';
+        var fileSizeMsg = 0;
         if (fileSizeByte) {
-            fileSizeMsg = (fileSizeByte / (1024 * 1024)).toFixed(3);
+            fileSizeMsg = parseFloat((fileSizeByte / (1024 * 1024)).toFixed(3));
         }
-        return parseFloat(fileSizeMsg);
+        return fileSizeMsg;
     };
     LegionsProUpload.prototype.readFile = function (file, fileList) {
         var _this = this;

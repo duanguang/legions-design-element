@@ -4,7 +4,7 @@ const { Sider } = Layout;
 const SubMenu = Menu.SubMenu;
 import { observer,bind } from 'legions/store-react'
 import {MenuStore,TabPaneViewStore} from '../../store/pro.layout';
-import { MenuEntity } from '../../models';
+import { MenuContainerEntity, MenuEntity } from '../../models';
 import { SelectParam,MenuProps,ClickParam } from 'antd/lib/menu'
 import '../style/memu.less';
 import { autorun,isObservableArray } from 'mobx';
@@ -18,9 +18,14 @@ import { IUserInfo,ILegionsPluginDataOrigin } from '../../interface';
 interface IProps extends IUserInfo,MenuProps {
   store?: MenuStore
   logo: string,
-  onGetMenuEntity: () => Promise<any>
-  activeKey?: string,
-  query?: string
+  onQueryPromiseMenus: () => Promise<MenuContainerEntity>;
+  /** 外部链接跳转，打开指定菜单 */
+  defaultOpenMenuTabs?: {
+    /** 指定菜单Key */
+    meunKey?: string;
+    /** 打开菜单地址栏参数 */
+    params?: string;
+  };
   domainUrl?: string
   router: Array<IRouter>;
   defaultOpenKeys?: string[];
@@ -54,9 +59,10 @@ export default class MenuParts extends React.Component<IProps>{
   }
   static defaultProps = {
     fixedLayoutPosition: 'fixedSider',
+    router:[]
   }
   componentDidMount() {
-    this.props.store.getMenuList(this.props.onGetMenuEntity);
+    this.props.store.getMenuList(this.props.onQueryPromiseMenus);
     this.initGlobalVariableValue();
     this.setOpenKesInDidMountcycle();
   }
@@ -91,11 +97,12 @@ export default class MenuParts extends React.Component<IProps>{
   onPageloadedOpenTabpane(menuList: MenuEntity[]) {
     const { store } = this.props;
     store.context.TabPaneApp.syncTabPanes(menuList);
-    const activeMenuItem = menuList.find((item) => item.key === this.props.activeKey)
+    const {defaultOpenMenuTabs={} } = this.props;
+    const activeMenuItem = menuList.find((item) => item.key === defaultOpenMenuTabs.meunKey)
     const hash = window.location.hash;
     const menuItem = hash && menuList.find((item) => (item.path === hash.replace('#','') || item.path === hash || (item.path !== '#' && hash.indexOf(item.path) > -1)))
     if (activeMenuItem) {/** 如果用户通过URL传入了活动菜单key值， 则打开用户指定的菜单key */
-      store.openDefault({ key: this.props.activeKey,title: activeMenuItem.title,path: `${activeMenuItem.path}?${this.props.query}` });
+      store.openDefault({ key: defaultOpenMenuTabs.meunKey,title: activeMenuItem.title,path: `${activeMenuItem.path}?${defaultOpenMenuTabs.params}` });
     }
     else if (hash && menuItem) {/** 如果用户传入指定菜单路由进行访问，则通过路由地址去找寻菜单数据，进行访问菜单页面 */
       store.openDefault({ key: menuItem.key,title: menuItem.title,path: `${menuItem.path}` });
@@ -105,7 +112,7 @@ export default class MenuParts extends React.Component<IProps>{
          * 否则调取默认缓存中菜单数据进行打开 */
         if ((Array.isArray(store.selectedKeys) || isObservableArray(store.selectedKeys)) && store.selectedKeys.length === 0) {
           const entity = menuList.length && menuList[0];
-          if (entity.path && entity.path !== '#' && !this.props.activeKey) {
+          if (entity.path && entity.path !== '#' && !defaultOpenMenuTabs.meunKey) {
             store.context.TabPaneApp.setDefaultTabPanes({
               key: entity.key,
               keyPath: [entity.key.toString()]
@@ -118,13 +125,14 @@ export default class MenuParts extends React.Component<IProps>{
     const skin = this.props.store.viewModel.getSkinInfos()
     this.props.store.setRootSubMenu(item.key.toString(),'0')
     return (
-      <Menu.Item key={`${item.key}`}
+      <Menu.Item
+        key={`${item.key}`}
         className={(skin && skin.skin) || ''}
       >
-        {!item.icon ? [<Icon type='pie-chart'></Icon>,
-        <span>{item.title}</span>] : [
-            <img className='anticon' src={item.icon} style={{ position: 'relative',top: '4px',right: '4px' }}></img>,
-            <span>{item.title}</span>
+        {!item.icon ? [<Icon type='pie-chart' key='1'></Icon>,
+        <span  key='2'>{item.title}</span>] : [
+            <img className='anticon' src={item.icon} key='3' style={{ position: 'relative',top: '4px',right: '4px' }}></img>,
+            <span key='4'>{item.title}</span>
           ]}
       </Menu.Item>
     )
@@ -143,7 +151,8 @@ export default class MenuParts extends React.Component<IProps>{
       }
     }
     return (
-      <SubMenu key={`${item.key}`}
+      <SubMenu
+        key={`${item.key}`}
         className={(skin && skin.skin) || ''}
         title={<span >{icon ? <img className='anticon' src={icon} style={{ position: 'relative',top: '4px',right: '4px' }}></img> : <Icon type="appstore" />}<span>{item.title}</span></span>}>
         {this.renderRecursiveCallsMenu(item.children,false)}
@@ -154,7 +163,8 @@ export default class MenuParts extends React.Component<IProps>{
   renderMenuItemElement(item: MenuEntity) {
     const skin = this.props.store.viewModel.getSkinInfos()
     return (
-      <Menu.Item key={`${item.key}`}
+      <Menu.Item
+        key={`${item.key}`}
         className={(skin && skin.skin) || ''}
       >
         {item.title}

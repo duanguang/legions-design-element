@@ -4,7 +4,7 @@
   * @license MIT
   */
 import React from 'react';
-import { Layout, Tabs, message, Menu, Dropdown, Spin, Icon, Avatar, Breadcrumb, Badge } from 'antd';
+import { Layout, Tabs, message, Menu, Dropdown, Spin, Icon, Avatar, Breadcrumb } from 'antd';
 import './style/index.less';
 import { bind, observer } from 'legions/store-react';
 import { TabPaneViewStore, MenuStore } from '../store/pro.layout';
@@ -13,7 +13,7 @@ import { observableViewModel } from 'legions/store-utils';
 import { debounce } from 'legions-utils-tool/debounce';
 import styles from './style/content.modules.less';
 import classNames from 'classnames';
-import { observable, isObservableArray, runInAction } from 'mobx';
+import { observable, isObservableArray } from 'mobx';
 import { shortHash } from 'legions-lunar/object-hash';
 import { focusBind, focusUnbind } from 'legions-thirdparty-plugin/focus-outside';
 import { RegExChk, validatorType } from 'legions-utils-tool/regex';
@@ -27,10 +27,6 @@ import { inject } from 'legions/store';
 import './style/memu.less';
 import { page } from 'legions-lunar/mobx-decorator';
 import LegionsProSelect from '../LegionsProSelect';
-import LegionsProModal from '../LegionsProModal';
-import { OpenConfirm } from 'legions-lunar/antd-toolkit';
-import LegionsProTable from '../LegionsProTable';
-import { download } from 'legions-utils-tool/download';
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -81,6 +77,18 @@ function __decorate(decorators, target, key, desc) {
 
 function __metadata(metadataKey, metadataValue) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(metadataKey, metadataValue);
+}
+
+function __values(o) {
+    var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
+    if (m) return m.call(o);
+    if (o && typeof o.length === "number") return {
+        next: function () {
+            if (o && i >= o.length) o = void 0;
+            return { value: o && o[i++], done: !o };
+        }
+    };
+    throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
 }
 
 function __read(o, n) {
@@ -215,24 +223,50 @@ var LayoutContentUtils = /** @class */ (function () {
             var url = LayoutContentUtils.transHttpUrl(src, tabPanesTimestamp);
             return (React.createElement(LegionsProIframe, { url: url, ref: "iframeContainer" + pane.key, height: "100%", display: "initial", position: "relative", styles: { border: "none", minHeight: "" + that.viewModel.iframeHeight }, id: "ReactIframe", name: pane.key, allowFullScreen: true, onFirstLoaded: function () {
                     var value = { pane: pane, iframe: document.querySelector("iframe[name=\"" + pane.key + "\"]") };
-                    if (!value.iframe.contentWindow.LegionsProGlobal) {
-                        var _a = getMicroAppStateActions(pane.key), onGlobalStateChange = _a.onGlobalStateChange, setGlobalState = _a.setGlobalState, offGlobalStateChange = _a.offGlobalStateChange;
-                        value.iframe.contentWindow.LegionsProGlobal = {
-                            //@ts-ignore
-                            onGlobalStateChange: onGlobalStateChange,
-                            //@ts-ignore
-                            setGlobalState: setGlobalState,
-                            appId: pane.key
-                        };
-                        LayoutContentUtils.masterGlobalStateStore.setGlobalState({
-                            user: that.props.userEntity,
-                            methods: {
-                                openTabPane: LayoutContentUtils.masterGlobalStateStore.openTabPane,
-                                removeTablePane: LayoutContentUtils.masterGlobalStateStore.removeTablePane,
-                            },
-                            menuList: LayoutContentUtils.masterGlobalStateStore.menuList,
-                        }, LayoutContentUtils.masterGlobalStateStore.masterEventScopes.userEvent.created);
-                    }
+                    var dispath = function (LegionsProGlobal) {
+                        if (!LegionsProGlobal) {
+                            var _a = getMicroAppStateActions(pane.key), onGlobalStateChange = _a.onGlobalStateChange, setGlobalState = _a.setGlobalState, offGlobalStateChange = _a.offGlobalStateChange;
+                            value.iframe.contentWindow.LegionsProGlobal = {
+                                //@ts-ignore
+                                onGlobalStateChange: onGlobalStateChange,
+                                //@ts-ignore
+                                setGlobalState: setGlobalState,
+                                appId: pane.key
+                            };
+                            LayoutContentUtils.masterGlobalStateStore.setGlobalState({
+                                user: that.props.userEntity,
+                                methods: {
+                                    openTabPane: LayoutContentUtils.masterGlobalStateStore.openTabPane,
+                                    removeTablePane: LayoutContentUtils.masterGlobalStateStore.removeTablePane,
+                                },
+                                menuList: LayoutContentUtils.masterGlobalStateStore.menuList,
+                            }, LayoutContentUtils.masterGlobalStateStore.masterEventScopes.userEvent.created);
+                        }
+                    };
+                    var count = 0;
+                    var timeid = setInterval(function () {
+                        count++;
+                        if (count > 1000) {
+                            count = 0;
+                            console.warn('LegionsProGlobal注入失败');
+                            clearInterval(timeid);
+                        }
+                        try {
+                            var cWindow = value.iframe.contentWindow;
+                            if (cWindow.document.body.innerHTML) {
+                                dispath();
+                                clearInterval(timeid);
+                            }
+                            else {
+                                if (cWindow.document.body.innerHTML) {
+                                    count = 0;
+                                    dispath();
+                                    clearInterval(timeid);
+                                }
+                            }
+                        }
+                        catch (e) { }
+                    }, 10);
                 }, onLoad: function () {
                     NProgress.done();
                     pane.afterLoad && pane.afterLoad({ pane: pane, iframe: document.querySelector("iframe[name=\"" + pane.key + "\"]") });
@@ -242,37 +276,16 @@ var LayoutContentUtils = /** @class */ (function () {
     //@ts-ignore
     LayoutContentUtils.renderTabPaneRouterComponent = function (pane, that, src) {
         NProgress.done();
-        var path = src.replace('#', '');
-        var getPath = function () {
-            var path = window.location.hash.replace('#', '').split('?')[0];
-            return path;
-        };
-        if (that.props.router.length) {
-            var item = that.props.router.find(function (e) { return e.path === path; });
+        var curPane = that.props.store.panes.find(function (i) { return i.key === that.props.store.activeKey; });
+        /** 只渲染当前活跃的页签，其他页面不渲染，避免路由跳转时触发多份实例导致显示异常 */
+        if (that.props.router.length && curPane.path === pane.path) {
+            /** 路径统一取location.hash进行匹配 */
+            var path_1 = window.location.hash.replace('#', '').split('?')[0];
+            var item = that.props.router.find(function (e) { return pathToRegexp(e.path).test(path_1); });
             if (item && typeof item.component === 'function') {
                 return React.createElement(item.component);
             }
-            else {
-                item = that.props.router.find(function (e) { return pathToRegexp(e.path).test(getPath()); });
-                if (item && typeof item.component === 'function') {
-                    return React.createElement(item.component);
-                }
-            }
         }
-        /* return this.props.router.map((item,index)=>{
-              const path = src.replace('#','');
-              if (path === item.path) {
-                NProgress.done();
-                return <Route path={path} component={item.component} key={index}></Route>
-              }
-              else{
-                const path = window.location.hash.replace('#','').split('?')[0];
-                if (pathToRegexp(item.path).test(path)) {
-                  NProgress.done();
-                  return <Route path={item.path} component={item.component} key={index}></Route>
-                }
-              }
-            }) */
     };
     LayoutContentUtils.renderProxySanboxDom = function (pane, that, src, proxySanbox) {
         if (pane.loadingMode === 'sandbox') {
@@ -322,7 +335,7 @@ var LayoutContentUtils = /** @class */ (function () {
                         var container = document.createElement('div');
                         container.setAttribute('id', "" + dataApp);
                         target.appendChild(container);
-                        microSanboxApp.loadMicroApp();
+                        microSanboxApp.mount();
                         microSanboxApp.app.mountPromise.then(function () {
                             if (proxySanbox.routerSanboxOpenMode === 'newOpenactiveTab') {
                                 proxySanbox.routerSanboxOpenMode = 'inSideActiveTab';
@@ -351,6 +364,31 @@ var LayoutContentUtils = /** @class */ (function () {
                     }
                 }
             }
+        }
+    };
+    /** 沙箱单实例加载方式 */
+    LayoutContentUtils.loadMicroApp2 = function (pane, that, proxySanbox) {
+        /** 空判跳过 */
+        if (!pane) {
+            return;
+        }
+        /** 非沙箱跳过 */
+        if (pane && pane.loadingMode !== 'sandbox') {
+            return;
+        }
+        /** tab容器直接作为沙箱实例的容器 */
+        var sandboxWrap = document.querySelector('.legions-pro-layout .ant-tabs-content');
+        /** 容器空判 */
+        if (!sandboxWrap) {
+            return;
+        }
+        /** 判断实例是否已注册 */
+        if (!proxySanbox.microSanboxApp.has(pane.sandbox.appName)) {
+            var dataApp = pane.sandbox.appName;
+            var container = document.createElement('div');
+            container.setAttribute('id', "" + dataApp);
+            sandboxWrap.appendChild(container);
+            proxySanbox.registerMicroApps(pane);
         }
     };
     __decorate([
@@ -447,52 +485,74 @@ var ContentPart = /** @class */ (function (_super) {
         var _this = this;
         this.props.isEnabledTabs && this.addContextmenu();
         var pane = this.props.store.panes.find(function (item) { return item.key === _this.props.store.activeKey; });
-        LayoutContentUtils.loadMicroApp(pane, this, this.props.store.proxySanbox);
+        LayoutContentUtils.loadMicroApp2(pane, this, this.props.store.proxySanbox);
     };
     /** 添加页签悬浮窗 */
     ContentPart.prototype.addContextmenu = function () {
-        var _this = this;
-        this.viewModel.dropdown.keys().map(function (item) {
-            var view = _this.viewModel.dropdown.get(item);
-            if (view) {
-                var dropdownElm = ReactDOM.findDOMNode(_this.refs[view.uid]);
-                if (dropdownElm) {
-                    var el = ReactDOM.findDOMNode(_this.refs["" + view.uid + view.tabkey]);
-                    if (el && el.parentElement && el.parentElement.parentElement) {
-                        if (!view.isAddContextmenu) {
-                            el.parentElement.parentElement.removeEventListener('contextmenu', _this.handleContextmenu.bind(_this, el.id));
-                            el.parentElement.parentElement.addEventListener('contextmenu', _this.handleContextmenu.bind(_this, el.id));
-                            //focusUnbind(el.parentElement.parentElement,this.handleOutside.bind(this,item),styles.outSide)
-                            view.isAddContextmenu = true;
-                        }
-                        else {
-                            if (el.parentElement.parentElement.classList.value.indexOf(styles.outSide) < 0) {
-                                el.parentElement.parentElement.className = el.parentElement.parentElement.className + " " + styles.outSide;
+        var e_1, _a;
+        var keys = this.viewModel.dropdown.keys();
+        try {
+            for (var keys_1 = __values(keys), keys_1_1 = keys_1.next(); !keys_1_1.done; keys_1_1 = keys_1.next()) {
+                var item = keys_1_1.value;
+                var view = this.viewModel.dropdown.get(item);
+                if (view) {
+                    var dropdownElm = ReactDOM.findDOMNode(this.refs[view.uid]);
+                    if (dropdownElm) {
+                        var el = ReactDOM.findDOMNode(this.refs["" + view.uid + view.tabkey]);
+                        if (el && el.parentElement && el.parentElement.parentElement) {
+                            if (!view.isAddContextmenu) {
+                                el.parentElement.parentElement.removeEventListener('contextmenu', this.handleContextmenu.bind(this, el.id));
+                                el.parentElement.parentElement.addEventListener('contextmenu', this.handleContextmenu.bind(this, el.id));
+                                //focusUnbind(el.parentElement.parentElement,this.handleOutside.bind(this,item),styles.outSide)
+                                view.isAddContextmenu = true;
                             }
+                            else {
+                                if (el.parentElement.parentElement.classList.toString().indexOf(styles.outSide) < 0) {
+                                    el.parentElement.parentElement.className = el.parentElement.parentElement.className + " " + styles.outSide;
+                                }
+                            }
+                            focusBind(el.parentElement.parentElement, this.handleOutside.bind(this, item), styles.outSide);
                         }
-                        focusBind(el.parentElement.parentElement, _this.handleOutside.bind(_this, item), styles.outSide);
                     }
                 }
             }
-        });
+        }
+        catch (e_1_1) { e_1 = { error: e_1_1 }; }
+        finally {
+            try {
+                if (keys_1_1 && !keys_1_1.done && (_a = keys_1.return)) _a.call(keys_1);
+            }
+            finally { if (e_1) throw e_1.error; }
+        }
     };
     /** 移除全部页签悬浮窗 */
     ContentPart.prototype.removeAllContextmenu = function () {
-        var _this = this;
-        this.viewModel.dropdown.keys().map(function (item) {
-            var view = _this.viewModel.dropdown.get(item);
-            if (view) {
-                var dropdownElm = ReactDOM.findDOMNode(_this.refs[view.uid]);
-                if (dropdownElm) {
-                    var el = ReactDOM.findDOMNode(_this.refs["" + view.uid + view.tabkey]);
-                    if (el && el.parentElement && el.parentElement.parentElement) {
-                        el.parentElement.parentElement.removeEventListener('contextmenu', _this.handleContextmenu.bind(_this, el.id));
+        var e_2, _a;
+        var keys = this.viewModel.dropdown.keys();
+        try {
+            for (var keys_2 = __values(keys), keys_2_1 = keys_2.next(); !keys_2_1.done; keys_2_1 = keys_2.next()) {
+                var item = keys_2_1.value;
+                var view = this.viewModel.dropdown.get(item);
+                if (view) {
+                    var dropdownElm = ReactDOM.findDOMNode(this.refs[view.uid]);
+                    if (dropdownElm) {
+                        var el = ReactDOM.findDOMNode(this.refs["" + view.uid + view.tabkey]);
+                        if (el && el.parentElement && el.parentElement.parentElement) {
+                            el.parentElement.parentElement.removeEventListener('contextmenu', this.handleContextmenu.bind(this, el.id));
+                        }
+                        // @ts-ignore
+                        focusUnbind(el.parentElement.parentElement, this.handleOutside.bind(this, item), styles.outSide);
                     }
-                    // @ts-ignore
-                    focusUnbind(el.parentElement.parentElement, _this.handleOutside.bind(_this, item), styles.outSide);
                 }
             }
-        });
+        }
+        catch (e_2_1) { e_2 = { error: e_2_1 }; }
+        finally {
+            try {
+                if (keys_2_1 && !keys_2_1.done && (_a = keys_2.return)) _a.call(keys_2);
+            }
+            finally { if (e_2) throw e_2.error; }
+        }
     };
     /** 移除页签悬浮窗dom 元素 */
     ContentPart.prototype.removeContextmenu = function (itemKey) {
@@ -513,12 +573,24 @@ var ContentPart = /** @class */ (function (_super) {
         var _this = this;
         even.preventDefault();
         this.viewModel.dispatchAction(function () {
+            var e_3, _a;
             _this.viewModel.dropdown.get(tabkey).visible = true;
-            _this.viewModel.dropdown.keys().map(function (item) {
-                if (item !== tabkey) {
-                    _this.viewModel.dropdown.get(item).visible = false;
+            var keys = _this.viewModel.dropdown.keys();
+            try {
+                for (var keys_3 = __values(keys), keys_3_1 = keys_3.next(); !keys_3_1.done; keys_3_1 = keys_3.next()) {
+                    var item = keys_3_1.value;
+                    if (item !== tabkey) {
+                        _this.viewModel.dropdown.get(item).visible = false;
+                    }
                 }
-            });
+            }
+            catch (e_3_1) { e_3 = { error: e_3_1 }; }
+            finally {
+                try {
+                    if (keys_3_1 && !keys_3_1.done && (_a = keys_3.return)) _a.call(keys_3);
+                }
+                finally { if (e_3) throw e_3.error; }
+            }
         });
     };
     /** 在页签元素之外单击关闭悬浮窗 */
@@ -534,10 +606,25 @@ var ContentPart = /** @class */ (function (_super) {
         }, 200);
     };
     ContentPart.prototype.handleDropMenuItemClick = function (tabkey, even) {
+        var e_4, _a;
         var key = even.key;
         if (key === 'closeOther') {
             var keys = this.viewModel.dropdown.keys();
-            var tabkeys = keys.filter(function (item) { return item !== tabkey; });
+            var keysList = [];
+            try {
+                for (var keys_4 = __values(keys), keys_4_1 = keys_4.next(); !keys_4_1.done; keys_4_1 = keys_4.next()) {
+                    var item = keys_4_1.value;
+                    keysList.push(item);
+                }
+            }
+            catch (e_4_1) { e_4 = { error: e_4_1 }; }
+            finally {
+                try {
+                    if (keys_4_1 && !keys_4_1.done && (_a = keys_4.return)) _a.call(keys_4);
+                }
+                finally { if (e_4) throw e_4.error; }
+            }
+            var tabkeys = keysList.filter(function (item) { return item !== tabkey; });
             this.handleEdit(tabkeys, 'remove');
         }
         else if (key === 'closeCurr') {
@@ -560,11 +647,11 @@ var ContentPart = /** @class */ (function (_super) {
     ContentPart.prototype.renderTabPaneElement = function () {
         var _this = this;
         var store = this.props.store;
-        return store.panes.map(function (pane) {
+        return store.panes.map(function (pane, index) {
             var routerPath = store.proxySanbox.getRouterPath(pane);
             var appid = store.proxySanbox.createMicroAppId(pane);
             var keys = pane.sandbox.appName + "-" + appid;
-            return React.createElement(TabPane, { "data-id": keys + "-legions", "data-service": keys, "data-app": pane.sandbox.appName, "data-page": pane.sandbox.appName + "-" + routerPath, style: { outline: 'none' }, tab: _this.renderTitleElement(pane.title, store.activeKey, pane.key), key: pane.key, closable: pane.closable }, _this.renderContentElement(pane));
+            return React.createElement(TabPane, { "data-id": keys + "-legions", "data-service": keys, "data-app": pane.sandbox.appName, "data-page": pane.sandbox.appName + "-" + routerPath, "data-mode": pane.loadingMode, style: { outline: 'none' }, tab: _this.renderTitleElement(pane.title, store.activeKey, pane.key), key: "" + pane.key, closable: pane.closable }, _this.renderContentElement(pane));
         });
     };
     ContentPart.prototype.renderContentElement = function (pane) {
@@ -589,17 +676,17 @@ var ContentPart = /** @class */ (function (_super) {
         }
         var render = [];
         if (activeKey === currKey) {
-            render.push(React.createElement("span", { key: "t-0", className: "" + classNames((_a = {},
+            render.push(React.createElement("span", { key: currKey, className: "" + classNames((_a = {},
                     _a[styles['tag-dot-inner']] = true,
                     _a[styles['tag-dot-innerblue']] = true,
                     _a)) }));
         }
         else {
-            render.push(React.createElement("span", { key: "t-0", className: styles['tag-dot-inner'] }));
+            render.push(React.createElement("span", { key: currKey, className: styles['tag-dot-inner'] }));
         }
-        render.push(React.createElement(Dropdown, { trigger: ['click'], ref: "" + this.viewModel.dropdown.get(currKey).uid, overlay: this.renderDropMenuElement(currKey), visible: this.viewModel.dropdown.get(currKey).visible, placement: "bottomLeft" },
+        render.push(React.createElement(Dropdown, { trigger: ['click'], ref: "" + this.viewModel.dropdown.get(currKey).uid, overlay: this.renderDropMenuElement(currKey), key: "dropdown" + currKey, visible: this.viewModel.dropdown.get(currKey).visible, placement: "bottomLeft" },
             React.createElement("span", { key: currKey, id: currKey, ref: "" + this.viewModel.dropdown.get(currKey).uid + this.viewModel.dropdown.get(currKey).tabkey }, title)));
-        return render;
+        return React.createElement(React.Fragment, { key: currKey }, render);
     };
     ContentPart.prototype.renderLayoutContentElement = function () {
         var _this = this;
@@ -609,7 +696,7 @@ var ContentPart = /** @class */ (function (_super) {
             return null;
         }
         if (this.props.isEnabledTabs) {
-            return React.createElement(Tabs, { hideAdd: true, tabPosition: "top", animated: { inkBar: false, tabPane: false }, type: "editable-card", activeKey: store.activeKey, onEdit: this.handleEdit, onChange: this.handleChange, tabBarStyle: this.computedTabBarStyles() }, this.renderTabPaneElement());
+            return React.createElement(Tabs, { className: "legions-pro-layout-tabs", hideAdd: true, tabPosition: "top", animated: { inkBar: false, tabPane: false }, type: "editable-card", activeKey: store.activeKey, onEdit: this.handleEdit, onChange: this.handleChange, tabBarStyle: this.computedTabBarStyles() }, this.renderTabPaneElement());
         }
         else {
             return (React.createElement("div", { id: "micro-app-legions" }, pane && this.renderContentElement(pane)));
@@ -638,7 +725,11 @@ var ContentPart = /** @class */ (function (_super) {
         if (this.props.userEntity && this.props.userEntity.userUid) {
             loading = false;
         }
-        return (React.createElement(Content, __assign({}, this.computedContentClassProps()), this.props.userEntity !== void 0 ? React.createElement(Spin, { tip: "Loading...", spinning: loading }, this.renderLayoutContentElement()) : this.renderLayoutContentElement()));
+        return (React.createElement(Content, __assign({}, this.computedContentClassProps()), 
+        /** 菜单数据加载完毕之后再渲染content区域 */
+        this.props.menuStore.obMenuList.isResolved && (
+        /** 更具用户信息判断时候暂时loading状态 */
+        this.props.userEntity !== void 0 ? React.createElement(Spin, { tip: "Loading...", spinning: loading }, this.renderLayoutContentElement()) : this.renderLayoutContentElement())));
     };
     ContentPart.defaultProps = {
         fixedLayoutPosition: 'fixedSider',
@@ -667,18 +758,11 @@ var MenuParts = /** @class */ (function (_super) {
             if (newItem) {
                 var path_1 = newItem['path'];
                 var index = _this.props.router.findIndex(function (item) { return item.path === path_1.replace('#', ''); });
+                var pane = store.context.TabPaneApp.panes.find(function (item) { return item.key === selected['key']; });
+                var oldpane = store.context.TabPaneApp.panes.find(function (item) { return item.key === oldActiveKey; });
                 if (path_1.indexOf('#') > -1 && index > -1) {
                     // window.location.href = `${this.props.domainUrl}${path.replace('','')}`
                     _this.props.store.history.push("" + path_1.replace('#', ''));
-                }
-                else if (path_1.indexOf('#') > -1 && newItem.loadingMode === 'sandbox') {
-                    var _path = path_1.split('#');
-                    if (_path.length > 1) {
-                        var pane = store.context.TabPaneApp.panes.find(function (item) { return item.key === selected['key']; });
-                        var oldpane = store.context.TabPaneApp.panes.find(function (item) { return item.key === oldActiveKey; });
-                        store.context.TabPaneApp.proxySanbox.routerSanboxOpenMode = 'newOpenactiveTab';
-                        store.context.TabPaneApp.proxySanbox.openTabPaneSanbox(oldpane, pane);
-                    }
                 }
             }
         };
@@ -694,7 +778,7 @@ var MenuParts = /** @class */ (function (_super) {
         return _this;
     }
     MenuParts.prototype.componentDidMount = function () {
-        this.props.store.getMenuList(this.props.onGetMenuEntity);
+        this.props.store.getMenuList(this.props.onQueryPromiseMenus);
         this.initGlobalVariableValue();
         this.setOpenKesInDidMountcycle();
     };
@@ -729,14 +813,14 @@ var MenuParts = /** @class */ (function (_super) {
     };
     /** 在打开菜单页面路由时，获取菜单完毕时，打开菜单页签 */
     MenuParts.prototype.onPageloadedOpenTabpane = function (menuList) {
-        var _this = this;
         var store = this.props.store;
         store.context.TabPaneApp.syncTabPanes(menuList);
-        var activeMenuItem = menuList.find(function (item) { return item.key === _this.props.activeKey; });
+        var _a = this.props.defaultOpenMenuTabs, defaultOpenMenuTabs = _a === void 0 ? {} : _a;
+        var activeMenuItem = menuList.find(function (item) { return item.key === defaultOpenMenuTabs.meunKey; });
         var hash = window.location.hash;
         var menuItem = hash && menuList.find(function (item) { return (item.path === hash.replace('#', '') || item.path === hash || (item.path !== '#' && hash.indexOf(item.path) > -1)); });
         if (activeMenuItem) { /** 如果用户通过URL传入了活动菜单key值， 则打开用户指定的菜单key */
-            store.openDefault({ key: this.props.activeKey, title: activeMenuItem.title, path: activeMenuItem.path + "?" + this.props.query });
+            store.openDefault({ key: defaultOpenMenuTabs.meunKey, title: activeMenuItem.title, path: activeMenuItem.path + "?" + defaultOpenMenuTabs.params });
         }
         else if (hash && menuItem) { /** 如果用户传入指定菜单路由进行访问，则通过路由地址去找寻菜单数据，进行访问菜单页面 */
             store.openDefault({ key: menuItem.key, title: menuItem.title, path: "" + menuItem.path });
@@ -747,7 +831,7 @@ var MenuParts = /** @class */ (function (_super) {
                * 否则调取默认缓存中菜单数据进行打开 */
             if ((Array.isArray(store.selectedKeys) || isObservableArray(store.selectedKeys)) && store.selectedKeys.length === 0) {
                 var entity = menuList.length && menuList[0];
-                if (entity.path && entity.path !== '#' && !this.props.activeKey) {
+                if (entity.path && entity.path !== '#' && !defaultOpenMenuTabs.meunKey) {
                     store.context.TabPaneApp.setDefaultTabPanes({
                         key: entity.key,
                         keyPath: [entity.key.toString()]
@@ -759,10 +843,10 @@ var MenuParts = /** @class */ (function (_super) {
     MenuParts.prototype.renderFirstMenuItemElement = function (item) {
         var skin = this.props.store.viewModel.getSkinInfos();
         this.props.store.setRootSubMenu(item.key.toString(), '0');
-        return (React.createElement(Menu.Item, { key: "" + item.key, className: (skin && skin.skin) || '' }, !item.icon ? [React.createElement(Icon, { type: 'pie-chart' }),
-            React.createElement("span", null, item.title)] : [
-            React.createElement("img", { className: 'anticon', src: item.icon, style: { position: 'relative', top: '4px', right: '4px' } }),
-            React.createElement("span", null, item.title)
+        return (React.createElement(Menu.Item, { key: "" + item.key, className: (skin && skin.skin) || '' }, !item.icon ? [React.createElement(Icon, { type: 'pie-chart', key: '1' }),
+            React.createElement("span", { key: '2' }, item.title)] : [
+            React.createElement("img", { className: 'anticon', src: item.icon, key: '3', style: { position: 'relative', top: '4px', right: '4px' } }),
+            React.createElement("span", { key: '4' }, item.title)
         ]));
     };
     MenuParts.prototype.renderFirstSubMenuELement = function (item) {
@@ -907,6 +991,7 @@ var MenuParts = /** @class */ (function (_super) {
     };
     MenuParts.defaultProps = {
         fixedLayoutPosition: 'fixedSider',
+        router: []
     };
     __decorate([
         inject(MasterGlobalStateStore),
@@ -930,91 +1015,10 @@ var MenuParts = /** @class */ (function (_super) {
 }(React.Component));
 
 var Header = Layout.Header;
-var Columns = function (that) { return [
-    {
-        title: '任务名称',
-        dataIndex: 'taskName',
-        key: 'taskName',
-        width: '10%',
-    },
-    {
-        title: '版本号',
-        dataIndex: 'version',
-        key: 'version',
-        width: '10%',
-    },
-    {
-        title: '导出状态',
-        dataIndex: 'stateDesc',
-        key: 'stateDesc',
-        width: '10%',
-        render: function (text, recrod) {
-            return React.createElement(Badge, { status: recrod['stateUI'], text: text });
-        },
-    },
-    {
-        title: '创建人',
-        dataIndex: 'createrName',
-        key: 'createrName',
-        width: '10%',
-    }, {
-        title: '导出名字',
-        dataIndex: 'moduleName',
-        key: 'moduleName',
-        width: '10%',
-    },
-    {
-        title: '导出开始时间',
-        dataIndex: 'startTime',
-        key: 'startTime',
-        width: '20%',
-    },
-    {
-        title: '导出完成时间',
-        dataIndex: 'finishTime',
-        key: 'finishTime',
-        width: '20%',
-    },
-    {
-        title: '下载',
-        dataIndex: 'filePath',
-        key: 'filePath',
-        width: '10%',
-        render: function (text) {
-            return React.createElement("span", { style: { cursor: 'pointer' } }, text && React.createElement(Icon, { type: "cloud-download-o", style: { fontSize: '18px', color: '#108ee9' }, onClick: function () {
-                    download([decodeURIComponent(text)]);
-                } }));
-        },
-    },
-    {
-        title: '删除',
-        dataIndex: 'id',
-        key: 'id',
-        width: '10%',
-        render: function (id) {
-            return React.createElement(Icon, { type: "delete", style: { fontSize: '16px', color: '#108ee9', cursor: 'pointer' }, onClick: function () {
-                    OpenConfirm({
-                        title: '提示',
-                        content: '是否确认删除？',
-                        onOk: function () {
-                            that.props.onExportTaskDelete && that.props.onExportTaskDelete(id);
-                        }
-                    });
-                } });
-        },
-    }
-]; };
 var HeaderPart = /** @class */ (function (_super) {
     __extends(HeaderPart, _super);
     function HeaderPart(props) {
         var _this = _super.call(this, props) || this;
-        /** 模态框内容区展示组件类型 */
-        _this.modalContentType = '';
-        _this.modalRef = null;
-        _this.taskCenterTableRef = null;
-        _this.onClose = function () {
-            _this.modalRef.viewModel.visible = false;
-        };
         _this.props.store.viewModel.skin = _this.props.skin || _this.props.store.viewModel.skin;
         _this.handleToggle = _this.handleToggle.bind(_this);
         _this.handleClick = _this.handleClick.bind(_this);
@@ -1053,36 +1057,18 @@ var HeaderPart = /** @class */ (function (_super) {
                     React.createElement(Icon, { type: "logout", style: { fontSize: 13, color: '#08c', paddingRight: '5px' } }),
                     React.createElement("span", null, "\u9000\u51FA\u767B\u5F55"))));
     };
-    HeaderPart.prototype.renderTaskCenterElement = function () {
-        var _this = this;
-        return React.createElement("span", { className: "action-item", onClick: function () {
-                _this.modalRef.viewModel.visible = true;
-                _this.modalRef.viewModel.width = 960;
-                _this.modalRef.viewModel.title = '自动任务调度中心';
-                runInAction(function () {
-                    _this.modalContentType = 'readTaskList';
-                });
-            } },
-            React.createElement(Icon, { type: "cloud-download-o", style: { fontSize: '22px', color: '#108ee9' } }));
-    };
     /** 渲染系统设置节点 */
     HeaderPart.prototype.renderSystemSettingElement = function () {
         var _this = this;
         return React.createElement(Dropdown, { overlay: (React.createElement(Menu, { onClick: function (params) {
-                    if (params.key === '0') {
-                        runInAction(function () {
-                            _this.modalContentType = 'updatePass';
-                        });
-                        _this.modalRef.viewModel.visible = true;
-                        _this.modalRef.viewModel.width = 660;
-                        _this.modalRef.viewModel.title = '修改密码';
+                    if (_this.props.sysSettingDropdown) {
+                        _this.props.sysSettingDropdown.onClick && _this.props.sysSettingDropdown.onClick(params.key);
                     }
                 } },
-                (this.props.password && this.props.password.componentNode) && React.createElement(Menu.Item, { key: "0" },
-                    React.createElement("span", null,
-                        React.createElement(Icon, { style: { fontSize: '11px' }, type: "user" }),
-                        "\u00A0\u00A0\u4FEE\u6539\u5BC6\u7801")),
-                React.createElement(Menu.Item, { key: "1" },
+                this.props.sysSettingDropdown && this.props.sysSettingDropdown.dropdown.map(function (item, _index) {
+                    return React.createElement(Menu.Item, { key: item.key || _index }, item.node);
+                }),
+                React.createElement(Menu.Item, { key: "loginout" },
                     React.createElement("span", { className: "action-item", onClick: this.props.onLoginOut },
                         React.createElement(Icon, { style: { fontSize: '11px' }, type: "logout" }),
                         "\u00A0\u00A0\u9000\u51FA\u767B\u5F55")))), trigger: ['hover'] },
@@ -1090,12 +1076,13 @@ var HeaderPart = /** @class */ (function (_super) {
                 React.createElement(Icon, { type: "setting", style: { fontSize: '20px', color: '#108ee9' } })));
     };
     HeaderPart.prototype.renderUserInfoElement = function () {
+        var _a = this.props.userEntity, userEntity = _a === void 0 ? {} : _a;
         return React.createElement("span", { className: "action-item" },
             React.createElement(Avatar, { icon: "user", size: "small" }),
-            React.createElement("span", { className: "name" }, this.props.userName),
-            this.props.companyName && React.createElement("span", null,
+            React.createElement("span", { className: "name" }, userEntity['userName']),
+            userEntity['companyName'] && React.createElement("span", null,
                 " \u00A0\u00A0|\u00A0\u00A0",
-                this.props.companyName));
+                userEntity['companyName']));
     };
     /** 在用户信息节点之后插入自定义header信息 */
     HeaderPart.prototype.renderInsertRightHeaderElement = function () {
@@ -1112,40 +1099,10 @@ var HeaderPart = /** @class */ (function (_super) {
         return React.createElement(Icon, { className: "trigger", style: { float: 'left', fontSize: '26px' }, type: this.props.store.viewModel.collapsed ? 'menu-unfold' : 'menu-fold', onClick: this.handleToggle });
     };
     HeaderPart.prototype.renderBreadcrumbElement = function () {
-        return React.createElement(Breadcrumb, { separator: ">", style: { float: 'left', marginLeft: '22px', lineHeight: '50px' } }, this.props.store.context.TabPaneApp.breadcrumbMenu.map(function (item, index) {
+        return React.createElement(Breadcrumb, { separator: ">", style: { display: 'inline-block', marginLeft: '22px', lineHeight: '50px' } }, this.props.store.context.TabPaneApp.breadcrumbMenu.map(function (item, index) {
             return (React.createElement(Breadcrumb.Item, { key: index },
                 React.createElement("span", { style: { fontSize: '14px' } }, item)));
         }));
-    };
-    HeaderPart.prototype.renderModalElement = function () {
-        var _this = this;
-        var footer = null;
-        if (this.modalContentType === 'readTaskList') {
-            footer = { footer: null };
-        }
-        if (this.modalContentType === 'updatePass' && this.props.password && (this.props.password.footer === null || this.props.password.footer)) {
-            footer = { footer: this.props.password.footer };
-        }
-        return React.createElement(LegionsProModal, __assign({}, footer, { onOk: function () {
-                if (_this.props.password && _this.props.password.onSubmit) {
-                    if (typeof _this.props.password.onSubmit === 'function') {
-                        _this.props.password.onSubmit({
-                            onClose: _this.onClose,
-                        });
-                    }
-                }
-            }, onReady: function (value) {
-                _this.modalRef = value;
-                if (_this.props.password) {
-                    _this.props.password.onReady && _this.props.password.onReady(value);
-                }
-            } }),
-            //@ts-ignore
-            this.modalContentType === 'readTaskList' && React.createElement(LegionsProTable, { bodyStyle: { minHeight: '0' }, total: this.props.store.viewModel.exportTaskList.length, scroll: { x: '100%', y: '300px' }, uniqueKey: "id", loading: false, columns: Columns(this), onReady: function (value) {
-                    _this.taskCenterTableRef = value;
-                    _this.taskCenterTableRef.viewModel.pageSize = 2;
-                }, data: this.props.store.viewModel.exportTaskList }),
-            (this.modalContentType === 'updatePass' && this.props.password) && (this.props.password.componentNode));
     };
     HeaderPart.prototype.renderHeaderElement = function () {
         var renderHeaders = React.createElement(Header, { style: { padding: 0, height: '50px' } },
@@ -1158,13 +1115,11 @@ var HeaderPart = /** @class */ (function (_super) {
                     this.renderUserInfoElement(),
                     this.renderInsertRightHeaderElement(),
                     this.renderSkinsElement(),
-                    this.renderTaskCenterElement(),
                     this.renderSystemSettingElement())
                 :
                     React.createElement("div", { className: "right-header" },
                         this.renderSearchDirectMenuElement(),
-                        this.renderInsertRightHeaderElement()),
-            this.renderModalElement());
+                        this.renderInsertRightHeaderElement()));
         if (this.props.fixedLayoutPosition === 'fixedSiderHeader') {
             return React.createElement("header", { className: this.computedHeaderClassName(), style: this.computedHeaderStyles() }, renderHeaders);
         }
@@ -1224,10 +1179,6 @@ var HeaderPart = /** @class */ (function (_super) {
     HeaderPart.defaultProps = {
         fixedLayoutPosition: 'fixedSider',
     };
-    __decorate([
-        observable,
-        __metadata("design:type", String)
-    ], HeaderPart.prototype, "modalContentType", void 0);
     HeaderPart = __decorate([
         bind({ store: MenuStore }),
         observer,
@@ -1237,13 +1188,18 @@ var HeaderPart = /** @class */ (function (_super) {
 }(React.Component));
 
 var baseCls = 'legions-pro-layout';
+var theme = {
+    dark: '0',
+    lightBlue: '1',
+    blue: '3',
+};
 var LegionsProLayout = function (props) {
     return (React.createElement("div", { className: "" + baseCls },
         React.createElement(Layout, null,
-            React.createElement(MenuParts, __assign({}, props.menuProps, { fixedLayoutPosition: props.fixedLayoutPosition, domainUrl: props.domainUrl, userEntity: props.userEntity, router: props.router || [], defaultOpenKeys: props.defaultOpenKeys, query: props.query, activeKey: props.menuActiveKey, loadedMenuTransformData: props.loadedMenuTransformData, onGetMenuEntity: props.onGetMenuEntity, logo: props.logo, onLogoClick: props.onLogoClick })),
+            React.createElement(MenuParts, __assign({}, props.menuProps, { fixedLayoutPosition: props.fixedLayoutPosition, domainUrl: props.domainUrl, userEntity: props.userEntity, router: props.router || [], defaultOpenKeys: props.defaultOpenKeys, defaultOpenMenuTabs: props.defaultOpenMenuTabs, loadedMenuTransformData: props.loadedMenuTransformData, onQueryPromiseMenus: props.onQueryPromiseMenus, logo: props.logo, onLogoClick: props.onLogoClick })),
             React.createElement(Layout, null,
-                (props.isShowHeader === void 0 || props.isShowHeader) && React.createElement(HeaderPart, { onLoginOut: props.onLoginOut, fixedLayoutPosition: props.fixedLayoutPosition, userName: props.userName, companyName: props.companyName, onExportTaskDelete: props.onExportTaskDelete, password: props.password, header: props.header, skin: props.skin || '0', isReCustomHeader: props.isReCustomHeader }),
-                React.createElement(ContentPart, { notFoundUrl: props.notFoundUrl, fixedLayoutPosition: props.fixedLayoutPosition, domainUrl: props.domainUrl, userEntity: props.userEntity, isEnabledTabs: props.isEnabledTabs, router: props.router })))));
+                (props.isShowHeader === void 0 || props.isShowHeader) && React.createElement(HeaderPart, { onLoginOut: props.onLoginOut, fixedLayoutPosition: props.fixedLayoutPosition, userEntity: props.userEntity, sysSettingDropdown: props.sysSettingDropdown, header: props.header, skin: theme[props.theme] || '0', isReCustomHeader: props.isReCustomHeader }),
+                React.createElement(ContentPart, { notFoundUrl: props.notFoundUrl, fixedLayoutPosition: props.fixedLayoutPosition, domainUrl: props.domainUrl, userEntity: props.userEntity, isEnabledTabs: props.isEnabledTabs, router: props.router || [] })))));
 };
 
 export default LegionsProLayout;

@@ -80,7 +80,7 @@ export interface IMenuEntity {
     status: string;
     data: Array<MenuEntity>;
 }
-export declare class MenuContainerEntity<InterfaceMenuEntity> extends BaseEntity<Array<InterfaceMenuEntity>> {
+export declare class MenuContainerEntity extends BaseEntity<Array<MenuEntity>> {
     /**
      *Creates an instance of MenuContainerEntity.
      * @param {IMenuEntity} fromJson 服务端接口数据

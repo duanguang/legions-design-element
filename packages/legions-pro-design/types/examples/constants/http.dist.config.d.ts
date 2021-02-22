@@ -4,4 +4,6 @@ export declare const HttpConfigPreBeta: {
     domainTms: string;
     domain3pl: string;
     bffService: string;
+    domainScm: string;
+    domain404: string;
 };

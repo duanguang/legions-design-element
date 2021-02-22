@@ -54,11 +54,11 @@ export default class LegionsProUpload extends React.Component<IProUploadProps,IS
     }
     getFileSize(fileByte: number) {
         let fileSizeByte = fileByte;
-        let fileSizeMsg = '';
+        let fileSizeMsg = 0;
         if (fileSizeByte) {
-            fileSizeMsg = (fileSizeByte / (1024 * 1024)).toFixed(3)
+            fileSizeMsg = parseFloat((fileSizeByte / (1024 * 1024)).toFixed(3))
         }
-        return parseFloat(fileSizeMsg);
+        return fileSizeMsg;
     }
     readFile(file,fileList: UploadFile[]) {
         const reader = new FileReader()

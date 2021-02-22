@@ -39,12 +39,12 @@ interface IProps extends IUserInfo {
 }
 declare class ViewModels {
     iframeHeight: number;
-    dropdown: import("mobx").ObservableMap<{
+    dropdown: import("mobx").ObservableMap<string, {
         visible: boolean;
         uid: string;
         tabkey: string;
         isAddContextmenu: boolean;
-    }, any>;
+    }>;
 }
 interface IState {
 }
@@ -82,7 +82,7 @@ export default class ContentPart extends React.Component<IProps, IState> {
      * @returns
      * @memberof ContentPart
      */
-    renderTitleElement(title: string, activeKey: string, currKey: string): any[];
+    renderTitleElement(title: string, activeKey: string, currKey: string): JSX.Element;
     renderLayoutContentElement(): JSX.Element;
     computedContentClassProps(): {};
     computedTabBarStyles(): React.CSSProperties;

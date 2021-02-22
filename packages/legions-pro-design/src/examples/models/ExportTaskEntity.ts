@@ -1,10 +1,10 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-31 10:50:12
- * @LastEditTime: 2020-12-31 10:50:26
+ * @LastEditTime: 2021-02-22 11:40:41
  * @LastEditors: duanguang
  * @Description:
- * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/models/pro.task.model/index.ts
+ * @FilePath: /legions-design-element/packages/legions-pro-design/src/examples/models/ExportTaskEntity.ts
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
 import { JsonProperty } from 'json-mapper-object';

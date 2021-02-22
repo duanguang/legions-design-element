@@ -3,7 +3,7 @@
   * (c) 2021 duanguang
   * @license MIT
   */
-import { JsonProperty, MapperEntity } from 'json-mapper-object';
+import { MapperEntity, JsonProperty } from 'json-mapper-object';
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -44,145 +44,6 @@ function __decorate(decorators, target, key, desc) {
 function __metadata(metadataKey, metadataValue) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(metadataKey, metadataValue);
 }
-
-var ExportTaskEntity = /** @class */ (function () {
-    function ExportTaskEntity() {
-        /**
-         * 企业UID
-         *
-         * @memberof UserEntity
-         */
-        this.companyUid = '';
-        this.id = 0;
-        /**
-         *创建人ID,
-         *
-         * @memberof MenuEntity
-         */
-        this.createrId = '';
-        /**
-         * 创建时间,
-         *
-         * @memberof MenuEntity
-         */
-        this.createTime = '';
-        /**
-         *导出名字
-         *
-         * @memberof MenuEntity
-         */
-        this.moduleName = '';
-        /**
-         *导出开始时间,
-         *
-         * @memberof MenuEntity
-         */
-        this.startTime = '';
-        /**
-         * 导出完成时间
-         *
-         * @memberof ExportTaskEntity
-         */
-        this.finishTime = '';
-        this.createrName = '';
-        /**
-         *
-         * 导出状态: 0:未导出;1:导出中;2:已导出;3:导出结果已删除;4:导出错误,
-         * @memberof ExportTaskEntity
-         */
-        this.state = '';
-        /**
-         *
-         * 导出结果地址,
-         * @memberof ExportTaskEntity
-         */
-        this.filePath = '';
-        /**
-         *
-         * 任务名称
-         * @memberof ExportTaskEntity
-         */
-        this.taskName = '';
-        this.version = '';
-    }
-    Object.defineProperty(ExportTaskEntity.prototype, "stateDesc", {
-        get: function () {
-            var enumObj = {
-                0: '未导出',
-                1: '导出中',
-                2: '已导出',
-                3: '导出结果已删除',
-                4: '导出错误',
-            };
-            return enumObj[this.state];
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(ExportTaskEntity.prototype, "stateUI", {
-        get: function () {
-            var enumObj = {
-                0: 'default',
-                1: 'processing',
-                2: 'success',
-                3: 'warning',
-                4: 'error',
-            };
-            return enumObj[this.state];
-        },
-        enumerable: false,
-        configurable: true
-    });
-    __decorate([
-        JsonProperty('companyUid'),
-        __metadata("design:type", Object)
-    ], ExportTaskEntity.prototype, "companyUid", void 0);
-    __decorate([
-        JsonProperty('id'),
-        __metadata("design:type", Object)
-    ], ExportTaskEntity.prototype, "id", void 0);
-    __decorate([
-        JsonProperty('createrId'),
-        __metadata("design:type", Object)
-    ], ExportTaskEntity.prototype, "createrId", void 0);
-    __decorate([
-        JsonProperty('createTime'),
-        __metadata("design:type", Object)
-    ], ExportTaskEntity.prototype, "createTime", void 0);
-    __decorate([
-        JsonProperty('moduleName'),
-        __metadata("design:type", Object)
-    ], ExportTaskEntity.prototype, "moduleName", void 0);
-    __decorate([
-        JsonProperty('startTime'),
-        __metadata("design:type", Object)
-    ], ExportTaskEntity.prototype, "startTime", void 0);
-    __decorate([
-        JsonProperty('finishTime'),
-        __metadata("design:type", Object)
-    ], ExportTaskEntity.prototype, "finishTime", void 0);
-    __decorate([
-        JsonProperty('createrName'),
-        __metadata("design:type", Object)
-    ], ExportTaskEntity.prototype, "createrName", void 0);
-    __decorate([
-        JsonProperty('state'),
-        __metadata("design:type", Object)
-    ], ExportTaskEntity.prototype, "state", void 0);
-    __decorate([
-        JsonProperty('filePath'),
-        __metadata("design:type", Object)
-    ], ExportTaskEntity.prototype, "filePath", void 0);
-    __decorate([
-        JsonProperty('taskName'),
-        __metadata("design:type", Object)
-    ], ExportTaskEntity.prototype, "taskName", void 0);
-    __decorate([
-        JsonProperty('version'),
-        __metadata("design:type", Object)
-    ], ExportTaskEntity.prototype, "version", void 0);
-    return ExportTaskEntity;
-}());
 
 var BaseEntity = /** @class */ (function () {
     function BaseEntity() {
@@ -483,4 +344,4 @@ var SelectKeyValue = /** @class */ (function (_super) {
     return SelectKeyValue;
 }(BaseEntity));
 
-export { BaseEntity, ContainerEntity, ExportTaskEntity, KeyValue, MenuContainerEntity, MenuEntity, SelectKeyValue, TableColumnsContainerEntity, TableColumnsEntity, TableListColumns };
+export { BaseEntity, ContainerEntity, KeyValue, MenuContainerEntity, MenuEntity, SelectKeyValue, TableColumnsContainerEntity, TableColumnsEntity, TableListColumns };

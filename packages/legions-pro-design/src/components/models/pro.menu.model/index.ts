@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-31 10:38:25
- * @LastEditTime: 2021-01-19 16:39:40
+ * @LastEditTime: 2021-02-22 15:00:24
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/models/pro.menu.model/index.ts
@@ -117,8 +117,8 @@ export interface IMenuEntity {
   status: string;
   data: Array<MenuEntity>;
 }
-export class MenuContainerEntity<InterfaceMenuEntity> extends BaseEntity<
-  Array<InterfaceMenuEntity>
+export class MenuContainerEntity extends BaseEntity<
+  Array<MenuEntity>
 > {
   /* transformRows(rows, mapEntity) {
     super.transformRows(rows, mapEntity)

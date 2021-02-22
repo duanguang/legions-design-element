@@ -1,4 +1,3 @@
-import { ExportTaskEntity } from '../../models';
 import { ISkinModel } from './interface';
 export declare class MenuViewStore {
     /**
@@ -28,7 +27,6 @@ export declare class MenuViewStore {
      * @memberof MenuViewStore
      */
     collapsed: boolean;
-    exportTaskList: ExportTaskEntity[];
     /** 是否固定侧边菜单 */
     fixedSiderMenu: boolean;
     /** 是否固定头部区域 */

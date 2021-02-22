@@ -320,7 +320,7 @@ var ModalView = /** @class */ (function () {
         }
         if (this.computedResizable.direction === 'left') {
             if (options &&
-                options.modalType === 'Drawer' &&
+                options.modalType === 'drawer' &&
                 options.placement === 'right') {
                 this.width = document.body.clientWidth - this.resizableData.resizableX;
             }
@@ -393,7 +393,7 @@ var ModalView = /** @class */ (function () {
         __metadata("design:type", Object)
     ], ModalView.prototype, "title", void 0);
     __decorate([
-        observable.ref,
+        observable,
         __metadata("design:type", Object)
     ], ModalView.prototype, "visible", void 0);
     __decorate([

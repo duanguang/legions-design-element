@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-04 11:17:55
- * @LastEditTime: 2021-01-06 13:49:13
+ * @LastEditTime: 2021-02-20 14:34:49
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/core/cross-module/globalStateEven.ts
@@ -18,8 +18,12 @@ function findWindow<T = {}>(name: string) {
     } catch (e) {
       LegionstValue = null;
     }
-    if (!LegionstValue) {
-        LegionstValue = window.parent[name];
+    try {
+        if (!LegionstValue) {
+            LegionstValue = window.parent[name];
+        }
+    } catch (e) {
+        console.warn('LegionstValue = window.parent[name]，赋值异常，可能是域不同')
     }
     return LegionstValue;
   }

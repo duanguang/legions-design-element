@@ -1,5 +1,4 @@
 import { observable,action } from 'legions/store';
-import { ExportTaskEntity } from '../../models';
 import { ISkinModel } from './interface';
 export class MenuViewStore {
     /**
@@ -66,7 +65,6 @@ export class MenuViewStore {
      */
     @observable collapsed = false; //
   
-    @observable exportTaskList: ExportTaskEntity[] = [];
   
      /** 是否固定侧边菜单 */
     @observable fixedSiderMenu = true;

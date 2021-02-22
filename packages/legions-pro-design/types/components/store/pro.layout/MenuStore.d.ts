@@ -19,7 +19,7 @@ export default class MenuStore extends StoreBase<IContext> {
     viewModel: import("brain-store-utils").ViewModel<MenuViewStore> & import("brain-store-utils").Proxify<MenuViewStore>;
     /** 菜单展开选项值集合 */
     openKeys: string[];
-    obMenuList: observablePromise.PramsResult<MenuContainerEntity<MenuEntity>>;
+    obMenuList: observablePromise.PramsResult<MenuContainerEntity>;
     /** 选中菜单项数据 */
     selectedKeys: any[];
     /**一级菜单节点数据*/

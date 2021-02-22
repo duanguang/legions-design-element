@@ -177,7 +177,6 @@ export declare type IViewModelProTable = IViewModelProTableStore;
 export interface IProTableProps<TableRow = {}, Model = {}> extends TableProps<TableRow> {
     readonly store?: ProTableStore;
     pageSize?: number;
-    pageIndex?: number;
     /**
      *
      *如果传递autoQuery参数，则此数据可不传
@@ -271,7 +270,7 @@ export interface IProTableProps<TableRow = {}, Model = {}> extends TableProps<Ta
      */
     displayType?: 'smallData' | 'bigData';
     /**
-     *导出全部数据方法,传入此方法会开启导出当页和导出全部
+     *导出全部数据方法,传入此方法会开启导出全部
      *
      * @memberof IHLTableProps
      */
@@ -287,7 +286,7 @@ export interface IProTableProps<TableRow = {}, Model = {}> extends TableProps<Ta
      *
      * 3: 维护好搜索条件即可
      *
-     * 4: loading 不需要传递，data传[] 数组即可，total 传递0即可
+     * 4: loading 不需要传递，total 传递0即可
      *
      * 5: 默认会在HLTable组件构造函数触发搜索方法，可以通过设置isDefaultLoad = false 来手动控制触发时机
      * @type {ITableAutoQuery<Model>}

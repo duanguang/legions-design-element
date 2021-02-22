@@ -2,47 +2,23 @@ import React from 'react'
 import { Layout,Icon,Badge,Avatar,Breadcrumb,Menu,Dropdown,Button } from 'antd';
 const { Header } = Layout;
 import { observer,bind } from 'legions/store-react'
-import {MenuStore} from '../../store/pro.layout';
+import { MenuStore } from '../../store/pro.layout';
 import LegionsProSelect from '../../LegionsProSelect';
-import { computed,observable,runInAction } from 'mobx';
-import LegionsProModal from '../../LegionsProModal';
-import { InstanceLegionsProModal } from '../../LegionsProModal/interface';
-import {OpenConfirm} from 'legions-lunar/antd-toolkit'
-import { InstanceProTable } from '../../LegionsProTable/interface'
-import LegionsProTable from '../../LegionsProTable';
-import { TableColumnConfig } from '../../interface/antd';
-import { download } from 'legions-utils-tool/download';
-import {ExportTaskEntity} from '../../models'
-interface IProps {
+import { IUserInfo } from '../../interface';
+interface IProps extends IUserInfo {
   store?: MenuStore,
-  userName: string
-  companyName: string,
   onLoginOut: () => void,
-  /** 删除异步任务 */
-  onExportTaskDelete?: (id: string) => any,
-  /**
-   * 修改密码功能信息
-   *
-   * @memberof IProps
-   */
-  password?: {
-
-    /**
-     * 提交事件函数
-     *
-     */
-    onSubmit: (value: {
-
-      /**
-       * 关闭弹窗
-       *
-       */
-      onClose: () => void,
-    }) => void;
-    componentNode?: React.ReactNode;
-    footer?: React.ReactNode;
-    onReady?: (instance: InstanceLegionsProModal) => void
-  }
+  /** 扩展系统设置下拉菜单项 */
+  sysSettingDropdown?: {
+    /** 下拉菜单项被单击时触发 */
+    onClick?: (key: string) => void;
+    dropdown: Array<{
+      /** 下拉菜单项节点 */
+      node: React.ReactNode,
+      /** 下拉菜单项key */
+      key: string;
+    }>
+  };
   /**在插入自定义header信息 */
   header?: React.ReactNode
   skin?: string;
@@ -54,88 +30,11 @@ interface IProps {
   /** 布局布局位置
    *  fixedSider 主要为了兼容历史固定侧边方案  过渡性方案
    */
-  fixedLayoutPosition?:'fixedSider'|'fixedSiderHeader'
+  fixedLayoutPosition?: 'fixedSider' | 'fixedSiderHeader'
 }
-const Columns = (that: HeaderPart): TableColumnConfig<ExportTaskEntity>[] => [
-  {
-    title: '任务名称',
-    dataIndex: 'taskName',
-    key: 'taskName',
-    width: '10%',
-  },
-  {
-    title: '版本号',
-    dataIndex: 'version',
-    key: 'version',
-    width: '10%',
-  },
-  {
-    title: '导出状态',
-    dataIndex: 'stateDesc',
-    key: 'stateDesc',
-    width: '10%',
-    render: (text,recrod) => {
-      return <Badge status={recrod['stateUI']} text={text} />
-    },
-  },{
-    title: '创建人',
-    dataIndex: 'createrName',
-    key: 'createrName',
-    width: '10%',
-  },{
-    title: '导出名字',
-    dataIndex: 'moduleName',
-    key: 'moduleName',
-    width: '10%',
-  },
-  {
-    title: '导出开始时间',
-    dataIndex: 'startTime',
-    key: 'startTime',
-    width: '20%',
-  },
-  {
-    title: '导出完成时间',
-    dataIndex: 'finishTime',
-    key: 'finishTime',
-    width: '20%',
-  },
-  {
-    title: '下载',
-    dataIndex: 'filePath',
-    key: 'filePath',
-    width: '10%',
-    render: (text) => {
-      return <span style={{ cursor: 'pointer' }}>{text && <Icon type="cloud-download-o" style={{ fontSize: '18px',color: '#108ee9' }} onClick={() => {
-        download([decodeURIComponent(text)])
-      }} />}</span>
-    },
-  },
-  {
-    title: '删除',
-    dataIndex: 'id',
-    key: 'id',
-    width: '10%',
-    render: (id) => {
-      return <Icon type="delete" style={{ fontSize: '16px',color: '#108ee9',cursor: 'pointer' }} onClick={() => {
-        OpenConfirm({
-          title: '提示',
-          content: '是否确认删除？',
-          onOk: () => {
-            that.props.onExportTaskDelete && that.props.onExportTaskDelete(id);
-          }
-        })
-      }}></Icon>
-    },
-  }
-];
 @bind({ store: MenuStore })
 @observer
 export default class HeaderPart extends React.Component<IProps>{
-  /** 模态框内容区展示组件类型 */
-  @observable modalContentType: 'updatePass' | 'readTaskList' | '' = ''
-  modalRef: InstanceLegionsProModal = null
-  taskCenterTableRef: InstanceProTable = null
   constructor(props) {
     super(props)
     this.props.store.viewModel.skin = this.props.skin || this.props.store.viewModel.skin
@@ -180,35 +79,19 @@ export default class HeaderPart extends React.Component<IProps>{
       </Menu.Item>
     </Menu>
   }
-  renderTaskCenterElement() {
-    return <span className="action-item" onClick={() => {
-      this.modalRef.viewModel.visible = true;
-      this.modalRef.viewModel.width = 960;
-      this.modalRef.viewModel.title = '自动任务调度中心'
-      runInAction(() => {
-        this.modalContentType = 'readTaskList'
-      })
-    }}>
-      <Icon type="cloud-download-o" style={{ fontSize: '22px',color: '#108ee9' }} />
-    </span>
-  }
   /** 渲染系统设置节点 */
   renderSystemSettingElement() {
     return <Dropdown overlay={(<Menu onClick={(params) => {
-      if (params.key === '0') {
-        runInAction(() => {
-          this.modalContentType = 'updatePass'
-        })
-        this.modalRef.viewModel.visible = true;
-        this.modalRef.viewModel.width = 660;
-        this.modalRef.viewModel.title = '修改密码'
+      if (this.props.sysSettingDropdown) {
+        this.props.sysSettingDropdown.onClick && this.props.sysSettingDropdown.onClick(params.key)
       }
     }} >
-      {(this.props.password && this.props.password.componentNode) && <Menu.Item key="0">
-        <span><Icon style={{ fontSize: '11px' }} type="user" />&nbsp;&nbsp;修改密码</span>
-
-      </Menu.Item>}
-      <Menu.Item key="1">
+      {this.props.sysSettingDropdown && this.props.sysSettingDropdown.dropdown.map((item,_index) => {
+        return <Menu.Item key={item.key || _index}>
+          {item.node}
+        </Menu.Item>
+      })}
+      <Menu.Item key="loginout">
         <span className="action-item" onClick={this.props.onLoginOut}>
           <Icon style={{ fontSize: '11px' }} type="logout" />
           &nbsp;&nbsp;退出登录
@@ -222,12 +105,13 @@ export default class HeaderPart extends React.Component<IProps>{
     </Dropdown>
   }
   renderUserInfoElement() {
+    const { userEntity = {} as IUserInfo } = this.props;
     return <span className="action-item">
       <Avatar icon="user" size="small" />
-      <span className="name">{this.props.userName}</span>
+      <span className="name">{userEntity['userName']}</span>
       {
-        this.props.companyName && <span> &nbsp;&nbsp;|&nbsp;&nbsp;
-              {this.props.companyName}
+        userEntity['companyName'] && <span> &nbsp;&nbsp;|&nbsp;&nbsp;
+              {userEntity['companyName']}
         </span>
       }
     </span>
@@ -265,81 +149,29 @@ export default class HeaderPart extends React.Component<IProps>{
       })}
     </Breadcrumb>
   }
-  renderModalElement() {
-    let footer = null;
-    if (this.modalContentType === 'readTaskList') {
-      footer = { footer: null }
-    }
-    if (this.modalContentType === 'updatePass' && this.props.password && (this.props.password.footer === null || this.props.password.footer)) {
-      footer = { footer: this.props.password.footer }
-    }
-    return <LegionsProModal
-      {...footer}
-      onOk={() => {
-        if (this.props.password && this.props.password.onSubmit) {
-          if (typeof this.props.password.onSubmit === 'function') {
-            this.props.password.onSubmit({
-              onClose: this.onClose,
-            })
-          }
-        }
-      }}
-      onReady={(value) => {
-        this.modalRef = value;
-        if (this.props.password) {
-          this.props.password.onReady && this.props.password.onReady(value)
-        }
-      }}>
-      {
-        //@ts-ignore
-        this.modalContentType === 'readTaskList' && <LegionsProTable bodyStyle={{ minHeight: '0' }}
-        total={this.props.store.viewModel.exportTaskList.length}
-        scroll={{ x: '100%',y: '300px' }}
-        uniqueKey="id"
-        loading={false}
-        columns={Columns(this)}
-        onReady={(value) => {
-          this.taskCenterTableRef = value;
-          this.taskCenterTableRef.viewModel.pageSize = 2;
-        }}
-        data={this.props.store.viewModel.exportTaskList}
-
-      ></LegionsProTable>}
-      {(this.modalContentType === 'updatePass' && this.props.password) && (this.props.password.componentNode)}
-    </LegionsProModal>
-  }
   renderHeaderElement() {
     const renderHeaders = <Header style={{ padding: 0,height: '50px' }}>
-    <div className='left-header'>
-      {this.renderMenuToggleIconElement()}
-      {this.renderBreadcrumbElement()}
-    </div>
-    {/* <Button onClick={() => {
-    window.ReactStore.openTabPane({key:'0001105',keyPath:["0001105",'0001'],title:'百度',path:'https://www.baidu.com'})
-    console.log();
-  }}>1222</Button>
-  &nbsp;&nbsp;&nbsp;<Button onClick={() => {
-    window.ReactStore.removeTablePane('0001105')
-  }}>33333</Button> */}
-    {!this.props.isReCustomHeader ?
-      <div className="right-header">
-      {this.renderSearchDirectMenuElement()}
-      {this.renderUserInfoElement()}
-      {this.renderInsertRightHeaderElement()}
+      <div className='left-header'>
+        {this.renderMenuToggleIconElement()}
+        {this.renderBreadcrumbElement()}
+      </div>
+      {!this.props.isReCustomHeader ?
+        <div className="right-header">
+          {this.renderSearchDirectMenuElement()}
+          {this.renderUserInfoElement()}
+          {this.renderInsertRightHeaderElement()}
 
-      {this.renderSkinsElement()}
-      {this.renderTaskCenterElement()}
-      {this.renderSystemSettingElement()}
-    </div>
-      :
-      <div className="right-header">
-        {this.renderSearchDirectMenuElement()}
-        {this.renderInsertRightHeaderElement()}
-      </div>}
-    {this.renderModalElement()}
+          {this.renderSkinsElement()}
+          {this.renderSystemSettingElement()}
+        </div>
+        :
+        <div className="right-header">
+          {this.renderSearchDirectMenuElement()}
+          {this.renderInsertRightHeaderElement()}
+        </div>}
     </Header>
     if (this.props.fixedLayoutPosition === 'fixedSiderHeader') {
-     return <header className={this.computedHeaderClassName()} style={this.computedHeaderStyles()}>
+      return <header className={this.computedHeaderClassName()} style={this.computedHeaderStyles()}>
         {renderHeaders}
       </header>
     }
@@ -350,8 +182,8 @@ export default class HeaderPart extends React.Component<IProps>{
     const { store } = this.props;
     let classNames = ''
     if (store.viewModel.fixedHeader) {
-      classNames ='ant-pro-fixed-header'
-    } 
+      classNames = 'ant-pro-fixed-header'
+    }
     return classNames;
   }
   /** 计算header 标签 style 样式信息 */
@@ -359,7 +191,7 @@ export default class HeaderPart extends React.Component<IProps>{
     const { store } = this.props;
     let headerStyles: React.CSSProperties = {};
     if (store.viewModel.fixedHeader) {
-      const skin= store.viewModel.getSkinInfos()
+      const skin = store.viewModel.getSkinInfos()
       let width = skin.width;
       if (store.viewModel.collapsed) {
         width = skin.width - skin.collapsedWidth - 40
@@ -391,9 +223,6 @@ export default class HeaderPart extends React.Component<IProps>{
         this.props.store.context.TabPaneApp.addTabPanes(panes,this.props.store.getAllMenuList())
       }
     }
-  }
-  onClose = () => {
-    this.modalRef.viewModel.visible = false;
   }
   render() {
     const { store } = this.props;

@@ -23,7 +23,6 @@ import moment from 'moment';
 import LegionsProTableCustomColumns from '../LegionsProTableCustomColumns';
 import LegionsProLineOverflow from '../LegionsProLineOverflow';
 import throttle from 'lodash.throttle';
-/* import {OpenModal,OpenConfirm } from 'legions-lunar/antd-toolkit'; */
 import LegionsProModal  from '../LegionsProModal';
 import { InstanceLegionsProModal } from '../LegionsProModal/interface';
 import { observable,runInAction,toJS,isObservable } from 'mobx'

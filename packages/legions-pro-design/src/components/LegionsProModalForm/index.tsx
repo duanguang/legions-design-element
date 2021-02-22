@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-02-01 22:24:42
- * @LastEditTime: 2021-02-02 10:49:07
+ * @LastEditTime: 2021-02-22 15:13:14
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProModalForm/index.tsx
@@ -75,9 +75,24 @@ export default class LegionsProModalForm<Model> extends React.Component<IProps<M
     render() {
         const { modalProps = {},controls,InputDataModel,group,size,colCount } = this.props;
         return <React.Fragment>
-            <LegionsProModal.LegionsProModalContext
-                content={(
-                    <React.Fragment>
+            <LegionsProModal
+                 resizable
+                 modalType="fullscreen"
+                 placement="top"
+                 draggable
+                 {...modalProps}
+                 onVisibleChange={this.onVisibleChange}
+                 onReady={(value) => {
+                     const width = 1120
+                     this.modalInstance = value;
+                     this.modalInstance.viewModel.width = width;
+                     this.props.onReady && this.props.onReady({
+                         formInstance: this.formInstance,
+                         modalInstance: this.modalInstance
+                     })
+                 }}
+                >
+                <React.Fragment>
                         <LegionsProForm
                             size={size}
                             colCount={colCount}
@@ -99,26 +114,7 @@ export default class LegionsProModalForm<Model> extends React.Component<IProps<M
                             controls={controls}
                         />
                     </React.Fragment>
-                )}
-            >
-                <LegionsProModal
-                    resizable
-                    modalType="fullscreen"
-                    placement="top"
-                    draggable
-                    {...modalProps}
-                    onVisibleChange={this.onVisibleChange}
-                    onReady={(value) => {
-                        const width = 1120
-                        this.modalInstance = value;
-                        this.modalInstance.viewModel.width = width;
-                        this.props.onReady && this.props.onReady({
-                            formInstance: this.formInstance,
-                            modalInstance: this.modalInstance
-                        })
-                    }}>
-                </LegionsProModal>
-            </LegionsProModal.LegionsProModalContext>
+            </LegionsProModal>
 
         </React.Fragment>
     }

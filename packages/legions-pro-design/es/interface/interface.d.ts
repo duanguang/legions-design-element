@@ -28,25 +28,7 @@ export interface IUserInfo<U = {}> {
         rowData?: U;
     };
 }
-export interface IWindow<U = {}> {
-    /** 打开菜单页签，可只传递菜单key */
-    readonly openTabPane?: (pane: {
-        key: string;
-        keyPath?: string[];
-        title?: string;
-        path?: string;
-        params?: {
-            [x: string]: string;
-        };
-        forceRefresh?: boolean;
-    }) => void;
-    /** 关闭菜单页签 */
-    readonly removeTablePane?: (targetKey: string | string[]) => void;
-    /** 获取用户信息 */
-    readonly userInfo?: IUserInfo<U>['userEntity'];
-    readonly menuList?: MenuEntity[];
-}
-export declare type loggerType = 'hlTable-constructor' | 'hlTable-watchData' | 'hlTable-componentWillMount' | 'hlTable-componentWillUnmount' | 'hlTable-componentDidMount' | 'hlTable-componentDidUpdate' | 'hlTable-componentWillReceiveProps' | 'hlTable-render' | 'hlFormContainer-constructor' | 'hlFormContainer-watchData' | 'hlFormContainer-componentWillMount' | 'hlFormContainer-componentWillUnmount' | 'hlFormContainer-componentDidMount' | 'hlFormContainer-componentDidUpdate' | 'hlFormContainer-componentWillReceiveProps' | 'hlFormContainer-render' | 'hlFormContainer-validateFields' | 'uiStore';
+export declare type loggerType = 'proTable-constructor' | 'proTable-watchData' | 'proTable-componentWillMount' | 'proTable-componentWillUnmount' | 'proTable-componentDidMount' | 'proTable-componentDidUpdate' | 'proTable-componentWillReceiveProps' | 'proTable-render' | 'proForm-constructor' | 'proForm-watchData' | 'proForm-componentWillMount' | 'proForm-componentWillUnmount' | 'proForm-componentDidMount' | 'proForm-componentDidUpdate' | 'proForm-componentWillReceiveProps' | 'proForm-render' | 'proForm-validateFields' | 'uiStore';
 export interface ILegionsPluginDataOrigin {
     /** 表格组件关键点函数埋点函数，如果需要调试各个节点输出信息，就请注入。 系统级别私有方法 */
     onHLTableCycle?: (value: Object, type: loggerType) => void;
@@ -56,10 +38,6 @@ export interface ILegionsPluginDataOrigin {
     openBrowserUpdateMessage?: () => void;
     /** 操作记录上报函数， 系统级别私有方法, 其他成员调用前先咨询 */
     loggerReport?: (value: Object, type: loggerType) => void;
-    /** 打开系统菜单页签 */
-    onSysOpenTabPane?: IWindow['openTabPane'];
-    /** 移除系统菜单页签 */
-    onSysRemoveTablePane?: IWindow['removeTablePane'];
     /** 获取用户信息, 请勿直接修改 */
     readonly sysUserInfos?: IUserInfo['userEntity'];
 }

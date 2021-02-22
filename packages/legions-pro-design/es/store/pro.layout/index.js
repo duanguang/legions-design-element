@@ -9,7 +9,8 @@ import { setStorageItems, getStorageItem } from 'legions-utils-tool/storage';
 import { observableViewModel, observablePromise } from 'legions/store-utils';
 import { panesStorageKeys, activeKeyStorageKeys, selectedStorageKeys, breadcrumbStorageKeys, SELECTED_STORAGE_KEY, OPENKEYS_STORAGE_KEY } from '../../core';
 import { RegExChk, validatorType } from 'legions-utils-tool/regex';
-import { ProxySanbox } from '../../core/cross-module';
+import { loadMicroApp } from 'legions-micro-service';
+import { shortHash } from 'legions-lunar/object-hash';
 import { computed } from 'mobx';
 
 /*! *****************************************************************************
@@ -63,6 +64,144 @@ function __metadata(metadataKey, metadataValue) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(metadataKey, metadataValue);
 }
 
+/*
+ * @Author: duanguang
+ * @Date: 2020-12-31 15:04:38
+ * @LastEditTime: 2021-01-11 15:43:31
+ * @LastEditors: duanguang
+ * @Description:
+ * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/core/cross-module/ProxySanbox.ts
+ * @「扫去窗上的尘埃，才可以看到窗外的美景。」
+ */
+/** 沙箱页签活动类型 */
+var SanboxTabActionMode;
+(function (SanboxTabActionMode) {
+    /** 新增 */
+    SanboxTabActionMode[SanboxTabActionMode["add"] = 0] = "add";
+    /** 删除 */
+    SanboxTabActionMode[SanboxTabActionMode["delete"] = 1] = "delete";
+    /** 切换 */
+    SanboxTabActionMode[SanboxTabActionMode["switch"] = 2] = "switch";
+})(SanboxTabActionMode || (SanboxTabActionMode = {}));
+var ProxySanbox = /** @class */ (function () {
+    function ProxySanbox(history) {
+        this.routerSanboxOpenMode = 'inSideActiveTab';
+        this.microSanboxApp = new Map();
+        /** 记录各个页签最后一次访问路径 */
+        this.microSanboxRoute = new Map();
+        //@ts-ignore
+        this.history = null;
+        this.history = history;
+    }
+    ProxySanbox.prototype.registerMicroApps = function (mountPane) {
+        /*  if (this.routerSanboxOpenMode !== 'newOpenactiveTab') {
+          return;
+        } */
+        if (this.microSanboxApp.has(mountPane.sandbox.appName)) {
+            return;
+        }
+        var routerPath = this.getRouterPath(mountPane);
+        var app = loadMicroApp({
+            name: mountPane.sandbox.appName,
+            entry: mountPane.sandbox.appEntiy,
+            container: "#" + mountPane.sandbox.appName,
+        }, {
+            sandbox: {
+                experimentalStyleIsolation: mountPane.sandbox.experimentalStyleIsolation,
+            },
+            isMerge: mountPane.sandbox.isMerge,
+        });
+        var mount = function () {
+            return app.mount().catch(function (err) {
+                console.log('----------status----------', app.getStatus());
+                console.error('----------mount error----------', err);
+                return err;
+            });
+        };
+        var unmount = function () {
+            return app.unmount().catch(function (err) {
+                console.log('----------status----------', app.getStatus());
+                console.error('----------unmount error----------', err);
+                return err;
+            });
+        };
+        this.routerSanboxOpenMode = 'inSideActiveTab';
+        var appid = this.createMicroAppId(mountPane);
+        this.microSanboxApp.set(mountPane.sandbox.appName, {
+            getStatus: app.getStatus,
+            appName: mountPane.sandbox.appName,
+            routers: new Map().set(routerPath, {
+                openMode: this.routerSanboxOpenMode,
+                router: routerPath,
+            }),
+            entry: mountPane.sandbox.appEntiy,
+            app: app,
+            mount: mount,
+            unmount: unmount,
+            container: new Map().set("" + appid, {
+                /* status: 'mount', */
+                rootid: mountPane.sandbox.appName,
+                wrapid: mountPane.sandbox.appRootId,
+                inactiveRootId: '',
+                inactiveWrapid: '',
+                lastActiveRouter: routerPath,
+                routers: [routerPath],
+            }),
+            activityRouter: routerPath,
+        });
+    };
+    ProxySanbox.prototype.mountSanboxMicroApp = function (mountPane) {
+        if (mountPane.loadingMode === 'sandbox') {
+            var path = this.microSanboxRoute.get(mountPane.key) ||
+                this.getRouterPath(mountPane);
+            this.history.replace(path);
+        }
+    };
+    ProxySanbox.prototype.unmountSanboxMicroApp = function (unmoutPane, mountPane) {
+        if (unmoutPane.loadingMode === 'sandbox') {
+            this.history.replace('/');
+        }
+    };
+    ProxySanbox.prototype.switchTabPaneSanboxMicroApp = function (unmoutPane, mountPane, type) {
+        /** 新增页签时，初始化页面路径 */
+        if (type === SanboxTabActionMode.add &&
+            mountPane &&
+            mountPane.loadingMode === 'sandbox') {
+            this.microSanboxRoute.set(mountPane.key, this.getRouterPath(mountPane));
+        }
+        /** 切换页签时，记录页签的最后一次访问路径 */
+        if (unmoutPane && unmoutPane.loadingMode === 'sandbox') {
+            this.microSanboxRoute.set(unmoutPane.key, window.location.hash.replace('#', ''));
+        }
+        /** 只要是沙箱的页面，在离开时都执行卸载 */
+        if (unmoutPane &&
+            unmoutPane.loadingMode === 'sandbox' &&
+            mountPane &&
+            mountPane.loadingMode !== 'sandbox') {
+            this.unmountSanboxMicroApp(unmoutPane, mountPane);
+        }
+        /** 只要是沙箱的页面，在进入时都执行装载 */
+        if (mountPane && mountPane.loadingMode === 'sandbox') {
+            this.mountSanboxMicroApp(mountPane);
+        }
+    };
+    ProxySanbox.prototype.getRouterPath = function (pane) {
+        var path = pane.path || '';
+        var routerPaths = path.split('#');
+        var routerPath = '';
+        if (routerPaths.length > 1) {
+            routerPath = routerPaths[1];
+        }
+        return routerPath;
+    };
+    ProxySanbox.prototype.createMicroAppId = function (pane) {
+        var routerPath = this.getRouterPath(pane);
+        return shortHash(routerPath);
+    };
+    ProxySanbox.SanboxTabActionMode = SanboxTabActionMode;
+    return ProxySanbox;
+}());
+
 var TabPaneUIView = /** @class */ (function () {
     function TabPaneUIView() {
         /**
@@ -78,11 +217,16 @@ var TabPaneUIView = /** @class */ (function () {
      * @memberof TabPaneUIView
      */
     TabPaneUIView.prototype.updateTimestamp = function (panesKey, timeStamp) {
+        //@ts-ignore
         if (this.tabPanesTimestamp.has(panesKey)) {
-            this.tabPanesTimestamp.set(panesKey, timeStamp || Date.parse(new Date().toString()));
+            this.tabPanesTimestamp.set(
+            //@ts-ignore
+            panesKey, timeStamp || Date.parse(new Date().toString()));
         }
         else {
-            this.tabPanesTimestamp.set(panesKey, timeStamp || Date.parse(new Date().toString()));
+            this.tabPanesTimestamp.set(
+            //@ts-ignore
+            panesKey, timeStamp || Date.parse(new Date().toString()));
         }
     };
     __decorate([
@@ -125,7 +269,9 @@ var TabPaneViewStore = /** @class */ (function (_super) {
         return _this;
     }
     TabPaneViewStore.prototype.addTabPanes = function (panes, menuList) {
+        var _this = this;
         var index = this.panes.findIndex(function (item) { return item.key === panes.key; });
+        var oldpane = this.panes.find(function (item) { return item.key === _this.activeKey; });
         var currMenu = menuList.find(function (item) { return item.key === panes.key; });
         this.updateBreadcrumbs(panes, menuList);
         if (index < 0) {
@@ -165,6 +311,7 @@ var TabPaneViewStore = /** @class */ (function (_super) {
                 params: panes.params || {},
             });
             this.viewUIModel.updateTimestamp(panes.key.toString());
+            this.proxySanbox.switchTabPaneSanboxMicroApp(oldpane, this.panes[this.panes.length - 1], ProxySanbox.SanboxTabActionMode.add);
         }
         else {
             this.panes[index].keyPath = panes.keyPath;
@@ -174,6 +321,7 @@ var TabPaneViewStore = /** @class */ (function (_super) {
             if (panes.forceRefresh) {
                 this.viewUIModel.updateTimestamp(panes.key.toString());
             }
+            this.proxySanbox.switchTabPaneSanboxMicroApp(oldpane, this.panes[index]);
         }
         this.panes = this.panes.slice(); //
         this.setActiveKey(panes.key);
@@ -545,7 +693,6 @@ var MenuViewStore = /** @class */ (function () {
          * @memberof MenuViewStore
          */
         this.collapsed = false; //
-        this.exportTaskList = [];
         /** 是否固定侧边菜单 */
         this.fixedSiderMenu = true;
         /** 是否固定头部区域 */
@@ -572,10 +719,6 @@ var MenuViewStore = /** @class */ (function () {
     ], MenuViewStore.prototype, "collapsed", void 0);
     __decorate([
         observable,
-        __metadata("design:type", Array)
-    ], MenuViewStore.prototype, "exportTaskList", void 0);
-    __decorate([
-        observable,
         __metadata("design:type", Object)
     ], MenuViewStore.prototype, "fixedSiderMenu", void 0);
     __decorate([
@@ -588,7 +731,7 @@ var MenuViewStore = /** @class */ (function () {
 /*
  * @Author: duanguang
  * @Date: 2020-12-31 10:34:43
- * @LastEditTime: 2021-01-07 17:52:53
+ * @LastEditTime: 2021-02-22 14:58:42
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/store/pro.layout/MenuStore.ts
@@ -847,4 +990,4 @@ var MenuStore = /** @class */ (function (_super) {
     return MenuStore;
 }(StoreBase));
 
-export { MenuStore, TabPaneViewStore };
+export { MenuStore, ProxySanbox, TabPaneViewStore };

@@ -1,6 +1,6 @@
 import React from 'react';
 import { MenuStore } from '../../store/pro.layout';
-import { MenuEntity } from '../../models';
+import { MenuContainerEntity, MenuEntity } from '../../models';
 import { SelectParam, MenuProps, ClickParam } from 'antd/lib/menu';
 import '../style/memu.less';
 import { MasterGlobalStateStore } from '../../core/cross-module';
@@ -9,9 +9,14 @@ import { IUserInfo } from '../../interface';
 interface IProps extends IUserInfo, MenuProps {
     store?: MenuStore;
     logo: string;
-    onGetMenuEntity: () => Promise<any>;
-    activeKey?: string;
-    query?: string;
+    onQueryPromiseMenus: () => Promise<MenuContainerEntity>;
+    /** 外部链接跳转，打开指定菜单 */
+    defaultOpenMenuTabs?: {
+        /** 指定菜单Key */
+        meunKey?: string;
+        /** 打开菜单地址栏参数 */
+        params?: string;
+    };
     domainUrl?: string;
     router: Array<IRouter>;
     defaultOpenKeys?: string[];
@@ -28,6 +33,7 @@ export default class MenuParts extends React.Component<IProps> {
     constructor(props: any);
     static defaultProps: {
         fixedLayoutPosition: string;
+        router: any[];
     };
     componentDidMount(): void;
     initGlobalVariableValue(): void;

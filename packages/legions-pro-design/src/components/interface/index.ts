@@ -9,7 +9,7 @@
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
 export type {
-    Weaken,Omit,IUserInfo,ILegionsPluginDataOrigin,IWindow,
+    Weaken,Omit,IUserInfo,ILegionsPluginDataOrigin,
     ClassOf,
     IResource,IGlobalStates,IGlobalUserInfo,IGlobalStateEvent,typeOpenPaneParames
 } from './interface';

@@ -53,7 +53,9 @@ export default class WorkerGlobalStateStore<IGlobalState,User={}> extends StoreB
         //@ts-ignore
         this.syncUpdateGlobalState(options.props);
         this.onGlobalStateChange((value,prev,event) => {
-            console.log(`[onGlobalStateChange - ${options.props.name}]:`,value,prev,event)
+            if (!event && (value.user||value.methods)) {
+                this.setLayoutData(value);
+            }
             if (options.callback && typeof options.callback === 'function') {
                 options.callback(value,prev,event);
             }
