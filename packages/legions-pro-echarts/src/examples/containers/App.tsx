@@ -5,9 +5,7 @@ import { LegionsProEchartsChartPieDemo } from './pro.echarts.chart';
 import { LayoutBaseDemo } from './pro.echarts.layout/base';
 import { LayoutFullDemo } from './pro.echarts.layout/full';
 import { ListBaseDemo } from './pro.echarts.table/base';
-import { LegionsProEchartsMapDemo } from './pro.echarts.map';
 import { ProProgressDemo } from './pro.progress/base';
-
 
 export default class App extends React.Component {
     unstable_handleError(e) {
@@ -23,11 +21,13 @@ export default class App extends React.Component {
                 <Route path="/layoutBase" component={LayoutBaseDemo}></Route>
                  {/* 页面容器，满屏显示，超出隐藏 */}
                 <Route path="/layoutFull" component={LayoutFullDemo}></Route>
-                 {/* 列表 */}
+                 {/* 基础表格 */}
                 <Route path="/listBase" component={ListBaseDemo}></Route>
-                <Route path="/map" component={LegionsProEchartsMapDemo}></Route>
+                 {/* 列表模型 */}
                 <Route path="/box" component={LegionsProEchartsBoxDemo}></Route>
+                 {/* chart合集 */}
                 <Route path="/chart" component={LegionsProEchartsChartPieDemo}></Route>
+                 {/* 进度条 */}
                 <Route path="/progress" component={ProProgressDemo}></Route>
             </Switch>
         );
