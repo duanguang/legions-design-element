@@ -6691,6 +6691,16 @@ echarts-gl@^2.0.0:
     claygl "^1.2.1"
     zrender "^5.0.3"
 
+echarts-liquidfill@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/echarts-liquidfill/-/echarts-liquidfill-3.0.0.tgz#1d41e6cd4016281b525f2f7b5be7879deffa821d"
+  integrity sha512-asBu62Zxpod9ZRYHweBoBvp7e+XtQbQoha19aTEJf2UptJJ2Bppcx8TdwQZnTjPM9s/yYD6Tk4/qcRqZ6s8HZA==
+
+echarts-wordcloud@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/echarts-wordcloud/-/echarts-wordcloud-2.0.0.tgz#52ef817895801ffe9e99dd1bacab7686b2dec04a"
+  integrity sha512-K7l6pTklqdW7ZWzT/1CS0KhBSINr/cd7c5N1fVMzZMwLQHEwT7x+nivK7g5hkVh7WNcAv4Dn6/ZS5zMKRozC1g==
+
 echarts@^5.0.0:
   version "5.0.2"
   resolved "https://registry.yarnpkg.com/echarts/-/echarts-5.0.2.tgz#1726d17a57cf05d62cd0567b4325e1201a56baf6"

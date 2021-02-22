@@ -8,25 +8,26 @@
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
 import React from 'react';
-import  LegionsProEcharts from '../LegionsProEcharts';
+import  LegionsProEcharts, { ProEchartsOption } from '../LegionsProEcharts';
 import { LegionsEchartsAutoQueryParams, LegionsProEchartsPropsTypes, Weaken } from '../interface/interface';
-import * as echarts from 'echarts/lib/echarts';
+import * as echarts from 'echarts/core';
 import { HeadersPrams } from 'legions/fetch';
 import { observablePromise,observableViewModel } from 'brain-store-utils';
 import { observable } from 'mobx';
 import { LegionsFetch } from '../core';
 import { merge } from 'lodash';
-import './liquidFill';
+import 'echarts-liquidfill';
+
 export class LegionsProEchartsLiquidFillProps extends LegionsProEchartsPropsTypes<IOptions> {
     /** 数据 */
-    data?: echarts.EChartOption.SeriesPie.DataObject[] = [{value: 100, name: 'demo'}];
+    data?: ProEchartsOption['data'] = [{value: 100, name: 'demo'}];
 /** 配置项 */
     option?: IOptions = {};
     /** 请求托管 */
     autoQuery?: LegionsEchartsAutoQueryParams
 }
-interface IOptions extends  Omit<echarts.EChartOption,'series'>{
-    series?:echarts.EChartOption.Series []
+interface IOptions extends  Omit<ProEchartsOption,'series'>{
+    series?: ProEchartsOption['Series'][]
 }
 /* interface ISeries extends Weaken<echarts.EChartOption,'series'>{
 

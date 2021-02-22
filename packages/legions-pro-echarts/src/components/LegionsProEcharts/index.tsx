@@ -12,7 +12,7 @@ import {
 import { CanvasRenderer } from 'echarts/renderers';
 
 // 通过 ComposeOption 来组合出一个只有必须组件和图表的 Option 类型
-export type ProEchartsOption<P> = echarts.ComposeOption<
+export type ProEchartsOption<P=never> = echarts.ComposeOption<
   TitleComponentOption | GridComponentOption | TooltipComponentOption | P
 >;
 

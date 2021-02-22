@@ -7,11 +7,13 @@
  * @FilePath: /legions-design-element/packages/legions-pro-echarts/src/components/interface/interface.ts
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
-import echarts from 'echarts/lib/echarts';
+import * as echarts from 'echarts/core';
 import { HeadersPrams } from 'legions/fetch';
 import { observablePromise,observableViewModel } from 'brain-store-utils';
+import { ProEchartsOption } from 'components/LegionsProEcharts';
+import {  } from 'echarts/components'
 const theme = require('../locale/theme.json');
-type TEchartOption = echarts.EChartOption
+
 export interface IMethods{
     onSearch:(option?:Object)=>void
 }
@@ -25,15 +27,15 @@ export interface IExtendsOption{
  * @class LegionsProEchartsPropsTypes
  * @template EchartOption
  */
-export class LegionsProEchartsPropsTypes<EchartOption= TEchartOption> {
+export class LegionsProEchartsPropsTypes<EchartOption= ProEchartsOption> {
     /** 配置项 */
-    option?: TEchartOption = {};
+    option?: ProEchartsOption = {};
     /** 事件集合 */
     onEvents?: {[k: string]: Function} = {};
     /** 是否显示加载状态 */
     loading?: boolean = false;
     /** loading状态配置 */
-    loadingOption?: echarts.EChartsLoadingOption = {};
+    loadingOption?: Object = {};
     /** 初始化附加参数 */
     opts?: Parameters<typeof echarts.init>[2] = {};
     /** 初始化主题 */
@@ -43,7 +45,7 @@ export class LegionsProEchartsPropsTypes<EchartOption= TEchartOption> {
     /** 容器类名 */
     className?: string = '';
     /** setOption时的附加配置项 */
-    setOptionConfig?: echarts.EChartsOptionConfig = {};
+    setOptionConfig?: ProEchartsOption = {};
     /** 由上层觉得是否需要setOption, 类似shouldComponentUpdate。默认为 true */
     shouldSetOption?: (
         prevProps: LegionsProEchartsPropsTypes,
@@ -70,7 +72,7 @@ export class LegionsEchartsAutoQueryParams {
     /** headers 参数 */
     headerOption?: HeadersPrams & Object;
     /** 返回结果转化 */
-    responseTransform: (response: observablePromise.PramsResult<any>) => echarts.EChartOption = () => echarts;
+    responseTransform: (response: observablePromise.PramsResult<any>) => ProEchartsOption = () => echarts;
 }
 
 /**

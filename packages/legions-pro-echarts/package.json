@@ -22,7 +22,9 @@
     "legions-control-container": "^0.0.5",
     "size-sensor": "^1.0.0",
     "echarts": "^5.0.0",
-    "echarts-gl": "^2.0.0"
+    "echarts-gl": "^2.0.0",
+    "echarts-liquidfill": "^3.0.0",
+    "echarts-wordcloud": "^2.0.0"
   },
   "devDependencies": {
     "@types/jest": "^24.0.25",
