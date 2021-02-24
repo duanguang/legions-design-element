@@ -79,9 +79,9 @@ export default  class LegionsProEchartsLayout extends React.Component<LayoutProp
     /** 劫持子元素，设置元素间距 */
     computedChildren(children: React.ReactElement<any>[], deep: number = 1) {
         let { gutter, gutterDeep } = this.props;
-        let newChildren: React.ReactElement<any>[] = []
-        let newProps = {}
         return React.Children.map(children as React.ReactElement<any>[], (item: React.ReactElement<any>, index) => {
+            let newChildren: React.ReactElement<any>[] = []
+            let newProps = {}
             try {
                 if (!item || !item.props || !gutter || deep > gutterDeep!) {
                     return item
