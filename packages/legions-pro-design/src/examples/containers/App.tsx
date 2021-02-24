@@ -13,6 +13,7 @@ import { LegionsProEchartsLayoutDemo } from './pro.echarts.layout'; */
 import { LegionsProEchartsChartPieDemo } from './pro.echarts.chart';
 import { LegionsProEchartsMapDemo } from './pro.echarts.map'; */
 import { ProTable } from './proTable';
+import ZoomableDemo from './react-zoomable/demo';
 import { ProTabsForm } from './tabsForm';
 
 
@@ -33,6 +34,7 @@ export default class App extends React.Component {
                 <Route path="/query" component={QueryDemo}></Route>
                 <Route path="/layout" component={ProLayout}></Route>
                 <Route path="/select" component={ProSelectDemo}></Route>
+                <Route path="/zoom" component={ZoomableDemo}></Route>
                 {/* <Route path="/chart" component={LegionsProEchartsChartPieDemo}></Route> */}
                 {/* <Route component={() => {
                         return <div>hello world</div>

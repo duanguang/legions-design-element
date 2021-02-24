@@ -127,6 +127,7 @@ const DrawerPositionWrap = {
     clientWidth = 0;
     viewStore: IViewModelModalStore = null;
     getModalDOM: Element = null;
+    leftBarNode: Element = null
     static defaultProps = {
         modalType: 'modal',
         placement: 'left',
@@ -153,6 +154,13 @@ const DrawerPositionWrap = {
     
     watchVisibleChange = (n) => {
         const visible = this.viewStore.visible;
+        if (visible) {
+            const timeId = setTimeout(() => {
+            /* this.setAntdContentLocation(); */
+                this.createZoomableLeft()
+                clearTimeout(timeId);
+            },200)
+        }
         this.props.onVisibleChange && this.props.onVisibleChange(visible);
     }
     get getModalContentDOM() {
@@ -233,6 +241,23 @@ const DrawerPositionWrap = {
             /* modalContent.addEventListener('mouseover',this.handleMousemove.bind(this)) */
         }
     }
+    createZoomableLeft() {
+        const modalNode = this.getModalDOM;
+        if (modalNode) {
+            const antdModal = modalNode.querySelector('.ant-modal');
+            if (antdModal) {
+                console.log(antdModal,'modalNodemodalNodemodalNode');
+                if (!antdModal.querySelector('.left-bar')) {
+                    const div = document.createElement('div');
+                    div.setAttribute('class',`zoom-bar left-bar`);
+                    this.leftBarNode = div;
+                    antdModal.appendChild(this.leftBarNode)
+                }
+            }
+            
+            
+        }
+    }
     componentWillMount() {
         this.uid = `m${this.props.store.ModalContainer.size}${shortHash(`${this.timeId}${this.props.store.ModalContainer.size}`)}`
         if (this.props.store.ModalContainer.has(this.uid)) {
@@ -257,7 +282,7 @@ const DrawerPositionWrap = {
         this.clientWidth = document.body.clientWidth;
         this.bindingDraggableHeaderMousedownEven();
         this.bindingResizableContentEven();
-        this.props.footer === null ? (this.viewStore._footerHeight = 0) : (this.viewStore._footerHeight = 53)
+        this.props.footer === null ? (this.viewStore._footerHeight = 0) : (this.viewStore._footerHeight = 53);
     }
     componentWillReceiveProps(nextProps: IProps) {
         if (this.props.placement !== nextProps.placement && this.viewStore && nextProps.placement) {
@@ -568,8 +593,9 @@ const DrawerPositionWrap = {
             });
         } */
         /* console.log(left,this.topLocation,distance,event) */
+        console.log('左边界极限',left,LeftMin,leftMax,distance,this.topLocation);
         if (left > -15 && left < 15 && LeftMin > 15 && leftMax > 15) {  // 左部
-            console.log('左边界极限');
+            
             this.viewStore.updateEnabledResizable({
                 enabled: false,
                 direction: 'left',
@@ -822,7 +848,7 @@ const DrawerPositionWrap = {
                         this.viewStore.computedResizableContentStyles,
                     )}
                     bodyStyle={Object.assign(this.props.bodyStyle || {},this.viewStore.computedMaximizeBodyStyle)}
-                    wrapClassName={`${this.uid} ${this.props.wrapClassName || ''} ${draggingMouseStyles} ${this.viewStore.computedResizableClasses}`}
+                    wrapClassName={`${this.uid} legions-pro-modal ${this.props.wrapClassName || ''} ${draggingMouseStyles} ${this.viewStore.computedResizableClasses}`}
                     title={this.viewStore.title}
                     visible={this.viewStore.visible}
                     onCancel={this.handleCancel}

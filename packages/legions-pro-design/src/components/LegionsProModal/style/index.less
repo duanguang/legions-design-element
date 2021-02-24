@@ -12,7 +12,7 @@
 }
 .legions-pro-modal-content-drag{
     /** 方案一二样式*/
-    pointer-events:none; /** 支持多个弹窗在页面可以拖拽移动*/
+    /* pointer-events:none; */ /** 支持多个弹窗在页面可以拖拽移动*/
     .ant-modal-content{
         pointer-events: auto;
         position: relative;
@@ -44,10 +44,10 @@
         cursor:ns-resize;
     }
 }
-.legions-pro-modal-ew-resizable{
+/* .legions-pro-modal-ew-resizable{
     cursor:ew-resize;
     z-index: 9999;
-}
+} */
 .legions-pro-modal-nwse-resizable{
     cursor:nwse-resize;
 }
@@ -128,4 +128,18 @@
     margin: 0 auto;
     top: auto;
     padding-bottom: 24px;
+}
+.legions-pro-modal{
+    .zoom-bar {
+        position: absolute;
+        overflow: hidden;
+        &.left-bar {
+            left: 0px;
+            top: 0;
+            height: 100% !important;
+            width: 2px;
+            cursor: ew-resize;
+        }
+    }
+    
 }
