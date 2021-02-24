@@ -11,6 +11,10 @@
     ],
     "backgroundColor": "rgba(0,0,0,0)",
     "textStyle": {},
+    "label": {
+        "textBorderColor": "transparent",
+        "color": "auto"
+    },
     "title": {
         "textStyle": {
             "color": "#ffffff"

@@ -39,7 +39,7 @@ export class LegionsProEchartsPropsTypes<EchartOption= ProEchartsOption> {
     /** 初始化附加参数 */
     opts?: Parameters<typeof echarts.init>[2] = {};
     /** 初始化主题 */
-    theme?: Parameters<typeof echarts.init>[1]  = theme;
+    theme?: Parameters<typeof echarts.init>[1] = theme;
     /** 容器样式 */
     style?: React.CSSProperties = {};
     /** 容器类名 */
