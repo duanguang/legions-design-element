@@ -9,21 +9,20 @@
  */
 import { observablePromise, observableViewModel } from 'brain-store-utils';
 import { PieChart, PieSeriesOption } from 'echarts/charts';
-import * as echarts from 'echarts/core';
 import { observer } from 'legions/store-react';
 import { merge } from 'lodash';
 import { observable } from 'mobx';
 import React from 'react';
 import { LegionsFetch } from '../core';
-import { LegionsEchartsAutoQueryParams, LegionsProEchartsPropsTypes } from '../interface/interface';
-import LegionsProEcharts, { ProEchartsOption } from '../LegionsProEcharts';
+import { echarts, LegionsEchartsAutoQueryParams, LegionsProEchartsPropsTypes, LegionsProEchartsOption } from '../interface';
+import LegionsProEcharts from '../LegionsProEcharts';
 echarts.use([PieChart])
 
 export class LegionsProEchartsPieProps extends LegionsProEchartsPropsTypes {
     /** 数据 */
-    data?: ProEchartsOption<PieSeriesOption>['data'][] = [{value: 100, name: 'demo'}];
+    data?: PieSeriesOption['data'] = [];
     /** 配置项 */
-    option?: ProEchartsOption<PieSeriesOption> = {};
+    option?: LegionsProEchartsOption<PieSeriesOption> = {};
     /** 请求托管 */
     autoQuery?: LegionsEchartsAutoQueryParams
 }
@@ -44,7 +43,7 @@ export default class LegionsProEchartsChartPie extends React.Component<LegionsPr
         return []
     }
     /** 配置项 */
-    get option(): ProEchartsOption<PieSeriesOption> {
+    get option(): LegionsProEchartsOption<PieSeriesOption> {
         return  {
             tooltip: {
                 trigger: 'item',
@@ -66,7 +65,7 @@ export default class LegionsProEchartsChartPie extends React.Component<LegionsPr
                         borderWidth: 2
                     },
                     selectedOffset: 1.5,
-                    data:this.props.data || [],
+                    data: this.props.data || [],
                     label: {
                         show: true,
                         formatter: '{b}\n{d}%',

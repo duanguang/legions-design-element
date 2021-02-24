@@ -2,7 +2,7 @@ import 'echarts/lib/chart/map';
 import echarts from 'echarts/lib/echarts';
 import React from 'react';
 import  LegionsProEcharts from '../LegionsProEcharts';
-import { LegionsProEchartsPropsTypes } from '../interface/interface'
+import { LegionsProEchartsPropsTypes } from '../interface'
 import { merge } from 'lodash';
 const world = require('./world.json');
 const nameCN = require('../locale/country-name-zh.json')

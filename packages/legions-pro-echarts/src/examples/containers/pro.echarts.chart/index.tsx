@@ -4,7 +4,7 @@
  * @description: charts demo合集
  */
 import { Button } from 'antd';
-import { IExtendsOption } from 'components/interface/interface';
+import { IExtendsOption } from 'components/interface';
 import echarts from 'echarts/lib/echarts';
 import { StockModeContainerEntity } from 'examples/models/mockEntity';
 import { observablePromise } from 'legions/store-utils';

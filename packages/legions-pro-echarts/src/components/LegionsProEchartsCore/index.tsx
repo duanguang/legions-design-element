@@ -2,7 +2,7 @@ import * as echarts from 'echarts/core';
 import { isEqual, pick } from 'lodash';
 import React, { Component } from 'react';
 import { bind, clear } from 'size-sensor';
-import { LegionsProEchartsPropsTypes } from '../interface/interface';
+import { LegionsProEchartsPropsTypes } from '../interface';
 interface ILegionsProEchartsReactCore extends LegionsProEchartsPropsTypes {
     echarts: typeof echarts
 }

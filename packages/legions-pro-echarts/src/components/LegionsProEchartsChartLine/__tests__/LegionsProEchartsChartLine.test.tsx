@@ -2,9 +2,9 @@
 import React from 'react';
 import LegionsProEchartsChartLine from '..';
 import { mount,render,shallow, configure} from 'enzyme';
-import { IExtendsOption, IMethods } from 'components/interface/interface';
+import { echarts, IExtendsOption, IMethods, LegionsProEchartsOption } from 'components/interface';
 import { observablePromise } from 'legions/store-utils';
-let lineOptions: echarts.EChartOption = {
+let lineOptions: LegionsProEchartsOption = {
     legend: {
         data: ['出口','进口'],
     },
