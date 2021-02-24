@@ -162,8 +162,8 @@ var LegionsProVirtualTable = /** @class */ (function (_super) {
             }
         };
         _this.handleScrollEvent = function (even) {
-            var data = _this.props.data;
-            _this.handleScroll((_this.props.autoQuery ? _this.state.data : data || []).length);
+            var dataSource = _this.props.dataSource;
+            _this.handleScroll((_this.props.autoQuery ? _this.state.data : dataSource || []).length);
             /* this.lodaMore() */
             // this.ticking =false
         };
@@ -205,7 +205,7 @@ var LegionsProVirtualTable = /** @class */ (function (_super) {
             bottomBlankHeight: 0,
             maxTotalHeight: 15000000,
             columns: _this.tranMapColumns(),
-            data: _this.props.data,
+            data: _this.props.dataSource,
         };
         return _this;
     }
@@ -258,7 +258,7 @@ var LegionsProVirtualTable = /** @class */ (function (_super) {
     LegionsProVirtualTable.prototype.componentWillReceiveProps = function (nextProps) {
         var _this = this;
         var data = nextProps.data;
-        var tdataSource = this.props.data;
+        var tdataSource = this.props.dataSource;
         if (data && data !== tdataSource && !this.props.autoQuery) {
             this.setState({ data: data, thresholdCount: 40 }, function () {
                 _this.refScroll.scrollTop = 0;
@@ -444,11 +444,11 @@ var LegionsProVirtualTable = /** @class */ (function (_super) {
         endIn = this.getValidValue(endIn, startIndex, length);
         var dataSource = (data || []).slice(startIn, endIn);
         if (this.tabelRef) {
-            this.tabelRef.viewModel.renderData = __spread(dataSource);
+            this.tabelRef.viewModel._renderData = __spread(dataSource);
         }
         return (React.createElement("div", { className: this.uid },
             this.FillNode({ height: topBlankHeight, uid: this.uid + "topBlank" }),
-            React.createElement(LegionsProTable, __assign({}, rest, { loading: this.props.autoQuery ? this.loading : rest.loading, total: this.props.autoQuery ? this.total : rest.total, columns: this.state.columns, displayType: "bigData", onPagingQuery: this.onPagingQuery, onReady: this.onReady.bind(this), pageSizeOptions: ['100', '500', '1000', '2000', '3000', '5000', '10000'], data: this.props.autoQuery ? this.state.data : this.props.data, 
+            React.createElement(LegionsProTable, __assign({}, rest, { loading: this.props.autoQuery ? this.loading : rest.loading, total: this.props.autoQuery ? this.total : rest.total, columns: this.state.columns, displayType: "bigData", onPagingQuery: this.onPagingQuery, onReady: this.onReady.bind(this), pageSizeOptions: ['100', '500', '1000', '2000', '3000', '5000', '10000'], dataSource: this.props.autoQuery ? this.state.data : this.props.dataSource, 
                 //@ts-ignore
                 onChange: function (pagination, filters, sorter) {
                     if (sorter.column && sorter.column.sorter && typeof sorter.column.sorter === 'boolean') {

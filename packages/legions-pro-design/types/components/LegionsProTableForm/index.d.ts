@@ -4,7 +4,7 @@ import { Weaken } from '../interface';
 import { IProTableProps, ITableColumnConfig } from '../LegionsProTable/interface';
 import LegionsProForm from '../LegionsProForm';
 import { InstanceForm } from '../LegionsProForm/interface';
-import { IProFormProps } from '../LegionsProForm/HlForm';
+import { IProFormProps } from '../LegionsProForm/ProForm';
 /** 分割符，用于给表单字段添加下标时使用 */
 export declare const HLTableFormSeparator = "___";
 interface IHlFormConfig<F> extends Partial<IProFormProps<F>>, Weaken<Partial<IProFormProps<F>>, 'controls' | 'onReady'> {

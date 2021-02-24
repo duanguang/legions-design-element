@@ -23,7 +23,6 @@ import moment from 'moment';
 import LegionsProTableCustomColumns from '../LegionsProTableCustomColumns';
 import LegionsProLineOverflow from '../LegionsProLineOverflow';
 import throttle from 'lodash.throttle';
-import LegionsProModal  from '../LegionsProModal';
 import { InstanceLegionsProModal } from '../LegionsProModal/interface';
 import { observable,runInAction,toJS,isObservable } from 'mobx'
 import { observableViewModel } from 'legions/store-utils'
@@ -86,7 +85,7 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
                 this.getLocalViewStore.loading = false;
             })
             this.consoleLog('watchData',{ uid });
-            this.logger('hlTable-watchData',{
+            this.logger('watchData',{
                 uid,apiResult: toJS(this.getLocalViewStore.obState),
                 apiParams: this.props.autoQuery.params(this.getViewStore.pageIndex,this.getViewStore.pageSize),
                 },
@@ -215,14 +214,14 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
                 ...viewStore,
                 ...obj,
             }
-            LoggerManager.report({
+            /* LoggerManager.report({
                 //@ts-ignore
                 type,
                 content: serialize(logConent,{ ignoreFunction: false }),
                 traceId: this.traceId,
                 modulesName: this.props.tableModulesName,
                 modulesPath: this.props['uniqueUid'],
-            },this.props.onLogRecord)
+            },this.props.onLogRecord) */
         }
 
     }
@@ -292,7 +291,7 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
         const ele = ReactDOM.findDOMNode(this).getElementsByClassName('ant-table-scroll')[0]
         if (ele && ele.firstElementChild && ele.firstElementChild.firstElementChild) {
             const div = document.createElement('div');
-            div.setAttribute('class','hlTable-header-inner');
+            div.setAttribute('class','proTable-header-inner');
             ele.firstElementChild.insertBefore(div,ele.firstElementChild.firstElementChild)
         }
     }
@@ -473,25 +472,6 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
         
         window.addEventListener && window.addEventListener('resize',this.resize.bind(this))
         if (findDOMNode(this).getElementsByClassName('ant-table-body')) {
-            /* const refScroll = findDOMNode(this).getElementsByClassName('ant-table-body')[0];
-            this.props.scroll && refScroll.addEventListener('scroll',(even) => {
-
-                // @ts-ignore
-                const scrollHeight = even.target.scrollHeight;
-                // @ts-ignore
-                const scrollTop = even.target.scrollTop;
-                // @ts-ignore
-                const offsetHeight = even.target.offsetHeight;
-                if (this.props.data.length === this.viewModel._renderData.length&&this.props.displayType==='smallData'&&this.props.onPagingQuery) {
-                    if ((offsetHeight >= (scrollHeight - scrollTop))&&scrollTop) { // 滚动到底部
-                       this.lodaMore('next');
-                    }
-                    if(scrollTop===0&&offsetHeight&&scrollHeight){
-                        this.lodaMore('pre');
-
-                    }
-                }
-            }) */
         }
         this.setTableContainerWidth();
         const data = this.props.dataSource;

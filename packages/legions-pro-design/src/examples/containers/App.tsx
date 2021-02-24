@@ -6,6 +6,7 @@ import { ProForm } from './proForm';
 import { ProLayout } from './proLayout';
 import { ProModal } from './proModal';
 import QueryDemo from './proQuery';
+import ProSelectDemo from './proSelect';
 /* import { LegionsProEchartsMapDemo } from './pro.echarts.map';
 import { LegionsProEchartsLayoutDemo } from './pro.echarts.layout'; */
 /* import { LegionsProEchartsBoxDemo } from './pro.echarts.box';
@@ -31,6 +32,7 @@ export default class App extends React.Component {
                 <Route path="/modal" component={ProModal}></Route>
                 <Route path="/query" component={QueryDemo}></Route>
                 <Route path="/layout" component={ProLayout}></Route>
+                <Route path="/select" component={ProSelectDemo}></Route>
                 {/* <Route path="/chart" component={LegionsProEchartsChartPieDemo}></Route> */}
                 {/* <Route component={() => {
                         return <div>hello world</div>

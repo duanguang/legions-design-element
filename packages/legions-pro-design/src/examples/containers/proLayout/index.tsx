@@ -230,6 +230,9 @@ export class ProLayout extends React.Component<IProps,IState> {
                 onReady={(value) => {
                     this.modalRef = value;
                 }}
+                resizable
+                draggable
+                maskClosable={false}
             >
 
                 <React.Fragment>

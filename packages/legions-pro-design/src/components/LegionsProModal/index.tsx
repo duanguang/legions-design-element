@@ -248,6 +248,7 @@ const DrawerPositionWrap = {
         }
         this.subscriptionVisible = this.props.store.schedule([this.watchVisibleChange.bind(this)])
         this.props.onReady && this.props.onReady({ store: this.props.store,uid: this.uid,viewModel: view });
+        this.viewStore._modalType = this.props.modalType;
     }
     componentDidMount() {
         this.setModalDOM()
@@ -568,6 +569,7 @@ const DrawerPositionWrap = {
         } */
         /* console.log(left,this.topLocation,distance,event) */
         if (left > -15 && left < 15 && LeftMin > 15 && leftMax > 15) {  // 左部
+            console.log('左边界极限');
             this.viewStore.updateEnabledResizable({
                 enabled: false,
                 direction: 'left',

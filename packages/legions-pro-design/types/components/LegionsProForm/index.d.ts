@@ -1,2 +1,2 @@
-import { LegionsProForm } from "./HlForm";
+import { LegionsProForm } from "./ProForm";
 export default LegionsProForm;

@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-10 16:14:09
- * @LastEditTime: 2021-02-22 15:29:58
+ * @LastEditTime: 2021-02-23 17:21:10
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/script/entiy.js
@@ -14,40 +14,46 @@ const array_components = ['core','core/cross-module','index']
 const array_components1 = ['models',
 /* 'db', */
 /* 'services' */]
-const array_componentsStore = [/* 'store', */,
-/* 'store/pro.form', */
-/* 'store/pro.layout', */
-/* 'store/pro.modal', */
-/* 'store/pro.query.conditions', */
-/* 'store/pro.table', */
+const array_componentsStore = ['store',
+'store/pro.form',
+'store/pro.layout',
+'store/pro.modal',
+'store/pro.query.conditions',
+'store/pro.table',
 ]
 const array_component = [
-/*   'LegionsProBaiduMap', */
-/* 'LegionsProBreadcrumb', */
-/* 'LegionsProDataImport', */
-/* 'LegionsProDragger', */
-/* 'LegionsProErrorReportShow', */
-/* 'LegionsProException', */
-/*  'LegionsProIframe', */
-/*   'LegionsProForm', */
-/*  'LegionsProInput', */
-  /* 'LegionsProLayout', */
-/* 'LegionsProLineOverflow', */
-/* 'LegionsProModal', */
-/* 'LegionsProNumericInput', */
-/* 'LegionsProPageContainer', */
-  /* 'LegionsProPrint', */
-  /* 'LegionsProQrCode', */
-/* 'LegionsProConditions', */
-  /* 'LegionsProScrawl', */
-  /* 'LegionsProSelect', */
-  /* 'LegionsProTable', */
-/*  'LegionsProTableCustomColumns', */
-/* 'LegionsProTableForm', */
-/* 'LegionsProTextArea', */
-/* 'LegionsProUEditor', */
-  /* 'LegionsProUpload', */
-/* 'LegionsProVirtualTable', */
+ /*  'LegionsProBaiduMap',
+'LegionsProBreadcrumb',
+'LegionsProDataImport',
+'LegionsProDragger',
+'LegionsProErrorReportShow',
+'LegionsProException',
+ 'LegionsProIframe',*/
+  
+ /* 'LegionsProForm', */
+  
+/*  'LegionsProInput',
+  'LegionsProLayout',
+'LegionsProLineOverflow',
+'LegionsProModal',
+'LegionsProNumericInput',
+'LegionsProPageContainer',
+  'LegionsProPrint', */
+  
+/*   'LegionsProQrCode',
+'LegionsProConditions',
+  'LegionsProScrawl',
+  'LegionsProSelect',
+  'LegionsProTable',
+ 'LegionsProTableCustomColumns',
+  'LegionsProTableForm', */
+  
+  'LegionsProTabsForm',
+'LegionsProModalForm',
+'LegionsProTextArea',
+'LegionsProUEditor',
+  'LegionsProUpload',
+'LegionsProVirtualTable',
   /* 'LgeionsProVirtualList', */
 ]
 const browser = [
@@ -74,7 +80,7 @@ const umd = [
   },
 ];
 const es = [
-  ...array_components1.map((item) => {
+  ...array_component.map((item) => {
     let input = '';
     let file = '';
     if (item === 'index') {

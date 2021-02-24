@@ -381,7 +381,7 @@ export default class LegionsProDataImport<TableRow = {},Model = {}> extends Reac
                             isOpenRowSelection={false}
                             isOpenRowChange={false}
                             {...tableProps}
-                            data={list}
+                            dataSource={list}
                         ></LegionsProTable>
                     }
                    

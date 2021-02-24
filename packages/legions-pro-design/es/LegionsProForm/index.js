@@ -151,6 +151,9 @@ var AbstractForm = /** @class */ (function (_super) {
         if (formref) {
             var viewStore = formref.store.get(uid);
             if (viewStore.renderNodeQueue.has(eleId)) {
+                if (eleId === 'text') {
+                    console.log(viewStore.renderNodeQueue, viewStore.renderNodeQueue.has(eleId), eleId);
+                }
                 viewStore.renderNodeQueue.delete(eleId);
                 return true;
             }
@@ -232,6 +235,8 @@ var KeydownEnum;
      */
     KeydownEnum[KeydownEnum["enter"] = 13] = "enter";
 })(KeydownEnum || (KeydownEnum = {}));
+var selectionSingleClass = 'ant-select-selection--single';
+var selectionMultipleClass = 'ant-select-selection--multiple';
 /**
  * 如果元素需要回车，或者上下键切换焦点，则一定要用此组件包裹
  *
@@ -256,7 +261,7 @@ var FormElement = /** @class */ (function (_super) {
                     if (selectSelectionDom) {
                         selectSelectionDom.addEventListener('keydown', _this.onKeyDownSelect.bind(_this));
                     }
-                    var selectSelectionMultipleDom = _this.querySelectDom('ant-select-selection--multiple');
+                    var selectSelectionMultipleDom = _this.querySelectDom(selectionMultipleClass);
                     if (selectSelectionMultipleDom) {
                         selectSelectionMultipleDom.addEventListener('keydown', _this.onkeyDownSelelctMultiple.bind(_this));
                     }
@@ -284,7 +289,7 @@ var FormElement = /** @class */ (function (_super) {
      * @memberof FormElement
      */
     FormElement.prototype.querySelectDom = function (type) {
-        if (type === void 0) { type = 'ant-select-selection--single'; }
+        if (type === void 0) { type = selectionSingleClass; }
         var selectDom = document.querySelector("." + this.uid);
         if (selectDom) {
             var selectSelectionDom = selectDom.getElementsByClassName(type);
@@ -298,7 +303,7 @@ var FormElement = /** @class */ (function (_super) {
     FormElement.prototype.componentDidMount = function () {
         this.addElement();
         /**  只对下拉框键盘事件进行代理*/
-        if (this.querySelectDom('ant-select-selection--multiple') || this.querySelectDom()) {
+        if (this.querySelectDom(selectionMultipleClass) || this.querySelectDom()) {
             if (!this.onLoadingKeyDown) {
                 this.onLoadingKeyDown = this.onkeyDownProxy();
             }
@@ -308,7 +313,7 @@ var FormElement = /** @class */ (function (_super) {
     FormElement.prototype.componentDidUpdate = function () {
         this.addElement();
         /**  只对下拉框键盘事件进行代理*/
-        if (this.querySelectDom('ant-select-selection--multiple') || this.querySelectDom()) {
+        if (this.querySelectDom(selectionMultipleClass) || this.querySelectDom()) {
             this.onLoadingKeyDown();
         }
     };
@@ -321,7 +326,7 @@ var FormElement = /** @class */ (function (_super) {
         if (selectSelectionDom) {
             selectSelectionDom.removeEventListener('keydown', this.onKeyDownSelect.bind(this));
         }
-        var selectSelectionMultipleDom = this.querySelectDom('ant-select-selection--multiple');
+        var selectSelectionMultipleDom = this.querySelectDom(selectionMultipleClass);
         if (selectSelectionMultipleDom) {
             selectSelectionMultipleDom.removeEventListener('keydown', this.onkeyDownSelelctMultiple.bind(this));
         }
@@ -406,7 +411,7 @@ var FormElement = /** @class */ (function (_super) {
                 if (el && this.props.elType) {
                     var elChildren = el.getElementsByTagName(this.props.elType);
                     var elementTabindex = null;
-                    var antSSelectSelection = el.getElementsByClassName('ant-select-selection--single');
+                    var antSSelectSelection = el.getElementsByClassName(selectionSingleClass);
                     if (antSSelectSelection && antSSelectSelection instanceof HTMLCollection && antSSelectSelection.length) {
                         if (findDOMNode(antSSelectSelection[0]).getAttribute('tabindex') !== null) { // 如果下拉列表自身设置了获取焦点方法，则抓取元素用于获取焦点
                             // @ts-ignore
@@ -486,7 +491,7 @@ var TooltipInput = /** @class */ (function (_super) {
     },200); */
     TooltipInput.prototype.handleOnChange = function (even) {
         var value = even.target.value;
-        this.props.onChange && this.props.onChange(value);
+        this.props.onChange && this.props.onChange(even);
         //@ts-ignore
         /* this.onChanges(even,value); */
     };
@@ -878,9 +883,9 @@ var HLSelectWrapError = /** @class */ (function (_super) {
     };
     return HLSelectWrapError;
 }(React.Component));
-var FormHLSelect = /** @class */ (function (_super) {
-    __extends(FormHLSelect, _super);
-    function FormHLSelect(props) {
+var FormSelect = /** @class */ (function (_super) {
+    __extends(FormSelect, _super);
+    function FormSelect(props) {
         var _this = _super.call(this, props) || this;
         _this.FormHLSelectRef = null;
         _this.onClear = function () {
@@ -915,42 +920,17 @@ var FormHLSelect = /** @class */ (function (_super) {
         };
         return _this;
     }
-    /**
-     *
-     * 开启labelInValue 时检测当value 为空字符串或者null 时自动进行转换，防止select解析对象报错
-     * @returns
-     * @memberof FormHLSelect
-     */
-    FormHLSelect.prototype.checkSelectValue = function () {
-        if (this.props.iFormWithSelect.labelInValue) {
-            var value = this.props.form.getFieldValue(this.props.iAntdProps.name);
-            if (value) {
-                return;
-            }
-            if (typeof value === 'object' && value) {
-                return;
-            }
-            var fileName = {};
-            if (this.props.iFormWithSelect.mode === 'multiple') {
-                fileName[this.props.iAntdProps.name] = [];
-            }
-            else {
-                fileName[this.props.iAntdProps.name] = { value: {} };
-            }
-            this.props.form.setFields(fileName);
-            console.error(this.props.iAntdProps.name + ": \u4E0B\u62C9\u6846\u542F\u7528labelInValue\uFF0Cform value should object,\u5BF9\u4E8E\u7A7A\u503C\uFF0C\u7A7A\u5B57\u7B26\u4E32\u5E94\u8BE5\u8F6C\u6362\u4E3A\u5BF9\u8C61\u7ED3\u6784");
-        }
-    };
-    FormHLSelect.prototype.translabelInValue = function (value, options) {
+    FormSelect.prototype.translabelInValue = function (value, options) {
         if (options === void 0) { options = this.props.iFormWithSelect.options; }
-        // @ts-ignore
-        return this.transformlabelInValue(value, this.props.iFormWithSelect, options);
+        return LegionsProSelect.transformlabelInValue(value, 
+        //@ts-ignore
+        this.props.iFormWithSelect, options);
     };
-    FormHLSelect.prototype.componentDidMount = function () {
+    FormSelect.prototype.componentDidMount = function () {
         this.bindCopyKeydown();
         this.didMountClearNodeQueue(this.FormHLSelectRef, this.props.formUid, this.props.iAntdProps.name);
     };
-    FormHLSelect.prototype.componentWillUnmount = function () {
+    FormSelect.prototype.componentWillUnmount = function () {
         var el = document.querySelector("." + this.FormHLSelectRef.uid);
         if (el) {
             var selectDom = el.querySelector(".ant-select-selection--single");
@@ -959,7 +939,7 @@ var FormHLSelect = /** @class */ (function (_super) {
             }
         }
     };
-    FormHLSelect.prototype.bindCopyKeydown = function () {
+    FormSelect.prototype.bindCopyKeydown = function () {
         var el = document.querySelector("." + this.FormHLSelectRef.uid);
         if (el) {
             var selectDom = el.querySelector(".ant-select-selection--single");
@@ -968,7 +948,7 @@ var FormHLSelect = /** @class */ (function (_super) {
             }
         }
     };
-    FormHLSelect.prototype.handleCopyKeydown = function (event) {
+    FormSelect.prototype.handleCopyKeydown = function (event) {
         var _this = this;
         if (event.keyCode == 67 && this.state.styleClassFocus) {
             var value = this.props.form.getFieldValue(this.props.iAntdProps.name);
@@ -992,36 +972,24 @@ var FormHLSelect = /** @class */ (function (_super) {
             }
         }
     };
-    FormHLSelect.prototype.onFocus = function () {
+    FormSelect.prototype.onFocus = function () {
         var store = this.FormHLSelectRef.store.get(this.props.formUid);
         if (store) {
             store.focusUid = this.FormHLSelectRef.uid;
             if (store.enableEnterSwitch && (this.props.iFormWithSelect.mode === 'default' || this.props.iFormWithSelect.mode === void 0)) {
-                this.setState({ styleClassFocus: 'hool-select-focus-style' });
+                this.setState({ styleClassFocus: 'legions-pro-select-focus' });
             }
         }
         var el = document.querySelector("." + this.FormHLSelectRef.uid);
         if (el && this.props.iFormWithSelect.mode === 'combobox') { // 只能做到对combobox类型聚点，全选文字，下拉多选，tag及普通模式由于实现方式不同，所以暂时做不到
-            /* const selectedDom = el.getElementsByClassName('ant-select-selection-selected-value')
-            if (selectedDom && selectedDom.length) {
-                const range = document.createRange()
-                range.selectNodeContents(selectedDom[0].firstChild);
-                window.getSelection().removeAllRanges()
-                window.getSelection().addRange(range)
-            } */
             var inputSelect = el.getElementsByTagName('input');
             if (inputSelect && inputSelect.length) {
                 inputSelect[0].select();
             }
         }
-        /* if (store&&store.enableEnterSwitch&&this.props.iFormWithSelect.options && this.props.iFormWithSelect.options.length) {
-            this.setState({
-                open:true
-            })
-        } */
         this.props.iFormWithSelect && this.props.iFormWithSelect.onFocus && this.props.iFormWithSelect.onFocus();
     };
-    FormHLSelect.prototype.onBlur = function () {
+    FormSelect.prototype.onBlur = function () {
         if (this.state.open) {
             this.setState({
                 open: false
@@ -1032,10 +1000,10 @@ var FormHLSelect = /** @class */ (function (_super) {
         }
         this.props.iFormWithSelect && this.props.iFormWithSelect.onBlur && this.props.iFormWithSelect.onBlur();
     };
-    FormHLSelect.prototype.onSelect = function (value, option) {
+    FormSelect.prototype.onSelect = function (value, option) {
         this.props.iFormWithSelect && this.props.iFormWithSelect.onSelect && this.props.iFormWithSelect.onSelect(value, option);
     };
-    FormHLSelect.prototype.onSearch = function (value) {
+    FormSelect.prototype.onSearch = function (value) {
         if (this.FormHLSelectRef && this.props.formUid) {
             var viewStore = this.FormHLSelectRef.store.get(this.props.formUid);
             var view = viewStore.computedErrorReactNodeList.get(this.props.iAntdProps.name);
@@ -1059,7 +1027,7 @@ var FormHLSelect = /** @class */ (function (_super) {
         }
         this.props.iFormWithSelect && this.props.iFormWithSelect.onSearch && this.props.iFormWithSelect.onSearch(value);
     };
-    FormHLSelect.prototype.onChange = function (even) {
+    FormSelect.prototype.onChange = function (even) {
         this.props.iFormWithSelect.onChange && this.props.iFormWithSelect.onChange(even);
         if (this.FormHLSelectRef && this.props.formUid) {
             var viewStore = this.FormHLSelectRef.store.get(this.props.formUid);
@@ -1072,10 +1040,10 @@ var FormHLSelect = /** @class */ (function (_super) {
             this.setState({ styleClassFocus: '' });
         }
     };
-    FormHLSelect.prototype.shouldComponentUpdate = function (nextProps, nextState, context) {
+    FormSelect.prototype.shouldComponentUpdate = function (nextProps, nextState, context) {
         return this.isShouldComponentUpdate(this.FormHLSelectRef, this.props.formUid, nextProps.iAntdProps.name);
     };
-    FormHLSelect.prototype.render = function () {
+    FormSelect.prototype.render = function () {
         var _this = this;
         var _a = this.props, form = _a.form, iAntdProps = _a.iAntdProps, iFormWithSelect = _a.iFormWithSelect, children = _a.children, rules = _a.rules, formUid = _a.formUid;
         var getFieldDecorator = form.getFieldDecorator, getFieldsError = form.getFieldsError;
@@ -1098,7 +1066,7 @@ var FormHLSelect = /** @class */ (function (_super) {
                 , __assign({}, props, { selectAllClass: this.state.styleClassFocus, options: options, onPagingQuery: this.onPagingQuery, total: total, open: this.state.open, onIgnoreError: this.props.formStore && this.props.formStore.onIgnoreError, formUid: this.props.formUid, formHLSelectRef: this.FormHLSelectRef, formItemName: iAntdProps.name, placeholder: iAntdProps.placeholder, onClear: this.onClear, onSelect: this.onSelect.bind(this), onBlur: this.onBlur.bind(this), onSearch: this.onSearch.bind(this), onChange: this.onChange.bind(this), onFocus: this.onFocus.bind(this) }))),
                 children)));
     };
-    return FormHLSelect;
+    return FormSelect;
 }(AbstractForm));
 
 var FormItem$6 = Form.Item;
@@ -1392,7 +1360,7 @@ var CreateForm = /** @class */ (function (_super) {
     };
     CreateForm.prototype.createFormSelect = function (key, control, form, formUid, formRef) {
         var iAntdProps = control.iAntdProps, rules = control.rules, iFormProps = control.iFormProps;
-        return (React.createElement(FormHLSelect, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formStore: formRef, formUid: formUid, iFormWithSelect: iFormProps }));
+        return (React.createElement(FormSelect, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formStore: formRef, formUid: formUid, iFormWithSelect: iFormProps }));
     };
     CreateForm.prototype.createFormRender = function (key, control, form, formRef) {
         var iAntdProps = control.iAntdProps, rules = control.rules, iFormProps = control.iFormProps;
@@ -1629,7 +1597,7 @@ var ProFormUtils = /** @class */ (function () {
         }
         else if (control instanceof LabelWithSelectModel) {
             var iAntdProps = control.iAntdProps, rules = control.rules, iFormProps = control.iFormProps;
-            return (React.createElement(FormHLSelect, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formStore: formRef, formUid: formUid, iFormWithSelect: iFormProps }));
+            return (React.createElement(FormSelect, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formStore: formRef, formUid: formUid, iFormWithSelect: iFormProps }));
         }
         else if (control instanceof LabelWithDatePickerModel) {
             var iAntdProps = control.iAntdProps, rules = control.rules, iFormProps = control.iFormProps;
@@ -1701,9 +1669,9 @@ var KeydownEnum$1;
     /** 回车键 */
     KeydownEnum[KeydownEnum["enter"] = 13] = "enter";
 })(KeydownEnum$1 || (KeydownEnum$1 = {}));
-var HLForm = /** @class */ (function (_super) {
-    __extends(HLForm, _super);
-    function HLForm(props) {
+var ProForm = /** @class */ (function (_super) {
+    __extends(ProForm, _super);
+    function ProForm(props) {
         var _this = _super.call(this, props) || this;
         _this.timer = null;
         _this.timeId = new Date().getTime();
@@ -1725,16 +1693,13 @@ var HLForm = /** @class */ (function (_super) {
             activeName: ''
         };
         _this.uid = _this.props['uid'];
-        _this.uid = "form" + _this.props.store.HLFormContainer.size + shortHash("" + _this.timeId + _this.props.store.HLFormContainer.size);
-        if (_this.props.store.HLFormContainer.has(_this.uid)) {
-            _this.timeId = new Date().getTime();
-            _this.uid = "form" + _this.props.store.HLFormContainer.size + shortHash("" + _this.timeId + _this.props.store.HLFormContainer.size);
-        }
         _this.traceId = _this.uid;
-        _this.props.store.add(_this.uid, __assign(__assign({}, _this.props.form), { validateFields: _this.validateFields.bind(_this) }), _this.props.InputDataModel);
-        if (_this.props['uniqueUid']) {
-            _this.decryptionFreezeUid = "" + _this.props['uniqueUid'] + (_this.props.uniqueKeys || '') + (process.env.environment === 'production' ? 'production' : '');
-            _this.freezeUid = shortHash(_this.decryptionFreezeUid);
+        _this.decryptionFreezeUid = _this.props['decryptionFreezeUid'];
+        _this.freezeUid = _this.props['freezeUid'];
+        if (_this.props.store.get(_this.uid)) {
+            _this.props.store.get(_this.uid)['form'] = __assign(__assign({}, _this.props.form), { validateFields: _this.validateFields.bind(_this) });
+        }
+        if (_this.freezeUid) {
             if (!_this.props.store.HLFormLocalDataContainer.has(_this.freezeUid)) {
                 _this.props.store.addLocalData(_this.freezeUid);
                 _this.initSelectView();
@@ -1749,21 +1714,21 @@ var HLForm = /** @class */ (function (_super) {
         _this.consoleLog('hlFormContainer-constructor');
         return _this;
     }
-    Object.defineProperty(HLForm.prototype, "storeView", {
+    Object.defineProperty(ProForm.prototype, "storeView", {
         get: function () {
             return this.props.store.HLFormContainer.get(this.uid);
         },
         enumerable: false,
         configurable: true
     });
-    Object.defineProperty(HLForm.prototype, "storeLocalView", {
+    Object.defineProperty(ProForm.prototype, "storeLocalView", {
         get: function () {
             return this.props.store.HLFormLocalDataContainer.get(this.freezeUid);
         },
         enumerable: false,
         configurable: true
     });
-    HLForm.prototype.consoleLog = function (type, logObj) {
+    ProForm.prototype.consoleLog = function (type, logObj) {
         var obj = logObj || {};
         var logConent = __assign(__assign({ localView: __assign({}, this.storeLocalView) }, obj), { store: this.props.store, that: toJS(this), props: toJS(this.props), storeView: this.storeView });
         LoggerManager.consoleLog({
@@ -1772,7 +1737,7 @@ var HLForm = /** @class */ (function (_super) {
             methodsName: 'onHLFormCycle',
         });
     };
-    HLForm.prototype.logger = function (type, logObj) {
+    ProForm.prototype.logger = function (type, logObj) {
         if (typeof this.props.onLogRecord === 'function') {
             var obj = logObj || {};
             var _a = this.props, store = _a.store, form = _a.form, props = __rest(_a, ["store", "form"]);
@@ -1788,7 +1753,7 @@ var HLForm = /** @class */ (function (_super) {
             }, this.props.onLogRecord);
         }
     };
-    HLForm.prototype.initGroup = function (group) {
+    ProForm.prototype.initGroup = function (group) {
         if (group === void 0) { group = this.props.group; }
         if (this.state.groupEntity.length === 0 || (group && this.state.groupEntity.length !== group.length)) {
             var groupEntity_1 = [];
@@ -1801,7 +1766,7 @@ var HLForm = /** @class */ (function (_super) {
         }
     };
     /** 重写表单验证提交方法 */
-    HLForm.prototype.validateFields = function () {
+    ProForm.prototype.validateFields = function () {
         var _a;
         var _this = this;
         var options = [];
@@ -1833,7 +1798,7 @@ var HLForm = /** @class */ (function (_super) {
         // @ts-ignore
         (_a = this.props.form).validateFields.apply(_a, __spread(options));
     };
-    HLForm.prototype.setFormStates = function (name, callback) {
+    ProForm.prototype.setFormStates = function (name, callback) {
         var _this = this;
         this.storeLocalView.dispatchAction(function () {
             var insertRenderEle = function () {
@@ -1855,7 +1820,7 @@ var HLForm = /** @class */ (function (_super) {
             }
         });
     };
-    HLForm.prototype.componentWillMount = function () {
+    ProForm.prototype.componentWillMount = function () {
         var _this = this;
         var group = this.props.group;
         var groupEntity = [];
@@ -1906,7 +1871,7 @@ var HLForm = /** @class */ (function (_super) {
         this.consoleLog('hlFormContainer-componentWillMount');
         /* document.addEventListener('keydown',this.handleKeyDown.bind(this)) */
     };
-    HLForm.prototype.componentDidMount = function () {
+    ProForm.prototype.componentDidMount = function () {
         var el = document.querySelector("." + this.uid);
         if (el) {
             el.addEventListener('keydown', this.handleKeyDown.bind(this));
@@ -1914,7 +1879,7 @@ var HLForm = /** @class */ (function (_super) {
         this.controlsLen = this.props.controls.length;
         this.consoleLog('hlFormContainer-componentDidMount');
     };
-    HLForm.prototype.componentWillReceiveProps = function (nextProps) {
+    ProForm.prototype.componentWillReceiveProps = function (nextProps) {
         if (this.props.controls !== nextProps.controls) {
             /*  this.setFormItemStateDisabled({
                  props: this.props,nextProps
@@ -1931,8 +1896,10 @@ var HLForm = /** @class */ (function (_super) {
         }
         this.consoleLog('hlFormContainer-componentWillReceiveProps');
     };
-    HLForm.prototype.componentWillUnmount = function () {
-        this.props.store.delete(this.uid);
+    ProForm.prototype.componentWillUnmount = function () {
+        if (!this.props['uniqueUid']) {
+            this.props.store.delete(this.uid);
+        }
         var el = document.querySelector("." + this.uid);
         if (el) {
             el.removeEventListener('keydown', this.handleKeyDown.bind(this));
@@ -1940,7 +1907,7 @@ var HLForm = /** @class */ (function (_super) {
         this.consoleLog('hlFormContainer-componentWillUnmount');
         /* document.removeEventListener('keydown',this.handleKeyDown.bind(this)) */
     };
-    HLForm.prototype.initFromState = function () {
+    ProForm.prototype.initFromState = function () {
         var _this = this;
         if (this.props.controls && Array.isArray(this.props.controls)) {
             this.props.controls.map(function (item) {
@@ -1959,7 +1926,7 @@ var HLForm = /** @class */ (function (_super) {
      * @param {*} [controls=this.props.controls]
      * @memberof HLForm
      */
-    HLForm.prototype.initSelectView = function (isDispatch, controls) {
+    ProForm.prototype.initSelectView = function (isDispatch, controls) {
         var _this = this;
         if (isDispatch === void 0) { isDispatch = true; }
         if (controls === void 0) { controls = this.props.controls; }
@@ -2002,13 +1969,13 @@ var HLForm = /** @class */ (function (_super) {
             });
         }
     };
-    HLForm.prototype.onSelectSearch = function (name, options) {
+    ProForm.prototype.onSelectSearch = function (name, options) {
         if (this.storeLocalView && this.storeLocalView.selectView.has(name)) {
             var item = this.storeLocalView.selectView.get(name);
             this.storeLocalView.dispatchRequest(name, item.autoQuery, __assign({ pageIndex: options.pageIndex, pageSize: item.pageSize, keyWords: options.keywords }, options));
         }
     };
-    HLForm.prototype.queryElementItem = function (ElementKey) {
+    ProForm.prototype.queryElementItem = function (ElementKey) {
         var _this = this;
         if (this.storeView) {
             var keys = this.storeView.elementList.keys();
@@ -2031,7 +1998,7 @@ var HLForm = /** @class */ (function (_super) {
      * @returns {(IElementList & {keys:string})}
      * @memberof HLForm
      */
-    HLForm.prototype.queryFormElementItem = function (elementItem) {
+    ProForm.prototype.queryFormElementItem = function (elementItem) {
         var e_1, _a;
         var viewStore = this.props.store.HLFormContainer.get(elementItem.formUid);
         if (viewStore) {
@@ -2061,7 +2028,7 @@ var HLForm = /** @class */ (function (_super) {
         return null;
     };
     //@ts-ignore
-    HLForm.prototype.handleKeyDown = function (e) {
+    ProForm.prototype.handleKeyDown = function (e) {
         var e_2, _a;
         var formStore = this.props.store.get(this.uid);
         var keyCode = e.keyCode;
@@ -2205,7 +2172,7 @@ var HLForm = /** @class */ (function (_super) {
             }
         }
     };
-    HLForm.prototype.handleToggle = function (name, even) {
+    ProForm.prototype.handleToggle = function (name, even) {
         var key = even.target.id || name;
         var group = this.state.groupEntity;
         group.map(function (item) {
@@ -2217,7 +2184,7 @@ var HLForm = /** @class */ (function (_super) {
             groupEntity: group
         });
     };
-    HLForm.prototype.getAbsPos = function (obj) {
+    ProForm.prototype.getAbsPos = function (obj) {
         var x = obj.offsetLeft;
         var y = obj.offsetTop;
         while (obj = obj.offsetParent) {
@@ -2226,7 +2193,7 @@ var HLForm = /** @class */ (function (_super) {
         }
         return { "x": x, "y": y };
     };
-    HLForm.prototype.componentDidUpdate = function () {
+    ProForm.prototype.componentDidUpdate = function () {
         var el = document.querySelector("." + this.uid);
         if (el && this.props.controls.length !== this.controlsLen) {
             /** 主要解决当key值发生变化时，导致组件卸载掉回车事件，重新绑定，否则回车会出现失效
@@ -2242,7 +2209,7 @@ var HLForm = /** @class */ (function (_super) {
      *
      * @memberof HLForm
      */
-    HLForm.prototype.handlePositioning = function (name) {
+    ProForm.prototype.handlePositioning = function (name) {
         var target = document.querySelector('div[data-tab=' + name + ']');
         var targetScroll = this.getAbsPos(target).y;
         window.scrollTo(0, targetScroll);
@@ -2260,7 +2227,7 @@ var HLForm = /** @class */ (function (_super) {
             activeName: name
         });
     };
-    HLForm.prototype.isFormHasError = function (getFieldsError) {
+    ProForm.prototype.isFormHasError = function (getFieldsError) {
         var error = getFieldsError && getFieldsError();
         var has = false;
         for (var key in error) {
@@ -2271,7 +2238,7 @@ var HLForm = /** @class */ (function (_super) {
         }
         return has;
     };
-    HLForm.prototype.renderControl = function (control, key) {
+    ProForm.prototype.renderControl = function (control, key) {
         var form = this.props.form;
         var hasError = this.isFormHasError(form.getFieldsError);
         var error = form.getFieldError(control.iAntdProps.id);
@@ -2385,7 +2352,7 @@ var HLForm = /** @class */ (function (_super) {
             throw new Error("ComponentClass: Unknown control. control = " + JSON.stringify(control));
         }
     };
-    HLForm.prototype.renderControls = function (controls) {
+    ProForm.prototype.renderControls = function (controls) {
         var _this = this;
         var colCount = this.props.colCount || 2;
         var form = this.props.form;
@@ -2431,7 +2398,7 @@ var HLForm = /** @class */ (function (_super) {
                 _this.forceUpdate();
             } }, rendercontrols) : rendercontrols);
     };
-    HLForm.prototype.renderGroup = function () {
+    ProForm.prototype.renderGroup = function () {
         var _this = this;
         var group = this.props.group;
         /* const controls = this.props.controls; */
@@ -2476,7 +2443,7 @@ var HLForm = /** @class */ (function (_super) {
                             React.createElement("span", { style: { paddingLeft: "20px" }, onClick: _this.handlePositioning.bind(_this, entity.name) }, entity.name));
                     }))))));
     };
-    HLForm.prototype.renderForm = function () {
+    ProForm.prototype.renderForm = function () {
         var group = this.props.group;
         /* const controls = this.props.controls; */
         var controls = this.storeView.computedFormFields;
@@ -2485,19 +2452,19 @@ var HLForm = /** @class */ (function (_super) {
         }
         return React.createElement(Row, { type: "flex" }, this.renderControls(controls));
     };
-    HLForm.prototype.render = function () {
+    ProForm.prototype.render = function () {
         return (React.createElement(Form, { className: baseCls + " " + this.uid }, this.renderForm()));
     };
-    HLForm.defaultProps = {
+    ProForm.defaultProps = {
         size: 'default',
         isDragSort: false,
     };
-    HLForm = __decorate([
+    ProForm = __decorate([
         bind({ store: ProFormStore }),
         observer,
         __metadata("design:paramtypes", [Object])
-    ], HLForm);
-    return HLForm;
+    ], ProForm);
+    return ProForm;
 }(CreateForm));
 var debounceOnFieldsChange = debounce(function (props, changedFields) {
     props.onFieldsChange && props.onFieldsChange(props, changedFields);
@@ -2513,49 +2480,74 @@ var CustomizedForm = Form.create({
     onValuesChange: function (props, values) {
         props.onValuesChange && props.onValuesChange(props, values);
     }
-})(HLForm);
-/* export const HLFormContainer = (props: IHLFormProps) => {
-    return <CustomizedForm {...props} />
-} */
-function LegionsProForm(props) {
-    return React.createElement(CustomizedForm, __assign({}, props));
-}
-LegionsProForm.CreateForm = CreateForm;
-LegionsProForm.ProFormUtils = ProFormUtils;
-LegionsProForm.LabelWithInputNumberModel = LabelWithInputNumberModel;
-LegionsProForm.LabelWithSelectModel = LabelWithSelectModel;
-LegionsProForm.LabelWithRenderModel = LabelWithRenderModel;
-LegionsProForm.LabelWithDatePickerModel = LabelWithDatePickerModel;
-LegionsProForm.LabelWithMonthPickerModel = LabelWithMonthPickerModel;
-LegionsProForm.LabelWithRangePickerModel = LabelWithRangePickerModel;
-LegionsProForm.LabelWithUploadModel = LabelWithUploadModel;
-LegionsProForm.LabelWithSwitchModel = LabelWithSwitchModel;
-LegionsProForm.LabelWithRadioButtonModel = LabelWithRadioButtonModel;
-LegionsProForm.LabelWithTextModel = LabelWithTextModel;
-LegionsProForm.LabelWithInputModel = LabelWithInputModel;
-LegionsProForm.BaseFormFields = BaseFormFields;
-LegionsProForm.ProFormFields = ProFormFields;
-/* @bind({ store: HLFormStore })
-@observer
-export class HLFormContainer<mapProps = {}> extends React.Component<IHLFormProps<mapProps>>{
-    timer = null
-    timeId = new Date().getTime()
-    uid = ''
-    constructor(props) {
-        super(props)
-        this.uid = `form${this.props.store.HLFormContainer.size}${shortHash(`${this.timeId}${this.props.store.HLFormContainer.size}`)}`
-    }
-    @computed get storeView() {
-        return this.props.store.HLFormContainer.get(this.uid)
-    }
-    render() {
-        const formEntity = { uid: this.uid }
-        let InputDataModel = {}
-        if (this.storeView&&this.storeView.InputDataModel) {
-            InputDataModel = this.storeView.InputDataModel
+})(ProForm);
+var LegionsProForm = /** @class */ (function (_super) {
+    __extends(LegionsProForm, _super);
+    function LegionsProForm(props) {
+        var _this = _super.call(this, props) || this;
+        /** 根据时间戳生成，每次初始化表单组件都会产生新的值*/
+        _this.uid = '';
+        _this.timeId = new Date().getTime();
+        /** uid 的值绝对唯一，且每次初始生成表单都是相同值 */
+        _this.freezeUid = '';
+        /** 未加密的freezeUid 值 */
+        _this.decryptionFreezeUid = '';
+        if (_this.props['uniqueUid']) {
+            _this.decryptionFreezeUid = "" + _this.props['uniqueUid'] + (_this.props.uniqueKeys || '') + (process.env.environment === 'production' ? 'production' : '');
+            _this.freezeUid = "form" + shortHash(_this.decryptionFreezeUid);
+            _this.uid = _this.freezeUid;
         }
-        return <CustomizedForm {...this.props} {...formEntity} />
+        else {
+            _this.uid = "form" + _this.props.store.HLFormContainer.size + shortHash("" + _this.timeId + _this.props.store.HLFormContainer.size);
+            if (_this.props.store.HLFormContainer.has(_this.uid)) {
+                _this.timeId = new Date().getTime();
+                _this.uid = "form" + _this.props.store.HLFormContainer.size + shortHash("" + _this.timeId + _this.props.store.HLFormContainer.size);
+            }
+            _this.freezeUid = _this.uid;
+            _this.decryptionFreezeUid = _this.uid;
+        }
+        console.log(_this.uid, 'this.uid');
+        _this.props.store.add(_this.uid, {
+            InputDataModel: _this.props.InputDataModel,
+            formRef: _this,
+        });
+        return _this;
     }
-} */
+    Object.defineProperty(LegionsProForm.prototype, "storeView", {
+        get: function () {
+            return this.props.store.HLFormContainer.get(this.uid);
+        },
+        enumerable: false,
+        configurable: true
+    });
+    LegionsProForm.prototype.render = function () {
+        return React.createElement(CustomizedForm, __assign({}, this.props, this.storeView.InputDataModel, {
+            uid: this.uid,
+            freezeUid: this.freezeUid,
+            decryptionFreezeUid: this.decryptionFreezeUid
+        }));
+    };
+    LegionsProForm.CreateForm = CreateForm;
+    LegionsProForm.ProFormUtils = ProFormUtils;
+    LegionsProForm.LabelWithInputNumberModel = LabelWithInputNumberModel;
+    LegionsProForm.LabelWithSelectModel = LabelWithSelectModel;
+    LegionsProForm.LabelWithRenderModel = LabelWithRenderModel;
+    LegionsProForm.LabelWithDatePickerModel = LabelWithDatePickerModel;
+    LegionsProForm.LabelWithMonthPickerModel = LabelWithMonthPickerModel;
+    LegionsProForm.LabelWithRangePickerModel = LabelWithRangePickerModel;
+    LegionsProForm.LabelWithUploadModel = LabelWithUploadModel;
+    LegionsProForm.LabelWithSwitchModel = LabelWithSwitchModel;
+    LegionsProForm.LabelWithRadioButtonModel = LabelWithRadioButtonModel;
+    LegionsProForm.LabelWithTextModel = LabelWithTextModel;
+    LegionsProForm.LabelWithInputModel = LabelWithInputModel;
+    LegionsProForm.BaseFormFields = BaseFormFields;
+    LegionsProForm.ProFormFields = ProFormFields;
+    LegionsProForm = __decorate([
+        bind({ store: ProFormStore }),
+        observer,
+        __metadata("design:paramtypes", [Object])
+    ], LegionsProForm);
+    return LegionsProForm;
+}(React.Component));
 
 export default LegionsProForm;

@@ -45,7 +45,7 @@ export declare class ConditionView<Query = {}> {
     selectOptions: IObservableMap<string, ISelectOptions>;
     get computedQuery(): Array<IProConditions['componentModel']>;
     get computedVmModel(): any;
-    get computedSize(): "small" | "default";
+    get computedSize(): "default" | "small";
     /**
      * xs: 宽度<768px 响应式栅格，可为栅格数或一个包含其他属性的对象
      *

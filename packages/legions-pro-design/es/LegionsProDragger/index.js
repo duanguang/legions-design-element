@@ -160,14 +160,15 @@ var LegionsProDragger = /** @class */ (function (_super) {
         var _this = this;
         var _a = this.props, Component = _a.tag, options = _a.options, // eslint-disable-line
         onChange = _a.onChange, // eslint-disable-line
-        props = __rest(_a, ["tag", "options", "onChange"]);
+        //@ts-ignore
+        style = _a.style, children = _a.children, props = __rest(_a, ["tag", "options", "onChange", "style", "children"]);
         return (
         // @ts-ignore
-        React.createElement(Component, __assign({}, props, { 
+        React.createElement(Component, __assign({ style: { width: '100%', display: 'inline-block' } }, props, { 
             //@ts-ignore
             ref: function (node) {
                 _this.node = node;
-            } })));
+            } }), this.props.children));
     };
     LegionsProDragger.propTypes = {
         options: PropTypes.object,

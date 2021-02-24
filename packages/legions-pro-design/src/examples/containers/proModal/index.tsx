@@ -194,7 +194,7 @@ export class ProModal extends React.Component<IProps,IState> {
                         modalProps={{
                             resizable: true,
                             modalType: 'fullscreen',
-                            placement: 'right',
+                            /* placement: 'left', */
                             draggable: true,
                             onVisibleChange: (value) => {
                                 console.log(value,'onVisibleChange');

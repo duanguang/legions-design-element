@@ -415,7 +415,7 @@ var LegionsProTable = /** @class */ (function (_super) {
                     _this.getLocalViewStore.loading = false;
                 });
                 _this.consoleLog('watchData', { uid: uid });
-                _this.logger('hlTable-watchData', {
+                _this.logger('watchData', {
                     uid: uid,
                     apiResult: toJS(_this.getLocalViewStore.obState),
                     apiParams: _this.props.autoQuery.params(_this.getViewStore.pageIndex, _this.getViewStore.pageSize),
@@ -555,14 +555,14 @@ var LegionsProTable = /** @class */ (function (_super) {
             });
             var _a = this.props, store = _a.store, columns = _a.columns, props = __rest(_a, ["store", "columns"]);
             var logConent = __assign(__assign({}, viewStore_1), obj);
-            LoggerManager.report({
+            /* LoggerManager.report({
                 //@ts-ignore
-                type: type,
-                content: serialize(logConent, { ignoreFunction: false }),
+                type,
+                content: serialize(logConent,{ ignoreFunction: false }),
                 traceId: this.traceId,
                 modulesName: this.props.tableModulesName,
                 modulesPath: this.props['uniqueUid'],
-            }, this.props.onLogRecord);
+            },this.props.onLogRecord) */
         }
     };
     LegionsProTable.prototype.search = function (options) {
@@ -631,7 +631,7 @@ var LegionsProTable = /** @class */ (function (_super) {
         var ele = ReactDOM.findDOMNode(this).getElementsByClassName('ant-table-scroll')[0];
         if (ele && ele.firstElementChild && ele.firstElementChild.firstElementChild) {
             var div = document.createElement('div');
-            div.setAttribute('class', 'hlTable-header-inner');
+            div.setAttribute('class', 'proTable-header-inner');
             ele.firstElementChild.insertBefore(div, ele.firstElementChild.firstElementChild);
         }
     };

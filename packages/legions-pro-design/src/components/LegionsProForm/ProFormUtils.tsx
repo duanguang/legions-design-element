@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-08 15:19:23
- * @LastEditTime: 2021-01-28 10:52:12
+ * @LastEditTime: 2021-02-23 16:46:29
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProForm/ProFormUtils.tsx
@@ -18,7 +18,7 @@ import {
 import { IFormCheckboxProps, IFormDatePickerProps, IFormInputNumberProps, IFormInputProps, IFormMonthPickerProps, IFormRadioButtonProps, IFormRangePickerProps, IFormRenderProps, IFormSelectProps, IFormState, IFormSwitchProps, IFormTextProps, IFormUploadProps, InstanceForm, LabelWithCheckboxModel, LabelWithDatePickerModel, LabelWithSelectModel, LabelWithInputModel, LabelWithInputNumberModel, LabelWithMonthPickerModel, LabelWithRadioButtonModel, LabelWithRangePickerModel, LabelWithRenderModel, LabelWithSwitchModel, LabelWithTextModel, LabelWithUploadModel } from './interface';
 import FormInput from './FormInput';
 import FormInputNumber from './FormInputNumber';
-import FormHLSelect from './FormHLSelect';
+import FormSelect from './FormSelect';
 import FormDatePicker from './FormDatePicker';
 import FormMonthPicker from './FormMonthPicker';
 import FormRangePicker from './FormRangePicker';
@@ -301,7 +301,7 @@ export class ProFormUtils<Store,global = {}>{
         else if (control instanceof LabelWithSelectModel) {
             let { iAntdProps,rules,iFormProps } = control;
             return (
-                <FormHLSelect
+                <FormSelect
                     iAntdProps={iAntdProps}
                     form={form}
                     rules={rules}
@@ -311,7 +311,7 @@ export class ProFormUtils<Store,global = {}>{
                     iFormWithSelect={iFormProps}
                 >
 
-                </FormHLSelect>
+                </FormSelect>
             );
         }
         else if (control instanceof LabelWithDatePickerModel) {

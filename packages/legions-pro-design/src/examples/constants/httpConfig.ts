@@ -20,7 +20,7 @@ function getConfig() {
 
 export const HttpConfig = getConfig();
 export const setHeaders = (url: string, option?: Object, cookie?: string) => {
-    let cookies = cookie ? cookie : 'uctoken=MzJhYWY1MzMtNjgxZC00MmJmLWE1NzgtMzA2Yzg1MTk3OTdl;SESSION=28539cf1-f6e3-4098-a99e-cc17d640fa40'
+    let cookies = cookie ? cookie : 'SESSION=fb498de4-01e6-49d6-8b2e-95b03febab62'
     if (process.env.environment !== 'dev') {
         /* cookie 存储UCTOKEN为大写  需置换为小写(3pl接口使用) */
         cookies = (getCookie() || '').replace('UCTOKEN=', 'uctoken=')
@@ -60,7 +60,7 @@ export const getToken = () => {
     cookie = `${cookie}; UCTOKEN=${getCookie('cookie_token')}`
     return process.env.environment !== 'dev'
     ? cookie
-    :'SESSION=28539cf1-f6e3-4098-a99e-cc17d640fa40; HL-Access-Token=MzJhYWY1MzMtNjgxZC00MmJmLWE1NzgtMzA2Yzg1MTk3OTdl; UCTOKEN=MzJhYWY1MzMtNjgxZC00MmJmLWE1NzgtMzA2Yzg1MTk3OTdl;'
+    :'SESSION=fb498de4-01e6-49d6-8b2e-95b03febab62;'
 }
 export const SocketUrl =
   process.env.environment === 'production'

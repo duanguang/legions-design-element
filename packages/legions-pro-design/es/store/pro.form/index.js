@@ -3,16 +3,16 @@
   * (c) 2021 duanguang
   * @license MIT
   */
-import React from 'react';
 import { StoreBase } from '../index';
-import { observable, action, StoreModules } from 'legions/store';
+import { observable as observable$1, action as action$1, StoreModules } from 'legions/store';
 import { observableViewModel } from 'legions/store-utils';
-import { computed, runInAction, extendObservable } from 'mobx';
+import { observable, computed, action, runInAction, extendObservable } from 'mobx';
 import { LegionsFetch } from '../../core';
 import { pagingQueryProcessing } from 'legions-lunar';
 import { cloneDeep } from 'lodash';
 import { SelectDatabaseDB } from '../../db';
 import { SelectKeyValue } from '../../models';
+import { shortHash } from 'legions-lunar/object-hash';
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -89,6 +89,266 @@ function __values(o) {
     throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
 }
 
+var TabsItemView = /** @class */ (function () {
+    function TabsItemView(key) {
+        /** 每个tab拥有的自己独立的from实体 */
+        this.formInstance = null;
+        this.keys = '';
+        this._style = {};
+        this._className = '';
+        this._closable = void 0;
+        this._disabled = void 0;
+        this.keys = key;
+    }
+    Object.defineProperty(TabsItemView.prototype, "computedStyle", {
+        get: function () {
+            return { style: this._style };
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(TabsItemView.prototype, "computedClassName", {
+        get: function () {
+            if (this._className) {
+                return { className: this._className };
+            }
+            return {};
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(TabsItemView.prototype, "computedClosable", {
+        get: function () {
+            if (this._closable !== void 0) {
+                return { closable: this._closable };
+            }
+            return {};
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(TabsItemView.prototype, "computedDisabled", {
+        get: function () {
+            if (this._disabled !== void 0) {
+                return { disabled: this._disabled };
+            }
+            return {};
+        },
+        enumerable: false,
+        configurable: true
+    });
+    TabsItemView.prototype.setStyle = function (style) {
+        this._style = style;
+    };
+    TabsItemView.prototype.setClassName = function (className) {
+        this._className = className;
+    };
+    TabsItemView.prototype.setClosable = function (closable) {
+        this._closable = closable;
+    };
+    TabsItemView.prototype.setDisabled = function (disabled) {
+        this._disabled = disabled;
+    };
+    __decorate([
+        observable,
+        __metadata("design:type", Object)
+    ], TabsItemView.prototype, "_style", void 0);
+    __decorate([
+        observable,
+        __metadata("design:type", String)
+    ], TabsItemView.prototype, "_className", void 0);
+    __decorate([
+        observable,
+        __metadata("design:type", Boolean)
+    ], TabsItemView.prototype, "_closable", void 0);
+    __decorate([
+        observable,
+        __metadata("design:type", Boolean)
+    ], TabsItemView.prototype, "_disabled", void 0);
+    __decorate([
+        computed,
+        __metadata("design:type", Object),
+        __metadata("design:paramtypes", [])
+    ], TabsItemView.prototype, "computedStyle", null);
+    __decorate([
+        computed,
+        __metadata("design:type", Object),
+        __metadata("design:paramtypes", [])
+    ], TabsItemView.prototype, "computedClassName", null);
+    __decorate([
+        computed,
+        __metadata("design:type", Object),
+        __metadata("design:paramtypes", [])
+    ], TabsItemView.prototype, "computedClosable", null);
+    __decorate([
+        computed,
+        __metadata("design:type", Object),
+        __metadata("design:paramtypes", [])
+    ], TabsItemView.prototype, "computedDisabled", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [Object]),
+        __metadata("design:returntype", void 0)
+    ], TabsItemView.prototype, "setStyle", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [String]),
+        __metadata("design:returntype", void 0)
+    ], TabsItemView.prototype, "setClassName", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [Boolean]),
+        __metadata("design:returntype", void 0)
+    ], TabsItemView.prototype, "setClosable", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [Boolean]),
+        __metadata("design:returntype", void 0)
+    ], TabsItemView.prototype, "setDisabled", null);
+    return TabsItemView;
+}());
+var TabsFormView = /** @class */ (function () {
+    function TabsFormView() {
+        /** 当前活跃的tab项 */
+        this.activeTabKey = null;
+        /** 内部变量，外部请勿直接调用 */
+        this._tabsMap = observable.map();
+        this.activeTabKey = "" + shortHash(new Date().getTime()) + 0;
+        this._tabsMap.set(this.activeTabKey, new TabsItemView(this.activeTabKey));
+    }
+    Object.defineProperty(TabsFormView.prototype, "computedTabs", {
+        get: function () {
+            var e_1, _a;
+            var value = [];
+            try {
+                for (var _b = __values(this._tabsMap.values()), _c = _b.next(); !_c.done; _c = _b.next()) {
+                    var item = _c.value;
+                    value.push(item);
+                }
+            }
+            catch (e_1_1) { e_1 = { error: e_1_1 }; }
+            finally {
+                try {
+                    if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
+                }
+                finally { if (e_1) throw e_1.error; }
+            }
+            return value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(TabsFormView.prototype, "size", {
+        get: function () {
+            return this._tabsMap.size;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(TabsFormView.prototype, "entries", {
+        get: function () {
+            return this._tabsMap.entries();
+        },
+        enumerable: false,
+        configurable: true
+    });
+    TabsFormView.prototype.getTabs = function (key) {
+        console.log(this._tabsMap);
+        return this._tabsMap.get(key);
+    };
+    TabsFormView.prototype.hasTabs = function (key) {
+        return this._tabsMap.has(key);
+    };
+    TabsFormView.prototype.getTabsKeys = function () {
+        return this._tabsMap.keys();
+    };
+    /**
+     * 删除tab
+     * @param {string} key map中对应key值
+     * @memberof DeliveryGoodsStore
+     */
+    TabsFormView.prototype.delTabsMap = function (key) {
+        this._tabsMap.delete(key);
+    };
+    /**
+     * 添加tab
+     * @param {boolean} switchTabKey 添加页签后是否立即切换到新增的页签
+     * @param {number} index 下标，用于遍历新增页签时可能会导致uid重复
+     * @param {() => void} callback 创建完成之后等待ui渲染完毕执行事件
+     */
+    TabsFormView.prototype.addTabsMap = function (isSwitchTabKey, index, callback) {
+        if (isSwitchTabKey === void 0) { isSwitchTabKey = true; }
+        if (index === void 0) { index = 0; }
+        var uid = "" + shortHash(new Date().getTime()) + index;
+        this._tabsMap.set(uid, new TabsItemView("" + uid));
+        isSwitchTabKey && (this.activeTabKey = uid);
+        /** 等待ui记载完毕根据托运责任设置订单服务类型 */
+        setTimeout(function () {
+            /** ui渲染完毕，执行回调 */
+            callback && callback();
+        }, 100);
+        return uid;
+    };
+    __decorate([
+        observable,
+        __metadata("design:type", String)
+    ], TabsFormView.prototype, "activeTabKey", void 0);
+    __decorate([
+        observable,
+        __metadata("design:type", Object)
+    ], TabsFormView.prototype, "_tabsMap", void 0);
+    __decorate([
+        computed,
+        __metadata("design:type", Array),
+        __metadata("design:paramtypes", [])
+    ], TabsFormView.prototype, "computedTabs", null);
+    __decorate([
+        computed,
+        __metadata("design:type", Object),
+        __metadata("design:paramtypes", [])
+    ], TabsFormView.prototype, "size", null);
+    __decorate([
+        computed,
+        __metadata("design:type", Object),
+        __metadata("design:paramtypes", [])
+    ], TabsFormView.prototype, "entries", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [String]),
+        __metadata("design:returntype", void 0)
+    ], TabsFormView.prototype, "getTabs", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [String]),
+        __metadata("design:returntype", void 0)
+    ], TabsFormView.prototype, "hasTabs", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], TabsFormView.prototype, "getTabsKeys", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [String]),
+        __metadata("design:returntype", void 0)
+    ], TabsFormView.prototype, "delTabsMap", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [Boolean, Number, Function]),
+        __metadata("design:returntype", void 0)
+    ], TabsFormView.prototype, "addTabsMap", null);
+    return TabsFormView;
+}());
+
 var HlFormView = /** @class */ (function () {
     function HlFormView() {
         /**
@@ -96,7 +356,7 @@ var HlFormView = /** @class */ (function () {
          *
          * @memberof HlFormView
          */
-        this.elementList = observable.map();
+        this.elementList = observable$1.map();
         /* @observable addEventListener=false */
         /**
          * 用来存放下一个应该聚焦的组件元素uid值
@@ -111,27 +371,14 @@ var HlFormView = /** @class */ (function () {
          */
         this.enableEnterSwitch = false;
         this.size = 'default';
-        /**
-         * 收集到节点数量，私有变量，主要用于当前后两次收集到节点数量不一致时，这是可以强制清空队列，重新收集，保证收集节点顺序
-         *
-         * @memberof HlFormView
-         */
-        this.nodeCount = 0;
-        /**
-         * 表单元素集合
-         *
-         * @type {any[]}
-         * @memberof HlFormView
-         */
-        this.controls = [];
-        this.formfields = observable.map();
+        this.formfields = observable$1.map();
         /** 自定义表单元素配置项 */
-        this.customFormFields = observable.map();
+        this.customFormFields = observable$1.map();
         /** 待执行渲染的组件元素队列
          *
          * 执行完后移出队列
          */
-        this.renderNodeQueue = observable.map();
+        this.renderNodeQueue = observable$1.map();
         /**
          * 需要进行回车，上下键操作的组件钩子列表keys
          *
@@ -144,13 +391,13 @@ var HlFormView = /** @class */ (function () {
          * 错误信息组件节点集合
          * @memberof HlFormView
          */
-        this.errorReactNodeList = observable.map();
+        this.errorReactNodeList = observable$1.map();
         /**
          *
          * 所有组件错误信息
          * @memberof HlFormView
          */
-        this.errorListView = observable.map();
+        this.errorListView = observable$1.map();
         this.formfields.observe(function (chan) {
         });
     }
@@ -406,51 +653,43 @@ var HlFormView = /** @class */ (function () {
         }
     };
     __decorate([
-        observable,
+        observable$1,
         __metadata("design:type", Object)
     ], HlFormView.prototype, "elementList", void 0);
     __decorate([
-        observable,
+        observable$1,
         __metadata("design:type", Object)
     ], HlFormView.prototype, "focusUid", void 0);
     __decorate([
-        observable,
+        observable$1,
         __metadata("design:type", Object)
     ], HlFormView.prototype, "enableEnterSwitch", void 0);
     __decorate([
-        observable,
+        observable$1,
         __metadata("design:type", String)
     ], HlFormView.prototype, "size", void 0);
     __decorate([
-        observable,
-        __metadata("design:type", Object)
-    ], HlFormView.prototype, "nodeCount", void 0);
-    __decorate([
-        observable,
-        __metadata("design:type", Array)
-    ], HlFormView.prototype, "controls", void 0);
-    __decorate([
-        observable,
+        observable$1,
         __metadata("design:type", Object)
     ], HlFormView.prototype, "formfields", void 0);
     __decorate([
-        observable,
+        observable$1,
         __metadata("design:type", Object)
     ], HlFormView.prototype, "customFormFields", void 0);
     __decorate([
-        observable,
+        observable$1,
         __metadata("design:type", Object)
     ], HlFormView.prototype, "renderNodeQueue", void 0);
     __decorate([
-        observable,
+        observable$1,
         __metadata("design:type", Object)
     ], HlFormView.prototype, "allElementList", void 0);
     __decorate([
-        observable,
+        observable$1,
         __metadata("design:type", Object)
     ], HlFormView.prototype, "errorReactNodeList", void 0);
     __decorate([
-        observable,
+        observable$1,
         __metadata("design:type", Object)
     ], HlFormView.prototype, "errorListView", void 0);
     __decorate([
@@ -484,43 +723,43 @@ var HlFormView = /** @class */ (function () {
         __metadata("design:paramtypes", [])
     ], HlFormView.prototype, "computedFormSize", null);
     __decorate([
-        action,
+        action$1,
         __metadata("design:type", Function),
         __metadata("design:paramtypes", [String]),
         __metadata("design:returntype", void 0)
     ], HlFormView.prototype, "updateFormSize", null);
     __decorate([
-        action,
+        action$1,
         __metadata("design:type", Function),
         __metadata("design:paramtypes", [String, String]),
         __metadata("design:returntype", void 0)
     ], HlFormView.prototype, "collectErrorReactNode", null);
     __decorate([
-        action,
+        action$1,
         __metadata("design:type", Function),
         __metadata("design:paramtypes", [String, Array]),
         __metadata("design:returntype", void 0)
     ], HlFormView.prototype, "setErrorErrorReactNodeList", null);
     __decorate([
-        action,
+        action$1,
         __metadata("design:type", Function),
         __metadata("design:paramtypes", [String, Number]),
         __metadata("design:returntype", void 0)
     ], HlFormView.prototype, "handleIgnore", null);
     __decorate([
-        action,
+        action$1,
         __metadata("design:type", Function),
         __metadata("design:paramtypes", [String]),
         __metadata("design:returntype", void 0)
     ], HlFormView.prototype, "addAllElementKeys", null);
     __decorate([
-        action,
+        action$1,
         __metadata("design:type", Function),
         __metadata("design:paramtypes", [String]),
         __metadata("design:returntype", Object)
     ], HlFormView.prototype, "getFormItemField", null);
     __decorate([
-        action,
+        action$1,
         __metadata("design:type", Function),
         __metadata("design:paramtypes", [String, Object, String]),
         __metadata("design:returntype", void 0)
@@ -538,19 +777,19 @@ var ErrorViewModel = /** @class */ (function () {
         this.validateStatus = '';
     }
     __decorate([
-        observable,
+        observable$1,
         __metadata("design:type", String)
     ], ErrorViewModel.prototype, "uid", void 0);
     __decorate([
-        observable,
+        observable$1,
         __metadata("design:type", String)
     ], ErrorViewModel.prototype, "validateStatus", void 0);
     return ErrorViewModel;
 }());
 var HLFormLocalView = /** @class */ (function () {
     function HLFormLocalView() {
-        this.selectOptions = observable.map();
-        this.selectView = observable.map();
+        this.selectOptions = observable$1.map();
+        this.selectView = observable$1.map();
         /**
          * 是否开启拖拽排序
          *
@@ -590,7 +829,7 @@ var HLFormLocalView = /** @class */ (function () {
             {
                 keywords: '',
                 // @ts-ignore
-                obData: observable.map(),
+                obData: observable$1.map(),
             },
         ]);
     };
@@ -603,7 +842,7 @@ var HLFormLocalView = /** @class */ (function () {
             pageSize: options.pageSize || 30,
             keywords: options.keywords || '',
             tableNameDb: options.tableNameDb,
-            currValue: { total: 0, data: observable.map() },
+            currValue: { total: 0, data: observable$1.map() },
         });
     };
     /**
@@ -760,7 +999,7 @@ var HLFormLocalView = /** @class */ (function () {
                     data.push({
                         keywords: keyWords_1,
                         // @ts-ignore
-                        obData: observable.map(),
+                        obData: observable$1.map(),
                     });
                     this.selectOptions.set(name, data);
                     item_1 = data.find(function (entity) { return entity.keywords === keyWords_1; });
@@ -821,7 +1060,7 @@ var HLFormLocalView = /** @class */ (function () {
                     var store = extendObservable({
                         keyWords: keyWords_1,
                         // @ts-ignore
-                        data: observable.map(),
+                        data: observable$1.map(),
                     }, {});
                     for (var i = 1; i <= item_1.obData.size; i++) {
                         /**
@@ -871,19 +1110,19 @@ var HLFormLocalView = /** @class */ (function () {
         }
     };
     __decorate([
-        observable,
+        observable$1,
         __metadata("design:type", Object)
     ], HLFormLocalView.prototype, "selectOptions", void 0);
     __decorate([
-        observable,
+        observable$1,
         __metadata("design:type", Object)
     ], HLFormLocalView.prototype, "selectView", void 0);
     __decorate([
-        observable,
+        observable$1,
         __metadata("design:type", Object)
     ], HLFormLocalView.prototype, "_isDragSort", void 0);
     __decorate([
-        observable,
+        observable$1,
         __metadata("design:type", Array)
     ], HLFormLocalView.prototype, "_controlsSort", void 0);
     __decorate([
@@ -897,31 +1136,31 @@ var HLFormLocalView = /** @class */ (function () {
         __metadata("design:paramtypes", [])
     ], HLFormLocalView.prototype, "computedControlsSort", null);
     __decorate([
-        action,
+        action$1,
         __metadata("design:type", Function),
         __metadata("design:paramtypes", [Array]),
         __metadata("design:returntype", void 0)
     ], HLFormLocalView.prototype, "updateControlsSort", null);
     __decorate([
-        action,
+        action$1,
         __metadata("design:type", Function),
         __metadata("design:paramtypes", [Boolean]),
         __metadata("design:returntype", void 0)
     ], HLFormLocalView.prototype, "setDragSort", null);
     __decorate([
-        action,
+        action$1,
         __metadata("design:type", Function),
         __metadata("design:paramtypes", [String, Object]),
         __metadata("design:returntype", void 0)
     ], HLFormLocalView.prototype, "initSelectOptions", null);
     __decorate([
-        action,
+        action$1,
         __metadata("design:type", Function),
         __metadata("design:paramtypes", [String, Object, Object]),
         __metadata("design:returntype", void 0)
     ], HLFormLocalView.prototype, "initSelectView", null);
     __decorate([
-        action,
+        action$1,
         __metadata("design:type", Function),
         __metadata("design:paramtypes", [String, Object, Object]),
         __metadata("design:returntype", void 0)
@@ -937,8 +1176,9 @@ var ProFormStore = /** @class */ (function (_super) {
          * 表单数据模型集合
          * @memberof HLFormStore
          */
-        _this.HLFormContainer = observable.map();
-        _this.HLFormLocalDataContainer = observable.map();
+        _this.HLFormContainer = observable$1.map();
+        _this.HLFormLocalDataContainer = observable$1.map();
+        _this._TabsFormDataMap = observable$1.map();
         return _this;
     }
     /**
@@ -949,18 +1189,18 @@ var ProFormStore = /** @class */ (function (_super) {
      * @param {*} [InputDataModel]
      * @memberof HLFormStore
      */
-    ProFormStore.prototype.add = function (uid, form, InputDataModel) {
-        var otherView = { form: form, uid: uid };
+    ProFormStore.prototype.add = function (uid, options) {
+        var otherView = { form: options.form, uid: uid, formRef: options.formRef };
         var formView = new HlFormView();
-        if (InputDataModel && typeof InputDataModel === 'function') {
+        if (options.InputDataModel && typeof options.InputDataModel === 'function') {
             /* otherView = Object.assign(otherView,{ InputDataModel: new InputDataModel(),InputDataModelClass: InputDataModel }) */
             otherView = Object.assign(otherView, {
-                InputDataModelClass: InputDataModel,
+                InputDataModelClass: options.InputDataModel,
             });
             /* formView = Object.assign(formView,{ InputDataModel: new InputDataModel() })
                   formView = observable(formView); */
             formView = extendObservable(formView, {
-                InputDataModel: new InputDataModel(),
+                InputDataModel: new options.InputDataModel(),
             });
         }
         this.HLFormContainer.set(uid, Object.assign(observableViewModel(formView), otherView));
@@ -1081,7 +1321,7 @@ var ProFormStore = /** @class */ (function (_super) {
      * @param {React.Component} parentRef 表单父级组件实例 this
      * @memberof HLFormStore
      */
-    ProFormStore.prototype.updateFormInputData = function (formUid, formFields, parentRef) {
+    ProFormStore.prototype.updateFormInputData = function (formUid, formFields) {
         var view = this.HLFormContainer.get(formUid);
         if (view && typeof view.InputDataModelClass === 'function') {
             // @ts-ignore
@@ -1091,74 +1331,103 @@ var ProFormStore = /** @class */ (function (_super) {
                     view.renderNodeQueue.set(key, key);
                 }
             });
-            /* if (parentRef && parentRef.forceUpdate) {
-              parentRef.forceUpdate();
-            } */
         }
+    };
+    ProFormStore.prototype.addTabsForm = function (uid) {
+        var formView = new TabsFormView();
+        this._TabsFormDataMap.set(uid, observableViewModel(formView));
+    };
+    ProFormStore.prototype.deleteTabsForm = function (uid) {
+        this._TabsFormDataMap.delete(uid);
+    };
+    ProFormStore.prototype.getTabsForm = function (uid) {
+        return this._TabsFormDataMap.get(uid);
     };
     ProFormStore.meta = __assign({}, StoreBase.meta);
     __decorate([
-        observable,
+        observable$1,
         __metadata("design:type", Object)
     ], ProFormStore.prototype, "HLFormContainer", void 0);
     __decorate([
-        observable,
+        observable$1,
         __metadata("design:type", Object)
     ], ProFormStore.prototype, "HLFormLocalDataContainer", void 0);
     __decorate([
-        action,
+        observable$1,
+        __metadata("design:type", Object)
+    ], ProFormStore.prototype, "_TabsFormDataMap", void 0);
+    __decorate([
+        action$1,
         __metadata("design:type", Function),
-        __metadata("design:paramtypes", [String, Object, Object]),
+        __metadata("design:paramtypes", [String, Object]),
         __metadata("design:returntype", void 0)
     ], ProFormStore.prototype, "add", null);
     __decorate([
-        action,
+        action$1,
         __metadata("design:type", Function),
         __metadata("design:paramtypes", [String, HlFormView]),
         __metadata("design:returntype", void 0)
     ], ProFormStore.prototype, "init", null);
     __decorate([
-        action,
+        action$1,
         __metadata("design:type", Function),
         __metadata("design:paramtypes", [String]),
         __metadata("design:returntype", void 0)
     ], ProFormStore.prototype, "delete", null);
     __decorate([
-        action,
+        action$1,
         __metadata("design:type", Function),
         __metadata("design:paramtypes", [String]),
         __metadata("design:returntype", void 0)
     ], ProFormStore.prototype, "get", null);
     __decorate([
-        action,
+        action$1,
         __metadata("design:type", Function),
         __metadata("design:paramtypes", [String]),
         __metadata("design:returntype", void 0)
     ], ProFormStore.prototype, "addLocalData", null);
     __decorate([
-        action,
+        action$1,
         __metadata("design:type", Function),
         __metadata("design:paramtypes", [String]),
         __metadata("design:returntype", void 0)
     ], ProFormStore.prototype, "deleteLocalData", null);
     __decorate([
-        action,
+        action$1,
         __metadata("design:type", Function),
         __metadata("design:paramtypes", [String]),
         __metadata("design:returntype", void 0)
     ], ProFormStore.prototype, "getLocalData", null);
     __decorate([
-        action,
+        action$1,
         __metadata("design:type", Function),
         __metadata("design:paramtypes", [String]),
         __metadata("design:returntype", void 0)
     ], ProFormStore.prototype, "clearAllElement", null);
     __decorate([
-        action,
+        action$1,
         __metadata("design:type", Function),
-        __metadata("design:paramtypes", [String, Object, React.Component]),
+        __metadata("design:paramtypes", [String, Object]),
         __metadata("design:returntype", void 0)
     ], ProFormStore.prototype, "updateFormInputData", null);
+    __decorate([
+        action$1,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [String]),
+        __metadata("design:returntype", void 0)
+    ], ProFormStore.prototype, "addTabsForm", null);
+    __decorate([
+        action$1,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [String]),
+        __metadata("design:returntype", void 0)
+    ], ProFormStore.prototype, "deleteTabsForm", null);
+    __decorate([
+        action$1,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [String]),
+        __metadata("design:returntype", void 0)
+    ], ProFormStore.prototype, "getTabsForm", null);
     ProFormStore = __decorate([
         StoreModules,
         __metadata("design:paramtypes", [Object])

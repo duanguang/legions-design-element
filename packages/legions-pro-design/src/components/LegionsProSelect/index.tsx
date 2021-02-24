@@ -10,63 +10,80 @@ import { debounce } from 'legions-utils-tool/debounce'
 import { shortHash } from 'legions-lunar/object-hash';
 import {
     isArray,
-  } from 'legions-utils-tool/type.validation';
+} from 'legions-utils-tool/type.validation';
 import { formatTrim } from 'legions-utils-tool/format.string'
 import { SelectValue } from 'antd/lib/select';
 import { slice } from 'lodash'
 import { legionsThirdpartyPlugin } from 'legions-thirdparty-plugin';
-import { IProSelectProps, ISelectProps, LabeledValue } from './interface';
+import { IProSelectProps,IOptions,LabeledValue } from './interface';
 
 interface IState {
     value: string | any[] | LabeledValue | LabeledValue[];
     keyWords: string,
     pageIndex: number,
-    data?: Map<string,ISelectProps[]>;
+    data?: Map<string,IOptions[]>;
     total?: number;
 }
-export class AbstractSelect<P = {},S = {}> extends React.Component<P,S> {
-    //@ts-ignore
-    transformlabelInValue(value,props: P,options = []): LabeledValue[] | LabeledValue {
-        if (!props['labelInValue']) {
-            if (Array.isArray(value)) {
-                const arr: LabeledValue[] = []
-                value.forEach((item) => {
-                    const entity = options.find((moedl) => moedl.key === item)
-                    if (entity) {
-                        arr.push({
-                            key: item,
-                            label: entity.value,
-                            title: entity.title || entity.value,
-                            keyValue: entity.keyValue,
-                        })
-                    }
-                })
-                return arr
-            }
-            if (typeof value === 'string' || typeof value === 'number') {
-                const entity = options.find((moedl) => moedl.key === value)
+function transformlabelInValue(value: SelectValue,props: IProSelectProps,options: IOptions[] = []): LabeledValue[] | LabeledValue {
+    if (!props['labelInValue']) {
+        if (Array.isArray(value)) { // 开启多选
+            const arr: LabeledValue[] = []
+            value.forEach((item: string) => {
+                const entity = options.find((moedl) => moedl.key === item)
                 if (entity) {
-                    const values: LabeledValue = {
-                        key: value,
-                        label: entity.value,
-                        title: entity.title || entity.value,
-                        keyValue: entity.keyValue,
-                    }
-                    return values
+                    arr.push({
+                        key: item,
+                        label: void 0,
+                        title: entity.title,
+                        extendedField: entity.extendedField,
+                        value: entity.value,
+                    })
                 }
+            })
+            return arr
+        }
+        if (typeof value === 'string' || typeof value === 'number') { //单选
+            const entity = options.find((moedl) => moedl.key === value)
+            if (entity) {
+                const values: LabeledValue = {
+                    key: value,
+                    label: void 0,
+                    title: entity.title,
+                    value: entity.value,
+                    extendedField: entity.extendedField,
+                }
+                return values
             }
-        } else {
-            if (value && options.length) {
-                let entity = options.find((moedl) => moedl.key === value.key)
+        }
+    } else {
+        if (Array.isArray(value)) {
+            const arr: LabeledValue[] = []
+            value.forEach((item: LabeledValue) => {
+                const entity = options.find((moedl) => moedl.key === item.key)
                 if (entity) {
-                    return { ...value,keyValue: entity.keyValue }
+                    arr.push({
+                        ...value,
+                        key: item.key,
+                        label: item.label,
+                        title: entity.title,
+                        value: entity.value,
+                        extendedField: entity.extendedField,
+                    })
                 }
+            })
+            return arr
+        }
+        if (typeof value === 'object' && !Array.isArray(value)) {
+            let entity = options.find((moedl) => moedl.key === value.key)
+            if (entity) {
+                return { ...value,extendedField: entity.extendedField,value: entity.value }
             }
-            return { ...value,keyValue: '' }
         }
     }
+    return void 0
 }
-export default class LegionsProSelect extends AbstractSelect<IProSelectProps,IState> {
+
+export default class LegionsProSelect extends React.Component<IProSelectProps,IState> {
     static defaultProps = {
         maxTagCount: 80000,
         defaultOpen: false,
@@ -74,20 +91,16 @@ export default class LegionsProSelect extends AbstractSelect<IProSelectProps,ISt
         paging: false,
         remote: false,
     }
+    static transformlabelInValue = transformlabelInValue;
     antdSelectRef = null
     timeId = new Date().getTime()
-    uid = `s${shortHash(this.timeId)}`
-    SelectInputUid = `input${shortHash(this.timeId)}`
+    uid = `select${shortHash(this.timeId)}`
+    SelectInputUid = `selectInput${shortHash(this.timeId)}`
     MaxTagPlaceholderUid = `placeholder${shortHash(this.timeId)}`
     pageSize: number = this.props.pageSize || 100
-    node: Element = null
+    copyIconNode: Element = null
     maxTagPlaceholderNode: Element = null;
-    search = debounce((props: IProSelectProps,val) => {
-        props && props.onSearch && props.onSearch(formatTrim(val))
-        this.setState({
-            keyWords: formatTrim(val),
-        })
-    },100)
+
     localSearch = debounce((props: IProSelectProps,value: string) => {
         let data = []
         const filter = props.options.filter((item) => item.value.indexOf(value) > -1)
@@ -107,19 +120,33 @@ export default class LegionsProSelect extends AbstractSelect<IProSelectProps,ISt
             pageIndex: 1,
             data: new Map(),
         }
-        this.consoleLog('constructor-hlSelect')
+        this.consoleLog('constructor')
+    }
+    onGeneralSearch(props: IProSelectProps,val) {
+        const value = formatTrim(val);
+        props && props.onSearch && props.onSearch(value)
+        this.setState({
+            keyWords: value,
+        })
     }
     componentWillMount() {
-        /**  主要场景，当开启下拉搜索,下拉框赋默认值后，需要基于默认值进行搜索数据，防止选中项数据不在当前页情况，发生选中项选中数据出现问题*/
-        /* this.props.onSearch&&this.search(this.props,this.props.value); */
-        this.props.onReady && this.props.onReady(this.uid)
-        this.consoleLog('componentWillMount-hlSelect')
+        this.props.onReady && this.props.onReady(this.uid);
+        this.consoleLog('componentWillMount');
+        this.initPageData();
     }
     consoleLog(type: string,logObj?: Object) {
         const obj = logObj || {}
-        if (window && window['hlSelectDebug'] && typeof window['hlSelectDebug'] === 'function') {
-            window['hlSelectDebug']({ that: this },type)
+        const name = 'proSelectDebug'
+        if (window && window[name] && typeof window[name] === 'function') {
+            window[name]({ that: this },`proSelect-${type}`)
         }
+    }
+    /** 是否远程搜索 */
+    isRemoteSearch() {
+        if (this.props.remote) {
+            return true;
+        }
+        return false;
     }
     /**
      *  本地搜索时通过选中词得出所选内容所在页码位置
@@ -127,10 +154,9 @@ export default class LegionsProSelect extends AbstractSelect<IProSelectProps,ISt
      * @memberof HLSelect
      */
     queryLocalPageIndexByKeyWords() {
-        if (this.props.paging && !this.props.remote && this.state.data.size > 0 && this.props.mode !== 'multiple' && this.state.value) {
+        if (this.props.paging && !this.isRemoteSearch() && this.state.data.size > 0 && this.props.mode !== 'multiple' && this.state.value) {
             for (let i = 1; i <= this.state.data.size; i++) {
-                // @ts-ignore
-                const index = this.state.data.get(i.toString()).findIndex((item) => item.key === this.state.value.key)
+                const index = this.state.data.get(i.toString()).findIndex((item) => item.key === this.state.value['key'])
                 if (index > -1) {
                     this.setState({ pageIndex: i })
                     break;
@@ -167,14 +193,18 @@ export default class LegionsProSelect extends AbstractSelect<IProSelectProps,ISt
             })
         }
     }
-    renderPortal(props) {
+    getLabel() {
         let label = ''
         if (this.props.mode === 'default' || this.props.mode === 'combobox') {
             if (this.state.value && typeof this.state.value === 'object' && !Array.isArray(this.state.value)) {
-                label = this.state.value['label'] as string
+                label = this.state.value['value'] as string
             }
         }
-        if (label && this.node) {
+        return label;
+    }
+    renderIconCopyPortal(props) {
+        const label = this.getLabel();
+        if (label && this.copyIconNode) {
             unstable_renderSubtreeIntoContainer(
                 this, //代表当前组件
                 <Tooltip
@@ -185,46 +215,39 @@ export default class LegionsProSelect extends AbstractSelect<IProSelectProps,ISt
                 >
                     <Icon type="eye" onClick={this.copyText.bind(this,label)} style={{ fontSize: 16 }} />
                 </Tooltip>,// 塞进传送门的JSX
-                this.node // 传送门另一端的DOM node
+                this.copyIconNode // 传送门另一端的DOM node
             )
         }
         else {
-            this.destroyPortal()
+            this.destroyIconCopyPortal()
         }
     }
-    destroyPortal() {
+    destroyIconCopyPortal() {
         let inputDom = document.querySelector(`.${this.SelectInputUid}`);
         if (inputDom) {
             const selection = inputDom.querySelector('.ant-select-selection');
-            if (selection && this.node) {
-                unmountComponentAtNode(this.node);
-                if (findDOMNode(selection).contains(this.node)) {
-                    //  findDOMNode(selection).removeChild(this.node);
+            if (selection && this.copyIconNode) {
+                unmountComponentAtNode(this.copyIconNode);
+                if (findDOMNode(selection).contains(this.copyIconNode)) {
+                    //  findDOMNode(selection).removeChild(this.copyIconNode);
                 }
             }
         }
     }
     componentDidMount() {
-        this.consoleLog('componentDidMount-hlSelect')
+        this.consoleLog('componentDidMount')
         this.appendMaxTagDom()
-        this.initPageData()
         let inputDom = document.querySelector(`.${this.SelectInputUid}`);
         if (inputDom) {
             const selection = inputDom.querySelector('.ant-select-selection');
             if (selection) {
                 const span = document.createElement('span');
-                span.setAttribute('class',`legions-pro-select-copy`);
-                this.node = span;
-                selection.appendChild(this.node)
-                this.renderPortal(this.props);
-            }
-            const selectionChoiceUL = inputDom.querySelector('ul')
-            if (selectionChoiceUL) {
-                // this.maxTagPlaceholderNode = selectionChoiceUL
-                // this.renderMaxTagPlaceholderPortal()
+                span.setAttribute('class',`span-icon`);
+                this.copyIconNode = span;
+                selection.appendChild(this.copyIconNode)
+                this.renderIconCopyPortal(this.props);
             }
         }
-        /* this.bindCopyKeydown() */
     }
     componentWillReceiveProps(nextProps: IProSelectProps) {
         if (this.props.value !== nextProps.value || this.props.options !== nextProps.options) {
@@ -242,33 +265,14 @@ export default class LegionsProSelect extends AbstractSelect<IProSelectProps,ISt
                 this.antdSelectRef.setOpenState && this.antdSelectRef.setOpenState(nextProps.open)
             }
         }
-        this.consoleLog('componentWillReceiveProps-hlSelect')
+        this.consoleLog('componentWillReceiveProps')
     }
     componentDidUpdate() {
-        this.consoleLog('componentDidUpdate-hlSelect')
+        this.consoleLog('componentDidUpdate')
         this.appendPageDom()
         this.appendMaxTagDom()
-        this.renderPortal(this.props);
-        /* this.antdSelectedValueDom(); */
-        // this.renderMaxTagPlaceholderPortal()
+        this.renderIconCopyPortal(this.props);
     }
-    /* addDropdownHidden() {
-        let inputDom = document.querySelector(`.${this.uid}`);
-        console.log(this.props)
-        if (this.props.open !== undefined&&inputDom) {
-            if (findDOMNode(inputDom).className.indexOf('ant-select-dropdown-hidden')<0) {
-                if (!this.props.open) {
-                   this.setState({openClass:'ant-select-dropdown-hidden'})
-                }
-            } else {
-                if (this.props.open) {
-
-                    this.setState({openClass:''})
-                 }
-            }
-        }
-
-    } */
     renderMaxTagPlaceholderPortal() {
         const inputDom = document.querySelector(`.${this.SelectInputUid}`);
         if (inputDom) {
@@ -290,11 +294,8 @@ export default class LegionsProSelect extends AbstractSelect<IProSelectProps,ISt
                         this.maxTagPlaceholderNode,
                     )
                 }
-                //this.appendMaxTagDom()
             }
-
         }
-
     }
     appendMaxTagDom() {
         let inputDom = document.querySelector(`.${this.SelectInputUid}`);
@@ -474,17 +475,14 @@ export default class LegionsProSelect extends AbstractSelect<IProSelectProps,ISt
 
     }
     componentWillUnmount() {
-        this.consoleLog('componentWillUnmount-hlSelect')
+        this.consoleLog('componentWillUnmount')
         this.removeEventListener()
-        this.destroyPortal()
+        this.destroyIconCopyPortal()
     }
     onBlur() {
         if (this.props.paging && !this.props.remote && this.state.data.size === 0) { // 当执行搜索时，查询不到数据，在失去焦点时，重新分配分页数据
             this.initPageData()
         }
-        /* if (this.state.styleClassFocus) {
-            this.setState({styleClassFocus:''})
-        } */
         this.props.onBlur && this.props.onBlur()
     }
     onFocus() {
@@ -495,8 +493,7 @@ export default class LegionsProSelect extends AbstractSelect<IProSelectProps,ISt
     }
     onSearch(value: string) {
         if (!this.props.paging || this.props.remote) { // 没有开启分页或者开启远程搜索时，才触发上层onSearch
-            //@ts-ignore
-            this.search(this.props,value);
+            this.onGeneralSearch(this.props,value);
             if (this.props.paging) {
                 this.setState({
                     pageIndex: 1,
@@ -517,61 +514,20 @@ export default class LegionsProSelect extends AbstractSelect<IProSelectProps,ISt
         })
         this.props.onSelect && this.props.onSelect(value,option)
     }
-    translabelInValue(value,options = this.props.options): LabeledValue[] | LabeledValue {
-        return this.transformlabelInValue(value,this.props,options);
-        /* if (!this.props.labelInValue) {
-            if (Array.isArray(value)) {
-                const arr:LabeledValue[]=[]
-                value.forEach((item) => {
-                    const entity = options.find((moedl) => moedl.key === item)
-                    if (entity) {
-                        arr.push({
-                            key: item,
-                            label:entity.value,
-                            title: entity.title || entity.value,
-                            keyValue:entity.keyValue,
-                        })
-                    }
-                })
-                return arr
-            }
-            if (typeof value === 'string'||typeof value==='number') {
-                const entity = options.find((moedl) => moedl.key === value)
-                if (entity) {
-                    const values:LabeledValue = {
-                        key: value,
-                        label:entity.value,
-                        title:entity.title||entity.value,
-                        keyValue:entity.keyValue,
-                    }
-                    return values
-                }
-            }
-        } else {
-            if (value&&options.length) {
-                let entity = options.find((moedl) => moedl.key === value.key)
-                if(entity){
-                    return {...value,keyValue:entity.keyValue}
-                }
-            }
-            return {...value,keyValue:''}
-        } */
+    translabelInValue(value: SelectValue,options = this.props.options): LabeledValue[] | LabeledValue {
+        return transformlabelInValue(value,this.props,options);
     }
-    setValue(value,options = this.props.options,callback?: (values: LabeledValue[] | LabeledValue) => void) {
+    setValue(value: SelectValue,options = this.props.options,callback?: (values: LabeledValue[] | LabeledValue) => void) {
         const values = this.translabelInValue(value,options)
         this.setState({ value: values },() => {
             callback && callback(values)
         })
         return values;
     }
-    onChange = (value) => {
+    onChange = (value: SelectValue) => {
         const res = this.setValue(value,this.props.options);
-        if (this.props.labelInValue && this.props.mode !== 'multiple') {
-            this.props.onChange && this.props.onChange(value === void 0 ? value : res as SelectValue)
-        } else {
-            this.props.onChange && this.props.onChange(value,res)
-        }
-        if (value === undefined) {
+        this.props.onChange && this.props.onChange(value,res)
+        if (value === undefined) { // 执行清空选项时触发
             if (this.props.paging) {
                 this.setState({
                     pageIndex: 1,
@@ -588,7 +544,7 @@ export default class LegionsProSelect extends AbstractSelect<IProSelectProps,ISt
     }
     renderOption(): JSX.Element[] {
         const { optGroups,options,total,onPagingQuery } = this.props
-        let newData = [];
+        let newData: IOptions[] = [];
         if (this.props.paging && !this.props.remote) {
             const data = this.state.data.get(this.state.pageIndex.toString());
             if (data && data.length) {
@@ -599,8 +555,8 @@ export default class LegionsProSelect extends AbstractSelect<IProSelectProps,ISt
         }
         if (optGroups) {
             return optGroups.map((item,index) => {
-                const option = newData.filter((entity) => entity.group === item.label)
-                return <OptGroup label={item.label} key={`${item.label}${index}`}>
+                const option = newData.filter((entity) => entity.groupKey === item.key)
+                return <OptGroup label={item.label} key={`${item.label}${item.key}`}>
                     {option.map((option,key) => {
                         <Option
                             {...option}
@@ -639,15 +595,9 @@ export default class LegionsProSelect extends AbstractSelect<IProSelectProps,ISt
         }
 
     }
-    getLegionsPlugins() {
-        const legionsPlugins = window['legionsPlugins'];
-        if (legionsPlugins && legionsPlugins.MicroApps && legionsPlugins.MicroApps.getStore && typeof legionsPlugins.MicroApps.getStore === 'function') {
-            return legionsPlugins.MicroApps.getStore();
-        }
-        return null;
-    }
     renderSelelt() {
         const { className,placeholder,options,loading } = this.props;
+        const label = this.getLabel();
         return <Select
             ref={(ref) => {
                 if (!this.antdSelectRef && ref && ref['_reactInternalInstance'] && ref['_reactInternalInstance']['_renderedComponent'] && ref['_reactInternalInstance']['_renderedComponent']['_instance']) {
@@ -656,22 +606,21 @@ export default class LegionsProSelect extends AbstractSelect<IProSelectProps,ISt
             }}
             optionLabelProp="children"
             optionFilterProp="children"
-            className={`${this.SelectInputUid} ${this.props.selectAllClass} ${this.state.value ? 'legions-pro-select' : ''}`}
+            className={`${this.SelectInputUid} ${this.props.selectAllClass || ''} ${label ? 'legions-pro-select-copy' : ''} ${this.state.value ? 'legions-pro-select' : ''}`}
             filterOption={this.props.mode === 'combobox' ? false : this.state.keyWords ? true : false}
             notFoundContent={loading ? <Spin size="small" /> : options.length === 0 ? '暂无数据' : ''}
             {...this.props}
             getPopupContainer={(t) => {
-                if (this.props.getPopupContainer) {
+                if (this.props.getPopupContainer && typeof this.props.getPopupContainer === 'function') {
                     return this.props.getPopupContainer(t);
                 }
-                const legionsPlugins = this.getLegionsPlugins();
-                if (legionsPlugins && legionsPlugins.currentEnvironment === 'sandbox') {
+                if (window['proxy']) {
                     return document.getElementById(this.SelectInputUid)
                 }
                 return document.body
             }}
             /* filterOption={this.props.mode==='combobox'?false:true} */
-            dropdownClassName={`${this.uid} ${window['legionsPlugins'] ? 'legions-pro-select-option-line-h' : ''}`}
+            dropdownClassName={`${this.uid} ${window['proxy'] ? 'legions-pro-select-line' : ''}`}
             placeholder={placeholder}
             onChange={this.onChange}
             onFocus={this.onFocus.bind(this)}
@@ -688,10 +637,8 @@ export default class LegionsProSelect extends AbstractSelect<IProSelectProps,ISt
     }
     render() {
         this.consoleLog('componentWillUnmount-render')
-        const { className,placeholder,options,loading } = this.props;
-        const legionsPlugins = this.getLegionsPlugins();
         return (
-            (legionsPlugins && legionsPlugins.currentEnvironment === 'sandbox') ? < div style={{ position: 'relative',display: 'unset' }
+            (window['proxy']) ? < div style={{ position: 'relative',display: 'unset' }
             } id={this.SelectInputUid} >  {this.renderSelelt()} </div> : this.renderSelelt()
 
         )

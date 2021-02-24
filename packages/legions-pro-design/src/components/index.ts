@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-25 18:42:42
- * @LastEditTime: 2021-02-03 11:49:52
+ * @LastEditTime: 2021-02-23 16:50:15
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/index.ts
@@ -14,7 +14,7 @@ export { default as LegionsProBreadcrumb } from './LegionsProBreadcrumb';
 export { default as LegionsProDataImport } from './LegionsProDataImport';
 export { default as LegionsProDragger } from './LegionsProDragger';
 export { default as LegionsProException } from './LegionsProException';
-export { default as LegionsProErrorReportShow } from './LegionsProErrorReportShow';
+/* export { default as LegionsProErrorReportShow } from './LegionsProErrorReportShow'; */
 export { default as LegionsProForm } from './LegionsProForm';
 export { default as LegionsProIframe } from './LegionsProIframe';
 export { default as LegionsProInput } from './LegionsProInput';
@@ -35,6 +35,6 @@ export { default as LegionsProTextArea } from './LegionsProTextArea';
 export { default as LegionsProUEditor } from './LegionsProUEditor';
 export { default as LegionsProUpload } from './LegionsProUpload';
 export { default as LegionsProVirtualTable } from './LegionsProVirtualTable';
-export { default as LgeionsProVirtualList } from './LgeionsProVirtualList';
+/* export { default as LgeionsProVirtualList } from './LgeionsProVirtualList'; */
 export { default as LegionsProModalForm } from './LegionsProModalForm';
 export { default as LegionsProTabsForm } from './LegionsProTabsForm';

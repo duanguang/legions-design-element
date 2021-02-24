@@ -79,7 +79,7 @@ export default class LegionsProVirtualTable extends Component<IProTableProps,ISt
             bottomBlankHeight: 0,
             maxTotalHeight: 15000000,
             columns: this.tranMapColumns(),
-            data: this.props.data,
+            data: this.props.dataSource,
         }
     }
     ticking = false; // rAF 触发锁
@@ -162,7 +162,7 @@ export default class LegionsProVirtualTable extends Component<IProTableProps,ISt
     }
     componentWillReceiveProps(nextProps) {
         const { data } = nextProps
-        const { data: tdataSource } = this.props
+        const { dataSource: tdataSource } = this.props
         if (data && data !== tdataSource && !this.props.autoQuery) {
             this.setState({ data: data,thresholdCount: 40 },() => {
                 this.refScroll.scrollTop = 0
@@ -229,8 +229,8 @@ export default class LegionsProVirtualTable extends Component<IProTableProps,ISt
     }
 
     handleScrollEvent = (even?) => {
-        const { data } = this.props
-        this.handleScroll((this.props.autoQuery ? this.state.data : data || []).length)
+        const { dataSource } = this.props
+        this.handleScroll((this.props.autoQuery ? this.state.data : dataSource || []).length)
         /* this.lodaMore() */
         // this.ticking =false
     }
@@ -391,7 +391,7 @@ export default class LegionsProVirtualTable extends Component<IProTableProps,ISt
         endIn = this.getValidValue(endIn,startIndex,length)
         const dataSource = (data || []).slice(startIn,endIn)
         if (this.tabelRef) {
-            this.tabelRef.viewModel.renderData = [...dataSource]
+            this.tabelRef.viewModel._renderData = [...dataSource]
         }
         return (
             <div className={this.uid}>
@@ -406,7 +406,7 @@ export default class LegionsProVirtualTable extends Component<IProTableProps,ISt
                     onPagingQuery={this.onPagingQuery}
                     onReady={this.onReady.bind(this)}
                     pageSizeOptions={['100','500','1000','2000','3000','5000','10000']}
-                    data={this.props.autoQuery ? this.state.data : this.props.data}
+                    dataSource={this.props.autoQuery ? this.state.data : this.props.dataSource}
                     //@ts-ignore
                     onChange={(pagination,filters,sorter: { column: { sorter: boolean | ((a: any,b: any) => number) }; columnKey: string; field: string; order: "ascend" | "descend" }) => {
                         if (sorter.column && sorter.column.sorter && typeof sorter.column.sorter === 'boolean') {

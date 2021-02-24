@@ -18,7 +18,7 @@ import { IProTableProps,InstanceProTable,ITableColumnConfigProps,ITableColumnCon
 
 import LegionsProForm from '../LegionsProForm'
 import { InstanceForm } from '../LegionsProForm/interface';
-import { IProFormProps } from '../LegionsProForm/HlForm';
+import { IProFormProps } from '../LegionsProForm/ProForm';
 import styles from './style/index.modules.less';
 import { toJS } from 'mobx';
 import { cloneDeep } from 'lodash';

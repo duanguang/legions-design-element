@@ -381,7 +381,7 @@ var LegionsProDataImport = /** @class */ (function (_super) {
                         React.createElement("b", null, this.warnList.length))))),
             React.createElement("div", { className: styles.tableWrap }, 
             //@ts-ignore
-            React.createElement(LegionsProTable, __assign({ onPagingQuery: function () { return void 0; }, pageSize: 20, locale: { emptyText: React.createElement("div", { className: styles.emptyText }, "\u65E0\u6570\u636E\uFF0C\u8BF7\u70B9\u51FB\u3010\u9009\u62E9\u6587\u4EF6\u3011\u5BFC\u5165\u6570\u636E") }, columns: [], isOpenRowSelection: false, isOpenRowChange: false }, tableProps, { data: list })))));
+            React.createElement(LegionsProTable, __assign({ onPagingQuery: function () { return void 0; }, pageSize: 20, locale: { emptyText: React.createElement("div", { className: styles.emptyText }, "\u65E0\u6570\u636E\uFF0C\u8BF7\u70B9\u51FB\u3010\u9009\u62E9\u6587\u4EF6\u3011\u5BFC\u5165\u6570\u636E") }, columns: [], isOpenRowSelection: false, isOpenRowChange: false }, tableProps, { dataSource: list })))));
     };
     LegionsProDataImport.defaultProps = new HLDataImportProps;
     LegionsProDataImport = __decorate([

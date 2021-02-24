@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { AbstractSelect } from '../LegionsProSelect';
 import { InstanceFormElement } from './interface/formElement';
 
 export default abstract class  AbstractForm<P,S={}> extends Component<P,S> {

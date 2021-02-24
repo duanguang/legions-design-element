@@ -63,6 +63,8 @@ enum KeydownEnum{
      */
     enter=13,
 }
+const selectionSingleClass = 'ant-select-selection--single';
+const selectionMultipleClass = 'ant-select-selection--multiple';
 /**
  * 如果元素需要回车，或者上下键切换焦点，则一定要用此组件包裹
  *
@@ -96,7 +98,7 @@ export default class FormElement extends React.Component<IFormElementProps,{}>{
                 if (selectSelectionDom) {
                     selectSelectionDom.addEventListener('keydown',this.onKeyDownSelect.bind(this))
                 }
-                const selectSelectionMultipleDom = this.querySelectDom('ant-select-selection--multiple')
+                const selectSelectionMultipleDom = this.querySelectDom(selectionMultipleClass)
                 if (selectSelectionMultipleDom) {
                     selectSelectionMultipleDom.addEventListener('keydown',this.onkeyDownSelelctMultiple.bind(this))
                 }   
@@ -116,7 +118,7 @@ export default class FormElement extends React.Component<IFormElementProps,{}>{
      * @returns
      * @memberof FormElement
      */
-    querySelectDom(type:'ant-select-selection--single'|'ant-select-selection--multiple'='ant-select-selection--single') {
+    querySelectDom(type:'ant-select-selection--single'|'ant-select-selection--multiple'=selectionSingleClass) {
         const selectDom = document.querySelector(`.${this.uid}`);
         if (selectDom) {
             const selectSelectionDom = selectDom.getElementsByClassName(type)
@@ -130,7 +132,7 @@ export default class FormElement extends React.Component<IFormElementProps,{}>{
     componentDidMount(){
         this.addElement() 
         /**  只对下拉框键盘事件进行代理*/
-        if (this.querySelectDom('ant-select-selection--multiple') || this.querySelectDom()) {
+        if (this.querySelectDom(selectionMultipleClass) || this.querySelectDom()) {
             if (!this.onLoadingKeyDown) {
                 this.onLoadingKeyDown = this.onkeyDownProxy();
             }           
@@ -140,7 +142,7 @@ export default class FormElement extends React.Component<IFormElementProps,{}>{
     componentDidUpdate() {
         this.addElement()
         /**  只对下拉框键盘事件进行代理*/
-        if (this.querySelectDom('ant-select-selection--multiple') || this.querySelectDom()) {
+        if (this.querySelectDom(selectionMultipleClass) || this.querySelectDom()) {
             this.onLoadingKeyDown()
         }
     }
@@ -154,7 +156,7 @@ export default class FormElement extends React.Component<IFormElementProps,{}>{
             selectSelectionDom.removeEventListener('keydown',this.onKeyDownSelect.bind(this))
         }
 
-        const selectSelectionMultipleDom = this.querySelectDom('ant-select-selection--multiple')
+        const selectSelectionMultipleDom = this.querySelectDom(selectionMultipleClass)
         if (selectSelectionMultipleDom) {
             selectSelectionMultipleDom.removeEventListener('keydown',this.onkeyDownSelelctMultiple.bind(this))
         }
@@ -239,7 +241,7 @@ export default class FormElement extends React.Component<IFormElementProps,{}>{
                 if (el&&this.props.elType) {
                     const elChildren = el.getElementsByTagName(this.props.elType)
                     let elementTabindex =null
-                    const antSSelectSelection = el.getElementsByClassName('ant-select-selection--single')
+                    const antSSelectSelection = el.getElementsByClassName(selectionSingleClass)
                     if (antSSelectSelection && antSSelectSelection instanceof HTMLCollection && antSSelectSelection.length) {
                         if (findDOMNode(antSSelectSelection[0]).getAttribute('tabindex') !== null) { // 如果下拉列表自身设置了获取焦点方法，则抓取元素用于获取焦点
                             // @ts-ignore

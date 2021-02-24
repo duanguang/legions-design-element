@@ -82,7 +82,7 @@ export default class LegionsProTable<TableRow = {}, Model = {}> extends React.Co
         pageSize: number;
         selectedRowKeys: string[] | number[];
         _expandRow?: string;
-        _type?: "checkbox" | "radio";
+        _type?: "radio" | "checkbox";
         _rowSelectionClickType?: "radio" | "check";
         columns?: (TableColumnConfig<{}> & import("../store/pro.table/interface").ITableColumnConfig)[];
         _obTableListCustom: import("../models").TableColumnsContainerEntity;
@@ -108,7 +108,7 @@ export default class LegionsProTable<TableRow = {}, Model = {}> extends React.Co
         readonly computedUnShowColumns: import("../store/pro.table/interface").IShowColumns[];
         readonly computedStorageShowColumnsKeys: string;
         readonly computedRenderColumns: (TableColumnConfig<{}> & import("../store/pro.table/interface").ITableColumnConfig)[];
-        readonly tableXAutoWidth: string | number;
+        readonly tableXAutoWidth: React.ReactText;
         readonly computedTotal: number;
         _filterColumns: () => void;
         _moveRightShowColumns: (Columns: string[]) => void;

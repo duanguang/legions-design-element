@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-26 22:43:04
- * @LastEditTime: 2021-02-03 11:38:43
+ * @LastEditTime: 2021-02-23 16:00:00
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProSelect/interface.ts
@@ -26,7 +26,7 @@ export interface IProSelectProps extends SelectProps,Weaken<SelectProps,'onSearc
      * @memberof IHLSelectProps
      */
     onPagingQuery?: (pageIndex: number,pageSize: number,value?: string | string[] | number[] | LabeledValue | LabeledValue[]) => void
-    options: ISelectProps[];
+    options: IOptions[];
     optGroups?: Array<IOptGroupProps>
     loading?: boolean,
 
@@ -96,11 +96,11 @@ export interface IProSelectProps extends SelectProps,Weaken<SelectProps,'onSearc
 
     pageSize?: number;
     /**
-     * keyValue 如果有开启labelInValue ,且是多选时会返回此值
+     * packingValue 详细的选中数据
      *
      * @memberof IHLSelectProps
      */
-    onChange?: (value: SelectValue,keyValue?: LabeledValue[] | LabeledValue) => void;
+    onChange?: (value: SelectValue,packingValue?: LabeledValue[] | LabeledValue) => void;
 
     /**
      * 全选样式，表单select 内部组件使用
@@ -120,24 +120,24 @@ export interface LabeledValue {
     key: string | number;
     label: React.ReactNode;
     title?: number | string;
-    keyValue: string,
+    extendedField: string,
+    value: string;
 }
-export interface ISelectProps extends OptionProps {
+export interface IOptions extends OptionProps { 
     value: string,
     key: string,
     /**
      *
-     * 当vlue值是key和value组合时，可用这个来代替单纯的value
+     * 扩展字段，上层传入，选中时直接输出
      * @type {string}
      * @memberof ISelectProps
      */
-    keyValue?: string;
+    extendedField?: string;
     /**
     * 分组信息
     *
     * @type {(string|number)}
     * @memberof IAntdSelectOption
     */
-    group?: string | number;
-    label?: React.ReactNode|string;
+    groupKey?: string | number;
 }

@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-26 17:54:09
- * @LastEditTime: 2021-02-02 11:09:38
+ * @LastEditTime: 2021-02-24 10:50:03
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/store/pro.modal/modalView.ts
@@ -11,6 +11,7 @@ import { observable, action } from 'legions/store';
 import { IResizable } from './interface';
 import { computed } from 'mobx';
 export class ModalView {
+  @observable _modalType: 'drawer' | 'modal' | 'fullscreen' = 'modal';
   /**
    * 模态框标题
    *
@@ -231,10 +232,11 @@ export class ModalView {
         // 在顶部边框缩放大小时，调整上边距大小
         style['top'] = `${this.resizableData.top}px`;
       }
-      if (this.computedResizable.direction === 'left') {
-        /* const width = this.resizableData.right - this.resizableData.resizableX; */
-        if (this.placement !== 'right') {
+      if (this.computedResizable.direction === 'left'&&this._modalType!=='drawer') { //非抽屉模式 以左侧为焦点，向右缩放
+        if (this.placement !== 'right') { // 如果抽屉方向是非右侧，则以左侧为中心轴，进行缩放
           style['left'] = `${this.resizableData.resizableX}px`;
+        } else if(this.placement==='right'){
+          style['right']=`${this.resizableData.right}px`; // 如果抽屉方向右侧，则以右侧方向为中心轴，进行缩放
         }
       }
     }

@@ -72,6 +72,12 @@ cp -r -f types/components/LegionsProVirtualTable/* lib/LegionsProVirtualTable/
 cp -r -f types/components/LgeionsProVirtualList/* es/LgeionsProVirtualList/
 cp -r -f types/components/LgeionsProVirtualList/* lib/LgeionsProVirtualList/
 
+cp -r -f types/components/LegionsProTabsForm/* es/LegionsProTabsForm/
+cp -r -f types/components/LegionsProTabsForm/* lib/LegionsProTabsForm/
+
+cp -r -f types/components/LegionsProModalForm/* es/LegionsProModalForm/
+cp -r -f types/components/LegionsProModalForm/* lib/LegionsProModalForm/
+
 cp -r -f types/components/LegionsProErrorReportShow/* es/LegionsProErrorReportShow/
 cp -r -f types/components/LegionsProErrorReportShow/* lib/LegionsProErrorReportShow/
 cp -r -f src/components/LegionsProErrorReportShow/style/* lib/LegionsProErrorReportShow/style/
