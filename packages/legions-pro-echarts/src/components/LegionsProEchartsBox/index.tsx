@@ -34,7 +34,7 @@ export default class LegionsProEchartsBox extends React.Component<IProps> {
         return (
             <div style={mStyle} className={`${prefixCls}-box-wrap ${className}`}>
                 <div className={`${prefixCls}-box`} style={{height: '100%', paddingTop: title ? '36px' : void 0}}>
-                    { title && <div className="pro-box-title" attr-title={title}></div> }
+                    { title && <div className="pro-box-title"><span>{title}</span></div> }
                     <div className="pro-box-topLeft"></div>
                     <div className="pro-box-topRight"></div>
                     <div className="pro-box-botLeft"></div>
