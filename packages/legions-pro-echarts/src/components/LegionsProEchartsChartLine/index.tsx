@@ -35,7 +35,7 @@ export default class LegionsProEchartsChartLine extends React.Component<LegionsP
                 top:'20%',
                 left: '3%',
                 right: '4%',
-                bottom: '3%',
+                bottom: '5%',
                 containLabel: true,
             },
             xAxis: {
@@ -64,20 +64,15 @@ export default class LegionsProEchartsChartLine extends React.Component<LegionsP
                 },
                 show:true,
             },
-            label: {
-                show: true
-            },
             series: [
                 {
                     type: 'line',
-                    data: this.props.data || []
                 }
             ],
         };
     }
     render() {
         const option = merge(this.option, this.props.option)
-        console.log(option);
         return(
             <LegionsProEcharts<LineSeriesOption>
                 {...this.props}
