@@ -1,40 +1,25 @@
-import React from 'react';
-import  LegionsProEcharts from '../LegionsProEcharts';
-import { echarts, LegionsEchartsAutoQueryParams, LegionsProEchartsOption, LegionsProEchartsPropsTypes } from '../interface';
-import { HeadersPrams } from 'legions/fetch';
-import { observablePromise,observableViewModel } from 'brain-store-utils';
-import { observable } from 'mobx';
-import { LegionsFetch,MORE_IOCN } from '../core';
-import { merge } from 'lodash';
+/*
+ * @Author: linzeqin
+ * @Date: 2021-01-22 14:23:11
+ * @description: 折线图
+ */
+import { LineChart, LineSeriesOption } from 'echarts/charts';
 import 'echarts/lib/chart/line';
 import 'echarts/lib/component/toolbox';
-import { LineChart, LineSeriesOption } from 'echarts/charts'
-import { observer } from 'legions/store-react';
+import { merge } from 'lodash';
+import React from 'react';
+import { echarts, LegionsProEchartsOption, LegionsProEchartsPropsTypes } from '../interface';
+import LegionsProEcharts from '../LegionsProEcharts';
 
 echarts.use([LineChart])
-export class LegionsProEchartsChartLineProps extends LegionsProEchartsPropsTypes {
+export class LegionsProEchartsChartLineProps extends LegionsProEchartsPropsTypes<LineSeriesOption> {
     /** 数据 */
-    data?: LineSeriesOption['data'] = [{value: 100, name: 'demo'}];
-    /** 配置项 */
-    option?: LegionsProEchartsOption<LineSeriesOption> = {};
-    /** 请求托管 */
-    autoQuery?: LegionsEchartsAutoQueryParams
+    data?: LineSeriesOption['data'];
 }
-class ViewModel {
-    /** 请求托管response */
-    @observable response = observablePromise<LegionsEchartsAutoQueryParams['model']>()
-}
-@observer
+
 export default class LegionsProEchartsChartLine extends React.Component<LegionsProEchartsChartLineProps>{
     static defaultProps: Readonly<LegionsProEchartsChartLineProps> = new LegionsProEchartsChartLineProps()
-    viewModel = observableViewModel<ViewModel>(new ViewModel());
-    /** 自动接管接口返回数据 */
-    get responseData() {
-        if (this.viewModel.response.isResolved && this.props.autoQuery) {
-            return this.props.autoQuery.responseTransform(this.viewModel.response)
-        }
-        return {}
-    }
+
     /** 配置项 */
     get option(): LegionsProEchartsOption<LineSeriesOption> {
         return  {
@@ -79,58 +64,26 @@ export default class LegionsProEchartsChartLine extends React.Component<LegionsP
                 },
                 show:true,
             },
-            series: [],
+            label: {
+                show: true
+            },
+            series: [
+                {
+                    type: 'line',
+                    data: this.props.data || []
+                }
+            ],
         };
     }
-    componentDidMount(){
-        if(this.props.autoQuery){
-            this.getData()
-        }
-    }
-    /** 获取数据 */
-    getData(option?:Object){
-        const {autoQuery} = this.props
-        const server = new LegionsFetch
-        if(autoQuery){
-            if(autoQuery.method === 'post'){
-                const res = server.post({
-                    url:autoQuery.url as string,
-                    model:autoQuery.model,
-                    parameter: option ? { ...autoQuery.params, ...option } : autoQuery.params,
-                    headers:autoQuery.headerOption,
-                })
-                this.viewModel.response = observablePromise(res)
-            }else{
-                const res = server.get({
-                    url:autoQuery.url as string,
-                    model:autoQuery.model,
-                    parameter: option ? { ...autoQuery.params, ...option } : autoQuery.params,
-                    headers:autoQuery.headerOption,
-                })
-                this.viewModel.response = observablePromise(res)
-            }
-        }
-    }
     render() {
-        const loading = this.props.autoQuery ? this.viewModel.response.isPending : this.props.loading
-        const option = this.props.autoQuery ? merge(this.props.option,this.responseData) : this.props.option
+        const option = merge(this.option, this.props.option)
+        console.log(option);
         return(
-            <LegionsProEcharts
-            {...this.props}
-            onChartReady={(value)=>{
-                if(this.props.onChartReady){
-                    this.props.onChartReady(value,{
-                        methods:{
-                            onSearch:(option?:Object)=>{
-                                this.getData(option)
-                            }
-                        },
-                    })
-                }
-            }}
-            loading={loading}
-            option={merge(this.option, option)}
+            <LegionsProEcharts<LineSeriesOption>
+                {...this.props}
+                option={merge(this.option, option)}
             ></LegionsProEcharts>
         )
     }
 }
+

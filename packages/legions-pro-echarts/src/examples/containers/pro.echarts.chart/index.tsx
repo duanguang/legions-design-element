@@ -6,6 +6,7 @@
 import { Button } from 'antd';
 import echarts from 'echarts/lib/echarts';
 import { StockModeContainerEntity } from 'examples/models/mockEntity';
+import { mockService } from 'examples/services/mockService';
 import { observablePromise } from 'legions/store-utils';
 import React from 'react';
 import LegionsProEchartsBox from '../../../components/LegionsProEchartsBox';
@@ -27,46 +28,6 @@ export class LegionsProEchartsChartPieDemo extends React.Component {
     // @ts-ignore
     pieMethod: IExtendsOption = null;
     liquidFillValue = 0.6;
-    lineOptions: echarts.EChartOption = {
-        legend: {
-            data: ['出口', '进口'],
-        },
-        xAxis: {
-            data: ['202001', '202002', '202003', '202004', '202005', '202006', '202007', '202008', '202009', '202010'],
-        },
-        series: [
-            {
-                name: '出口',
-                type: 'line',
-                stack: '总量',
-                symbolSize: 5,
-                // tslint:disable-next-line: no-magic-numbers
-                data: [10.32, 12.43, 26.45, 20.09, 34.42, 11.43, 13.58, 25.47, 38.45, 31.58],
-                itemStyle: {
-                    normal: {
-                        label: { show: true },
-                    },
-                },
-            },
-            {
-                name: '进口',
-                type: 'line',
-                stack: '总量',
-                symbolSize: 5,
-                // tslint:disable-next-line: no-magic-numbers
-                data: [11.43, 13.58, 25.47, 38.45, 31.58, 26.45, 20.09, 34.42, 11.43, 42.56],
-                itemStyle: {
-                    normal: {
-                        color: '#ff9933',
-                        label: { show: true, color: '#ff9933' },
-                        lineStyle: {
-                            color: '#ff9933',
-                        },
-                    },
-                },
-            },
-        ],
-    };
     barOptions: echarts.EChartOption = {
         dataset: {
             dimensions: ['product', '2015', '2016', '2017'],
@@ -112,66 +73,17 @@ export class LegionsProEchartsChartPieDemo extends React.Component {
                     </ProCol>
                     <ProCol span={6}>
                         <LegionsProEchartsBox title="折线图" height="240px">
-                            <LegionsProEchartsChartLine option={this.lineOptions}></LegionsProEchartsChartLine>
+                            <LegionsProEchartsChartLine
+                                data={[11.43, 13.58, 25.47, 38.45, 31.58, 26.45, 20.09, 34.42, 11.43, 42.56]}
+                                option={{series: [{name: '进口', stack: '总量'}]}}
+                            ></LegionsProEchartsChartLine>
                         </LegionsProEchartsBox>
                     </ProCol>
                     <ProCol span={6}>
                         <LegionsProEchartsBox title="折线图自动托管数据" height="240px">
                             <LegionsProEchartsChartLine
-                                option={{
-                                    xAxis: {
-                                        data: [
-                                            '202001',
-                                            '202002',
-                                            '202003',
-                                            '202004',
-                                            '202005',
-                                            '202006',
-                                            '202007',
-                                            '202008',
-                                            '202009',
-                                            '202010',
-                                        ],
-                                    },
-                                }}
-                                onChartReady={(instance) => {
-                                    this.lineAutoRef = instance;
-                                }}
-                                autoQuery={{
-                                    model: StockModeContainerEntity,
-                                    url: 'https://gateway.hoolinks.com/api/gateway',
-                                    method: 'post',
-                                    params: { pageSize: 3000, pageNo: 1 },
-                                    headerOption: {
-                                        'api-target': 'https://uat-api.hoolinks.com/scmjg/dcl/exports-goods-model/list',
-                                        'api-cookie':
-                                            'SESSION=31c6b99d-a132-4dbf-9975-3b41160a340d; HL-Access-Token=YzMxMGM2MmMtYmU0NS00YzVjLWI0YzktM2QzNGNkZDczMWUx; UCTOKEN=YzMxMGM2MmMtYmU0NS00YzVjLWI0YzktM2QzNGNkZDczMWUx;',
-                                    },
-                                    responseTransform: (response: observablePromise.PramsResult<StockModeContainerEntity>) => {
-                                        if (response.isResolved && response.value.success) {
-                                            return {
-                                                series: response.value.result.records.slice(0, 2).map((item, index) => {
-                                                    return {
-                                                        name: item.id.toString(),
-                                                        type: 'line',
-                                                        stack: '总量',
-                                                        symbolSize: 5,
-                                                        // tslint:disable-next-line: no-magic-numbers
-                                                        data: [10.32, 12.43, 26.45, 20.09, 34.42, 11.43, 13.58, 25.47, 38.45, 31.58].map(
-                                                            (item) => item + index,
-                                                        ),
-                                                        itemStyle: {
-                                                            normal: {
-                                                                label: { show: true },
-                                                            },
-                                                        },
-                                                    };
-                                                }),
-                                            };
-                                        }
-                                        return {};
-                                    },
-                                }}></LegionsProEchartsChartLine>
+                                request={mockService.lineData}
+                            ></LegionsProEchartsChartLine>
                         </LegionsProEchartsBox>
                     </ProCol>
                 </ProRow>
@@ -201,39 +113,6 @@ export class LegionsProEchartsChartPieDemo extends React.Component {
                                             ['Milk Tea', 86.5, 92.1, 85.7, 83.1],
                                             ['Cheese Cocoa', 24.1, 67.2, 79.5, 86.4],
                                         ],
-                                    },
-                                }}
-                                autoQuery={{
-                                    model: StockModeContainerEntity,
-                                    url: 'https://gateway.hoolinks.com/api/gateway',
-                                    method: 'post',
-                                    params: { pageSize: 3000, pageNo: 1 },
-                                    headerOption: {
-                                        'api-target': 'https://uat-api.hoolinks.com/scmjg/dcl/exports-goods-model/list',
-                                        'api-cookie':
-                                            'SESSION=31c6b99d-a132-4dbf-9975-3b41160a340d; HL-Access-Token=YzMxMGM2MmMtYmU0NS00YzVjLWI0YzktM2QzNGNkZDczMWUx; UCTOKEN=YzMxMGM2MmMtYmU0NS00YzVjLWI0YzktM2QzNGNkZDczMWUx;',
-                                    },
-                                    responseTransform: (response: observablePromise.PramsResult<StockModeContainerEntity>) => {
-                                        if (response.isResolved && response.value.success) {
-                                            return {
-                                                series: [
-                                                    {
-                                                        type: 'bar',
-                                                        barWidth: '10%',
-                                                        barGap: '0',
-                                                        barCategoryGap: '15px',
-                                                    },
-                                                    {
-                                                        type: 'bar',
-                                                        barWidth: '10%',
-                                                        barGap: '15%',
-                                                    },
-                                                    { type: 'bar', barWidth: '10%', barGap: '25%', barCategoryGap: '5%' },
-                                                    { type: 'bar', barWidth: '10%', barGap: '25%', barCategoryGap: '5%' },
-                                                ],
-                                            };
-                                        }
-                                        return {};
                                     },
                                 }}></LegionsProEchartsChartBar>
                         </LegionsProEchartsBox>

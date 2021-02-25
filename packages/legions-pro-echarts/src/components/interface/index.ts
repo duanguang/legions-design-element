@@ -32,7 +32,7 @@ export interface LegionsProEchartsInstance {
 /**
  * 通过 ComposeOption 来组合出一个只有必须组件和图表的 Option 类型
  */
-export type LegionsProEchartsOption<P=never> = echarts.ComposeOption<
+export type LegionsProEchartsOption<P=TitleComponentOption> = echarts.ComposeOption<
   TitleComponentOption | LegendComponentOption | GridComponentOption | TooltipComponentOption | P
 >;
 
@@ -42,9 +42,11 @@ export type LegionsProEchartsOption<P=never> = echarts.ComposeOption<
  * @class LegionsProEchartsPropsTypes
  * @template EchartOption
  */
-export class LegionsProEchartsPropsTypes<P=never> {
+export class LegionsProEchartsPropsTypes<P=TitleComponentOption> {
+    /** echarts对象注入,只有在自定义导入echarts时使用 */
+    echarts?: typeof echarts | undefined
     /** 配置项 */
-    option?: LegionsProEchartsOption<P & never> = {};
+    option?: LegionsProEchartsOption<P>;
     /** 事件集合 */
     onEvents?: {[k: string]: Function} = {};
     /** 是否显示加载状态 */
@@ -60,7 +62,7 @@ export class LegionsProEchartsPropsTypes<P=never> {
     /** 容器类名 */
     className?: string = '';
     /** setOption时的附加配置项 */
-    setOptionConfig?: LegionsProEchartsOption<P & never> = {};
+    setOptionConfig?: LegionsProEchartsOption<P>;
     /** 由上层觉得是否需要setOption, 类似shouldComponentUpdate。默认为 true */
     shouldSetOption?: (
         prevProps: LegionsProEchartsPropsTypes<P>,
@@ -69,7 +71,7 @@ export class LegionsProEchartsPropsTypes<P=never> {
     /** echarts 实例化完成后执行并抛出实例 */
     onChartReady?: (instance: LegionsProEchartsInstance) => void = () => {};
     /** 请求托管 */
-    request?: (searchParams?: any) => Promise<LegionsProEchartsOption<P & never>>
+    request?: (searchParams?: any) => Promise<LegionsProEchartsOption<P>>
 }
 
 /**

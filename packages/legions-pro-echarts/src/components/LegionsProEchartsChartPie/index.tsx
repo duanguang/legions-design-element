@@ -19,6 +19,7 @@ export class LegionsProEchartsPieProps extends LegionsProEchartsPropsTypes<PieSe
     data?: PieSeriesOption['data'];
 }
 
+
 /** 饼图组件 */
 export default class LegionsProEchartsChartPie extends React.PureComponent<LegionsProEchartsPieProps>{
     static defaultProps: Readonly<LegionsProEchartsPieProps> = new LegionsProEchartsPieProps()
@@ -65,7 +66,7 @@ export default class LegionsProEchartsChartPie extends React.PureComponent<Legio
     render() {
         const option = merge(this.option, this.props.option)
         return (
-            <LegionsProEcharts
+            <LegionsProEcharts<PieSeriesOption>
                 {...this.props}
                 option={option}
             ></LegionsProEcharts>

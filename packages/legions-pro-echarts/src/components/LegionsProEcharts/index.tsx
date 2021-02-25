@@ -15,8 +15,8 @@ echarts.use(
     [TitleComponent, LegendComponent, TooltipComponent, GridComponent, CanvasRenderer]
 );
 
-export default class LegionsProEcharts extends LegionsProEchartsCore<LegionsProEchartsPropsTypes> {
-    static defaultProps: Readonly<LegionsProEchartsPropsTypes> = {
+export default class LegionsProEcharts<P> extends LegionsProEchartsCore<P> {
+    static defaultProps: Readonly<LegionsProEchartsPropsTypes<any>> = {
         ...new LegionsProEchartsPropsTypes(),
         theme,
     }

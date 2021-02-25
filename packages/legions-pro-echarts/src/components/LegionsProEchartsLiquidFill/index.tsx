@@ -13,10 +13,9 @@ import React from 'react';
 import { echarts, LegionsProEchartsOption, LegionsProEchartsPropsTypes } from '../interface';
 import LegionsProEcharts from '../LegionsProEcharts';
 
-export class LegionsProEchartsLiquidFillProps extends LegionsProEchartsPropsTypes {
+export class LegionsProEchartsLiquidFillProps extends LegionsProEchartsPropsTypes<any> {
     /** 数据 */
-    data?: LegionsProEchartsOption['data'];
-
+    data?: Object;
 }
 export default class LegionsProEchartsLiquidFill extends React.Component<LegionsProEchartsLiquidFillProps>{
     static defaultProps: Readonly<LegionsProEchartsLiquidFillProps> = new LegionsProEchartsLiquidFillProps()

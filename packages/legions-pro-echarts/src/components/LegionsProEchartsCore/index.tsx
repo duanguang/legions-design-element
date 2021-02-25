@@ -3,16 +3,14 @@ import { isEqual, pick } from 'lodash';
 import React, { Component } from 'react';
 import { bind, clear } from 'size-sensor';
 import { LegionsProEchartsPropsTypes } from '../interface';
-interface ILegionsProEchartsReactCore extends LegionsProEchartsPropsTypes {
-    echarts: typeof echarts
-}
-export default class LegionsProEchartsCore<P = {}> extends Component<LegionsProEchartsPropsTypes & P> {
-    static defaultProps: Readonly<LegionsProEchartsPropsTypes> = new LegionsProEchartsPropsTypes()
+export default class LegionsProEchartsCore<P> extends Component<LegionsProEchartsPropsTypes<P>> {
+    static defaultProps: Readonly<LegionsProEchartsPropsTypes<any>> = new LegionsProEchartsPropsTypes()
     echartsLib: typeof echarts;
     echartsElement: HTMLDivElement;
     echartObj: echarts.ECharts;
-    constructor(props: ILegionsProEchartsReactCore&P) {
+    constructor(props: LegionsProEchartsPropsTypes<P>) {
         super(props);
+        // @ts-ignore
         this.echartsLib = props.echarts;
         // @ts-ignore
         this.echartsElement = null;
@@ -64,7 +62,7 @@ export default class LegionsProEchartsCore<P = {}> extends Component<LegionsProE
         /* 获取Echarts实例，没有则初始化 */
         const echartObj = this.echartsLib.getInstanceByDom(this.echartsElement) || this.echartsLib.init(this.echartsElement, this.props.theme, this.props.opts);
         /* 初始配置 */
-        echartObj.setOption(this.props.option || {},{ ...this.props.setOptionConfig });
+        echartObj.setOption(this.props.option || {}, this.props.setOptionConfig);
         /* 是否显示lading状态 */
         if (this.props.loading) {
             echartObj.showLoading(void 0, this.props.loadingOption)
