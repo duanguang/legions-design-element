@@ -3,136 +3,90 @@
  * @Date: 2020-12-14 16:10:47
  * @LastEditTime: 2020-12-18 16:42:03
  * @LastEditors: duanguang
- * @Description: 饼图组件
+ * @Description: 水滴波纹组件
  * @FilePath: /legions-design-element/packages/legions-pro-echarts/src/components/LegionsProEchartsLiquidFill/index.tsx
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
-import React from 'react';
-import  LegionsProEcharts from '../LegionsProEcharts';
-import { LegionsEchartsAutoQueryParams, LegionsProEchartsOption, LegionsProEchartsPropsTypes } from '../interface';
-import * as echarts from 'echarts/core';
-import { HeadersPrams } from 'legions/fetch';
-import { observablePromise,observableViewModel } from 'brain-store-utils';
-import { observable } from 'mobx';
-import { LegionsFetch } from '../core';
-import { merge } from 'lodash';
 import 'echarts-liquidfill';
+import { merge } from 'lodash';
+import React from 'react';
+import { echarts, LegionsProEchartsOption, LegionsProEchartsPropsTypes } from '../interface';
+import LegionsProEcharts from '../LegionsProEcharts';
 
-export class LegionsProEchartsLiquidFillProps extends LegionsProEchartsPropsTypes<IOptions> {
+export class LegionsProEchartsLiquidFillProps extends LegionsProEchartsPropsTypes {
     /** 数据 */
-    data?: LegionsProEchartsOption['data'] = [{value: 100, name: 'demo'}];
-/** 配置项 */
-    option?: IOptions = {};
-    /** 请求托管 */
-    autoQuery?: LegionsEchartsAutoQueryParams
-}
-interface IOptions extends  Omit<LegionsProEchartsOption,'series'>{
-    series?: LegionsProEchartsOption['Series'][]
-}
-/* interface ISeries extends Weaken<echarts.EChartOption,'series'>{
+    data?: LegionsProEchartsOption['data'];
 
-} */
-class ViewModel {
-    /** 请求托管response */
-    @observable response = observablePromise<LegionsEchartsAutoQueryParams['model']>()
 }
-/** 水滴波纹组件 */
 export default class LegionsProEchartsLiquidFill extends React.Component<LegionsProEchartsLiquidFillProps>{
     static defaultProps: Readonly<LegionsProEchartsLiquidFillProps> = new LegionsProEchartsLiquidFillProps()
-    viewModel = observableViewModel<ViewModel>(new ViewModel());
-    /** 自动接管接口返回数据 */
-    get responseData() {
-        if (this.viewModel.response.isResolved&&this.props.autoQuery) {
-            return this.props.autoQuery.responseTransform(this.viewModel.response)
-        }
-        return []
-    }
-    /** 配置项 */
-    get option(): IOptions {
-        return {
-            backgroundColor: new echarts.graphic['RadialGradient'](0.3, 0.3, 0.8, [{
-                offset: 0,
-                color: '#1D263F'
-            }, {
-                offset: 1,
-                color: '#111D35'
-            }]),
-            title: [{
-                text: (0.2 * 100).toFixed(0) + '{a|%}',
-                textStyle: {
-                    fontSize: 25,
-                    fontFamily: 'Microsoft Yahei',
-                    fontWeight: 'normal',
-                    color: '#bcb8fb',
-                    rich: {
-                        a: {
-                            fontSize: 25,
-                        }
-                    },
-                },
-                //@ts-ignore
-                x: 'center',
-                top:'33%',
-            }],
 
+    /** 配置项 */
+    get option() {
+        return {
             series: [
                 {
-
                     type: 'liquidFill',
+                    data: this.props.data || [],
                     radius: '80%',
                     center: ['50%', '50%'],
-                    //  shape: 'roundRect',
-                    data: [{
-                        name: '流量统计',
-                       value:0.2,
-                    },0.2,0.2,0.2,],
-
+                    color: [new echarts.graphic.LinearGradient(0,0,0,1,[{
+                        offset: 1,
+                        color: 'rgba(58, 71, 212, 0)'
+                    }, {
+                        offset: 0.5,
+                        color: 'rgba(31, 222, 225, .2)'
+                    }, {
+                        offset: 0,
+                        color: 'rgba(31, 222, 225, 1)'
+                    }],false)],
                     label: {
-                        show:true,
-                        position: ['50%','60%'],
-                    }
+                        show: true,
+                        color: '#aab2fa',
+                        insideColor: '#fff',
+                        fontSize: 24,
+                        top:'68%',
+                    },
+                    outline: {
+                        borderDistance: 0,
+                        itemStyle: {
+                            borderWidth: 8,
+                            borderColor: new echarts.graphic.LinearGradient(0,0,0,1,[{
+                                offset: 0,
+                                color: 'rgba(69, 73, 240, 0)'
+                            }, {
+                                offset: 0.5,
+                                color: 'rgba(69, 73, 240, .25)'
+                            }, {
+                                offset: 1,
+                                color: 'rgba(69, 73, 240, 1)'
+                            }],false),
+                            shadowBlur: 5,
+                            shadowColor: '#000',
+                        }
+                    },
+                    backgroundStyle: {
+                        color: new echarts.graphic.LinearGradient(1,0,0.5,1,[{
+                            offset: 1,
+                            color: 'rgba(68, 145, 253, 0)'
+                        }, {
+                            offset: 0.5,
+                            color: 'rgba(68, 145, 253, .25)'
+                        }, {
+                            offset: 0,
+                            color: 'rgba(68, 145, 253, 1)'
+                        }],false),
+                    },
                 },
             ],
         };
     }
-    componentDidMount() {
-        if (this.props.autoQuery) {
-            this.getData()
-        }
-    }
-    /** 获取数据 */
-    getData() {
-        const { autoQuery } = this.props;
-        const server = new LegionsFetch()
-        if (autoQuery) {
-            if (autoQuery.method === 'post') {
-                const res = server.post({
-                    url: autoQuery.url as string,
-                    model: autoQuery.model,
-                    parameter: autoQuery.params,
-                    headers: autoQuery.headerOption,
-                })
-                this.viewModel.response = observablePromise(res)
-            } else {
-                const res = server.get({
-                    url: autoQuery.url as string,
-                    model: autoQuery.model,
-                    parameter: autoQuery.params,
-                    headers: autoQuery.headerOption,
-                })
-                this.viewModel.response = observablePromise(res)
-            }
-        }
-
-    }
     render() {
-        const { option } = this.props;
-        const loading = this.props.autoQuery ? this.viewModel.response.isPending : this.props.loading;
+        const option = merge(this.option, this.props.option)
         return (
             <LegionsProEcharts
                 {...this.props}
-                loading={loading}
-                option={merge(this.option, option)}
+                option={option}
             ></LegionsProEcharts>
         )
     }

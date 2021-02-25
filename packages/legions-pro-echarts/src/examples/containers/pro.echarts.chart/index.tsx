@@ -92,29 +92,6 @@ export class LegionsProEchartsChartPieDemo extends React.Component {
             { type: 'bar', barWidth: '10%', barGap: '25%', barCategoryGap: '5%' },
         ],
     };
-    liquidFillOptions: echarts.EChartOption = {
-        title: [
-            {
-                text: (this.liquidFillValue * 100).toFixed(0) + '{a|%}',
-            },
-        ],
-        series: [
-            {
-                data: [
-                    {
-                        name: '流量统计',
-                        value: 0.8,
-                    },
-                    this.liquidFillValue,
-                    this.liquidFillValue,
-                    this.liquidFillValue,
-                ],
-                label: {
-                    show: false,
-                },
-            },
-        ],
-    };
 
     render() {
         return (
@@ -200,6 +177,11 @@ export class LegionsProEchartsChartPieDemo extends React.Component {
                 </ProRow>
                 <ProRow>
                     <ProCol span={6}>
+                        <LegionsProEchartsBox height="240px">
+                            <LegionsProEchartsLiquidFill data={[0.5, 0.4, 0.4, 0.4]}></LegionsProEchartsLiquidFill>
+                        </LegionsProEchartsBox>
+                    </ProCol>
+                    <ProCol span={6}>
                         <LegionsProEchartsBox height="240px" title="柱状图">
                             <LegionsProEchartsChartBar
                                 option={{
@@ -259,11 +241,6 @@ export class LegionsProEchartsChartPieDemo extends React.Component {
                     <ProCol span={6}>
                         <LegionsProEchartsBox height="240px">
                             <LegionsProEchartsChartCard total={126} title={'本月新增审核企业'}></LegionsProEchartsChartCard>
-                        </LegionsProEchartsBox>
-                    </ProCol>
-                    <ProCol span={6}>
-                        <LegionsProEchartsBox height="240px">
-                            <LegionsProEchartsLiquidFill option={this.liquidFillOptions}></LegionsProEchartsLiquidFill>
                         </LegionsProEchartsBox>
                     </ProCol>
                 </ProRow>
