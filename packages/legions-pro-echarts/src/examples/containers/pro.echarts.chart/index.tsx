@@ -120,54 +120,18 @@ export class LegionsProEchartsChartPieDemo extends React.Component {
         return (
             <LegionsProEchartsLayout gutter={6}>
                 <ProRow>
-                    <Button
-                        onClick={() => {
-
-                        }}>
-                        饼图数据刷新测试
-                    </Button>
-                </ProRow>
-                <ProRow>
                     <ProCol span={6}>
                         <LegionsProEchartsBox title="饼图" height="240px">
                             <LegionsProEchartsChartPie
-                                option={{
-                                    legend: {
-                                        bottom: 20,
-                                        itemWidth: 12,
-                                        itemHeight: 5,
-                                    },
-                                    series: [
-                                        {
-                                            radius: ['28%', '40%'],
-                                            center: ['50%', '40%'],
-                                            data: [
-                                                { value: 5210, name: '保税跨境', selected: true, itemStyle: { color: '#407fcc' } },
-                                                { value: 9610, name: '跨境直邮', selected: true, itemStyle: { color: '#00D2FF' } },
-                                            ],
-                                        },
-                                    ],
-                                }}
-                                onChartReady={(instance) => {
-                                    this.chartsRef = instance;
-                                }}></LegionsProEchartsChartPie>
+                                data={[
+                                    { value: 5210, name: '保税跨境', selected: true, itemStyle: { color: '#407fcc' } },
+                                    { value: 9610, name: '跨境直邮', selected: true, itemStyle: { color: '#00D2FF' } },
+                                ]}
+                            ></LegionsProEchartsChartPie>
                         </LegionsProEchartsBox>
                     </ProCol>
                     <ProCol span={6}>
-                        <LegionsProEchartsBox height="240px" title="饼图数据自动托管">
-                            <LegionsProEchartsChartPie
-                                option={{
-                                    legend: {
-                                        bottom: 20,
-                                        itemWidth: 12,
-                                        itemHeight: 5,
-                                    },
-                                }}
-                                onChartReady={(instance) => {
-                                    this.chartsRef = instance;
-                                }}
-                                ></LegionsProEchartsChartPie>
-                        </LegionsProEchartsBox>
+                        <ChartsPieDemo></ChartsPieDemo>
                     </ProCol>
                     <ProCol span={6}>
                         <LegionsProEchartsBox title="折线图" height="240px">
@@ -301,11 +265,6 @@ export class LegionsProEchartsChartPieDemo extends React.Component {
                         <LegionsProEchartsBox height="240px">
                             <LegionsProEchartsLiquidFill option={this.liquidFillOptions}></LegionsProEchartsLiquidFill>
                         </LegionsProEchartsBox>
-                    </ProCol>
-                </ProRow>
-                <ProRow>
-                    <ProCol span={6}>
-                        <ChartsPieDemo></ChartsPieDemo>
                     </ProCol>
                 </ProRow>
             </LegionsProEchartsLayout>
