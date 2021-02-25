@@ -4,7 +4,6 @@
  * @description: charts demo合集
  */
 import { Button } from 'antd';
-import { IExtendsOption } from 'components/interface';
 import echarts from 'echarts/lib/echarts';
 import { StockModeContainerEntity } from 'examples/models/mockEntity';
 import { observablePromise } from 'legions/store-utils';
@@ -16,6 +15,7 @@ import LegionsProEchartsChartLine from '../../../components/LegionsProEchartsCha
 import LegionsProEchartsChartPie from '../../../components/LegionsProEchartsChartPie';
 import LegionsProEchartsLayout from '../../../components/LegionsProEchartsLayout';
 import LegionsProEchartsLiquidFill from '../../../components/LegionsProEchartsLiquidFill';
+import ChartsPieDemo from './charts.pie';
 const { ProRow, ProCol } = LegionsProEchartsLayout;
 export class LegionsProEchartsChartPieDemo extends React.Component {
     //@ts-ignore
@@ -122,7 +122,7 @@ export class LegionsProEchartsChartPieDemo extends React.Component {
                 <ProRow>
                     <Button
                         onClick={() => {
-                            this.pieMethod.methods.onSearch({ pageSize: 10 });
+
                         }}>
                         饼图数据刷新测试
                     </Button>
@@ -163,42 +163,10 @@ export class LegionsProEchartsChartPieDemo extends React.Component {
                                         itemHeight: 5,
                                     },
                                 }}
-                                onChartReady={(instance, methodRef) => {
+                                onChartReady={(instance) => {
                                     this.chartsRef = instance;
-                                    this.pieMethod = methodRef!;
                                 }}
-                                autoQuery={{
-                                    model: StockModeContainerEntity,
-                                    url: 'https://gateway.hoolinks.com/api/gateway',
-                                    method: 'post',
-                                    params: { pageSize: 3000, pageNo: 1 },
-                                    headerOption: {
-                                        'api-target': 'https://uat-api.hoolinks.com/scmjg/dcl/exports-goods-model/list',
-                                        'api-cookie':
-                                            'SESSION=31c6b99d-a132-4dbf-9975-3b41160a340d; HL-Access-Token=YzMxMGM2MmMtYmU0NS00YzVjLWI0YzktM2QzNGNkZDczMWUx; UCTOKEN=YzMxMGM2MmMtYmU0NS00YzVjLWI0YzktM2QzNGNkZDczMWUx;',
-                                    },
-                                    responseTransform: (response: observablePromise.PramsResult<StockModeContainerEntity>) => {
-                                        if (response.isResolved && response.value.success) {
-                                            return {
-                                                series: [
-                                                    {
-                                                        radius: ['28%', '40%'],
-                                                        center: ['50%', '40%'],
-                                                        data: response.value.result.records.slice(0, 2).map((item, index) => {
-                                                            return {
-                                                                value: item.id,
-                                                                name: item.bizopEtpsNm,
-                                                                selected: true,
-                                                                itemStyle: { color: '#407fcc' },
-                                                            };
-                                                        }),
-                                                    },
-                                                ],
-                                            };
-                                        }
-                                        return {};
-                                    },
-                                }}></LegionsProEchartsChartPie>
+                                ></LegionsProEchartsChartPie>
                         </LegionsProEchartsBox>
                     </ProCol>
                     <ProCol span={6}>
@@ -225,9 +193,8 @@ export class LegionsProEchartsChartPieDemo extends React.Component {
                                         ],
                                     },
                                 }}
-                                onChartReady={(instance, extendsOption) => {
+                                onChartReady={(instance) => {
                                     this.lineAutoRef = instance;
-                                    this.lineAutoMethod = extendsOption!;
                                 }}
                                 autoQuery={{
                                     model: StockModeContainerEntity,
@@ -334,6 +301,11 @@ export class LegionsProEchartsChartPieDemo extends React.Component {
                         <LegionsProEchartsBox height="240px">
                             <LegionsProEchartsLiquidFill option={this.liquidFillOptions}></LegionsProEchartsLiquidFill>
                         </LegionsProEchartsBox>
+                    </ProCol>
+                </ProRow>
+                <ProRow>
+                    <ProCol span={6}>
+                        <ChartsPieDemo></ChartsPieDemo>
                     </ProCol>
                 </ProRow>
             </LegionsProEchartsLayout>

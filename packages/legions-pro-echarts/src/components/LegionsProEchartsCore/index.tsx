@@ -10,11 +10,14 @@ export default class LegionsProEchartsCore<P = {}> extends Component<LegionsProE
     static defaultProps: Readonly<LegionsProEchartsPropsTypes> = new LegionsProEchartsPropsTypes()
     echartsLib: typeof echarts;
     echartsElement: HTMLDivElement;
+    echartObj: echarts.ECharts;
     constructor(props: ILegionsProEchartsReactCore&P) {
         super(props);
         this.echartsLib = props.echarts;
         // @ts-ignore
         this.echartsElement = null;
+        // @ts-ignore
+        this.echartObj = null;
     }
     componentDidMount() {
         this.rerender();
@@ -68,14 +71,13 @@ export default class LegionsProEchartsCore<P = {}> extends Component<LegionsProE
         }else {
             echartObj.hideLoading();
         }
+        this.echartObj = echartObj
         return echartObj
     };
     rerender = () => {
-        const { onEvents,onChartReady } = this.props;
+        const { onEvents } = this.props;
         const echartObj = this.renderEchartDom();
         this.bindEvents(echartObj,onEvents || {});
-        // @ts-ignore on chart ready
-        if (typeof onChartReady === 'function' && this.props.onChartReady) this.props.onChartReady(echartObj);
         // on resize
         if (this.echartsElement) {
             bind(this.echartsElement,() => {

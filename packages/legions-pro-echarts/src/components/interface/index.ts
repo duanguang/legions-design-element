@@ -17,11 +17,16 @@ import {
     LegendComponentOption,
 } from 'echarts/components';
 
-export interface IMethods{
-    onSearch:(option?:Object)=>void
-}
-export interface IExtendsOption{
-    methods:IMethods
+/**
+ * onChartReady抛出实体
+ * @export
+ * @interface ProEchartsInstance
+ */
+export interface LegionsProEchartsInstance {
+    echarts?: echarts.EChartsType;
+    methods?: {
+        onSearch: <T=any>(option?: T)=>void
+    };
 }
 
 /**
@@ -45,7 +50,7 @@ export class LegionsProEchartsPropsTypes<P=never> {
     /** 是否显示加载状态 */
     loading?: boolean = false;
     /** loading状态配置 */
-    loadingOption?: Object = {};
+    loadingOption?: Object = {maskColor: 'rgba(0, 0, 0, 0.2)', color: '#8dd5f5', textColor: '#fff', text: ''};
     /** 初始化附加参数 */
     opts?: Parameters<typeof echarts.init>[2] = {};
     /** 初始化主题 */
@@ -62,7 +67,9 @@ export class LegionsProEchartsPropsTypes<P=never> {
         currProps: LegionsProEchartsPropsTypes<P>
     ) => boolean = () => true;
     /** echarts 实例化完成后执行并抛出实例 */
-    onChartReady?: (instance: echarts.ECharts,extendsOption?:IExtendsOption) => void = () => {};
+    onChartReady?: (instance: LegionsProEchartsInstance) => void = () => {};
+    /** 请求托管 */
+    request?: (searchParams?: any) => Promise<LegionsProEchartsOption<P & never>>
 }
 
 /**
