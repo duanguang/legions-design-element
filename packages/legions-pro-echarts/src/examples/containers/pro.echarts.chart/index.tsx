@@ -3,8 +3,7 @@
  * @Date: 2021-01-22 14:23:11
  * @description: charts demo合集
  */
-import { LegionsProEchartsOption } from 'components/interface';
-import { BarSeriesOption } from 'echarts/charts';
+import { Radio, Table, Tabs } from 'antd';
 import { mockService } from 'examples/services/mockService';
 import React from 'react';
 import LegionsProEchartsBox from '../../../components/LegionsProEchartsBox';
@@ -47,10 +46,15 @@ export class LegionsProEchartsChartPieDemo extends React.Component {
                     <ProCol span={6}>
                         <LegionsProEchartsBox title="折线图" height="240px">
                             <LegionsProEchartsChartLine
-                                option={{series: [{
-                                    name: '进口', stack: '总量',
-                                    data: [11.43, 13.58, 25.47, 38.45, 31.58, 26.45, 20.09, 34.42, 11.43, 42.56],
-                                }]}}
+                                option={{
+                                    xAxis: {
+                                        data: ['A','B','C','D','E','F','G','H','I','J'],
+                                    },
+                                    series: [{
+                                        name: '进口', stack: '总量',
+                                        data: [11.43, 13.58, 25.47, 38.45, 31.58, 26.45, 20.09, 34.42, 11.43, 42.56],
+                                    }]
+                                }}
                             ></LegionsProEchartsChartLine>
                         </LegionsProEchartsBox>
                     </ProCol>
@@ -91,6 +95,13 @@ export class LegionsProEchartsChartPieDemo extends React.Component {
                     <ProCol span={6}>
                         <LegionsProEchartsBox height="240px">
                             <LegionsProEchartsChartCard total={126} title={'本月新增审核企业'}></LegionsProEchartsChartCard>
+                        </LegionsProEchartsBox>
+                    </ProCol>
+                </ProRow>
+                <ProRow>
+                    <ProCol span={6}>
+                        <LegionsProEchartsBox title="词云" height="240px">
+
                         </LegionsProEchartsBox>
                     </ProCol>
                 </ProRow>

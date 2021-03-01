@@ -23,7 +23,7 @@ export default class LegionsProEchartsChartBar extends React.Component<LegionsPr
 
     /** 配置项 */
     get option(): LegionsProEchartsOption<BarSeriesOption> {
-        const a: LegionsProEchartsOption<BarSeriesOption> = {
+        return {
             tooltip: {
                 trigger: 'axis',
                 axisPointer: {
@@ -77,7 +77,6 @@ export default class LegionsProEchartsChartBar extends React.Component<LegionsPr
                 type: 'bar',
             }],
         };
-        return a
     }
     render() {
         return(

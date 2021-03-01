@@ -7,7 +7,7 @@ import { LegionsProEchartsBox, LegionsProEchartsLayout, LegionsProEchartsTable }
 import React from 'react';
 const { ProRow, ProCol } = LegionsProEchartsLayout;
 
-export class ListBaseDemo extends React.Component{
+export class TableDemo extends React.Component{
     render() {
         return <LegionsProEchartsLayout gutter={6}>
             <ProRow>

@@ -13,8 +13,7 @@ import LegionsProEcharts from '../LegionsProEcharts';
 
 echarts.use([LineChart])
 export class LegionsProEchartsChartLineProps extends LegionsProEchartsPropsTypes<LineSeriesOption> {
-    /** 数据 */
-    data?: LineSeriesOption['data'];
+
 }
 
 export default class LegionsProEchartsChartLine extends React.Component<LegionsProEchartsChartLineProps>{

@@ -32,7 +32,7 @@ export default class LegionsProEchartsChartPie extends React.PureComponent<Legio
                 formatter: '{b} : {c} ({d}%)',
             },
             legend: {
-                bottom: 30,
+                bottom: 20,
                 itemWidth: 10,
                 itemHeight: 4,
             },

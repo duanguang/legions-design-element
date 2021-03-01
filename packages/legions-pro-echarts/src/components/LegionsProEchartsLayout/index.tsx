@@ -101,7 +101,11 @@ export default  class LegionsProEchartsLayout extends React.Component<LayoutProp
             } catch (error) {
                 console.error(error)
             }
-            return React.cloneElement(item, newProps, newChildren);
+            if (newChildren.length) {
+                return React.cloneElement(item, newProps);
+            } else {
+                return React.cloneElement(item, newProps, newChildren);
+            }
         })
     }
     render() {

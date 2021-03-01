@@ -4,9 +4,9 @@ import { LegionsProEchartsBoxDemo } from './pro.echarts.box';
 import { LegionsProEchartsChartPieDemo } from './pro.echarts.chart';
 import { LayoutBaseDemo } from './pro.echarts.layout/base';
 import { LayoutFullDemo } from './pro.echarts.layout/full';
-import { ListBaseDemo } from './pro.echarts.table/base';
 import { ProProgressDemo } from './pro.progress/base';
 import { ProPieDemo } from './pro.echart.pie/base';
+import AntdComponentDemo from './pro.echarts.antd';
 
 export default class App extends React.Component {
     unstable_handleError(e) {
@@ -22,8 +22,8 @@ export default class App extends React.Component {
                 <Route path="/layoutBase" component={LayoutBaseDemo}></Route>
                  {/* 页面容器，满屏显示，超出隐藏 */}
                 <Route path="/layoutFull" component={LayoutFullDemo}></Route>
-                 {/* 基础表格 */}
-                <Route path="/listBase" component={ListBaseDemo}></Route>
+                 {/* 基础组件 */}
+                <Route path="/antd" component={AntdComponentDemo}></Route>
                  {/* 列表模型 */}
                 <Route path="/box" component={LegionsProEchartsBoxDemo}></Route>
                  {/* chart合集 */}

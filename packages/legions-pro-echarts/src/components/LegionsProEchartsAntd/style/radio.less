@@ -1,0 +1,54 @@
+@import '../../style/index';
+
+@radioClsDefault: ~'@{prefixCls}-radio-default';
+@radioClsCard: ~'@{prefixCls}-radio-card';
+
+.@{radioClsDefault} {
+    .ant-radio-button-wrapper{
+        background-color: #075b72;
+        color: rgba(255, 255, 255, 0.4);
+        box-shadow: unset;
+        border-color: #0490aa;
+        border-radius: 0!important;
+        &:not(:first-child)::before{
+            background-color: #0490aa;
+        }
+        &:first-child{
+            border-color: #0490aa;
+        }
+        &::after{
+            content: '';
+            display: block;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            border: 1px solid #02070f;
+        }
+        &-checked{
+            border-color: #54C7E7!important;
+            box-shadow: -1px 0 0 0 #54C7E7;
+            color: #fff;
+            background-color: #19829F;
+        }
+    }
+}
+
+.@{radioClsCard} {
+    .ant-radio-button-wrapper{
+        background-color: transparent;
+        color: #146983;
+        box-shadow: unset;
+        border: 0;
+        border-radius: 0!important;
+        &:not(:first-child)::before{
+            background-color: transparent;
+        }
+        &-checked{
+            border: 0;
+            border-bottom: 1px solid #54C7E7;
+            color: #00D2FF;
+        }
+    }
+}

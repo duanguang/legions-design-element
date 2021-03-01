@@ -10,7 +10,7 @@
 import 'echarts-liquidfill';
 import { merge } from 'lodash';
 import React from 'react';
-import { echarts, LegionsProEchartsOption, LegionsProEchartsPropsTypes } from '../interface';
+import { echarts, LegionsProEchartsPropsTypes } from '../interface';
 import LegionsProEcharts from '../LegionsProEcharts';
 
 export class LegionsProEchartsLiquidFillProps extends LegionsProEchartsPropsTypes<any> {
