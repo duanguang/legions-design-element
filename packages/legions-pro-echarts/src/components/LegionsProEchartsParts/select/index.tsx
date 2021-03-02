@@ -19,7 +19,7 @@ export default class LegionsProEchartsSelect extends React.Component<SelectProps
             ...style,
         }
         return (
-            <Select {...props} style={mStyle} className={`${className} ${prefixCls}-select`}>
+            <Select {...props} style={mStyle} className={`${prefixCls}-select ${className}`}>
                 {this.props.children}
             </Select>
         )

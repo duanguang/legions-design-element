@@ -1,0 +1,18 @@
+@import '../../style/index';
+
+@inputDatePicker: ~'@{prefixCls}-date-picker';
+@inputRangeDatePicker: ~'@{prefixCls}-rangeDate-picker';
+@inputMonthDatePicker: ~'@{prefixCls}-monthDate-picker';
+
+.@{inputDatePicker},
+.@{inputMonthDatePicker},
+.@{inputRangeDatePicker} {
+    .ant-calendar-picker-input{
+        color: #fff;
+        background-color: rgba(6,41,70, 0.6);
+        border-color: #0490aa;
+    }
+    .ant-calendar-picker-icon::after{
+        color: #fff;
+    }
+}

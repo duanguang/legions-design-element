@@ -15,7 +15,7 @@ export default class LegionsProEchartsInput extends React.Component<InputProps> 
     render() {
         const { className = '',  ...props} = this.props;
         return (
-            <Input {...props} className={`${className} ${prefixCls}-input`}/>
+            <Input {...props} className={`${prefixCls}-input ${className}`}/>
         )
     }
 }

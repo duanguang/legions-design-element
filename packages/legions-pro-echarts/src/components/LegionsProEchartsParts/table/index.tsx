@@ -16,13 +16,13 @@ interface IProps<T> extends TableProps<T> {
 }
 export default class LegionsProEchartsTable<T> extends React.Component<IProps<T>> {
     render() {
-        const {className,isFullScreen, ...props} = this.props;
+        const {className = '', isFullScreen, ...props} = this.props;
         const full = isFullScreen ? `${prefixCls}-table-full` : '';
         return (
             <Table<T>
                 size="middle"
                 {...props}
-                className={`${prefixCls}-table ${full} ${className ? className : ''}`}
+                className={`${prefixCls}-table ${full} ${className}`}
             ></Table>
         )
     }

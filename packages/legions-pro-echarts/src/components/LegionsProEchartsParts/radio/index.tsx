@@ -25,7 +25,7 @@ export default class LegionsProEchartsRadio extends React.Component<IProps> {
         const { className = '', ...props} = this.props;
         const themeClassName = `${prefixCls}-radio-${this.props.theme}`
         return (
-            <Radio.Group {...props} className={`${className} ${themeClassName}`}>{this.props.children}</Radio.Group>
+            <Radio.Group {...props} className={`${themeClassName} ${className}`}>{this.props.children}</Radio.Group>
         )
     }
 }

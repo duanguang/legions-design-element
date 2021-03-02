@@ -13,7 +13,7 @@ import { Progress,Col,Row } from 'antd';
 import './style/index.less';
 import LegionsProEchartsBox from '../LegionsProEchartsBox';
 import LegionsProLineOverflow from '../LegionsProLineOverflow';
-import { LegionsProEchartsProgress } from 'components/LegionsProEchartsAntd';
+import { LegionsProEchartsProgress } from 'components/LegionsProEchartsParts';
 interface ColumnProps<T> {
     title?: React.ReactNode;
     key?: string;
