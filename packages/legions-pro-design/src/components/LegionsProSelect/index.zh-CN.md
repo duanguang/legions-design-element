@@ -6,16 +6,16 @@ title: ProSelect
 subtitle: 选择器
 ---
 
-ProTable 的诞生是为了解决项目中需要写很多 table 的样板代码的问题，所以在其中做了封装了很多常用的逻辑。这些封装可以简单的分类为预设行为与预设逻辑。
+ProSelect 的诞生是为了解决项目中诸多下拉选择器数据量大，无法分页展示，因此在扩展antd select 组件出来，让其既支持基础下拉选择器全部功能，又能支持分页显示。
 
 
 ## 何时使用
 
-当你的表格需要与服务端进行交互或者需要多种单元格样式时，ProTable 是不二选择。
+不管是否分页，ProSelect 都是你的不二选择。
 
 ## API
 
-ProTable 在 antd 的 Table 上进行了一层封装，支持了一些预设，并且封装了一些行为。这里只列出与 antd Table 不同的 api。
+ProSelect 在 antd 的 select 上进行了一层封装，支持了一些预设，并且封装了一些行为。这里只列出与 antd select 不同的 api。
 
 按钮的属性说明如下：
 

@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-14 16:26:10
- * @LastEditTime: 2021-01-19 15:51:19
+ * @LastEditTime: 2021-03-01 11:00:33
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/core/legionsFetch.ts
@@ -15,7 +15,8 @@ legionFetchInstance.register({
     request: (configs) => { 
         /* const credential:'same-origin'|'include'|'omit'='include' */
         const { credentials,...props } = configs;
-        return { ...props, /* ...{ mode: 'no-cors' } */ };
+        console.log(credentials,'credentials');
+        return { ...props, /* ...{ mode: 'no-cors' } */};
     }
 })
 interface options<Parameter, Model> {

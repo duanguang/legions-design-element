@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-26 17:54:09
- * @LastEditTime: 2021-02-24 10:50:03
+ * @LastEditTime: 2021-02-25 10:00:46
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/store/pro.modal/modalView.ts
@@ -62,7 +62,7 @@ export class ModalView {
   //@ts-ignore
   @observable confirmLoading: boolean = null;
 
-  @observable dragData: {
+  @observable _dragData: {
     /**模态框左侧边框线距离body左侧距离 */
     x: number;
     /** 模态框顶部边框线距离顶部距离 */
@@ -89,12 +89,12 @@ export class ModalView {
    * @type {boolean}
    * @memberof ModalView
    */
-  @observable private resizable: IResizable = {
+  @observable private _resizable: IResizable = {
     enabled: false,
     direction: '',
   };
 
-  @observable resizableData: {
+  @observable _resizableData: {
     /**模态框左侧边框线距离body左侧距离 */
     x: number;
     /** 模态框顶部边框线距离顶部距离 */
@@ -133,23 +133,23 @@ export class ModalView {
   };
 
   /** 拖拽缩放时产生的高度在modal-body生效的样式 */
-  @observable private oldResizableBodyStyle = null;
+  @observable private _oldResizableBodyStyle:React.CSSProperties = null;
 
-  @observable private oldResizableContentStyle = null;
+  @observable private _oldResizableContentStyle:React.CSSProperties = null;
 
   /**
    *
    * 模态框操作模式，
    * 拖拽，缩放，最大化，还原
    */
-  @observable operaModel:
+  @observable _operaModel:
     | 'null'
     | 'resizable'
     | 'draggable'
     | 'maximize'
     | 'reduction' = 'null';
-  //@ts-ignore
-  @observable placement?: 'left' | 'right' | 'top' | 'bottom' = null;
+  
+  @observable _placement?: 'left' | 'right' | 'top' | 'bottom' = null;
   /**
    * 底部高度，组件外部请勿直接修改其值
    *
@@ -161,15 +161,15 @@ export class ModalView {
     let style = {};
     const customTop = 0;
     const customLeft = 0;
-    if (this.dragData.x !== null)
-      style['left'] = `${this.dragData.x - customLeft}px`;
-    if (this.dragData.y !== null) style['top'] = `${this.dragData.y}px`;
-    if (this.dragData.y !== null)
-      style['top'] = `${this.dragData.y - customTop}px`;
+    if (this._dragData.x !== null)
+      style['left'] = `${this._dragData.x - customLeft}px`;
+    if (this._dragData.y !== null) style['top'] = `${this._dragData.y}px`;
+    if (this._dragData.y !== null)
+      style['top'] = `${this._dragData.y - customTop}px`;
     return style;
   }
   @computed get computedResizable() {
-    return this.resizable;
+    return this._resizable;
   }
 
   /**
@@ -179,27 +179,26 @@ export class ModalView {
    * @memberof ModalView
    */
   @computed get computedBodyStyle() {
-    //@ts-ignore
-    let style = { ...this.oldResizableBodyStyle } || {};
+    let style = { ...this._oldResizableBodyStyle } || {};
     if (
-      this.resizableData.resizableY !== null &&
-      this.resizableData.resizable
+      this._resizableData.resizableY !== null &&
+      this._resizableData.resizable
     ) {
       const header = 48;
       const footer = 53;
       if (this.computedResizable.direction === 'bottom') {
         // 在底部边框线缩放时，计算body区域高度值
         const height =
-          this.resizableData.resizableY -
+          this._resizableData.resizableY -
           header -
           footer -
-          this.resizableData.top;
+          this._resizableData.top;
         style['height'] = `${height}px`;
       }
       if (this.computedResizable.direction === 'top') {
         // 在顶部边框缩放大小时，计算内容区body部分高度值
         const height =
-          this.resizableData.bottom - this.resizableData.top - header - footer;
+          this._resizableData.bottom - this._resizableData.top - header - footer;
         style['height'] = `${height}px`;
       }
     }
@@ -207,7 +206,7 @@ export class ModalView {
   }
   /** 模态框最大化时样式数据 */
   @computed get computedMaximizeContentStyles(): React.CSSProperties {
-    if (this.operaModel === 'maximize') {
+    if (this._operaModel === 'maximize') {
       return { width: '100%', top: '0px', left: '0px', paddingBottom: '0px' };
     }
     return {};
@@ -217,26 +216,25 @@ export class ModalView {
    * 模态框大小缩放时，上边距样式值
    */
   @computed get computedResizableContentTopStyles() {
-    //@ts-ignore
-    let style = { ...this.oldResizableContentStyle } || {};
+    let style = { ...this._oldResizableContentStyle } || {};
     if (
-      this.resizableData.resizableY !== null &&
-      this.resizableData.resizable
+      this._resizableData.resizableY !== null &&
+      this._resizableData.resizable
     ) {
       const header = 48;
       const footer = 53;
       if (
         this.computedResizable.direction === 'top' &&
-        this.resizableData.top !== null
+        this._resizableData.top !== null
       ) {
         // 在顶部边框缩放大小时，调整上边距大小
-        style['top'] = `${this.resizableData.top}px`;
+        style['top'] = `${this._resizableData.top}px`;
       }
       if (this.computedResizable.direction === 'left'&&this._modalType!=='drawer') { //非抽屉模式 以左侧为焦点，向右缩放
-        if (this.placement !== 'right') { // 如果抽屉方向是非右侧，则以左侧为中心轴，进行缩放
-          style['left'] = `${this.resizableData.resizableX}px`;
-        } else if(this.placement==='right'){
-          style['right']=`${this.resizableData.right}px`; // 如果抽屉方向右侧，则以右侧方向为中心轴，进行缩放
+        if (this._placement !== 'right') { // 如果抽屉方向是非右侧，则以左侧为中心轴，进行缩放
+          style['left'] = `${this._resizableData.resizableX}px`;
+        } else if(this._placement==='right'){
+          style['right']=`${this._resizableData.right}px`; // 如果抽屉方向右侧，则以右侧方向为中心轴，进行缩放
         }
       }
     }
@@ -245,7 +243,7 @@ export class ModalView {
 
   /** 模态框拖拽缩放大小样式数据 */
   @computed get computedResizableContentStyles(): React.CSSProperties {
-    if (this.operaModel === 'resizable') {
+    if (this._operaModel === 'resizable') {
       return this.computedResizableContentTopStyles;
     }
     return {};
@@ -253,7 +251,7 @@ export class ModalView {
 
   /**** 模态框最大化时模态框内部body部分样式数据 */
   @computed get computedMaximizeBodyStyle(): React.CSSProperties {
-    if (this.operaModel === 'maximize') {
+    if (this._operaModel === 'maximize') {
       const height = document.body.clientHeight - 48 - this._footerHeight;
       return Object.assign(
         { ...this.computedBodyStyle },
@@ -263,42 +261,19 @@ export class ModalView {
     return this.computedBodyStyle;
   }
 
-  /**
-   * 拖拽缩放图标样式
-   *
-   * @readonly
-   * @type {string}
-   * @memberof ModalView
-   */
-  @computed get computedResizableClasses(): string {
-    const style = {
-      upperLeft: 'legions-pro-modal-nwse-resizable',
-      lowRight: 'legions-pro-modal-nwse-resizable',
-      upperRight: 'legions-pro-modal-nesw-resizable',
-      leftLower: 'legions-pro-modal-nesw-resizable',
-      top: 'legions-pro-modal-ns-resizable',
-      bottom: 'legions-pro-modal-ns-resizable',
-      left: 'legions-pro-modal-ew-resizable',
-      right: 'legions-pro-modal-ew-resizable',
-    };
-    //@ts-ignore
-    return style[this.computedResizable.direction] || '';
-  }
-  @action asyncResizableBodyStyle(options?: {
+  @action _asyncResizableBodyStyle(options?: {
     modalType?: 'drawer' | 'modal' | 'fullscreen';
     placement?: 'left' | 'right' | 'top' | 'bottom';
   }) {
-    let style = {};
+    let style:React.CSSProperties = {};
     const header = 48;
     const footer = 53;
-    if (!this.oldResizableContentStyle) {
-      //@ts-ignore
-      this.oldResizableContentStyle = {};
+    if (!this._oldResizableContentStyle) {
+      this._oldResizableContentStyle = {};
     }
-    if (this.resizableData.top !== null) {
-      //@ts-ignore
-      this.oldResizableContentStyle['top'] = `${this.resizableData.top}px`;
-      this.dragData.y = this.resizableData.top; // 同步坐标回拖拽坐标数据，防止在进行拖拽时，位置不一致，出现闪回动作
+    if (this._resizableData.top !== null) {
+      this._oldResizableContentStyle['top'] = `${this._resizableData.top}px`;
+      this._dragData.y = this._resizableData.top; // 同步坐标回拖拽坐标数据，防止在进行拖拽时，位置不一致，出现闪回动作
     }
     if (this.computedResizable.direction === 'left') {
       if (
@@ -306,32 +281,31 @@ export class ModalView {
         options.modalType === 'drawer' &&
         options.placement === 'right'
       ) {
-        this.width = document.body.clientWidth - this.resizableData.resizableX;
+        this.width = document.body.clientWidth - this._resizableData.resizableX;
       } else {
-        this.width = this.resizableData.right - this.resizableData.resizableX;
-        //@ts-ignore
-        this.oldResizableContentStyle[
+        this.width = this._resizableData.right - this._resizableData.resizableX;
+        this._oldResizableContentStyle[
           'left'
-        ] = `${this.resizableData.resizableX}px`;
+        ] = `${this._resizableData.resizableX}px`;
       }
-      this.dragData.x = this.resizableData.resizableX; // 同步坐标回拖拽坐标数据，防止在进行拖拽时，位置不一致，出现闪回动作
+      this._dragData.x = this._resizableData.resizableX; // 同步坐标回拖拽坐标数据，防止在进行拖拽时，位置不一致，出现闪回动作
     }
     if (this.computedResizable.direction === 'right') {
-      this.width = this.resizableData.resizableX - this.resizableData.left;
-      this.dragData.x = this.resizableData.left;
+      this.width = this._resizableData.resizableX - this._resizableData.left;
+      this._dragData.x = this._resizableData.left;
     }
     if (
       this.computedResizable.direction === 'top' ||
       this.computedResizable.direction === 'bottom'
     ) {
       const height =
-        this.resizableData.resizableY -
+        this._resizableData.resizableY -
         header -
         footer -
-        this.resizableData.top;
+        this._resizableData.top;
       style['height'] = `${height}px`;
-      //@ts-ignore
-      this.oldResizableBodyStyle = style;
+      style['overflow'] = 'auto';
+      this._oldResizableBodyStyle = style;
     }
   }
 
@@ -339,23 +313,21 @@ export class ModalView {
    * 当执行拖拽时需要把坐标同步到缩放坐标数据
    * 在拖拽移动结束时触发
    */
-  @action asyncResizableData() {
-    this.resizableData.top = this.dragData.y;
-    this.resizableData.resizableX = this.dragData.x;
-    this.resizableData.left = this.dragData.x;
-    if (this.oldResizableContentStyle) {
-      //@ts-ignore
-      this.oldResizableContentStyle['top'] = this.dragData.y;
-      //@ts-ignore
-      this.oldResizableContentStyle['left'] = this.dragData.x;
+  @action _asyncResizableData() {
+    this._resizableData.top = this._dragData.y;
+    this._resizableData.resizableX = this._dragData.x;
+    this._resizableData.left = this._dragData.x;
+    if (this._oldResizableContentStyle) {
+      this._oldResizableContentStyle['top'] = this._dragData.y;
+      this._oldResizableContentStyle['left'] = this._dragData.x;
     }
   }
-  @action updateEnabledResizable(resizable: IResizable) {
+  @action _updateEnabledResizable(resizable: IResizable) {
     if (resizable.enabled !== undefined) {
-      this.resizable.enabled = resizable.enabled;
+      this._resizable.enabled = resizable.enabled;
     }
     if (resizable.direction !== void 0) {
-      this.resizable.direction = resizable.direction;
+      this._resizable.direction = resizable.direction;
     }
   }
 
@@ -364,10 +336,10 @@ export class ModalView {
    *
    * @memberof ModalView
    */
-  @action resetDragLocationData() {
+  @action _resetDragLocationData() {
     const width = document.body.clientWidth;
     const left = (width - this.width) / 2;
-    this.dragData = {
+    this._dragData = {
       x: left,
       //@ts-ignore
       y: null,

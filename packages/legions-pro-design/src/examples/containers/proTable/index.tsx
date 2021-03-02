@@ -7,13 +7,34 @@ import { observablePromise } from 'legions/store-utils';
 import { ResponseVModelNameDataEntity } from './model';
 import { observable } from 'legions/store';
 import { runInAction } from 'mobx'
-import { HttpConfig } from '../../constants/httpConfig';
+import { getSystem, HttpConfig } from '../../constants/httpConfig';
 LegionsProTable.customColumnsConfig.editApi = `${HttpConfig.bffService}/table/edit`;
 LegionsProTable.customColumnsConfig.queryApi = `${HttpConfig.bffService}/table/query`;
+
+interface Materialsparames {
+  baseCommodityItemNo?: string,
+  createTimeEnd?: string,
+  createTimeStart?: string,
+  createrName?: string,
+  current?: number,
+  gname?: string,
+  goodsCode?: string,
+  isNotBlankCheckInfo?: string,
+  itemNo?: string,
+  size?: number,
+  state?: string,
+  typeName?: string,
+}
 interface IProps { }
 @observer
 export class ProTable extends LegionsProTable.ProTableBaseClass<IProps,{size:any},{},{}> {
-
+  parames: Materialsparames = {
+    state: '1',
+    typeName: '料件',
+    createTimeStart: '',
+    createTimeEnd: '',
+    isNotBlankCheckInfo: 'false',
+}
   @observable status = {
     color: 'red'
   }
@@ -40,6 +61,9 @@ export class ProTable extends LegionsProTable.ProTableBaseClass<IProps,{size:any
         return <span style={{ color: `${this.status.color}` }}>{text}</span>
       }
     })
+  }
+  componentWillUnmount() {
+    console.log('componentWillUnmount');
   }
   handleSizeChange = (e) => {
     this.setState({ size: e.target.value });
@@ -84,20 +108,17 @@ export class ProTable extends LegionsProTable.ProTableBaseClass<IProps,{size:any
               });
             }}
             columns={this.columnsData}
-            uniqueKey='name'
+            uniqueKey='id'
             tableModulesName='demo/proTable'
             isOpenCustomColumns={true}
             autoQuery={{
               params: (pageIndex,pageSize) => {
-                return {
-                  size: pageSize,
-                  current: pageIndex,
-                  ...this.queryPrams,
-                };
+                return { size: pageSize,current: pageIndex,...this.parames }
               },
               transform: (value) => {
                 if (value && !value.isPending && value.value) {
                   const { result,current,pageSize,total } = value.value;
+
                   return {
                     data: result.map((item,index) => {
                       item['key'] = index + 1 + (current - 1) * pageSize;
@@ -111,18 +132,18 @@ export class ProTable extends LegionsProTable.ProTableBaseClass<IProps,{size:any
                   data: [],
                 };
               },
-              /* options: {
-              'api-target':'http://192.168.200.171:3001/mock/115/getUsers',
+              options: {
+                'api-target': `${getSystem()}/jg/basic/item-master/list.json`,
               
-            }, */
+              },
               token: (() => {
-                return process.env.environment === 'dev' ? 'SESSION=3aaa0e0f-e799-4ec6-8612-da5593f7414d' : 'SESSION=3aaa0e0f-e799-4ec6-8612-da5593f7414d';
+                return process.env.environment === 'dev' ? 'SESSION=51de1ec3-354e-4dc0-b043-90d954463e37' : 'SESSION=e3bdf8a8-eae4-40b3-9da8-99152b5239f8';
               })(),
 
-              method: 'get',
-              ApiUrl: 'http://192.168.200.171:3001/mock/115/getUsers',
+              method: 'post',
+              ApiUrl: 'https://gateway.hoolinks.com/api/gateway',
               mappingEntity: (that,res) => {
-                that.result = that.transformRows(res['data'],ResponseVModelNameDataEntity)
+                that.result = res['data']
               }
             }}
           >

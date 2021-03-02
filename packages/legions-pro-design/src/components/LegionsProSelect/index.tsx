@@ -247,6 +247,11 @@ export default class LegionsProSelect extends React.Component<IProSelectProps,IS
                 selection.appendChild(this.copyIconNode)
                 this.renderIconCopyPortal(this.props);
             }
+            const selectionChoiceUL = inputDom.querySelector('ul')
+            if (selectionChoiceUL) {
+                // this.maxTagPlaceholderNode = selectionChoiceUL
+                // this.renderMaxTagPlaceholderPortal()
+            }
         }
     }
     componentWillReceiveProps(nextProps: IProSelectProps) {
@@ -318,7 +323,7 @@ export default class LegionsProSelect extends React.Component<IProSelectProps,IS
                 /* 筛选下拉输入框选中项dom 因为下拉选中项dom元素里面还有其他项，所以先做过滤，找到真实的选中项数据 */
                 selectionList.map((item) => {
                     let title = item['title'] || ''
-                    let entity = value.find((val) => val.label === title || val.title === title)
+                    let entity = value.find((val) => val.key === title)
                     if (entity) {
                         arr.push(item)
                     }
@@ -562,7 +567,7 @@ export default class LegionsProSelect extends React.Component<IProSelectProps,IS
                             {...option}
                             value={option.key}
                             disabled={option.disabled}
-                            title={option.title || option.value}
+                            title={option.key}
                             key={`${this.uid}${option.key}`}
                         >
                             {option.value}
@@ -577,7 +582,7 @@ export default class LegionsProSelect extends React.Component<IProSelectProps,IS
                 key={`${this.uid}${option.key}`}
                 disabled={option.disabled}
                 value={`${option.key}`}
-                title={option.title || option.value}
+                title={option.key}
             >
                 {option.value}
             </Option>

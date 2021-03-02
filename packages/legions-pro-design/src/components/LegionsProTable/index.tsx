@@ -803,6 +803,7 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
                 locale: this.renderlocale(),
             }
         }
+        
         this.consoleLog('render');
         const rowSelection: TableRowSelection<{}> = (this.getViewStore._isOpenRowSelection) ? {
             ...this.props.rowSelection,

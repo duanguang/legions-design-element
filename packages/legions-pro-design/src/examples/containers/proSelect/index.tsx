@@ -134,11 +134,12 @@ export default class ProSelectDemo extends Component<IProps,IState> {
                     >
                     </LegionsProSelect> */}
                     <LegionsProSelect
-                        style={{ width: '150px' }}
+                        style={{ width: '260px' }}
                         labelInValue
                         paging
                         pageSize={30}
-                        
+                        mode='multiple'
+                        maxTagCount={3}
                         options={this.state.selectList.map((item: { key: string; value: string }) => {
                             return { key: item.key,value: item.value,title: item.value }
                         })}

@@ -61,6 +61,7 @@ function __metadata(metadataKey, metadataValue) {
 
 var ModalView = /** @class */ (function () {
     function ModalView() {
+        this._modalType = 'modal';
         /**
          * 模态框标题
          *
@@ -104,7 +105,7 @@ var ModalView = /** @class */ (function () {
          */
         //@ts-ignore
         this.confirmLoading = null;
-        this.dragData = {
+        this._dragData = {
             //@ts-ignore
             x: null,
             //@ts-ignore
@@ -122,11 +123,11 @@ var ModalView = /** @class */ (function () {
          * @type {boolean}
          * @memberof ModalView
          */
-        this.resizable = {
+        this._resizable = {
             enabled: false,
             direction: '',
         };
-        this.resizableData = {
+        this._resizableData = {
             //@ts-ignore
             x: null,
             //@ts-ignore
@@ -146,16 +147,15 @@ var ModalView = /** @class */ (function () {
             left: null,
         };
         /** 拖拽缩放时产生的高度在modal-body生效的样式 */
-        this.oldResizableBodyStyle = null;
-        this.oldResizableContentStyle = null;
+        this._oldResizableBodyStyle = null;
+        this._oldResizableContentStyle = null;
         /**
          *
          * 模态框操作模式，
          * 拖拽，缩放，最大化，还原
          */
-        this.operaModel = 'null';
-        //@ts-ignore
-        this.placement = null;
+        this._operaModel = 'null';
+        this._placement = null;
         /**
          * 底部高度，组件外部请勿直接修改其值
          *
@@ -169,12 +169,12 @@ var ModalView = /** @class */ (function () {
             var style = {};
             var customTop = 0;
             var customLeft = 0;
-            if (this.dragData.x !== null)
-                style['left'] = this.dragData.x - customLeft + "px";
-            if (this.dragData.y !== null)
-                style['top'] = this.dragData.y + "px";
-            if (this.dragData.y !== null)
-                style['top'] = this.dragData.y - customTop + "px";
+            if (this._dragData.x !== null)
+                style['left'] = this._dragData.x - customLeft + "px";
+            if (this._dragData.y !== null)
+                style['top'] = this._dragData.y + "px";
+            if (this._dragData.y !== null)
+                style['top'] = this._dragData.y - customTop + "px";
             return style;
         },
         enumerable: false,
@@ -182,7 +182,7 @@ var ModalView = /** @class */ (function () {
     });
     Object.defineProperty(ModalView.prototype, "computedResizable", {
         get: function () {
-            return this.resizable;
+            return this._resizable;
         },
         enumerable: false,
         configurable: true
@@ -195,23 +195,22 @@ var ModalView = /** @class */ (function () {
          * @memberof ModalView
          */
         get: function () {
-            //@ts-ignore
-            var style = __assign({}, this.oldResizableBodyStyle) || {};
-            if (this.resizableData.resizableY !== null &&
-                this.resizableData.resizable) {
+            var style = __assign({}, this._oldResizableBodyStyle) || {};
+            if (this._resizableData.resizableY !== null &&
+                this._resizableData.resizable) {
                 var header = 48;
                 var footer = 53;
                 if (this.computedResizable.direction === 'bottom') {
                     // 在底部边框线缩放时，计算body区域高度值
-                    var height = this.resizableData.resizableY -
+                    var height = this._resizableData.resizableY -
                         header -
                         footer -
-                        this.resizableData.top;
+                        this._resizableData.top;
                     style['height'] = height + "px";
                 }
                 if (this.computedResizable.direction === 'top') {
                     // 在顶部边框缩放大小时，计算内容区body部分高度值
-                    var height = this.resizableData.bottom - this.resizableData.top - header - footer;
+                    var height = this._resizableData.bottom - this._resizableData.top - header - footer;
                     style['height'] = height + "px";
                 }
             }
@@ -223,7 +222,7 @@ var ModalView = /** @class */ (function () {
     Object.defineProperty(ModalView.prototype, "computedMaximizeContentStyles", {
         /** 模态框最大化时样式数据 */
         get: function () {
-            if (this.operaModel === 'maximize') {
+            if (this._operaModel === 'maximize') {
                 return { width: '100%', top: '0px', left: '0px', paddingBottom: '0px' };
             }
             return {};
@@ -236,19 +235,20 @@ var ModalView = /** @class */ (function () {
          * 模态框大小缩放时，上边距样式值
          */
         get: function () {
-            //@ts-ignore
-            var style = __assign({}, this.oldResizableContentStyle) || {};
-            if (this.resizableData.resizableY !== null &&
-                this.resizableData.resizable) {
+            var style = __assign({}, this._oldResizableContentStyle) || {};
+            if (this._resizableData.resizableY !== null &&
+                this._resizableData.resizable) {
                 if (this.computedResizable.direction === 'top' &&
-                    this.resizableData.top !== null) {
+                    this._resizableData.top !== null) {
                     // 在顶部边框缩放大小时，调整上边距大小
-                    style['top'] = this.resizableData.top + "px";
+                    style['top'] = this._resizableData.top + "px";
                 }
-                if (this.computedResizable.direction === 'left') {
-                    /* const width = this.resizableData.right - this.resizableData.resizableX; */
-                    if (this.placement !== 'right') {
-                        style['left'] = this.resizableData.resizableX + "px";
+                if (this.computedResizable.direction === 'left' && this._modalType !== 'drawer') { //非抽屉模式 以左侧为焦点，向右缩放
+                    if (this._placement !== 'right') { // 如果抽屉方向是非右侧，则以左侧为中心轴，进行缩放
+                        style['left'] = this._resizableData.resizableX + "px";
+                    }
+                    else if (this._placement === 'right') {
+                        style['right'] = this._resizableData.right + "px"; // 如果抽屉方向右侧，则以右侧方向为中心轴，进行缩放
                     }
                 }
             }
@@ -260,7 +260,7 @@ var ModalView = /** @class */ (function () {
     Object.defineProperty(ModalView.prototype, "computedResizableContentStyles", {
         /** 模态框拖拽缩放大小样式数据 */
         get: function () {
-            if (this.operaModel === 'resizable') {
+            if (this._operaModel === 'resizable') {
                 return this.computedResizableContentTopStyles;
             }
             return {};
@@ -271,7 +271,7 @@ var ModalView = /** @class */ (function () {
     Object.defineProperty(ModalView.prototype, "computedMaximizeBodyStyle", {
         /**** 模态框最大化时模态框内部body部分样式数据 */
         get: function () {
-            if (this.operaModel === 'maximize') {
+            if (this._operaModel === 'maximize') {
                 var height = document.body.clientHeight - 48 - this._footerHeight;
                 return Object.assign(__assign({}, this.computedBodyStyle), { height: height + "px", overflow: 'auto' });
             }
@@ -280,93 +280,63 @@ var ModalView = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
-    Object.defineProperty(ModalView.prototype, "computedResizableClasses", {
-        /**
-         * 拖拽缩放图标样式
-         *
-         * @readonly
-         * @type {string}
-         * @memberof ModalView
-         */
-        get: function () {
-            var style = {
-                upperLeft: 'legions-pro-modal-nwse-resizable',
-                lowRight: 'legions-pro-modal-nwse-resizable',
-                upperRight: 'legions-pro-modal-nesw-resizable',
-                leftLower: 'legions-pro-modal-nesw-resizable',
-                top: 'legions-pro-modal-ns-resizable',
-                bottom: 'legions-pro-modal-ns-resizable',
-                left: 'legions-pro-modal-ew-resizable',
-                right: 'legions-pro-modal-ew-resizable',
-            };
-            //@ts-ignore
-            return style[this.computedResizable.direction] || '';
-        },
-        enumerable: false,
-        configurable: true
-    });
-    ModalView.prototype.asyncResizableBodyStyle = function (options) {
+    ModalView.prototype._asyncResizableBodyStyle = function (options) {
         var style = {};
         var header = 48;
         var footer = 53;
-        if (!this.oldResizableContentStyle) {
-            //@ts-ignore
-            this.oldResizableContentStyle = {};
+        if (!this._oldResizableContentStyle) {
+            this._oldResizableContentStyle = {};
         }
-        if (this.resizableData.top !== null) {
-            //@ts-ignore
-            this.oldResizableContentStyle['top'] = this.resizableData.top + "px";
-            this.dragData.y = this.resizableData.top; // 同步坐标回拖拽坐标数据，防止在进行拖拽时，位置不一致，出现闪回动作
+        if (this._resizableData.top !== null) {
+            this._oldResizableContentStyle['top'] = this._resizableData.top + "px";
+            this._dragData.y = this._resizableData.top; // 同步坐标回拖拽坐标数据，防止在进行拖拽时，位置不一致，出现闪回动作
         }
         if (this.computedResizable.direction === 'left') {
             if (options &&
                 options.modalType === 'drawer' &&
                 options.placement === 'right') {
-                this.width = document.body.clientWidth - this.resizableData.resizableX;
+                this.width = document.body.clientWidth - this._resizableData.resizableX;
             }
             else {
-                this.width = this.resizableData.right - this.resizableData.resizableX;
-                //@ts-ignore
-                this.oldResizableContentStyle['left'] = this.resizableData.resizableX + "px";
+                this.width = this._resizableData.right - this._resizableData.resizableX;
+                this._oldResizableContentStyle['left'] = this._resizableData.resizableX + "px";
             }
-            this.dragData.x = this.resizableData.resizableX; // 同步坐标回拖拽坐标数据，防止在进行拖拽时，位置不一致，出现闪回动作
+            this._dragData.x = this._resizableData.resizableX; // 同步坐标回拖拽坐标数据，防止在进行拖拽时，位置不一致，出现闪回动作
         }
         if (this.computedResizable.direction === 'right') {
-            this.width = this.resizableData.resizableX - this.resizableData.left;
-            this.dragData.x = this.resizableData.left;
+            this.width = this._resizableData.resizableX - this._resizableData.left;
+            this._dragData.x = this._resizableData.left;
         }
         if (this.computedResizable.direction === 'top' ||
             this.computedResizable.direction === 'bottom') {
-            var height = this.resizableData.resizableY -
+            var height = this._resizableData.resizableY -
                 header -
                 footer -
-                this.resizableData.top;
+                this._resizableData.top;
             style['height'] = height + "px";
-            //@ts-ignore
-            this.oldResizableBodyStyle = style;
+            style['overflow'] = 'auto';
+            this._oldResizableBodyStyle = style;
         }
     };
     /**
      * 当执行拖拽时需要把坐标同步到缩放坐标数据
      * 在拖拽移动结束时触发
      */
-    ModalView.prototype.asyncResizableData = function () {
-        this.resizableData.top = this.dragData.y;
-        this.resizableData.resizableX = this.dragData.x;
-        this.resizableData.left = this.dragData.x;
-        if (this.oldResizableContentStyle) {
-            //@ts-ignore
-            this.oldResizableContentStyle['top'] = this.dragData.y;
-            //@ts-ignore
-            this.oldResizableContentStyle['left'] = this.dragData.x;
+    ModalView.prototype._asyncResizableData = function () {
+        this._resizableData.top = this._dragData.y;
+        this._resizableData.resizableX = this._dragData.x;
+        this._resizableData.left = this._dragData.x;
+        if (this._oldResizableContentStyle) {
+            this._oldResizableContentStyle['top'] = this._dragData.y;
+            this._oldResizableContentStyle['left'] = this._dragData.x;
         }
     };
-    ModalView.prototype.updateEnabledResizable = function (resizable) {
+    ModalView.prototype._updateEnabledResizable = function (resizable) {
         if (resizable.enabled !== undefined) {
-            this.resizable.enabled = resizable.enabled;
+            this._resizable.enabled = resizable.enabled;
         }
         if (resizable.direction !== void 0) {
-            this.resizable.direction = resizable.direction;
+            this._resizable.direction = resizable.direction;
         }
     };
     /**
@@ -374,10 +344,10 @@ var ModalView = /** @class */ (function () {
      *
      * @memberof ModalView
      */
-    ModalView.prototype.resetDragLocationData = function () {
+    ModalView.prototype._resetDragLocationData = function () {
         var width = document.body.clientWidth;
         var left = (width - this.width) / 2;
-        this.dragData = {
+        this._dragData = {
             x: left,
             //@ts-ignore
             y: null,
@@ -388,6 +358,10 @@ var ModalView = /** @class */ (function () {
             dragging: false,
         };
     };
+    __decorate([
+        observable,
+        __metadata("design:type", String)
+    ], ModalView.prototype, "_modalType", void 0);
     __decorate([
         observable,
         __metadata("design:type", Object)
@@ -419,31 +393,31 @@ var ModalView = /** @class */ (function () {
     __decorate([
         observable,
         __metadata("design:type", Object)
-    ], ModalView.prototype, "dragData", void 0);
+    ], ModalView.prototype, "_dragData", void 0);
     __decorate([
         observable,
         __metadata("design:type", Object)
-    ], ModalView.prototype, "resizable", void 0);
+    ], ModalView.prototype, "_resizable", void 0);
     __decorate([
         observable,
         __metadata("design:type", Object)
-    ], ModalView.prototype, "resizableData", void 0);
+    ], ModalView.prototype, "_resizableData", void 0);
     __decorate([
         observable,
         __metadata("design:type", Object)
-    ], ModalView.prototype, "oldResizableBodyStyle", void 0);
+    ], ModalView.prototype, "_oldResizableBodyStyle", void 0);
     __decorate([
         observable,
         __metadata("design:type", Object)
-    ], ModalView.prototype, "oldResizableContentStyle", void 0);
+    ], ModalView.prototype, "_oldResizableContentStyle", void 0);
     __decorate([
         observable,
         __metadata("design:type", String)
-    ], ModalView.prototype, "operaModel", void 0);
+    ], ModalView.prototype, "_operaModel", void 0);
     __decorate([
         observable,
         __metadata("design:type", String)
-    ], ModalView.prototype, "placement", void 0);
+    ], ModalView.prototype, "_placement", void 0);
     __decorate([
         observable,
         __metadata("design:type", Object)
@@ -484,34 +458,29 @@ var ModalView = /** @class */ (function () {
         __metadata("design:paramtypes", [])
     ], ModalView.prototype, "computedMaximizeBodyStyle", null);
     __decorate([
-        computed,
-        __metadata("design:type", String),
-        __metadata("design:paramtypes", [])
-    ], ModalView.prototype, "computedResizableClasses", null);
-    __decorate([
         action,
         __metadata("design:type", Function),
         __metadata("design:paramtypes", [Object]),
         __metadata("design:returntype", void 0)
-    ], ModalView.prototype, "asyncResizableBodyStyle", null);
+    ], ModalView.prototype, "_asyncResizableBodyStyle", null);
     __decorate([
         action,
         __metadata("design:type", Function),
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)
-    ], ModalView.prototype, "asyncResizableData", null);
+    ], ModalView.prototype, "_asyncResizableData", null);
     __decorate([
         action,
         __metadata("design:type", Function),
         __metadata("design:paramtypes", [Object]),
         __metadata("design:returntype", void 0)
-    ], ModalView.prototype, "updateEnabledResizable", null);
+    ], ModalView.prototype, "_updateEnabledResizable", null);
     __decorate([
         action,
         __metadata("design:type", Function),
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)
-    ], ModalView.prototype, "resetDragLocationData", null);
+    ], ModalView.prototype, "_resetDragLocationData", null);
     return ModalView;
 }());
 

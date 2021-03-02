@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-07 17:21:19
- * @LastEditTime: 2021-02-19 18:37:14
+ * @LastEditTime: 2021-02-26 14:45:20
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/store/pro.table/ProTableLocalView.ts
@@ -73,6 +73,7 @@ export class ProTableLocalView {
       };
       // @ts-ignore
       this.obState = observablePromise<{}>(apiServer());
+      
     }
   }
 }

@@ -31,7 +31,21 @@ export class ProForm extends React.Component<IProps,IState> {
         const rules = FormFields.initFormRules<FormFields,{}>(FormFields,{})
         const formUtils = new LegionsProForm.ProFormUtils();
         formUtils.renderInputConfig({
-            iAntdProps: formUtils.createAntdProps('text',null),
+            iAntdProps: formUtils.createAntdProps('text1',null,'',{span:24}),
+            iFormProps: {
+                
+                maxLength: '50',
+                type: 'text',
+                /* visible:false, */
+            /* disabled: true, */
+                onChange: () => {
+                    console.log(this.formRef);
+                }
+            },
+            rules: rules.text
+        })
+        formUtils.renderInputConfig({
+            iAntdProps: formUtils.createAntdProps('text',null,),
             iFormProps: {
                 ...formUtils.createLayout('文本框',5,7),
                 maxLength: '50',
@@ -50,7 +64,7 @@ export class ProForm extends React.Component<IProps,IState> {
                 ...formUtils.createLayout('多行文本',5,7),
                 maxLength: '50',
                 type: 'textarea',
-                disabled:true
+                disabled: true,
             },
             rules: rules.textarea
         });
@@ -70,7 +84,6 @@ export class ProForm extends React.Component<IProps,IState> {
                 ...formUtils.createLayout('数字文本',5,7),
                 maxLength: '50',
                 type: 'number',
-
             },
             rules: rules.numberText
         })
@@ -78,7 +91,6 @@ export class ProForm extends React.Component<IProps,IState> {
             iAntdProps: formUtils.createAntdProps('numbers',null),
             iFormProps: {
                 ...formUtils.createLayout('数字',5,7),
-
             },
             rules: rules.numbers
         })
@@ -423,7 +435,7 @@ export class ProForm extends React.Component<IProps,IState> {
                         size="small"
                         controls={this.createConfig()}
                         
-                        colCount={1}
+                        colCount={2}
                     ></LegionsProForm>
 
                 </Row>

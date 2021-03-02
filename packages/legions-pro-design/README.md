@@ -1,5 +1,5 @@
-# legions-pro-echarts
-前端可视化图表业务组件库,这里放置了 pro 系列组件，用于支撑重型组件
+# legions-pro-design
+前端业务组件库,这里放置了 pro 系列组件，用于支撑重型组件
 
 ## 🖥 浏览器兼容性
 

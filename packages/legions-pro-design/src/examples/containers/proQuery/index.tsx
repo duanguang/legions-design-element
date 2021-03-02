@@ -89,10 +89,10 @@ export default class QueryDemo extends React.Component<{},Istate>{
                 onChange: (value,viewStore) => {
                     console.log(value,viewStore,'企业');
                 },
-                options: [{ key: '111',label: '111',value: '昊链科技' },
-                    { key: '222',label: '2222',value: '昊链科技1' },
-                    { key: '333',value: '昊链科技3',label:'333' },
-                    { key: '444',value: '昊链科技4',label:'444' }]
+                options: [{ key: '111',value: '昊链科技' },
+                    { key: '222',value: '昊链科技1' },
+                    { key: '333',value: '昊链科技3' },
+                    { key: '444',value: '昊链科技4' }]
             },
             jsonProperty:'orderNo2'
         })

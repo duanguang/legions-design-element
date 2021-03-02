@@ -1,8 +1,8 @@
 ---
 order: 0
 title:
-  zh-CN: 简单模态框
-  en-US: 简单模态框
+  zh-CN: 简单对话框
+  en-US: 简单对话框
 ---
 
 ## zh-CN

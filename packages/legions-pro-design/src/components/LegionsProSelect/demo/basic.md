@@ -1,13 +1,13 @@
 ---
 order: 0
 title:
-  zh-CN: 简单列表
-  en-US: 简单列表
+  zh-CN: 多选
+  en-US: 多选
 ---
 
 ## zh-CN
 
-一个简单列表绑定数据使用
+本地数据分页配置
 
 ## en-US
 
@@ -17,95 +17,59 @@ import { JsonProperty } from 'json-mapper-object';
 import { Button, Row } from 'antd';
 import React from 'react';
 import { bind, observer } from 'legions/store-react';
-import { LegionsProTable, LegionsProPageContainer } from 'legions-pro-design';
+import { LegionsProSelect, LegionsProPageContainer } from 'legions-pro-design';
 
 
 
- class ResponseVModelNameDataEntity {
-  @JsonProperty('key')
-  key = void 0;
-  @JsonProperty('name')
-  name = void 0;
-  @JsonProperty('age')
-  age = void 0;
-  @JsonProperty('address')
-  address = void 0;
-}
+
 interface IProps {}
-class ProTableDemo extends LegionsProTable.ProTableBaseClass<IProps,{},{},{}> {
+interface IState{
+  loading: boolean,
+    pageIndexSelect: number,
+    page: number,
+    pageSize: number,
+    pageSelelctList: { key: string; value: string }[],
+    selectList:{ key: string; value: string }[],
+}
+class LegionsProSelectDemo extends React.Component<IProps,IState> {
   constructor(props: IProps) {
     super(props);
-    this.pushColumns('name', {
-      title: '姓名',
-      width: '100px',
-      sorter: true,
-    });
-    this.pushColumns('age', {
-      title: '年龄',
-      width: '100px',
-      sorter: true,
-    });
-    this.pushColumns('address', {
-      title: '住址',
-      width: '100px',
-      sorter: true,
-    });
+    const data = [];
+    this.state = {
+        loading: false,
+        page: 1,
+        pageSize: 100,
+        pageIndexSelect: 1,
+        pageSelelctList: this.data,
+        selectList:data,
+    }
+     for (let i = 0; i < 40; i++) {
+            data.push({
+                id: i,
+                key: `${i}`,
+                name: `Edward King ${i}`,
+                age: 32,
+                address: `London, Park Lane no.London, Park Lane no. ${i}`,
+                value: `Edward King ${i}`,
+            });
+        }
   }
   render() {
     return (
-      <LegionsProTable
-      <{},ResponseVModelNameDataEntity>
-        onReady={value => {
-          this.tableRef = value;
-          this.tableRef.viewModel.isAdaptiveHeight = false;
-
-          this.tableRef.viewModel.bodyExternalContainer.set('ButtonAction', {
-            height: 48,
-          });
-
-          this.tableRef.viewModel.bodyExternalContainer.set('other', {
-            height: 70,
-          });
-        }}
-        autoQuery={{
-            params: (pageIndex,pageSize) => {
-              return {
-                size: pageSize,
-                current: pageIndex,
-                ...this.queryPrams,
-              };
-            },
-            transform: (value) => {
-              if (value && !value.isPending && value.value) {
-                const { result,current,pageSize,total } = value.value;
-                return {
-                  data: result.map((item,index) => {
-                    item['key'] = index + 1 + (current - 1) * pageSize;
-                    return item;
-                  }),
-                  total: total,
-                };
-              }
-              return {
-                total: 0,
-                data: [],
-              };
-            },
-            method: 'get',
-            ApiUrl: 'http://192.168.200.171:3001/mock/115/getUsers',
-            mappingEntity: (that,res) => {
-                that.result = that.transformRows(res['data'],ResponseVModelNameDataEntity)
-            }
-        }}
-        columns={this.columnsData}
-        uniqueUid="mock/115/getUsers"
-        uniqueKey="name"
-        isOpenRowChange={false}></LegionsProTable>
+      <LegionsProSelect
+        style={{ width: '260px' }}
+        labelInValue
+        mode='multiple'
+        maxTagCount={4}
+        options={this.state.selectList.map((item: { key: string; value: string }) => {
+            return { key: item.key,value: item.value,title: item.value }
+        })}
+      ></LegionsProSelect>
     );
   }
 }
 const root = props => {
-  return <ProTableDemo></ProTableDemo>;
+  return <LegionsProSelectDemo></LegionsProSelectDemo>;
 };
 const app = create();
 ReactDOM.render(React.createElement(app.start(root)), mountNode);

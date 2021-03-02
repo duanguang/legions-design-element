@@ -1,13 +1,13 @@
 ---
 order: 0
 title:
-  zh-CN: 简单列表
-  en-US: 简单列表
+  zh-CN: 富文本使用方式
+  en-US: 富文本使用方式
 ---
 
 ## zh-CN
 
-一个简单列表绑定数据使用
+富文本编辑器简单使用
 
 ## en-US
 
@@ -17,95 +17,69 @@ import { JsonProperty } from 'json-mapper-object';
 import { Button, Row } from 'antd';
 import React from 'react';
 import { bind, observer } from 'legions/store-react';
-import { LegionsProTable, LegionsProPageContainer } from 'legions-pro-design';
+import { LegionsProUEditor, LegionsProPageContainer } from 'legions-pro-design';
 
 
-
- class ResponseVModelNameDataEntity {
-  @JsonProperty('key')
-  key = void 0;
-  @JsonProperty('name')
-  name = void 0;
-  @JsonProperty('age')
-  age = void 0;
-  @JsonProperty('address')
-  address = void 0;
-}
 interface IProps {}
-class ProTableDemo extends LegionsProTable.ProTableBaseClass<IProps,{},{},{}> {
+class LegionsProUEditorDemo extends React.Component<IProps,{}> {
+   editorInstance = null;
   constructor(props: IProps) {
     super(props);
-    this.pushColumns('name', {
-      title: '姓名',
-      width: '100px',
-      sorter: true,
-    });
-    this.pushColumns('age', {
-      title: '年龄',
-      width: '100px',
-      sorter: true,
-    });
-    this.pushColumns('address', {
-      title: '住址',
-      width: '100px',
-      sorter: true,
-    });
+    
   }
   render() {
     return (
-      <LegionsProTable
-      <{},ResponseVModelNameDataEntity>
-        onReady={value => {
-          this.tableRef = value;
-          this.tableRef.viewModel.isAdaptiveHeight = false;
-
-          this.tableRef.viewModel.bodyExternalContainer.set('ButtonAction', {
-            height: 48,
-          });
-
-          this.tableRef.viewModel.bodyExternalContainer.set('other', {
-            height: 70,
-          });
-        }}
-        autoQuery={{
-            params: (pageIndex,pageSize) => {
-              return {
-                size: pageSize,
-                current: pageIndex,
-                ...this.queryPrams,
-              };
-            },
-            transform: (value) => {
-              if (value && !value.isPending && value.value) {
-                const { result,current,pageSize,total } = value.value;
-                return {
-                  data: result.map((item,index) => {
-                    item['key'] = index + 1 + (current - 1) * pageSize;
-                    return item;
-                  }),
-                  total: total,
-                };
-              }
-              return {
-                total: 0,
-                data: [],
-              };
-            },
-            method: 'get',
-            ApiUrl: 'http://192.168.200.171:3001/mock/115/getUsers',
-            mappingEntity: (that,res) => {
-                that.result = that.transformRows(res['data'],ResponseVModelNameDataEntity)
-            }
-        }}
-        columns={this.columnsData}
-        uniqueUid="mock/115/getUsers"
-        uniqueKey="name"
-        isOpenRowChange={false}></LegionsProTable>
+       <React.Fragment>
+        <LegionsProUEditor
+            ueditorPath={`https://qa-zy.hoolinks.com/static/ueditor/`}
+            ueditorConfig={{
+                initialFrameHeight: 250,
+                autoHeightEnabled: false,
+                toolbars: [
+                    [
+                    'bold', // 加粗
+                    'italic', // 斜体
+                    'underline', // 下划线
+                    'strikethrough', // 删除线
+                    'subscript', // 下标
+                    'superscript', // 上标
+                    'pasteplain', // 纯文本粘贴模式
+                    'preview', // 预览
+                    'horizontal', // 分隔线
+                    'removeformat', // 清除格式
+                    'cleardoc', // 清空文档
+                    'fontfamily', // 字体
+                    'fontsize', // 字号
+                    'spechars', // 特殊字符
+                    'justifyleft', // 居左对齐
+                    'justifyright', // 居右对齐
+                    'justifycenter', // 居中对齐
+                    'justifyjustify', // 两端对齐
+                    'forecolor', // 字体颜色
+                    'backcolor', // 背景色
+                    'fullscreen', // 全屏
+                    'lineheight', // 行间距
+                    'simpleupload', // 单图上传
+                    'insertimage', // 多图上传
+                    ],
+                ],
+            }}
+            ueditorId={`LegionsProUEditorDemo`}
+            onReady={(instance) => {
+                /* 配置上传接口 */
+                instance['options'].serverUrl = `https://qa-fc.hoolinks.com/v1/oss/uploadByForm?project=4pl&module=ueditor`
+                this.editorInstance = instance;
+                // 初始化内容
+                instance.execCommand('inserthtml', '');
+                instance.setEnabled();
+            }}
+          ></LegionsProUEditor>
+        </React.Fragment>
     );
   }
 }
 const root = props => {
-  return <ProTableDemo></ProTableDemo>;
+  return <LegionsProUEditorDemo></LegionsProUEditorDemo>;
 };
 const app = create();
 ReactDOM.render(React.createElement(app.start(root)), mountNode);

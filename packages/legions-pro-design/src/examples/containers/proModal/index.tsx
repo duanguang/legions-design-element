@@ -1,7 +1,7 @@
 import { Button,Col,Row } from 'antd';
 import React from 'react';
 import { bind,observer } from 'legions/store-react';
-import { LegionsProForm, LegionsProModalForm,LegionsProPageContainer } from '../../../components';
+import { LegionsProForm,LegionsProModalForm,LegionsProPageContainer } from '../../../components';
 import { observablePromise } from 'legions/store-utils';
 import { observable } from 'legions/store';
 import { HttpConfig } from '../../constants/httpConfig';
@@ -16,6 +16,7 @@ interface IState {
 /* @observer */
 export class ProModal extends React.Component<IProps,IState> {
     modalStore: InstanceLegionsModalForm<FormFields> = null;
+    modalStore1: InstanceLegionsModalForm<FormFields> = null;
     constructor(props: IProps) {
         super(props)
         this.state = {
@@ -33,7 +34,7 @@ export class ProModal extends React.Component<IProps,IState> {
                 maxLength: '50',
                 type: 'text',
                 /* visible:false, */
-            /* disabled: true, */
+                /* disabled: true, */
                 onChange: () => {
                     console.log(this.modalStore.formInstance);
                 }
@@ -100,7 +101,7 @@ export class ProModal extends React.Component<IProps,IState> {
             },
             rules: rules.selectedItem,
         })
-        
+
         formUtils.renderSelectConfig({
             iAntdProps: formUtils.createAntdProps('selectedItemRemote',null,'请选择'),
             iFormProps: {
@@ -176,37 +177,79 @@ export class ProModal extends React.Component<IProps,IState> {
             query={null}
             content={
                 <Row>
-                    <Button style={{ marginLeft: '10px' }} type="primary" htmlType="submit" onClick={() => {
+                    <Row>
+                        <Button style={{ marginLeft: '10px' }} type="primary" htmlType="submit" onClick={() => {
 
-                        this.modalStore.modalInstance.viewModel.visible = true
-                        this.modalStore.modalInstance.viewModel.title = 'test'
-                    }}>打开</Button>
-                    <Button style={{ marginLeft: '10px' }} type="primary" htmlType="submit" onClick={() => {
+                            this.modalStore.modalInstance.viewModel.visible = true
+                            this.modalStore.modalInstance.viewModel.title = 'test'
+                        }}>打开</Button>
+                        <Button style={{ marginLeft: '10px' }} type="primary" htmlType="submit" onClick={() => {
+
+                            this.modalStore1.modalInstance.viewModel.visible = true
+                            this.modalStore1.modalInstance.viewModel.title = 'test1'
+                        }}>打开1</Button>
+                        <Button style={{ marginLeft: '10px' }} type="primary" htmlType="submit" onClick={() => {
 
 
-                    }}>提交</Button>
-                    <Button style={{ marginLeft: '10px' }} type="primary" htmlType="submit" onClick={() => {
+                        }}>提交</Button>
+                        <Button style={{ marginLeft: '10px' }} type="primary" htmlType="submit" onClick={() => {
 
-                    }}>赋值</Button>
+                        }}>赋值</Button>
+                    </Row>
 
-                    <LegionsProModalForm
-                        <FormFields>
-                        modalProps={{
-                            resizable: true,
-                            modalType: 'fullscreen',
-                            /* placement: 'left', */
-                            draggable: true,
-                            onVisibleChange: (value) => {
-                                console.log(value,'onVisibleChange');
-                            }
-                        }}
-                        InputDataModel={FormFields}
-                        controls={this.createConfig()}
-                        onReady={(value) => {
-                            this.modalStore = value;
-                        }}>
 
-                    </LegionsProModalForm>
+                    <Row>
+                        <LegionsProModalForm
+                            <FormFields>
+                            modalProps={{
+                                resizable: true,
+                                modalType:'drawer',
+                                /* modalType: 'fullscreen', */
+                                /* placement: 'right', */
+                                /* draggable: true, */
+                                mask: true,
+                                getContainer: (value) => {
+                                    return document.querySelector('#modalStore')
+                                },
+                                onVisibleChange: (value) => {
+                                    console.log(value,'onVisibleChange');
+                                }
+                            }}
+                            InputDataModel={FormFields}
+                            controls={this.createConfig()}
+                            onReady={(value) => {
+                                this.modalStore = value;
+                            }}>
+
+                        </LegionsProModalForm>
+                        <div id='modalStore'></div>
+                    </Row>
+                    <Row>
+                        <div id='modalStore1'></div>
+                        <LegionsProModalForm
+                            <FormFields>
+                            modalProps={{
+                                resizable: true,
+                                /* modalType: 'fullscreen', */
+                                /* placement: 'right', */
+                                draggable: true,
+                                mask: true,
+                                getContainer: (value) => {
+                                    return document.querySelector('#modalStore1')
+                                },
+                                onVisibleChange: (value) => {
+                                    console.log(value,'onVisibleChange');
+                                }
+                            }}
+                            InputDataModel={FormFields}
+                            controls={this.createConfig()}
+                            onReady={(value) => {
+                                this.modalStore1 = value;
+                            }}>
+
+                        </LegionsProModalForm>
+                    </Row>
+
 
                 </Row>
             }

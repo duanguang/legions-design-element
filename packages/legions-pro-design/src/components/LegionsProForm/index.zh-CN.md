@@ -1,6 +1,6 @@
 ---
 category: Components
-cols: 2
+cols: 1
 type: 数据展示
 title: ProForm
 subtitle: 高级表单

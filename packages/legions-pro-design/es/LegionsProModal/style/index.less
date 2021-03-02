@@ -12,7 +12,7 @@
 }
 .legions-pro-modal-content-drag{
     /** 方案一二样式*/
-    pointer-events:none; /** 支持多个弹窗在页面可以拖拽移动*/
+    pointer-events:none ; /** 支持多个弹窗在页面可以拖拽移动*/
     .ant-modal-content{
         pointer-events: auto;
         position: relative;
@@ -38,16 +38,6 @@
         cursor: move;
     } */
 }
-.legions-pro-modal-ns-resizable{
-   
-    .ant-modal-content{
-        cursor:ns-resize;
-    }
-}
-.legions-pro-modal-ew-resizable{
-    cursor:ew-resize;
-    z-index: 9999;
-}
 .legions-pro-modal-nwse-resizable{
     cursor:nwse-resize;
 }
@@ -60,6 +50,7 @@
 }
 .legions-pro-modal-content-dragging{
     /** 方案一二样式*/
+     
     .ant-modal-content{
         position: relative;
         background-color: #fff;
@@ -128,4 +119,47 @@
     margin: 0 auto;
     top: auto;
     padding-bottom: 24px;
+}
+.legions-pro-modal{
+    .zoom-bar {
+        position: absolute;
+        overflow: hidden;
+        pointer-events:auto ; 
+        &.left-bar {
+            left: 0px;
+            top: 0;
+            height: 100% !important;
+            width: 2px;
+            cursor: ew-resize;
+        }
+        &.right-bar {
+            right: 0;
+            top: 0;
+            height: 100% !important;
+            width: 2px;
+            cursor: ew-resize;
+          }
+          &.bottom-bar {
+            left: 0;
+            bottom: 24px;
+            height: 2px;
+            width: 100% !important;
+            cursor: ns-resize;
+          }
+    }
+    .modalMaximize{
+        cursor: pointer;
+        border: 0;
+        background: transparent;
+        position: absolute;
+        right: 48px;
+        top: 15px;
+        z-index: 10;
+        font-weight: 700;
+        line-height: 1;
+        text-decoration: none;
+        transition: color .3s ease;
+        color: rgba(0, 0, 0, 0.43);
+        outline: 0; 
+    }
 }

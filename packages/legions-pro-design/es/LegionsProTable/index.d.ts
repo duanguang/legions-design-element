@@ -82,7 +82,7 @@ export default class LegionsProTable<TableRow = {}, Model = {}> extends React.Co
         pageSize: number;
         selectedRowKeys: string[] | number[];
         _expandRow?: string;
-        _type?: "checkbox" | "radio";
+        _type?: "radio" | "checkbox";
         _rowSelectionClickType?: "radio" | "check";
         columns?: (TableColumnConfig<{}> & import("../store/pro.table/interface").ITableColumnConfig)[];
         _obTableListCustom: import("../models").TableColumnsContainerEntity;

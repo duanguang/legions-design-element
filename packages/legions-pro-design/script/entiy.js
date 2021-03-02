@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-10 16:14:09
- * @LastEditTime: 2021-02-23 17:21:10
+ * @LastEditTime: 2021-02-25 10:07:02
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/script/entiy.js
@@ -47,13 +47,13 @@ const array_component = [
   'LegionsProTable',
  'LegionsProTableCustomColumns',
   'LegionsProTableForm', */
-  
-  'LegionsProTabsForm',
+  'LegionsProModal',
+/*   'LegionsProTabsForm',
 'LegionsProModalForm',
 'LegionsProTextArea',
 'LegionsProUEditor',
   'LegionsProUpload',
-'LegionsProVirtualTable',
+'LegionsProVirtualTable', */
   /* 'LgeionsProVirtualList', */
 ]
 const browser = [

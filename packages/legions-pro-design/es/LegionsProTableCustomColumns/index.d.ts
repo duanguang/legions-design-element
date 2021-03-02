@@ -46,7 +46,7 @@ export default class LegionsProTableCustomColumns extends Component<IProps, ISta
         pageSize: number;
         selectedRowKeys: string[] | number[];
         _expandRow?: string;
-        _type?: "checkbox" | "radio";
+        _type?: "radio" | "checkbox";
         _rowSelectionClickType?: "radio" | "check";
         columns?: (import("antd/lib/table/Table").TableColumnConfig<{}> & import("../store/pro.table/interface").ITableColumnConfig)[];
         _obTableListCustom: import("../models").TableColumnsContainerEntity;

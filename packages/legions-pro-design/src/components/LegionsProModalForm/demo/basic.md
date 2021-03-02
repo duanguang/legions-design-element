@@ -1,13 +1,13 @@
 ---
 order: 0
 title:
-  zh-CN: 简单列表
-  en-US: 简单列表
+  zh-CN: 页签表单基本使用
+  en-US: 页签表单基本使用
 ---
 
 ## zh-CN
 
-一个简单列表绑定数据使用
+页签表单基本使用
 
 ## en-US
 
@@ -17,95 +17,134 @@ import { JsonProperty } from 'json-mapper-object';
 import { Button, Row } from 'antd';
 import React from 'react';
 import { bind, observer } from 'legions/store-react';
-import { LegionsProTable, LegionsProPageContainer } from 'legions-pro-design';
+import { LegionsProTable,LegionsProModalForm,LegionsProForm, LegionsProPageContainer } from 'legions-pro-design';
+import {FormFields} from '../demoTest/model'; // 具体使用请看底部
 
 
-
- class ResponseVModelNameDataEntity {
-  @JsonProperty('key')
-  key = void 0;
-  @JsonProperty('name')
-  name = void 0;
-  @JsonProperty('age')
-  age = void 0;
-  @JsonProperty('address')
-  address = void 0;
-}
 interface IProps {}
-class ProTableDemo extends LegionsProTable.ProTableBaseClass<IProps,{},{},{}> {
+class LegionsProModalFormDemo extends React.Component<IProps,{}> {
+  modalStore: InstanceLegionsModalForm<FormFields> = null;
   constructor(props: IProps) {
     super(props);
-    this.pushColumns('name', {
-      title: '姓名',
-      width: '100px',
-      sorter: true,
-    });
-    this.pushColumns('age', {
-      title: '年龄',
-      width: '100px',
-      sorter: true,
-    });
-    this.pushColumns('address', {
-      title: '住址',
-      width: '100px',
-      sorter: true,
-    });
   }
+  createConfig() {
+        const rules = FormFields.initFormRules<FormFields,{}>(FormFields,{})
+        const formUtils = new LegionsProForm.ProFormUtils();
+        formUtils.renderInputConfig({
+            iAntdProps: formUtils.createAntdProps('text',null),
+            iFormProps: {
+                ...formUtils.createLayout('文本框',5,7),
+                maxLength: '50',
+                type: 'text',
+                /* visible:false, */
+            /* disabled: true, */
+                onChange: () => {
+                    console.log(this.formRef);
+                }
+            },
+            rules: rules.text
+        });
+        formUtils.renderInputConfig({
+            iAntdProps: formUtils.createAntdProps('textarea',null),
+            iFormProps: {
+                ...formUtils.createLayout('多行文本',5,7),
+                maxLength: '50',
+                type: 'textarea',
+            },
+            rules: rules.textarea
+        });
+        formUtils.renderInputConfig({
+            iAntdProps: formUtils.createAntdProps('password',null),
+            iFormProps: {
+                ...formUtils.createLayout('密码',5,7),
+                maxLength: '50',
+                type: 'password',
+
+            },
+            rules: rules.password
+        })
+        formUtils.renderInputConfig({
+            iAntdProps: formUtils.createAntdProps('numberText',null),
+            iFormProps: {
+                ...formUtils.createLayout('数字文本',5,7),
+                maxLength: '50',
+                type: 'number',
+
+            },
+            rules: rules.numberText
+        })
+        formUtils.renderInputNumberConfig({
+            iAntdProps: formUtils.createAntdProps('numbers',null),
+            iFormProps: {
+                ...formUtils.createLayout('数字',5,7),
+
+            },
+            rules: rules.numbers
+        })
+        formUtils.renderSelectConfig({
+            iAntdProps: formUtils.createAntdProps('selectedItem',null,'请选择'),
+            iFormProps: {
+                ...formUtils.createLayout('普通下拉',5,1 * 7),
+                options: [{
+                    value: '订单',
+                    label: '订单1',
+                    key: '1',
+                    keyValue: '222',
+                    disabled: true,
+                },
+                {
+                    value: '工单',
+                    label: '工单1',
+                    key: '2',
+                }],
+                size: 'default',
+                labelInValue: true,
+                onFocus: () => {
+                }
+            },
+            rules: rules.selectedItem,
+        })
+        return [
+            formUtils.getFormConfig('text'),
+            formUtils.getFormConfig('textarea'),
+            formUtils.getFormConfig('password'),
+            formUtils.getFormConfig('numberText'),
+            formUtils.getFormConfig('numbers'),
+            formUtils.getFormConfig('selectedItem'),
+        ]
+    }
   render() {
     return (
-      <LegionsProTable
-      <{},ResponseVModelNameDataEntity>
-        onReady={value => {
-          this.tableRef = value;
-          this.tableRef.viewModel.isAdaptiveHeight = false;
+      <Row>
+        <Row style={{ marginBottom: '10px' }}> 
+          <Button  type="primary" htmlType="submit" onClick={() => {
+              }}>打开</Button>
+        </Row>
+        <LegionsProModalForm
+              <FormFields>
+              modalProps={{
+                  resizable: true,
+                  /* modalType: 'fullscreen', */
+                  /* placement: 'right', */
+                  /* draggable: true, */
+                  mask: true,
+                  onVisibleChange: (value) => {
+                      console.log(value,'onVisibleChange');
+                  }
+              }}
+              InputDataModel={FormFields}
+              controls={this.createConfig()}
+              onReady={(value) => {
+                  this.modalStore = value;
+              }}>
 
-          this.tableRef.viewModel.bodyExternalContainer.set('ButtonAction', {
-            height: 48,
-          });
-
-          this.tableRef.viewModel.bodyExternalContainer.set('other', {
-            height: 70,
-          });
-        }}
-        autoQuery={{
-            params: (pageIndex,pageSize) => {
-              return {
-                size: pageSize,
-                current: pageIndex,
-                ...this.queryPrams,
-              };
-            },
-            transform: (value) => {
-              if (value && !value.isPending && value.value) {
-                const { result,current,pageSize,total } = value.value;
-                return {
-                  data: result.map((item,index) => {
-                    item['key'] = index + 1 + (current - 1) * pageSize;
-                    return item;
-                  }),
-                  total: total,
-                };
-              }
-              return {
-                total: 0,
-                data: [],
-              };
-            },
-            method: 'get',
-            ApiUrl: 'http://192.168.200.171:3001/mock/115/getUsers',
-            mappingEntity: (that,res) => {
-                that.result = that.transformRows(res['data'],ResponseVModelNameDataEntity)
-            }
-        }}
-        columns={this.columnsData}
-        uniqueUid="mock/115/getUsers"
-        uniqueKey="name"
-        isOpenRowChange={false}></LegionsProTable>
+          </LegionsProModalForm>
+      </Row>
     );
   }
 }
 const root = props => {
-  return <ProTableDemo></ProTableDemo>;
+  return <LegionsProModalFormDemo></LegionsProModalFormDemo>;
 };
 const app = create();
 ReactDOM.render(React.createElement(app.start(root)), mountNode);
