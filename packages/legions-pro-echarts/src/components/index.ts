@@ -10,7 +10,7 @@
 export { default as LegionsProEchartsBox } from './LegionsProEchartsBox'
 export { default as LegionsProEcharts }  from './LegionsProEcharts'
 export { default as LegionsProEchartsCore }  from './LegionsProEchartsCore';
-export { default as LegionsProEchartsBoxList }  from './LegionsProEchartsBoxList';
+export { default as LegionsProEchartsList }  from './LegionsProEchartsList';
 export { default as LegionsProEchartsChartBar }  from './LegionsProEchartsChartBar';
 export { default as LegionsProEchartsChartCard }  from './LegionsProEchartsChartCard';
 export { default as LegionsProEchartsChartLine }  from './LegionsProEchartsChartLine';

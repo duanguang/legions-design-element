@@ -3,7 +3,7 @@ import Col, { ColProps } from 'antd/lib/grid/col';
 import React from 'react';
 import './style/index.less';
 import { prefixCls } from '../core';
-import { log } from 'console';
+
 class ProColProps {
     style?: React.CSSProperties = {};
     className?: string = `${prefixCls}-col`;

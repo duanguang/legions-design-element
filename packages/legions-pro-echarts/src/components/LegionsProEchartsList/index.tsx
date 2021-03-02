@@ -9,9 +9,8 @@
  */
 
 import React from 'react';
-import { Progress,Col,Row } from 'antd';
+import { Col,Row } from 'antd';
 import './style/index.less';
-import LegionsProEchartsBox from '../LegionsProEchartsBox';
 import LegionsProLineOverflow from '../LegionsProLineOverflow';
 import LegionsProEchartsProgress from '../LegionsProEchartsParts/progress';
 interface ColumnProps<T> {
@@ -50,7 +49,7 @@ class IProps<T> {
 }
 const proLayoutPrefix = 'legions-pro-echarts';
 /** 可视化界面容器盒子列表组件 */
-export default class LegionsProEchartsBoxList<T = {}> extends React.Component<IProps<T>> {
+export default class LegionsProEchartsList<T = {}> extends React.Component<IProps<T>> {
     //@ts-ignore
     static defaultProps: Readonly<IProps> = new IProps()
     renderContent() {
@@ -160,13 +159,9 @@ export default class LegionsProEchartsBoxList<T = {}> extends React.Component<IP
             ...boxStyle
         }
         return (
-            <LegionsProEchartsBox style={newBoxStyle}
-                title={this.renderProBoxTitle()}
-            >
                 <div className={`${proLayoutPrefix}-box-list`}>
                    {this.renderContent()}
                 </div>
-            </LegionsProEchartsBox>
         )
     }
 }

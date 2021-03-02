@@ -1,5 +1,5 @@
 import { Col,Progress,Row } from 'antd';
-import LegionsProEchartsBoxList from '../../../components/LegionsProEchartsBoxList';
+import LegionsProEchartsList from '../../../components/LegionsProEchartsList';
 import LegionsProEchartsLayout from '../../../components/LegionsProEchartsLayout';
 import React from 'react';
 import LegionsProEchartsBox from '../../../components/LegionsProEchartsBox';
@@ -31,8 +31,8 @@ export class LegionsProEchartsBoxDemo extends React.Component {
         return <LegionsProEchartsLayout gutter={6}>
             <ProRow>
                 <ProCol span={6}>
-                    <LegionsProEchartsBoxList
-                        boxTitle="无数据"
+                    <LegionsProEchartsBox title="无数据">
+                    <LegionsProEchartsList
                         noContent="暂无数据"
                         rowKey={'name'}
                         columns={
@@ -56,13 +56,14 @@ export class LegionsProEchartsBoxDemo extends React.Component {
 
                             ]
                         }
-                        dataSource={[]}></LegionsProEchartsBoxList>
+                        dataSource={[]}></LegionsProEchartsList>
+                    </LegionsProEchartsBox>
                 </ProCol>
                 <ProCol span={6}>
-                    <LegionsProEchartsBoxList
+                    <LegionsProEchartsBox title="单行列表">
+                    <LegionsProEchartsList
                         <IDataSourceSingleRowList>
                         boxStyle={{ height: '33.33%', paddingBottom: 10, paddingTop: 5 }}
-                        boxTitle="单行列表"
                         columns={
                             [
                                 {
@@ -88,12 +89,13 @@ export class LegionsProEchartsBoxDemo extends React.Component {
                                 proportion: 41,
                                 total: 397786
                             },
-                        ]}></LegionsProEchartsBoxList>
+                        ]}></LegionsProEchartsList>
+                        </LegionsProEchartsBox>
                 </ProCol>
                 <ProCol span={6}>
-                    <LegionsProEchartsBoxList
+                    <LegionsProEchartsBox title="列表占比">
+                    <LegionsProEchartsList
                         boxStyle={{ height: '33.33%', paddingBottom: 10, paddingTop: 5 }}
-                        boxTitle="列表占比"
                         rowKey={'name'}
                         columns={
                             [
@@ -134,10 +136,12 @@ export class LegionsProEchartsBoxDemo extends React.Component {
                                 proportion: 61,
                                 total: 397786
                             },
-                        ]}></LegionsProEchartsBoxList>
+                        ]}></LegionsProEchartsList>
+                        </LegionsProEchartsBox>
                 </ProCol>
                 <ProCol span={6}>
-                    <LegionsProEchartsBoxList
+                    <LegionsProEchartsBox title="超出内容部分浮框显示">
+                    <LegionsProEchartsList
                         boxStyle={{ height: '33.33%',paddingBottom: 10,paddingTop: 5 }}
                         rowKey={'zhengqu'}
                         boxTitle="超出内容部分浮框显示"
@@ -163,12 +167,14 @@ export class LegionsProEchartsBoxDemo extends React.Component {
                                 jiaoyie: '40,457,37',
                                 jiaoyidanliang: 21445,
                             },
-                        ]}></LegionsProEchartsBoxList>
+                        ]}></LegionsProEchartsList>
+                        </LegionsProEchartsBox>
                 </ProCol>
             </ProRow>
             <ProRow>
                 <ProCol span={12}>
-                <LegionsProEchartsBoxList
+                <LegionsProEchartsBox title="列表占比">
+                <LegionsProEchartsList
                         boxStyle={{ height: '33.33%', paddingBottom: 10, paddingTop: 5 }}
                         boxTitle="列表占比"
                         rowKey={'name'}
@@ -210,7 +216,8 @@ export class LegionsProEchartsBoxDemo extends React.Component {
                                 proportion: 61,
                                 total: 397786
                             },
-                        ]}></LegionsProEchartsBoxList>
+                        ]}></LegionsProEchartsList>
+                        </LegionsProEchartsBox>
                 </ProCol>
             </ProRow>
         </LegionsProEchartsLayout>
