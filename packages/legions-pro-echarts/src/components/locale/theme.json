@@ -11,6 +11,10 @@
     ],
     "backgroundColor": "rgba(0,0,0,0)",
     "textStyle": {},
+    "label": {
+        "textBorderColor": "transparent",
+        "color": "auto"
+    },
     "title": {
         "textStyle": {
             "color": "#ffffff"
@@ -20,6 +24,9 @@
         }
     },
     "line": {
+        "label": {
+            "show": true
+        },
         "itemStyle": {
             "normal": {
                 "borderWidth": "2"
@@ -50,6 +57,12 @@
         "smooth": false
     },
     "bar": {
+        "label": {
+            "show": true,
+            "position": "top"
+        },
+        "barWidth": "20%",
+        "barGap": "15%",
         "itemStyle": {
             "normal": {
                 "barBorderWidth": 0,

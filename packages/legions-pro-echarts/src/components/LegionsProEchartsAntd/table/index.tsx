@@ -7,8 +7,8 @@
 import { Table } from 'antd';
 import { TableProps } from 'antd/lib/table/Table';
 import React from 'react';
-import { prefixCls } from '../core';
-import './style/index.less';
+import { prefixCls } from '../../core';
+import '../style/table.less';
 
 interface IProps<T> extends TableProps<T> {
     /** 是否启用高度自适应模式 */

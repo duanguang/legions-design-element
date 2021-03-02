@@ -8,9 +8,8 @@
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
 import React from 'react';
-import { LegionsEchartsAutoQueryParams, LegionsProEchartsPropsTypes } from '../interface/interface';
+import { LegionsEchartsAutoQueryParams, LegionsProEchartsPropsTypes } from '../interface';
 import echarts from 'echarts/lib/echarts';
-import 'echarts/lib/chart/pie';
 
 export class LegionsProEchartsCardProps{
     title?: string = '';

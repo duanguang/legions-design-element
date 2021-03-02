@@ -7,7 +7,7 @@ import echarts from 'echarts/lib/echarts';
 import LegionsProEchartsChartPie from '..';
 import { mount,render,shallow, configure} from 'enzyme';
 import { observablePromise } from 'legions/store-utils';
-import { IExtendsOption } from 'components/interface/interface';
+import { IExtendsOption } from 'components/interface';
 
 /* import jsdom from 'jsdom'
 const { JSDOM } = jsdom;
@@ -79,6 +79,7 @@ class LegionsProEchartsChartPieAutoMouter extends React.Component{
             }}
             onChartReady={(instance,methodRef) => {
                 this.chartsRef = instance;
+                // @ts-ignore
                 this.pieMethod = methodRef
             }}
             autoQuery={{

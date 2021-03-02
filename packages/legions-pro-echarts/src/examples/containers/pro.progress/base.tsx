@@ -1,5 +1,4 @@
-import { LegionsProEchartsBox, LegionsProEchartsLayout } from "components";
-import LegionsProEchartsProgress from "components/LegionsProEchartsProgress";
+import { LegionsProEchartsBox, LegionsProEchartsLayout,LegionsProEchartsProgress } from "components";
 import React from "react";
 const { ProRow, ProCol } = LegionsProEchartsLayout;
 export class ProProgressDemo extends React.Component{

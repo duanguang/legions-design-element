@@ -17,7 +17,10 @@ class IProps {
     height?: React.ReactText = '100%';
     /** 宽度 */
     width?: React.ReactText = 'auto';
+    /** 外层样式 */
     style?: React.CSSProperties = {};
+    /** 内层conent样式 */
+    contentStyle?: React.CSSProperties = {};
     className?: string = '';
 }
 /** 可视化界面容器盒子占位块 */
@@ -25,7 +28,7 @@ export default class LegionsProEchartsBox extends React.Component<IProps> {
     static defaultProps: Readonly<IProps> = new IProps()
 
     render() {
-        const {style, className, title, height, width} = this.props;
+        const {style, className, title, height, width, contentStyle} = this.props;
         const mStyle: React.CSSProperties = {
             height,
             width,
@@ -34,12 +37,12 @@ export default class LegionsProEchartsBox extends React.Component<IProps> {
         return (
             <div style={mStyle} className={`${prefixCls}-box-wrap ${className}`}>
                 <div className={`${prefixCls}-box`} style={{height: '100%', paddingTop: title ? '36px' : void 0}}>
-                    { title && <div className="pro-box-title" attr-title={title}></div> }
+                    { title && <div className="pro-box-title"><span>{title}</span></div> }
                     <div className="pro-box-topLeft"></div>
                     <div className="pro-box-topRight"></div>
                     <div className="pro-box-botLeft"></div>
                     <div className="pro-box-botRight"></div>
-                    <div className="pro-box-content">
+                    <div className="pro-box-content" style={contentStyle}>
                         {this.props.children}
                     </div>
                 </div>

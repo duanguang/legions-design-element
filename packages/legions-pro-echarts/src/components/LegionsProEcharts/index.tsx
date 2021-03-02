@@ -1,16 +1,48 @@
-import echarts from 'echarts/lib/echarts';
-import React from 'react';
+
 import LegionsProEchartsCore from '../LegionsProEchartsCore';
-import { LegionsProEchartsPropsTypes } from '../interface/interface';
-/* 默认加载下列组件，其他组件按需引入 */
-import 'echarts/lib/chart/bar';
-import 'echarts/lib/component/legend';
-import 'echarts/lib/component/tooltip';
-import 'echarts/lib/component/title';
-export default  class LegionsProEcharts extends LegionsProEchartsCore<LegionsProEchartsPropsTypes> {
-    static defaultProps: Readonly<LegionsProEchartsPropsTypes> = new LegionsProEchartsPropsTypes()
+import { echarts, LegionsProEchartsPropsTypes } from '../interface';
+import {
+    TitleComponent,
+    GridComponent,
+    TooltipComponent,
+    LegendComponent,
+} from 'echarts/components';
+import { CanvasRenderer } from 'echarts/renderers';
+import theme from '../locale/theme.json';
+
+/** 预设组件，也是注册必须的组件 */
+echarts.use(
+    [TitleComponent, LegendComponent, TooltipComponent, GridComponent, CanvasRenderer]
+);
+
+export default class LegionsProEcharts<P> extends LegionsProEchartsCore<P> {
+    static defaultProps: Readonly<LegionsProEchartsPropsTypes<any>> = {
+        ...new LegionsProEchartsPropsTypes(),
+        theme,
+    }
     constructor(props) {
       super(props);
       this.echartsLib = echarts;
+    }
+    componentDidMount() {
+        super.componentDidMount();
+        /** 抛出实例 */
+        this.props.onChartReady && this.props.onChartReady({
+            echarts: this.echartObj,
+            methods: { onSearch: this.autoRequestData}
+        });
+        /** 执行请求 */
+        this.autoRequestData();
+    }
+    /** 请求托管 */
+    autoRequestData = (params?: any) => {
+        if (this.props.request) {
+            this.echartObj.showLoading(this.props.loadingOption)
+            this.props.request(params).then(res => {
+                this.echartObj.setOption(res)
+            }).finally(() => {
+                this.echartObj.hideLoading()
+            })
+        }
     }
 }

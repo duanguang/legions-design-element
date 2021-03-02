@@ -1,8 +1,8 @@
 import React,{ Component } from 'react'
 import { Progress } from 'antd';
 import { ProgressProps } from 'antd/lib/progress/progress';
-import { prefixCls } from '../core';
-import './style/index.less';
+import { prefixCls } from '../../core';
+import '../style/progress.less';
 interface IProps extends ProgressProps{}
 export default class LegionsProEchartsProgress extends Component<IProps> {
     renderProgress(){

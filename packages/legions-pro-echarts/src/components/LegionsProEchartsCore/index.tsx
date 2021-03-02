@@ -1,20 +1,21 @@
-import echarts from 'echarts/lib/echarts';
+import * as echarts from 'echarts/core';
 import { isEqual, pick } from 'lodash';
 import React, { Component } from 'react';
 import { bind, clear } from 'size-sensor';
-import { LegionsProEchartsPropsTypes } from '../interface/interface';
-interface ILegionsProEchartsReactCore extends LegionsProEchartsPropsTypes {
-    echarts: typeof echarts
-}
-export default class LegionsProEchartsCore<P = {}> extends Component<LegionsProEchartsPropsTypes & P> {
-    static defaultProps: Readonly<LegionsProEchartsPropsTypes> = new LegionsProEchartsPropsTypes()
+import { LegionsProEchartsPropsTypes } from '../interface';
+export default class LegionsProEchartsCore<P> extends Component<LegionsProEchartsPropsTypes<P>> {
+    static defaultProps: Readonly<LegionsProEchartsPropsTypes<any>> = new LegionsProEchartsPropsTypes()
     echartsLib: typeof echarts;
     echartsElement: HTMLDivElement;
-    constructor(props: ILegionsProEchartsReactCore&P) {
+    echartObj: echarts.ECharts;
+    constructor(props: LegionsProEchartsPropsTypes<P>) {
         super(props);
+        // @ts-ignore
         this.echartsLib = props.echarts;
         // @ts-ignore
         this.echartsElement = null;
+        // @ts-ignore
+        this.echartObj = null;
     }
     componentDidMount() {
         this.rerender();
@@ -61,21 +62,20 @@ export default class LegionsProEchartsCore<P = {}> extends Component<LegionsProE
         /* 获取Echarts实例，没有则初始化 */
         const echartObj = this.echartsLib.getInstanceByDom(this.echartsElement) || this.echartsLib.init(this.echartsElement, this.props.theme, this.props.opts);
         /* 初始配置 */
-        echartObj.setOption(this.props.option || {},{ ...this.props.setOptionConfig });
+        echartObj.setOption(this.props.option || {}, this.props.setOptionConfig);
         /* 是否显示lading状态 */
         if (this.props.loading) {
             echartObj.showLoading(void 0, this.props.loadingOption)
         }else {
             echartObj.hideLoading();
         }
+        this.echartObj = echartObj
         return echartObj
     };
     rerender = () => {
-        const { onEvents,onChartReady } = this.props;
+        const { onEvents } = this.props;
         const echartObj = this.renderEchartDom();
         this.bindEvents(echartObj,onEvents || {});
-        // @ts-ignore on chart ready
-        if (typeof onChartReady === 'function' && this.props.onChartReady) this.props.onChartReady(echartObj);
         // on resize
         if (this.echartsElement) {
             bind(this.echartsElement,() => {
