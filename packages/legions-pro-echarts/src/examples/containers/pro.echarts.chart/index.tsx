@@ -3,7 +3,7 @@
  * @Date: 2021-01-22 14:23:11
  * @description: charts demo合集
  */
-import { Radio, Table, Tabs } from 'antd';
+import { LegionsProEchartsChartGauge, LegionsProEchartsChartRadar } from 'components';
 import { mockService } from 'examples/services/mockService';
 import React from 'react';
 import LegionsProEchartsBox from '../../../components/LegionsProEchartsBox';
@@ -100,8 +100,47 @@ export class LegionsProEchartsChartPieDemo extends React.Component {
                 </ProRow>
                 <ProRow>
                     <ProCol span={6}>
-                        <LegionsProEchartsBox title="词云" height="240px">
-
+                        <LegionsProEchartsBox title="雷达图" height="350px">
+                            <LegionsProEchartsChartRadar
+                                option={{
+                                    radar: {
+                                        indicator: [
+                                            { name: '销售', max: 6500},
+                                            { name: '管理', max: 16000},
+                                            { name: '信息技术', max: 30000},
+                                            { name: '客服', max: 38000},
+                                            { name: '研发', max: 52000},
+                                            { name: '市场', max: 25000},
+                                        ]
+                                    },
+                                    series: [{
+                                        data : [
+                                            {
+                                                value : [4300, 10000, 28000, 35000, 50000, 19000],
+                                                name : '预算分配'
+                                            },
+                                            {
+                                                value : [5000, 14000, 28000, 31000, 42000, 21000],
+                                                name : '实际开销'
+                                            }
+                                        ]
+                                    }]
+                                }}
+                            ></LegionsProEchartsChartRadar>
+                        </LegionsProEchartsBox>
+                    </ProCol>
+                    <ProCol span={6}>
+                        <LegionsProEchartsBox title="仪表盘" height="350px">
+                            <LegionsProEchartsChartGauge
+                                option={{
+                                    series: [{
+                                        data: [{
+                                            value: 50,
+                                            name: '速度'
+                                        }]
+                                    }]
+                                }}
+                            ></LegionsProEchartsChartGauge>
                         </LegionsProEchartsBox>
                     </ProCol>
                 </ProRow>
