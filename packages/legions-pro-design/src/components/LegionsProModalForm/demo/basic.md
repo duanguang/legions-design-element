@@ -118,6 +118,8 @@ class LegionsProModalFormDemo extends React.Component<IProps,{}> {
       <Row>
         <Row style={{ marginBottom: '10px' }}> 
           <Button  type="primary" htmlType="submit" onClick={() => {
+             this.modalStore.modalInstance.viewModel.visible = true
+            this.modalStore.modalInstance.viewModel.title = 'test'
               }}>打开</Button>
         </Row>
         <LegionsProModalForm
