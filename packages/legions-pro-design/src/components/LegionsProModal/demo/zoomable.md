@@ -39,6 +39,9 @@ class ProModalDemo extends React.Component<IProps,{}> {
           }}> 缩放</Button>
         <LegionsProModal
           resizable
+          mask
+          draggable
+          maskClosable={false}
           onReady={value => {
             this.modalRef = value;
           }}
