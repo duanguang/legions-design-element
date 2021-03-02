@@ -30,7 +30,7 @@
     "@commitlint/cli": "^7.3.2",
     "@commitlint/config-conventional": "^7.3.1",
     "@types/node": "^10.0.0",
-    "@types/react": "^15.6.6",
+    "@types/react": "^16.9.35",
     "@types/react-dom": "^0.14.22",
     "antd": "^2.7.4",
     "brain-cli": "^1.0.8-alpha.5",
