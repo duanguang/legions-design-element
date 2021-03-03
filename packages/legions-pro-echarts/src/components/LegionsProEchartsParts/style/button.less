@@ -1,0 +1,43 @@
+@import '../../style/index';
+
+@buttonCls: ~'@{prefixCls}-button';
+
+.@{buttonCls} {
+    background-color: transparent;
+    border-color: #0490aa;
+    color: #fff;
+    &:hover, &:active, &:focus{
+        background-color: transparent;
+        border-color: #54C7E7;
+        color: #54C7E7;
+    }
+    &.ant-btn-primary {
+        border-color: #54C7E7;
+        background-color: #19829F;
+        color: #fff;
+        &:hover, &:active, &:focus{
+            background-color: #075b72;
+        }
+    }
+    &.ant-btn-danger {
+        border-color: #f04134;
+        color: #f04134;
+        background-color: transparent;
+        &:hover, &:active, &:focus{
+            color: #fff;
+            background-color: #f04134;
+        }
+    }
+    &.ant-btn-loading::before{
+        background-color: transparent;
+    }
+    &[disabled],
+    &[disabled]:hover,
+    &[disabled]:focus,
+    &[disabled]:active{
+        color: #fff;
+        border-color: #0490aa;
+        opacity: 0.6;
+        background-color: transparent;
+    }
+}

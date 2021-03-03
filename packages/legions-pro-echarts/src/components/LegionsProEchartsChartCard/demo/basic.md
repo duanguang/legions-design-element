@@ -12,10 +12,11 @@ title:
 ## en-US
 
 ````jsx
-import { LegionsProEchartsBox } from 'legions-pro-echarts';
+import { LegionsProEchartsBox, LegionsProEchartsChartCard } from 'legions-pro-echarts';
 ReactDOM.render(
   <div>
     <LegionsProEchartsBox style={{ height: '260px', paddingBottom: 5 }}>
+        <LegionsProEchartsChartCard total={126} title="本月新增审核企业"></LegionsProEchartsChartCard>
     </LegionsProEchartsBox>
   </div>,
   mountNode

@@ -1,8 +1,8 @@
 ---
 order: 2
 title:
-  zh-CN: 显示副标题
-  en-US: Size
+  zh-CN: 基础折线图
+  en-US: Line
 ---
 
 ## zh-CN
@@ -12,10 +12,21 @@ title:
 ## en-US
 
 ````jsx
-import { LegionsProEchartsBox } from 'legions-pro-echarts';
+import { LegionsProEchartsBox, LegionsProEchartsChartLine } from 'legions-pro-echarts';
 ReactDOM.render(
   <div>
     <LegionsProEchartsBox style={{ height: '260px', paddingBottom: 5 }}>
+        <LegionsProEchartsChartLine
+            option={{
+                xAxis: {
+                    data: ['A','B','C','D','E','F','G','H','I','J'],
+                },
+                series: [{
+                    name: '进口', stack: '总量',
+                    data: [11.43, 13.58, 25.47, 38.45, 31.58, 26.45, 20.09, 34.42, 11.43, 42.56],
+                }]
+            }}
+        ></LegionsProEchartsChartLine>
     </LegionsProEchartsBox>
   </div>,
   mountNode

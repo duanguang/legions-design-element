@@ -3,6 +3,7 @@ import Col, { ColProps } from 'antd/lib/grid/col';
 import React from 'react';
 import './style/index.less';
 import { prefixCls } from '../core';
+
 class ProColProps {
     style?: React.CSSProperties = {};
     className?: string = `${prefixCls}-col`;
@@ -102,9 +103,9 @@ export default  class LegionsProEchartsLayout extends React.Component<LayoutProp
                 console.error(error)
             }
             if (newChildren.length) {
-                return React.cloneElement(item, newProps);
-            } else {
                 return React.cloneElement(item, newProps, newChildren);
+            } else {
+                return React.cloneElement(item, newProps);
             }
         })
     }

@@ -1,0 +1,38 @@
+@import '../../style/index';
+
+@progressCls: ~'@{prefixCls}-progress';
+
+.@{progressCls}{
+    &.ant-progress-line{
+        .ant-progress-inner{
+            background-color: transparent;
+            border: 1px solid #1D5D7F;
+            padding: 2px;
+        }
+        .ant-progress-bg{
+            background: linear-gradient(to right, transparent, #00E6FC);
+            transition: all 1s;
+            /** 关闭active状态下的动画 */
+            &::before{
+                animation: unset;
+            }
+        }
+        .ant-progress-text{
+            color: #00E6FC;
+        }
+    }
+    &.ant-progress-circle{
+        display: inline-block;
+        .ant-progress-inner{
+            border: 1px solid rgba(16,141,233,0.2);
+            padding: 12%;
+            .ant-progress-circle-trail{
+                stroke: rgba(4,35,58,1);
+            }
+        }
+        .ant-progress-text{
+            color: #00E6FC;
+            font-size: 18px;
+        }
+    }
+}
