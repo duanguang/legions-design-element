@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-08 15:19:23
- * @LastEditTime: 2021-02-04 17:34:29
+ * @LastEditTime: 2021-03-03 09:54:52
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProConditions/ProConditionsUtils.tsx
@@ -19,7 +19,7 @@ import { ClassOf } from 'legions-lunar/types/api/typescript';
 import { createFormRule } from 'legions-decorator/async.validator'; 
 import { IQueryCheckBoxProps, IQueryDateProps, IQueryGroupCheckBoxProps, IQueryRadioButtonProps, IQueryRangePickerProps, IQuerySelectProps, IQueryTextAreaProps, IQueryTextNumberProps, IQueryTextProps } from './interface';
 import { ColSize } from 'antd/lib/grid/col';
-import { IViewQueryConditionStore } from '../store/pro.query.conditions/interface';
+import { IViewQueryConditionStore } from '../LegionsStoreConditions/interface';
 import { shortHash } from 'legions-lunar/object-hash';
 interface ColProps {
     className?: string;

@@ -1,6 +1,6 @@
 import React from "react";
-import { TabPaneViewStore, MenuStore } from "../../store/pro.layout";
-import { IPanes } from '../../store/pro.layout/interface';
+import LegionsStoreLayout from "../../LegionsStoreLayout";
+import { IPanes } from '../../LegionsStoreLayout/interface';
 import { IUserInfo } from '../../interface';
 export interface ClickParam {
     key: string;
@@ -14,8 +14,8 @@ export interface IRouter {
     component: any;
 }
 interface IProps extends IUserInfo {
-    store?: TabPaneViewStore;
-    menuStore?: MenuStore;
+    store?: InstanceType<typeof LegionsStoreLayout.TabPaneViewStore>;
+    menuStore?: InstanceType<typeof LegionsStoreLayout.MenuStore>;
     router: Array<IRouter>;
     /**
      * 是否启用页签

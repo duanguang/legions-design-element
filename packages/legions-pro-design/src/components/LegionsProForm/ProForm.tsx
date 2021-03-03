@@ -7,14 +7,14 @@ import { LabelWithInputModel } from './FormInput';
 import './style/index.less'
 import { WrappedFormUtils } from '../interface/antd';
 import { IErrorView, IFormState, IGroup } from './interface/form';
-import { ISchedule } from '../store/interface';
+import { ISchedule } from '../LegionsStore/interface';
 import {
     LabelWithSelectModel,LabelWithRenderModel,LabelWithDatePickerModel,
     LabelWithMonthPickerModel,LabelWithRangePickerModel,LabelWithUploadModel,LabelWithInputNumberModel,
 } from './interface';
 import { bind,observer } from 'legions/store-react'
-import {ProFormStore } from '../store/pro.form';
-import {IViewModelHlFormStore,IElementList, IProFormFields} from '../store/pro.form/interface'
+import LegionsStoreForm from '../LegionsStoreForm';
+import {IViewModelHlFormStore,IElementList, IProFormFields} from '../LegionsStoreForm/interface'
 import { shortHash } from 'legions-lunar/object-hash';
 import { LabelWithSwitchModel } from './FormSwitch';
 import { LabelWithRadioButtonModel } from './FormRadioButton';
@@ -43,7 +43,7 @@ export interface IProFormProps<mapProps = {}> {
      * @memberof IHLFormProps
      */
     InputDataModel: Function,
-    store?: ProFormStore,
+    store?: InstanceType<typeof LegionsStoreForm>,
     /** 初始化执行一次 */
     controls: Array<IProFormFields['componentModel']>;
     group?: Array<IGroup>,
@@ -141,7 +141,7 @@ enum KeydownEnum {
     enter = 13,
 }
 
-@bind({ store: ProFormStore })
+@bind({ store: LegionsStoreForm })
 @observer
 class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
     timer = null
@@ -981,7 +981,7 @@ const CustomizedForm = Form.create({
     }
 })(ProForm);
 
-@bind({ store: ProFormStore })
+@bind({ store: LegionsStoreForm })
 @observer
 export class LegionsProForm<mapProps = {}> extends React.Component<IProFormProps<mapProps>>{
     static CreateForm = CreateForm

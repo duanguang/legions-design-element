@@ -1,5 +1,5 @@
-import { IViewModelProTableStore, ILocalViewModelProTableStore, ITableAutoQuery } from '../store/pro.table/interface';
-import { ProTableStore } from '../store/pro.table';
+import { IViewModelProTableStore, ILocalViewModelProTableStore, ITableAutoQuery } from '../LegionsStoreTable/interface';
+import LegionsStoreTable from '../LegionsStoreTable';
 import { TableColumnConfig } from '../interface/antd';
 import { TableProps } from 'antd/lib/table/Table';
 export interface ITableColumnConfig {
@@ -85,7 +85,7 @@ export interface IExportCsv {
     quoted?: boolean;
 }
 export interface InstanceProTable {
-    store: ProTableStore;
+    store: InstanceType<typeof LegionsStoreTable>;
     readonly uid: string;
     /**
      * 当前table实现双向绑定的数据对象，可以直接修改其值，会实时响应到table组件
@@ -175,7 +175,7 @@ interface IMethods {
 }
 export declare type IViewModelProTable = IViewModelProTableStore;
 export interface IProTableProps<TableRow = {}, Model = {}> extends TableProps<TableRow> {
-    readonly store?: ProTableStore;
+    readonly store?: InstanceType<typeof LegionsStoreTable>;
     pageSize?: number;
     /**
      *

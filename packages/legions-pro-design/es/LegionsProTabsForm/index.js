@@ -1,10 +1,10 @@
 /**
-  *  legions-pro-design v0.0.7
+  *  legions-pro-design v0.0.3
   * (c) 2021 duanguang
   * @license MIT
   */
 import { Tabs, Button, Col, Icon } from 'antd';
-import { ProFormStore } from '../store/pro.form';
+import LegionsStoreForm from '../LegionsStoreForm';
 import { bind, observer } from 'legions/store-react';
 import React from 'react';
 import { shortHash } from 'legions-lunar/object-hash';
@@ -255,7 +255,7 @@ var LegionsProTabsForm = /** @class */ (function (_super) {
             })));
     };
     LegionsProTabsForm = __decorate([
-        bind({ store: ProFormStore }),
+        bind({ store: LegionsStoreForm }),
         observer,
         __metadata("design:paramtypes", [Object])
     ], LegionsProTabsForm);

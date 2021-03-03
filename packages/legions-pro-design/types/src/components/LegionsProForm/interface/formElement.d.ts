@@ -1,6 +1,6 @@
-import { ProFormStore } from '../../store/pro.form';
+import LegionsStoreForm from '../../LegionsStoreForm';
 export interface InstanceFormElement {
-    store: ProFormStore;
+    store: InstanceType<typeof LegionsStoreForm>;
     /**
      * FormElement 组件唯一UID 自动生成
      *

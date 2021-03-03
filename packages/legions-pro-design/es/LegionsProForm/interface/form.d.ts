@@ -1,11 +1,11 @@
 /// <reference types="react" />
 import { ValidateCallback } from 'antd/lib/form/Form';
 import { HlLabeledValue } from 'legions-lunar/model';
-import { ILocalViewModelHlFormStore, IViewModelHlFormStore, IErrorView, IProFormFields } from '../../store/pro.form/interface';
-import { ProFormStore } from '../../store/pro.form';
+import { ILocalViewModelHlFormStore, IViewModelHlFormStore, IErrorView, IProFormFields } from '../../LegionsStoreForm/interface';
+import LegionsStoreForm from '../../LegionsStoreForm';
 export type { IErrorView };
 export interface InstanceForm {
-    store: ProFormStore;
+    store: InstanceType<typeof LegionsStoreForm>;
     /**
      * 只读数据，请勿篡改
      *

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Button, Row, Col, Card, Tooltip, message, Icon } from 'antd';
 import LegionsProModal from  '../LegionsProModal';
 import { InstanceLegionsProModal} from '../LegionsProModal/interface'
-import {ProTableStore} from '../store/pro.table';
+import LegionsStoreTable from '../LegionsStoreTable';
 import { observer, bind } from 'legions/store-react'
 import LegionsProDragger from '../LegionsProDragger';
 import styles from './style/index.modules.less';
@@ -15,7 +15,7 @@ interface IProps {
      * @memberof IProps
      */
     tableUid: string;
-    store?: ProTableStore;
+    store?: InstanceType<typeof LegionsStoreTable>;
      /**
      *  组件componentWillMount 执行
      *
@@ -34,7 +34,7 @@ interface IProps {
 interface IState {
     columns?: { dataIndex: string; title: string }[]
 }
-@bind({ store: ProTableStore })
+@bind({ store: LegionsStoreTable })
 @observer
 export default class LegionsProTableCustomColumns extends Component<IProps, IState> {
     modalRef: InstanceLegionsProModal = null

@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-10 16:14:09
- * @LastEditTime: 2021-02-25 10:07:02
+ * @LastEditTime: 2021-03-03 15:19:37
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/script/entiy.js
@@ -10,25 +10,26 @@
 
 const path = require('path');
 const resolves = _path => path.join(process.cwd(),_path);
-const array_components = ['core','core/cross-module','index']
-const array_components1 = ['models',
+const array_components = ['index']
+const array_components1 = ['LegionsModels','LegionsCore'
 /* 'db', */
 /* 'services' */]
-const array_componentsStore = ['store',
-'store/pro.form',
-'store/pro.layout',
-'store/pro.modal',
-'store/pro.query.conditions',
-'store/pro.table',
+const array_componentsStore = [
+'LegionsStore',
+/* 'LegionsStoreConditions',
+'LegionsStoreForm',
+'LegionsStoreLayout',
+'LegionsStoreModal',
+'LegionsStoreTable', */
 ]
 const array_component = [
- /*  'LegionsProBaiduMap',
+/*   'LegionsProBaiduMap',
 'LegionsProBreadcrumb',
 'LegionsProDataImport',
 'LegionsProDragger',
 'LegionsProErrorReportShow',
 'LegionsProException',
- 'LegionsProIframe',*/
+ 'LegionsProIframe', */
   
  /* 'LegionsProForm', */
   
@@ -47,8 +48,8 @@ const array_component = [
   'LegionsProTable',
  'LegionsProTableCustomColumns',
   'LegionsProTableForm', */
-  'LegionsProModal',
-/*   'LegionsProTabsForm',
+
+  /* 'LegionsProTabsForm',
 'LegionsProModalForm',
 'LegionsProTextArea',
 'LegionsProUEditor',
@@ -80,25 +81,27 @@ const umd = [
   },
 ];
 const es = [
-  ...array_component.map((item) => {
+  ...array_components.map((item) => {
     let input = '';
     let file = '';
     if (item === 'index') {
       input = resolves(`src/components/index.ts`);
       file = resolves('es/index.js');
     }
-    else if (item==='core') {
-      input = resolves(`src/components/core/index.ts`);
-      file = resolves('es/core/index.js');
+    else if (item==='LegionsCore') {
+      input = resolves(`src/components/LegionsCore/index.ts`);
+      file = resolves('es/LegionsCore/index.js');
     }
-    else if (item==='core/cross-module') {
-      input = resolves(`src/components/core/cross-module/index.ts`);
-      file = resolves('es/core/cross-module/index.js');
-    }
-    else if (item.indexOf('models') > -1
+    else if (item.indexOf('LegionsModels') > -1
       || item.indexOf('db') > -1
       || item.indexOf('services') > -1
-      ||item.indexOf('store') > -1) {
+      || item.indexOf('LegionsStore') > -1
+      || item.indexOf('LegionsStoreConditions') > -1
+      || item.indexOf('LegionsStoreForm') > -1
+      || item.indexOf('LegionsStoreLayout') > -1
+      || item.indexOf('LegionsStoreModal') > -1
+      || item.indexOf('LegionsStoreTable') > -1
+    ) {
       input = resolves(`src/components/${item}/index.ts`);
       file = resolves(`es/${item}/index.js`);
     }

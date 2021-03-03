@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.7
+  *  legions-pro-design v0.0.3
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -337,6 +337,7 @@ var LegionsProSelect = /** @class */ (function (_super) {
                 selection.appendChild(this.copyIconNode);
                 this.renderIconCopyPortal(this.props);
             }
+            var selectionChoiceUL = inputDom.querySelector('ul');
         }
     };
     LegionsProSelect.prototype.componentWillReceiveProps = function (nextProps) {
@@ -402,7 +403,7 @@ var LegionsProSelect = /** @class */ (function (_super) {
                 /* 筛选下拉输入框选中项dom 因为下拉选中项dom元素里面还有其他项，所以先做过滤，找到真实的选中项数据 */
                 selectionList.map(function (item) {
                     var title = item['title'] || '';
-                    var entity = value_1.find(function (val) { return val.label === title || val.title === title; });
+                    var entity = value_1.find(function (val) { return val.key === title; });
                     if (entity) {
                         arr_3.push(item);
                     }
@@ -591,12 +592,12 @@ var LegionsProSelect = /** @class */ (function (_super) {
             return optGroups.map(function (item, index) {
                 var option = newData.filter(function (entity) { return entity.groupKey === item.key; });
                 return React.createElement(OptGroup, { label: item.label, key: "" + item.label + item.key }, option.map(function (option, key) {
-                    React.createElement(Option, __assign({}, option, { value: option.key, disabled: option.disabled, title: option.title || option.value, key: "" + _this.uid + option.key }), option.value);
+                    React.createElement(Option, __assign({}, option, { value: option.key, disabled: option.disabled, title: option.key, key: "" + _this.uid + option.key }), option.value);
                 }));
             });
         }
         return newData.map(function (option, key) {
-            return React.createElement(Option, __assign({}, option, { key: "" + _this.uid + option.key, disabled: option.disabled, value: "" + option.key, title: option.title || option.value }), option.value);
+            return React.createElement(Option, __assign({}, option, { key: "" + _this.uid + option.key, disabled: option.disabled, value: "" + option.key, title: option.key }), option.value);
         });
     };
     LegionsProSelect.prototype.copyText = function (value) {

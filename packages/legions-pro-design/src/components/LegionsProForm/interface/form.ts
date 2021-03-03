@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-29 10:26:57
- * @LastEditTime: 2021-01-22 14:18:24
+ * @LastEditTime: 2021-03-02 18:57:49
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProForm/interface/form.ts
@@ -14,12 +14,12 @@ import  {
   IViewModelHlFormStore,
   IErrorView,
   IProFormFields,
-} from '../../store/pro.form/interface';
-import {ProFormStore} from '../../store/pro.form'
+} from '../../LegionsStoreForm/interface';
+import LegionsStoreForm from '../../LegionsStoreForm'
 export type {IErrorView}
 
 export interface InstanceForm {
-  store: ProFormStore;
+  store: InstanceType<typeof LegionsStoreForm>;
 
   /**
    * 只读数据，请勿篡改

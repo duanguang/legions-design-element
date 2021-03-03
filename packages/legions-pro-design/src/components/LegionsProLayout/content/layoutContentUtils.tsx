@@ -1,19 +1,19 @@
 import { RegExChk,validatorType } from 'legions-utils-tool/regex';
-import { IPanes } from '../../store/pro.layout/interface';
+import { IPanes } from '../../LegionsStoreLayout/interface';
 import ContentPart from '.';
 import LegionsProIframe from "../../LegionsProIframe";
 import React from 'react';
 import { NProgress } from "legions-nprogress";
 import pathToRegexp from 'path-to-regexp'
-import { ProxySanbox } from '../../store/pro.layout';
+import LegionsStoreLayout from '../../LegionsStoreLayout';
 import cloneDeep from 'lodash/cloneDeep';
 import { getMicroAppStateActions } from 'legions-micro-service'
-import { MasterGlobalStateStore } from '../../core/cross-module';
+import LegionsCore from '../../LegionsCore';
 import { inject } from 'legions/store';
 
 export class LayoutContentUtils {
-  @inject(MasterGlobalStateStore)
-  static masterGlobalStateStore: MasterGlobalStateStore
+  @inject(LegionsCore.MasterGlobalStateStore)
+  static masterGlobalStateStore: InstanceType<typeof LegionsCore.MasterGlobalStateStore>
   /** 将对象转换为字符串拼接至url */
   static transHttpUrlByObj(url: string,object: object) {
     let arr = url.split('?');
@@ -204,12 +204,12 @@ export class LayoutContentUtils {
     }
   }
 
-  static renderProxySanboxDom(pane: IPanes,that: ContentPart,src: string,proxySanbox: ProxySanbox) {
+  static renderProxySanboxDom(pane: IPanes,that: ContentPart,src: string,proxySanbox: InstanceType<typeof LegionsStoreLayout.ProxySanbox> ) {
     if (pane.loadingMode === 'sandbox') {
       return null;
     }
   }
-  static loadMicroApp(pane: IPanes,that: ContentPart,proxySanbox: ProxySanbox) {
+  static loadMicroApp(pane: IPanes,that: ContentPart,proxySanbox: InstanceType<typeof LegionsStoreLayout.ProxySanbox>) {
     if (pane && pane.loadingMode === 'sandbox') {
       let routerPath = proxySanbox.getRouterPath(pane);
       const appid = proxySanbox.createMicroAppId(pane)
@@ -284,7 +284,7 @@ export class LayoutContentUtils {
     }
   }
   /** 沙箱单实例加载方式 */
-  static loadMicroApp2(pane: IPanes,that: ContentPart,proxySanbox: ProxySanbox) {
+  static loadMicroApp2(pane: IPanes,that: ContentPart,proxySanbox: InstanceType<typeof LegionsStoreLayout.ProxySanbox>) {
     /** 空判跳过 */
     if (!pane) {
       return

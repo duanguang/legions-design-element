@@ -1,10 +1,10 @@
 import React from 'react';
 import './style/index.less';
 import { TableColumnConfig } from 'antd/lib/table/Table';
-import { IViewModelProTableStore, ITableAutoQuery } from '../store/pro.table/interface';
+import { IViewModelProTableStore, ITableAutoQuery } from '../LegionsStoreTable/interface';
 import { SelectionDecorator } from '../interface/antd';
 import { ITableColumnConfig, IExportCsv, IProTableProps, ICustomColumnsConfig } from './interface';
-import { ISchedule } from '../store/interface';
+import { ISchedule } from '../LegionsStore/interface';
 import { InstanceLegionsProModal } from '../LegionsProModal/interface';
 import { ProTableBaseClass } from './ProTableBaseClass';
 interface IState {
@@ -70,7 +70,7 @@ export default class LegionsProTable<TableRow = {}, Model = {}> extends React.Co
     static ProTableBaseClass: typeof ProTableBaseClass;
     constructor(props: any);
     get uuid(): string;
-    get getViewStore(): import("brain-store-utils").ViewModel<import("../store/pro.table/ProTableView").ProTableView> & {
+    get getViewStore(): import("brain-store-utils").ViewModel<import("../LegionsStoreTable/ProTableView").ProTableView> & {
         userInfo: {
             userName: string;
             userUid: string;
@@ -82,12 +82,12 @@ export default class LegionsProTable<TableRow = {}, Model = {}> extends React.Co
         pageSize: number;
         selectedRowKeys: string[] | number[];
         _expandRow?: string;
-        _type?: "radio" | "checkbox";
+        _type?: "checkbox" | "radio";
         _rowSelectionClickType?: "radio" | "check";
-        columns?: (TableColumnConfig<{}> & import("../store/pro.table/interface").ITableColumnConfig)[];
-        _obTableListCustom: import("../models").TableColumnsContainerEntity;
+        columns?: (TableColumnConfig<{}> & import("../LegionsStoreTable/interface").ITableColumnConfig)[];
+        _obTableListCustom: import("../LegionsModels/pro.table.model").TableColumnsContainerEntity;
         tableBodyDomClientHeight: number;
-        bodyExternalContainer: import("../store/pro.table/interface").IObservableMap<string, {
+        bodyExternalContainer: import("../LegionsStoreTable/interface").IObservableMap<string, {
             height: number;
         }>;
         isAdaptiveHeight: boolean;
@@ -104,11 +104,11 @@ export default class LegionsProTable<TableRow = {}, Model = {}> extends React.Co
         _uniqueKey: string;
         readonly computedSelectedRows: any[];
         readonly calculateBody: {};
-        readonly computedShowColumns: import("../store/pro.table/interface").IShowColumns[];
-        readonly computedUnShowColumns: import("../store/pro.table/interface").IShowColumns[];
+        readonly computedShowColumns: import("../LegionsStoreTable/interface").IShowColumns[];
+        readonly computedUnShowColumns: import("../LegionsStoreTable/interface").IShowColumns[];
         readonly computedStorageShowColumnsKeys: string;
-        readonly computedRenderColumns: (TableColumnConfig<{}> & import("../store/pro.table/interface").ITableColumnConfig)[];
-        readonly tableXAutoWidth: React.ReactText;
+        readonly computedRenderColumns: (TableColumnConfig<{}> & import("../LegionsStoreTable/interface").ITableColumnConfig)[];
+        readonly tableXAutoWidth: string | number;
         readonly computedTotal: number;
         _filterColumns: () => void;
         _moveRightShowColumns: (Columns: string[]) => void;
@@ -116,15 +116,15 @@ export default class LegionsProTable<TableRow = {}, Model = {}> extends React.Co
         _orderSortRightShowColumns: (Columns: string[]) => void;
         _orderSortLeftShowColumns: (Columns: string[]) => void;
         _setLocalStorageShowColumnsKeys: (modulesName: string, uid: string) => void;
-        _getLocalStorageShowColumns: () => import("../store/pro.table/interface").IShowColumns[];
+        _getLocalStorageShowColumns: () => import("../LegionsStoreTable/interface").IShowColumns[];
         _setLocalStorageShowColumns: (url: string) => void;
-        _editTableColumns: (modulesUid: string, customColumns: import("../models").TableListColumns[], url: any) => Promise<void>;
+        _editTableColumns: (modulesUid: string, customColumns: import("../LegionsModels/pro.table.model").TableListColumns[], url: any) => Promise<void>;
         _queryTableColumns: (modulesUid: string, url: any) => Promise<void>;
         setTotal: (total: number) => void;
         updateOpenRowChange: (isOpenRowChange: boolean) => void;
         updateOpenRowSelection: (isOpenRowSelection: boolean) => void;
     };
-    get getLocalViewStore(): import("brain-store-utils").ViewModel<import("../store/pro.table/ProTableLocalView").ProTableLocalView> & {
+    get getLocalViewStore(): import("brain-store-utils").ViewModel<import("../LegionsStoreTable/ProTableLocalView").ProTableLocalView> & {
         obState: import("brain-store-utils").observablePromise.PramsResult<import("./pageListEntity").PageListEntity<any>>;
         loading: boolean;
         dispatchRequest: (autoQuery: ITableAutoQuery<{}>, options: {

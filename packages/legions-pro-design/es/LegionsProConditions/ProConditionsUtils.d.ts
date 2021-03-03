@@ -1,7 +1,7 @@
 import React from 'react';
 import { IQueryCheckBoxProps, IQueryDateProps, IQueryGroupCheckBoxProps, IQueryRadioButtonProps, IQueryRangePickerProps, IQuerySelectProps, IQueryTextAreaProps, IQueryTextNumberProps, IQueryTextProps } from './interface';
 import { ColSize } from 'antd/lib/grid/col';
-import { IViewQueryConditionStore } from '../store/pro.query.conditions/interface';
+import { IViewQueryConditionStore } from '../LegionsStoreConditions/interface';
 interface ColProps {
     className?: string;
     span?: number;

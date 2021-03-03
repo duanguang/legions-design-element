@@ -1,13 +1,13 @@
-import { ProFormStore } from '../store/pro.form';
+import LegionsStoreForm from '../LegionsStoreForm';
 import React from 'react';
-import { IProFormFields } from '../store/pro.form/interface';
+import { IProFormFields } from '../LegionsStoreForm/interface';
 import { ClassOf } from 'legions-lunar/types/api/typescript';
 import { IGroup } from '../LegionsProForm/interface';
 import { TabPaneProps, TabsProps } from 'antd/lib/tabs';
 import { Weaken } from '../interface';
 import { InstanceTabsForm } from './interface';
 interface IProps<Model> {
-    store?: ProFormStore;
+    store?: InstanceType<typeof LegionsStoreForm>;
     /**
      * 主要用于当父组件中存在多个表单组件时，标记key 来保证父级组件中表单组件唯一
      * 注意，建议一定传递
@@ -59,12 +59,12 @@ export default class LegionsProTabsForm<Model> extends React.Component<IProps<Mo
     decryptionFreezeUid: string;
     timeId: number;
     constructor(props: any);
-    get storeView(): import("brain-store-utils").ViewModel<import("../store/pro.form/tabsView").TabsFormView> & {
+    get storeView(): import("brain-store-utils").ViewModel<import("../LegionsStoreForm/tabsView").TabsFormView> & {
         activeTabKey: string;
-        readonly computedTabs: import("../store/pro.form/tabsView").TabsItemView[];
+        readonly computedTabs: import("../LegionsStoreForm/tabsView").TabsItemView[];
         readonly size: number;
-        readonly entries: IterableIterator<import("mobx").IMapEntry<string, import("../store/pro.form/tabsView").TabsItemView>>;
-        getTabs: (key: string) => import("../store/pro.form/tabsView").TabsItemView;
+        readonly entries: IterableIterator<import("mobx").IMapEntry<string, import("../LegionsStoreForm/tabsView").TabsItemView>>;
+        getTabs: (key: string) => import("../LegionsStoreForm/tabsView").TabsItemView;
         hasTabs: (key: string) => boolean;
         getTabsKeys: () => IterableIterator<string>;
         delTabsMap: (key: string) => void;

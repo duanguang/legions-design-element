@@ -2,10 +2,10 @@ import React,{ Component } from 'react'
 import { findDOMNode,unstable_renderSubtreeIntoContainer,unmountComponentAtNode } from 'react-dom'
 import { Modal,message } from 'antd';
 import { bind,observer } from 'legions/store-react'
-import {ProModalStore  } from '../store/pro.modal';
+import LegionsStoreModal from '../LegionsStoreModal';
 import { ILegionsProModalProps } from './interface';
-import { IViewModelModalStore } from '../store/pro.modal/interface';
-import { ISchedule } from '../store/interface';
+import { IViewModelModalStore } from '../LegionsStoreModal/interface';
+import { ISchedule } from '../LegionsStore/interface';
 import { shortHash } from 'legions-lunar/object-hash';
 import './style/index.less';
 import { runInAction,autorun } from 'mobx';
@@ -81,7 +81,7 @@ const DrawerPositionWrap = {
     right: 'legions-pro-modal-drawerPositionY',
 }
 
-@bind({ store: ProModalStore })
+@bind({ store: LegionsStoreModal })
 @observer
  class ProModal extends Component<IProps,IState> {
     timeId = new Date().getTime()

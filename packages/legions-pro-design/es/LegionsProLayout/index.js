@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.7
+  *  legions-pro-design v0.0.3
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -7,7 +7,7 @@ import React from 'react';
 import { Layout, Tabs, message, Menu, Dropdown, Spin, Icon, Avatar, Breadcrumb } from 'antd';
 import './style/index.less';
 import { bind, observer } from 'legions/store-react';
-import { TabPaneViewStore, MenuStore } from '../store/pro.layout';
+import LegionsStoreLayout from '../LegionsStoreLayout';
 import ReactDOM from 'react-dom';
 import { observableViewModel } from 'legions/store-utils';
 import { debounce } from 'legions-utils-tool/debounce';
@@ -22,7 +22,7 @@ import { NProgress } from 'legions-nprogress';
 import pathToRegexp from 'path-to-regexp';
 import cloneDeep from 'lodash/cloneDeep';
 import { getMicroAppStateActions } from 'legions-micro-service';
-import { MasterGlobalStateStore } from '../core/cross-module';
+import LegionsCore from '../LegionsCore';
 import { inject } from 'legions/store';
 import './style/memu.less';
 import { page } from 'legions-lunar/mobx-decorator';
@@ -392,10 +392,8 @@ var LayoutContentUtils = /** @class */ (function () {
         }
     };
     __decorate([
-        inject(MasterGlobalStateStore),
-        __metadata("design:type", MasterGlobalStateStore
-        /** 将对象转换为字符串拼接至url */
-        )
+        inject(LegionsCore.MasterGlobalStateStore),
+        __metadata("design:type", void 0)
     ], LayoutContentUtils, "masterGlobalStateStore", void 0);
     return LayoutContentUtils;
 }());
@@ -735,7 +733,7 @@ var ContentPart = /** @class */ (function (_super) {
         fixedLayoutPosition: 'fixedSider',
     };
     ContentPart = __decorate([
-        bind({ store: TabPaneViewStore, menuStore: MenuStore }),
+        bind({ store: LegionsStoreLayout.TabPaneViewStore, menuStore: LegionsStoreLayout.MenuStore }),
         observer,
         __metadata("design:paramtypes", [Object])
     ], ContentPart);
@@ -994,11 +992,11 @@ var MenuParts = /** @class */ (function (_super) {
         router: []
     };
     __decorate([
-        inject(MasterGlobalStateStore),
-        __metadata("design:type", MasterGlobalStateStore)
+        inject(LegionsCore.MasterGlobalStateStore),
+        __metadata("design:type", void 0)
     ], MenuParts.prototype, "masterGlobalStateStore", void 0);
     MenuParts = __decorate([
-        bind({ store: MenuStore }),
+        bind({ store: LegionsStoreLayout.MenuStore }),
         page({
             sideEffect: function (that, store) {
                 if (store.obMenuList.isResolved) {
@@ -1180,7 +1178,7 @@ var HeaderPart = /** @class */ (function (_super) {
         fixedLayoutPosition: 'fixedSider',
     };
     HeaderPart = __decorate([
-        bind({ store: MenuStore }),
+        bind({ store: LegionsStoreLayout.MenuStore }),
         observer,
         __metadata("design:paramtypes", [Object])
     ], HeaderPart);

@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.2
+  *  legions-pro-design v0.0.3
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -7,7 +7,7 @@ import React, { Component } from 'react';
 import { unmountComponentAtNode, unstable_renderSubtreeIntoContainer } from 'react-dom';
 import { Modal } from 'antd';
 import { bind, observer } from 'legions/store-react';
-import { ProModalStore } from '../store/pro.modal';
+import LegionsStoreModal from '../LegionsStoreModal';
 import { shortHash } from 'legions-lunar/object-hash';
 import './style/index.less';
 import { runInAction } from 'mobx';
@@ -768,7 +768,7 @@ var ProModal = /** @class */ (function (_super) {
     };
     ProModal.LegionsProModalContext = LegionsProModalContext;
     ProModal = __decorate([
-        bind({ store: ProModalStore }),
+        bind({ store: LegionsStoreModal }),
         observer,
         __metadata("design:paramtypes", [Object])
     ], ProModal);

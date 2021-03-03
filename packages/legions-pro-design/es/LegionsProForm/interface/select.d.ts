@@ -3,7 +3,7 @@ import { observablePromise } from 'legions/store-utils';
 import { WrappedFormUtils, IAntdProps, IAntdFormItemProps, IAntdRule, IAntdSelectOption } from '../../interface/antd';
 import { InstanceFormElement } from './formElement';
 import { IErrorView, InstanceForm } from './form';
-import { SelectKeyValue, KeyValue } from '../../models';
+import LegionsModels from '../../LegionsModels';
 import { request } from 'legions/request';
 declare type HeadersPrams = {
     'Content-Type'?: 'application/json' | 'application/x-www-form-urlencoded';
@@ -87,14 +87,14 @@ export interface ISelectAutoQuery<Model = {}> {
      *
      * 如果不想写model,则通过此函数先把数据转换成约定结构，在由底层固定model去转换
      */
-    mappingEntity: (that: SelectKeyValue, responseData: any) => KeyValue[];
+    mappingEntity: (that: InstanceType<typeof LegionsModels.SelectKeyValue>, responseData: any) => InstanceType<typeof LegionsModels.KeyValue>[];
     /**
      * 下拉数据绑定前转换绑定数据结构
      *
      * 当外部数据不确定时，此时我们需要一个适配器转换从接口中取到的数据，用于绑定下拉选项
      * @memberof ISelectAutoQuery
      */
-    transform: (value: observablePromise.PramsResult<SelectKeyValue>) => {
+    transform: (value: observablePromise.PramsResult<InstanceType<typeof LegionsModels.SelectKeyValue>>) => {
         total: number;
         data: IAntdSelectOption[];
     };
