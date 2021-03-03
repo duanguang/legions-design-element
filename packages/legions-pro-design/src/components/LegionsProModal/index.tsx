@@ -743,7 +743,6 @@ const DrawerPositionWrap = {
 
 const LegionsProModal = (props: IProps) => {
     const { children,...prop } = props;
-    console.log(children,'childrenchildren');
     return <ProModal.LegionsProModalContext content={<React.Fragment>
         {children}
     </React.Fragment>}>

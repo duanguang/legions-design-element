@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.3
+  *  legions-pro-design v0.0.4
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -22,7 +22,7 @@ import { NProgress } from 'legions-nprogress';
 import pathToRegexp from 'path-to-regexp';
 import cloneDeep from 'lodash/cloneDeep';
 import { getMicroAppStateActions } from 'legions-micro-service';
-import LegionsCore from '../LegionsCore';
+import LegionsCrossModule from '../LegionsCrossModule';
 import { inject } from 'legions/store';
 import './style/memu.less';
 import { page } from 'legions-lunar/mobx-decorator';
@@ -392,7 +392,7 @@ var LayoutContentUtils = /** @class */ (function () {
         }
     };
     __decorate([
-        inject(LegionsCore.MasterGlobalStateStore),
+        inject(LegionsCrossModule.MasterGlobalStateStore),
         __metadata("design:type", void 0)
     ], LayoutContentUtils, "masterGlobalStateStore", void 0);
     return LayoutContentUtils;
@@ -992,7 +992,7 @@ var MenuParts = /** @class */ (function (_super) {
         router: []
     };
     __decorate([
-        inject(LegionsCore.MasterGlobalStateStore),
+        inject(LegionsCrossModule.MasterGlobalStateStore),
         __metadata("design:type", void 0)
     ], MenuParts.prototype, "masterGlobalStateStore", void 0);
     MenuParts = __decorate([

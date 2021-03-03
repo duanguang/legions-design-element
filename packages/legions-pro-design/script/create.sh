@@ -11,8 +11,8 @@ cp -r types/src/components/index.d.ts lib/
 cp -r -f types/src/components/LegionsCore/*.d.ts es/LegionsCore/
 cp -r -f types/src/components/LegionsCore/*.d.ts lib/LegionsCore/
 
-cp -r -f types/src/components/LegionsCore/cross-module/*.d.ts es/LegionsCore/cross-module/
-cp -r -f types/src/components/LegionsCore/cross-module/*.d.ts lib/LegionsCore/cross-module/
+cp -r -f types/src/components/LegionsCrossModule/*.d.ts es/LegionsCrossModule/
+cp -r -f types/src/components/LegionsCrossModule/*.d.ts lib/LegionsCrossModule/
 
 
 cp -r -f types/src/components/LegionsModels/* es/LegionsModels/

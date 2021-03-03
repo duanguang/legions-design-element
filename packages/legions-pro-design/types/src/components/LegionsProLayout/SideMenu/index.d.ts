@@ -3,7 +3,7 @@ import LegionsStoreLayout from '../../LegionsStoreLayout';
 import LegionsModels from '../../LegionsModels';
 import { SelectParam, MenuProps, ClickParam } from 'antd/lib/menu';
 import '../style/memu.less';
-import LegionsCore from '../../LegionsCore';
+import LegionsCrossModule from '../../LegionsCrossModule';
 import { IRouter } from '../../interface/router';
 import { IUserInfo } from '../../interface';
 interface IProps extends IUserInfo, MenuProps {
@@ -29,7 +29,7 @@ interface IProps extends IUserInfo, MenuProps {
     loadedMenuTransformData?: (menuList: InstanceType<typeof LegionsModels.MenuEntity>[]) => void;
 }
 export default class MenuParts extends React.Component<IProps> {
-    masterGlobalStateStore: InstanceType<typeof LegionsCore.MasterGlobalStateStore>;
+    masterGlobalStateStore: InstanceType<typeof LegionsCrossModule.MasterGlobalStateStore>;
     constructor(props: any);
     static defaultProps: {
         fixedLayoutPosition: string;
