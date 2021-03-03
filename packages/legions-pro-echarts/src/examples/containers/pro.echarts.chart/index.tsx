@@ -13,7 +13,9 @@ import LegionsProEchartsChartLine from '../../../components/LegionsProEchartsCha
 import LegionsProEchartsChartPie from '../../../components/LegionsProEchartsChartPie';
 import LegionsProEchartsLayout from '../../../components/LegionsProEchartsLayout';
 import LegionsProEchartsLiquidFill from '../../../components/LegionsProEchartsLiquidFill';
+import { MapDemo } from './charts.map';
 import ChartsPieDemo from './charts.pie';
+import WordCloudDemo from './charts.wordCloud';
 const { ProRow, ProCol } = LegionsProEchartsLayout;
 export class LegionsProEchartsChartPieDemo extends React.Component {
     //@ts-ignore
@@ -142,6 +144,14 @@ export class LegionsProEchartsChartPieDemo extends React.Component {
                                 }}
                             ></LegionsProEchartsChartGauge>
                         </LegionsProEchartsBox>
+                    </ProCol>
+                    <ProCol span={12}>
+                        <WordCloudDemo></WordCloudDemo>
+                    </ProCol>
+                </ProRow>
+                <ProRow gutter={6}>
+                    <ProCol span={12}>
+                        <MapDemo/>
                     </ProCol>
                 </ProRow>
             </LegionsProEchartsLayout>

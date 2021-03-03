@@ -27,7 +27,6 @@ export default class LegionsProEchartsChartRadar extends React.PureComponent<Leg
         return {
             tooltip: {
                 trigger: 'item',
-                formatter: '{b} : {c} ({d}%)',
             },
             legend: {
                 bottom: 20,

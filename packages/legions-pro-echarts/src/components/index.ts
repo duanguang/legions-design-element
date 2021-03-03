@@ -19,6 +19,7 @@ export { default as LegionsProEchartsChartRadar }  from './LegionsProEchartsChar
 export { default as LegionsProEchartsChartGauge }  from './LegionsProEchartsChartGauge';
 export { default as LegionsProEchartsLayout }  from './LegionsProEchartsLayout';
 export { default as LegionsProEchartsLiquidFill }  from './LegionsProEchartsLiquidFill';
+export { default as LegionsProEchartsWordCloud }  from './LegionsProEchartsWordCloud';
 export { default as LegionsProEchartsMap }  from './LegionsProEchartsMap';
 export { default as LegionsProLineOverflow} from './LegionsProLineOverflow'
 export * from './LegionsProEchartsParts';

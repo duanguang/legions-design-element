@@ -2,19 +2,19 @@
 category: Components
 type: Charts
 cols: 1
-title: Map
-subtitle: 地图
+title: WordCloud
+subtitle: 词云
 ---
 
-展示地图信息
+词云
 
 ## 何时使用
 
-展示地图信息
+但需要展示很多单词时
 
 ## API
 
-属性说明如下：
+液体填充的属性说明如下：
 
 | 属性 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |

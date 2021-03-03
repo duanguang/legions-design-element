@@ -1,21 +1,22 @@
 ---
 order: 2
 title:
-  zh-CN: 显示副标题
+  zh-CN: 世界地图
   en-US: Size
 ---
 
 ## zh-CN
 
-当我们需要显示更多描述信息时，可设置 `series.label.show` 为 `true`
+世界地图
 
 ## en-US
 
 ````jsx
-import { LegionsProEchartsBox } from 'legions-pro-echarts';
+import { LegionsProEchartsBox, LegionsProEchartsMap } from 'legions-pro-echarts';
 ReactDOM.render(
   <div>
-    <LegionsProEchartsBox style={{ height: '260px', paddingBottom: 5 }}>
+    <LegionsProEchartsBox style={{ height: '400px', paddingBottom: 5 }}>
+        <LegionsProEchartsMap></LegionsProEchartsMap>
     </LegionsProEchartsBox>
   </div>,
   mountNode
