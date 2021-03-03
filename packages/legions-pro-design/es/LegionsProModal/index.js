@@ -776,7 +776,6 @@ var ProModal = /** @class */ (function (_super) {
 }(Component));
 var LegionsProModal = function (props) {
     var children = props.children, prop = __rest(props, ["children"]);
-    console.log(children, 'childrenchildren');
     return React.createElement(ProModal.LegionsProModalContext, { content: React.createElement(React.Fragment, null, children) },
         React.createElement(ProModal, __assign({}, prop)));
 };

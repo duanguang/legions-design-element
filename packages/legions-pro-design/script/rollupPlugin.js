@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-10 16:14:09
- * @LastEditTime: 2021-03-03 15:21:45
+ * @LastEditTime: 2021-03-03 16:53:15
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/script/rollupPlugin.js
@@ -12,6 +12,8 @@ const externalLib = [
 /* 'legions-lunar/types/api/typescript', */
   'mobx-react',
   'legions-utils-tool/dom',
+  '../../LegionsCrossModule',
+  './LegionsCrossModule',
   'legions/store',
   './LegionsCore',
   './LegionsModels',

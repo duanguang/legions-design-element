@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-10 16:14:09
- * @LastEditTime: 2021-03-03 15:19:37
+ * @LastEditTime: 2021-03-03 16:52:37
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/script/entiy.js
@@ -11,7 +11,7 @@
 const path = require('path');
 const resolves = _path => path.join(process.cwd(),_path);
 const array_components = ['index']
-const array_components1 = ['LegionsModels','LegionsCore'
+const array_components1 = ['LegionsModels','LegionsCore','LegionsCrossModule'
 /* 'db', */
 /* 'services' */]
 const array_componentsStore = [
@@ -101,6 +101,7 @@ const es = [
       || item.indexOf('LegionsStoreLayout') > -1
       || item.indexOf('LegionsStoreModal') > -1
       || item.indexOf('LegionsStoreTable') > -1
+      || item.indexOf('LegionsCrossModule') > -1
     ) {
       input = resolves(`src/components/${item}/index.ts`);
       file = resolves(`es/${item}/index.js`);
