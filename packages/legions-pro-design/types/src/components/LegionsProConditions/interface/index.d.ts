@@ -1,6 +1,6 @@
 /// <reference types="react" />
-import { ProQueryConditionStore } from '../../store/pro.query.conditions';
-import { IViewQueryConditionStore, ISelectAutoQuery } from '../../store/pro.query.conditions/interface';
+import LegionsStoreConditions from '../../LegionsStoreConditions';
+import { IViewQueryConditionStore, ISelectAutoQuery } from '../../LegionsStoreConditions/interface';
 import { HlLabeledValue } from 'legions-lunar/model';
 import { Weaken } from '../../interface';
 import { InputProps, DatePickerProps, RangePickerProps, InputNumberProps, RadioGroupProps, TextAreaProps, CheckboxGroupProps, CheckboxProps } from '../../interface/antd';
@@ -46,7 +46,7 @@ export interface IFieldsState {
     visable?: boolean;
 }
 export interface IQueryConditionsInstance<Query = {}> {
-    store: ProQueryConditionStore<Query>;
+    store: InstanceType<typeof LegionsStoreConditions>;
     /** 只读 */
     readonly uid: string;
     /**

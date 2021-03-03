@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { InstanceLegionsProModal } from '../LegionsProModal/interface';
-import { ProTableStore } from '../store/pro.table';
+import LegionsStoreTable from '../LegionsStoreTable';
 interface IProps {
     /**
      * 列配置归属table表
@@ -9,7 +9,7 @@ interface IProps {
      * @memberof IProps
      */
     tableUid: string;
-    store?: ProTableStore;
+    store?: InstanceType<typeof LegionsStoreTable>;
     /**
     *  组件componentWillMount 执行
     *
@@ -34,9 +34,9 @@ export default class LegionsProTableCustomColumns extends Component<IProps, ISta
     modalRef: InstanceLegionsProModal;
     constructor(props: any);
     componentDidMount(): void;
-    get viewStore(): import("brain-store-utils").ViewModel<import("../store/pro.table/ProTableView").ProTableView> & {
+    get viewStore(): import("brain-store-utils").ViewModel<import("../LegionsStoreTable/ProTableView").ProTableView> & {
         userInfo: {
-            userName: string;
+            userName: string; /** 从服务端查询自定义列信息接口地址 */
             userUid: string;
             companyName?: string;
             companyUid?: string;
@@ -46,12 +46,12 @@ export default class LegionsProTableCustomColumns extends Component<IProps, ISta
         pageSize: number;
         selectedRowKeys: string[] | number[];
         _expandRow?: string;
-        _type?: "radio" | "checkbox";
+        _type?: "checkbox" | "radio";
         _rowSelectionClickType?: "radio" | "check";
-        columns?: (import("antd/lib/table/Table").TableColumnConfig<{}> & import("../store/pro.table/interface").ITableColumnConfig)[];
-        _obTableListCustom: import("../models").TableColumnsContainerEntity;
+        columns?: (import("antd/lib/table/Table").TableColumnConfig<{}> & import("../LegionsStoreTable/interface").ITableColumnConfig)[];
+        _obTableListCustom: import("../LegionsModels/pro.table.model").TableColumnsContainerEntity;
         tableBodyDomClientHeight: number;
-        bodyExternalContainer: import("../store/pro.table/interface").IObservableMap<string, {
+        bodyExternalContainer: import("../LegionsStoreTable/interface").IObservableMap<string, {
             height: number;
         }>;
         isAdaptiveHeight: boolean;
@@ -68,11 +68,11 @@ export default class LegionsProTableCustomColumns extends Component<IProps, ISta
         _uniqueKey: string;
         readonly computedSelectedRows: any[];
         readonly calculateBody: {};
-        readonly computedShowColumns: import("../store/pro.table/interface").IShowColumns[];
-        readonly computedUnShowColumns: import("../store/pro.table/interface").IShowColumns[];
+        readonly computedShowColumns: import("../LegionsStoreTable/interface").IShowColumns[];
+        readonly computedUnShowColumns: import("../LegionsStoreTable/interface").IShowColumns[];
         readonly computedStorageShowColumnsKeys: string;
-        readonly computedRenderColumns: (import("antd/lib/table/Table").TableColumnConfig<{}> & import("../store/pro.table/interface").ITableColumnConfig)[];
-        readonly tableXAutoWidth: React.ReactText;
+        readonly computedRenderColumns: (import("antd/lib/table/Table").TableColumnConfig<{}> & import("../LegionsStoreTable/interface").ITableColumnConfig)[];
+        readonly tableXAutoWidth: string | number;
         readonly computedTotal: number;
         _filterColumns: () => void;
         _moveRightShowColumns: (Columns: string[]) => void;
@@ -80,9 +80,9 @@ export default class LegionsProTableCustomColumns extends Component<IProps, ISta
         _orderSortRightShowColumns: (Columns: string[]) => void;
         _orderSortLeftShowColumns: (Columns: string[]) => void;
         _setLocalStorageShowColumnsKeys: (modulesName: string, uid: string) => void;
-        _getLocalStorageShowColumns: () => import("../store/pro.table/interface").IShowColumns[];
+        _getLocalStorageShowColumns: () => import("../LegionsStoreTable/interface").IShowColumns[];
         _setLocalStorageShowColumns: (url: string) => void;
-        _editTableColumns: (modulesUid: string, customColumns: import("../models").TableListColumns[], url: any) => Promise<void>;
+        _editTableColumns: (modulesUid: string, customColumns: import("../LegionsModels/pro.table.model").TableListColumns[], url: any) => Promise<void>;
         _queryTableColumns: (modulesUid: string, url: any) => Promise<void>;
         setTotal: (total: number) => void;
         updateOpenRowChange: (isOpenRowChange: boolean) => void;

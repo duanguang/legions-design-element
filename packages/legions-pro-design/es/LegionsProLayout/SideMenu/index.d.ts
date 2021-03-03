@@ -1,15 +1,15 @@
 import React from 'react';
-import { MenuStore } from '../../store/pro.layout';
-import { MenuContainerEntity, MenuEntity } from '../../models';
+import LegionsStoreLayout from '../../LegionsStoreLayout';
+import LegionsModels from '../../LegionsModels';
 import { SelectParam, MenuProps, ClickParam } from 'antd/lib/menu';
 import '../style/memu.less';
-import { MasterGlobalStateStore } from '../../core/cross-module';
+import LegionsCore from '../../LegionsCore';
 import { IRouter } from '../../interface/router';
 import { IUserInfo } from '../../interface';
 interface IProps extends IUserInfo, MenuProps {
-    store?: MenuStore;
+    store?: InstanceType<typeof LegionsStoreLayout.MenuStore>;
     logo: string;
-    onQueryPromiseMenus: () => Promise<MenuContainerEntity>;
+    onQueryPromiseMenus: () => Promise<InstanceType<typeof LegionsModels.MenuContainerEntity>>;
     /** 外部链接跳转，打开指定菜单 */
     defaultOpenMenuTabs?: {
         /** 指定菜单Key */
@@ -26,10 +26,10 @@ interface IProps extends IUserInfo, MenuProps {
      */
     fixedLayoutPosition?: 'fixedSider' | 'fixedSiderHeader';
     /** 在菜单数据接口请求完成后，如果需要对菜单数据项进行自定义加工，可传入此函数 */
-    loadedMenuTransformData?: (menuList: MenuEntity[]) => void;
+    loadedMenuTransformData?: (menuList: InstanceType<typeof LegionsModels.MenuEntity>[]) => void;
 }
 export default class MenuParts extends React.Component<IProps> {
-    masterGlobalStateStore: MasterGlobalStateStore;
+    masterGlobalStateStore: InstanceType<typeof LegionsCore.MasterGlobalStateStore>;
     constructor(props: any);
     static defaultProps: {
         fixedLayoutPosition: string;
@@ -40,14 +40,14 @@ export default class MenuParts extends React.Component<IProps> {
     /** 在did mount 生命周期内设置菜单展开项数据 */
     setOpenKesInDidMountcycle(): void;
     /** 在打开菜单页面路由时，获取菜单完毕时，打开菜单页签 */
-    onPageloadedOpenTabpane(menuList: MenuEntity[]): void;
-    renderFirstMenuItemElement(item: MenuEntity): JSX.Element;
-    renderFirstSubMenuELement(item: MenuEntity): JSX.Element;
+    onPageloadedOpenTabpane(menuList: InstanceType<typeof LegionsModels.MenuEntity>[]): void;
+    renderFirstMenuItemElement(item: InstanceType<typeof LegionsModels.MenuEntity>): JSX.Element;
+    renderFirstSubMenuELement(item: InstanceType<typeof LegionsModels.MenuEntity>): JSX.Element;
     /** 渲染末级菜单选项 */
-    renderMenuItemElement(item: MenuEntity): JSX.Element;
-    renderSubMenuElement(item: MenuEntity): JSX.Element;
+    renderMenuItemElement(item: InstanceType<typeof LegionsModels.MenuEntity>): JSX.Element;
+    renderSubMenuElement(item: InstanceType<typeof LegionsModels.MenuEntity>): JSX.Element;
     /** 递归调用不断遍历所有菜单，并按照顺序渲染相应层级菜单 */
-    renderRecursiveCallsMenu(list: Array<MenuEntity>, isFirst?: boolean): JSX.Element[];
+    renderRecursiveCallsMenu(list: Array<InstanceType<typeof LegionsModels.MenuEntity>>, isFirst?: boolean): JSX.Element[];
     /** 渲染Logo节点 */
     renderLogoElement(): JSX.Element;
     renderMenuNodesElement(): JSX.Element;

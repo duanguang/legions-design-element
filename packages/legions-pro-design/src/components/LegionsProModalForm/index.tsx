@@ -1,19 +1,19 @@
 /*
  * @Author: duanguang
  * @Date: 2021-02-01 22:24:42
- * @LastEditTime: 2021-02-24 13:48:49
+ * @LastEditTime: 2021-03-02 19:05:45
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProModalForm/index.tsx
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
 import { Button,Col,Icon,Tabs } from 'antd';
-import { ProFormStore } from '../store/pro.form';
+import LegionsStoreForm from '../LegionsStoreForm';
 import { bind,observer } from 'legions/store-react';
 import React from 'react';
 import { shortHash } from 'legions-lunar/object-hash';
 import LegionsProForm from '../LegionsProForm';
-import { IProFormFields,ITabsFormItem } from '../store/pro.form/interface';
+import { IProFormFields,ITabsFormItem } from '../LegionsStoreForm/interface';
 import { ClassOf } from 'legions-lunar/types/api/typescript';
 import { IGroup,InstanceForm } from '../LegionsProForm/interface';
 import { TabPaneProps,TabsProps } from 'antd/lib/tabs';
@@ -23,7 +23,7 @@ import { ValidateCallback } from 'antd/lib/form/Form';
 import { ILegionsProModalProps,InstanceLegionsProModal } from '../LegionsProModal/interface';
 import LegionsProModal from '../LegionsProModal'
 interface IProps<Model> {
-    store?: ProFormStore;
+    store?: InstanceType<typeof LegionsStoreForm>;
     /**
      * 主要用于当父组件中存在多个表单组件时，标记key 来保证父级组件中表单组件唯一
      * 注意，建议一定传递

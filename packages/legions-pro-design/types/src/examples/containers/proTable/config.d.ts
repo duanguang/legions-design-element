@@ -5,6 +5,5 @@ export declare abstract class PageListConfig<P, S = {}> extends React.Component<
     instanceStatement: ProTable;
     constructor(props: P);
     registeredInstanceStatement(instance: ProTable): void;
-    protected createQueryConfig(): any[];
     protected createTableColumnsConfig(): TableColumnConfig<{}>[];
 }

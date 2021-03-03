@@ -1,16 +1,17 @@
 /**
-  *  legions-pro-design v0.0.7
+  *  legions-pro-design v0.0.3
   * (c) 2021 duanguang
   * @license MIT
   */
-import React, { useState, forwardRef, memo, Component } from 'react';
-import { unstable_batchedUpdates, unmountComponentAtNode, unstable_renderSubtreeIntoContainer } from 'react-dom';
+import React, { Component } from 'react';
+import { unmountComponentAtNode, unstable_renderSubtreeIntoContainer } from 'react-dom';
 import { Modal } from 'antd';
 import { bind, observer } from 'legions/store-react';
-import { ProModalStore } from '../store/pro.modal';
+import LegionsStoreModal from '../LegionsStoreModal';
 import { shortHash } from 'legions-lunar/object-hash';
 import './style/index.less';
-import { spy, configure, observable, runInAction } from 'mobx';
+import { runInAction } from 'mobx';
+import { MobXProviderContext, Provider } from 'mobx-react';
 import { getInjector } from 'legions/store';
 
 /*! *****************************************************************************
@@ -76,204 +77,6 @@ function __metadata(metadataKey, metadataValue) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(metadataKey, metadataValue);
 }
 
-if (!useState) {
-    throw new Error("mobx-react-lite requires React with Hooks support");
-}
-if (!spy) {
-    throw new Error("mobx-react-lite requires mobx at least version 4 to be available");
-}
-
-var __read = (undefined && undefined.__read) || function (o, n) {
-    var m = typeof Symbol === "function" && o[Symbol.iterator];
-    if (!m) return o;
-    var i = m.call(o), r, ar = [], e;
-    try {
-        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
-    }
-    catch (error) { e = { error: error }; }
-    finally {
-        try {
-            if (r && !r.done && (m = i["return"])) m.call(i);
-        }
-        finally { if (e) throw e.error; }
-    }
-    return ar;
-};
-function getSymbol(name) {
-    if (typeof Symbol === "function") {
-        return Symbol.for(name);
-    }
-    return "__$mobx-react " + name + "__";
-}
-var mockGlobal = {};
-function getGlobal() {
-    if (typeof window !== "undefined") {
-        return window;
-    }
-    if (typeof global !== "undefined") {
-        return global;
-    }
-    if (typeof self !== "undefined") {
-        return self;
-    }
-    return mockGlobal;
-}
-
-var observerBatchingConfiguredSymbol = getSymbol("observerBatching");
-function defaultNoopBatch(callback) {
-    callback();
-}
-function observerBatching(reactionScheduler) {
-    if (!reactionScheduler) {
-        reactionScheduler = defaultNoopBatch;
-        if ("production" !== process.env.NODE_ENV) {
-            console.warn("[MobX] Failed to get unstable_batched updates from react-dom / react-native");
-        }
-    }
-    configure({ reactionScheduler: reactionScheduler });
-    getGlobal()[observerBatchingConfiguredSymbol] = true;
-}
-
-var __assign$1 = (undefined && undefined.__assign) || function () {
-    __assign$1 = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign$1.apply(this, arguments);
-};
-
-var __read$1 = (undefined && undefined.__read) || function (o, n) {
-    var m = typeof Symbol === "function" && o[Symbol.iterator];
-    if (!m) return o;
-    var i = m.call(o), r, ar = [], e;
-    try {
-        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
-    }
-    catch (error) { e = { error: error }; }
-    finally {
-        try {
-            if (r && !r.done && (m = i["return"])) m.call(i);
-        }
-        finally { if (e) throw e.error; }
-    }
-    return ar;
-};
-
-observerBatching(unstable_batchedUpdates);
-
-function shallowEqual(objA, objB) {
-  //From: https://github.com/facebook/fbjs/blob/c69904a511b900266935168223063dd8772dfc40/packages/fbjs/src/core/shallowEqual.js
-  if (is(objA, objB)) return true;
-
-  if (typeof objA !== "object" || objA === null || typeof objB !== "object" || objB === null) {
-    return false;
-  }
-
-  var keysA = Object.keys(objA);
-  var keysB = Object.keys(objB);
-  if (keysA.length !== keysB.length) return false;
-
-  for (var i = 0; i < keysA.length; i++) {
-    if (!Object.hasOwnProperty.call(objB, keysA[i]) || !is(objA[keysA[i]], objB[keysA[i]])) {
-      return false;
-    }
-  }
-
-  return true;
-}
-
-function is(x, y) {
-  // From: https://github.com/facebook/fbjs/blob/c69904a511b900266935168223063dd8772dfc40/packages/fbjs/src/core/shallowEqual.js
-  if (x === y) {
-    return x !== 0 || 1 / x === 1 / y;
-  } else {
-    return x !== x && y !== y;
-  }
-} // based on https://github.com/mridgway/hoist-non-react-statics/blob/master/src/index.js
-
-var hasSymbol = typeof Symbol === "function" && Symbol.for; // Using react-is had some issues (and operates on elements, not on types), see #608 / #609
-
-var ReactForwardRefSymbol = hasSymbol ?
-/*#__PURE__*/
-Symbol.for("react.forward_ref") : typeof forwardRef === "function" &&
-/*#__PURE__*/
-forwardRef(function (props) {
-  return null;
-})["$$typeof"];
-var ReactMemoSymbol = hasSymbol ?
-/*#__PURE__*/
-Symbol.for("react.memo") : typeof memo === "function" &&
-/*#__PURE__*/
-memo(function (props) {
-  return null;
-})["$$typeof"];
-
-function _extends() {
-  _extends = Object.assign || function (target) {
-    for (var i = 1; i < arguments.length; i++) {
-      var source = arguments[i];
-
-      for (var key in source) {
-        if (Object.prototype.hasOwnProperty.call(source, key)) {
-          target[key] = source[key];
-        }
-      }
-    }
-
-    return target;
-  };
-
-  return _extends.apply(this, arguments);
-}
-
-function _objectWithoutPropertiesLoose(source, excluded) {
-  if (source == null) return {};
-  var target = {};
-  var sourceKeys = Object.keys(source);
-  var key, i;
-
-  for (i = 0; i < sourceKeys.length; i++) {
-    key = sourceKeys[i];
-    if (excluded.indexOf(key) >= 0) continue;
-    target[key] = source[key];
-  }
-
-  return target;
-}
-
-var MobXProviderContext =
-/*#__PURE__*/
-React.createContext({});
-function Provider(props) {
-  var children = props.children,
-      stores = _objectWithoutPropertiesLoose(props, ["children"]);
-
-  var parentValue = React.useContext(MobXProviderContext);
-  var mutableProviderRef = React.useRef(_extends({}, parentValue, stores));
-  var value = mutableProviderRef.current;
-
-  if (process.env.NODE_ENV !== "production") {
-    var newValue = _extends({}, value, stores); // spread in previous state for the context based stores
-
-
-    if (!shallowEqual(value, newValue)) {
-      throw new Error("MobX Provider: The set of provided stores has changed. See: https://github.com/mobxjs/mobx-react#the-set-of-provided-stores-has-changed-error.");
-    }
-  }
-
-  return React.createElement(MobXProviderContext.Provider, {
-    value: value
-  }, children);
-}
-Provider.displayName = "MobXProvider";
-
-if (!Component) throw new Error("mobx-react requires React to be available");
-if (!observable) throw new Error("mobx-react requires mobx to be available");
-
 var LegionsProModalContext = /** @class */ (function (_super) {
     __extends(LegionsProModalContext, _super);
     function LegionsProModalContext() {
@@ -289,7 +92,7 @@ var LegionsProModalContext = /** @class */ (function (_super) {
         });
     };
     LegionsProModalContext.prototype.renderContextType = function () {
-        return React.cloneElement(this.props.modal || this.props.children, null, React.createElement(Provider, { storeManage: getInjector()  },
+        return React.cloneElement(this.props.modal || this.props.children, null, React.createElement(Provider, { storeManage: this.context.storeManage['getState'] ? this.context.storeManage : getInjector() },
             " ",
             this.props.content));
     };
@@ -965,7 +768,7 @@ var ProModal = /** @class */ (function (_super) {
     };
     ProModal.LegionsProModalContext = LegionsProModalContext;
     ProModal = __decorate([
-        bind({ store: ProModalStore }),
+        bind({ store: LegionsStoreModal }),
         observer,
         __metadata("design:paramtypes", [Object])
     ], ProModal);
@@ -973,6 +776,7 @@ var ProModal = /** @class */ (function (_super) {
 }(Component));
 var LegionsProModal = function (props) {
     var children = props.children, prop = __rest(props, ["children"]);
+    console.log(children, 'childrenchildren');
     return React.createElement(ProModal.LegionsProModalContext, { content: React.createElement(React.Fragment, null, children) },
         React.createElement(ProModal, __assign({}, prop)));
 };

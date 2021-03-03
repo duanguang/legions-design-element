@@ -5,8 +5,8 @@ import './style/index.less';
 import { WrappedFormUtils } from '../interface/antd';
 import { IErrorView, IGroup } from './interface/form';
 import { LabelWithSelectModel, LabelWithRenderModel, LabelWithDatePickerModel, LabelWithMonthPickerModel, LabelWithRangePickerModel, LabelWithUploadModel, LabelWithInputNumberModel } from './interface';
-import { ProFormStore } from '../store/pro.form';
-import { IElementList, IProFormFields } from '../store/pro.form/interface';
+import LegionsStoreForm from '../LegionsStoreForm';
+import { IElementList, IProFormFields } from '../LegionsStoreForm/interface';
 import { LabelWithSwitchModel } from './FormSwitch';
 import { LabelWithRadioButtonModel } from './FormRadioButton';
 import { LabelWithTextModel } from './FormText';
@@ -25,7 +25,7 @@ export interface IProFormProps<mapProps = {}> {
      * @memberof IHLFormProps
      */
     InputDataModel: Function;
-    store?: ProFormStore;
+    store?: InstanceType<typeof LegionsStoreForm>;
     /** 初始化执行一次 */
     controls: Array<IProFormFields['componentModel']>;
     group?: Array<IGroup>;
@@ -118,17 +118,17 @@ export declare class LegionsProForm<mapProps = {}> extends React.Component<IProF
     /** 未加密的freezeUid 值 */
     decryptionFreezeUid: string;
     constructor(props: any);
-    get storeView(): import("brain-store-utils").ViewModel<import("../store/pro.form/proFormStore").HlFormView> & {
-        elementList: import("../store/pro.form/interface").IObservableMap<string, IElementList>;
+    get storeView(): import("brain-store-utils").ViewModel<import("../LegionsStoreForm/proFormStore").HlFormView> & {
+        elementList: import("../LegionsStoreForm/interface").IObservableMap<string, IElementList>;
         focusUid: string;
         enableEnterSwitch: boolean;
-        renderNodeQueue: import("../store/pro.form/interface").IObservableMap<string, string>;
-        errorReactNodeList: import("../store/pro.form/interface").IObservableMap<string, import("brain-store-utils").ViewModel<import("../store/pro.form/proFormStore").ErrorViewModel> & {
+        renderNodeQueue: import("../LegionsStoreForm/interface").IObservableMap<string, string>;
+        errorReactNodeList: import("../LegionsStoreForm/interface").IObservableMap<string, import("brain-store-utils").ViewModel<import("../LegionsStoreForm/proFormStore").ErrorViewModel> & {
             uid: string;
             validateStatus: "" | "error";
         }>;
-        errorListView: import("../store/pro.form/interface").IObservableMap<string, IErrorView[]>;
-        readonly computedErrorReactNodeList: import("../store/pro.form/interface").IObservableMap<string, import("brain-store-utils").ViewModel<import("../store/pro.form/proFormStore").ErrorViewModel> & {
+        errorListView: import("../LegionsStoreForm/interface").IObservableMap<string, IErrorView[]>;
+        readonly computedErrorReactNodeList: import("../LegionsStoreForm/interface").IObservableMap<string, import("brain-store-utils").ViewModel<import("../LegionsStoreForm/proFormStore").ErrorViewModel> & {
             uid: string;
             validateStatus: "" | "error";
         }>;
@@ -136,8 +136,8 @@ export declare class LegionsProForm<mapProps = {}> extends React.Component<IProF
         readonly computedFormFields: (LabelWithInputModel | LabelWithInputNumberModel | LabelWithDatePickerModel | LabelWithMonthPickerModel | LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel | LabelWithRadioButtonModel | LabelWithTextModel | LabelWithSelectModel | LabelWithCheckboxModel)[];
         readonly computedAllFormFields: (LabelWithInputModel | LabelWithInputNumberModel | LabelWithDatePickerModel | LabelWithMonthPickerModel | LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel | LabelWithRadioButtonModel | LabelWithTextModel | LabelWithSelectModel | LabelWithCheckboxModel)[];
         readonly computedErrorListView: IErrorView[];
-        readonly computedFormSize: "default" | "small" | "table";
-        updateFormSize: (size: "default" | "small" | "table") => void;
+        readonly computedFormSize: "small" | "table" | "default";
+        updateFormSize: (size: "small" | "table" | "default") => void;
         collectErrorReactNode: (componentCode: string, errorUid: string) => void;
         setErrorErrorReactNodeList: (componentCode: string, errorListView: IErrorView[]) => void;
         handleIgnore: (componentCode: string, id: number) => void;
@@ -147,6 +147,6 @@ export declare class LegionsProForm<mapProps = {}> extends React.Component<IProF
             type: "normal" | "custom";
         };
         _initFormItemField: (key: string, value: LabelWithInputModel | LabelWithInputNumberModel | LabelWithDatePickerModel | LabelWithMonthPickerModel | LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel | LabelWithRadioButtonModel | LabelWithTextModel | LabelWithSelectModel | LabelWithCheckboxModel, type?: "normal" | "custom") => void;
-    } & import("../store/pro.form/proFormStore").IOtherView;
+    } & import("../LegionsStoreForm/proFormStore").IOtherView;
     render(): JSX.Element;
 }

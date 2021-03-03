@@ -1,17 +1,16 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-29 10:57:31
- * @LastEditTime: 2021-01-29 16:02:29
+ * @LastEditTime: 2021-03-02 19:20:01
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProTabsForm/interface/index.ts
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
 import { ClassOf } from 'legions-lunar/types/api/typescript';
-import { ProFormStore } from '../../store/pro.form';
 import  {
     ITabsFormViewModelStore,
-  } from '../../store/pro.form/interface';
+  } from '../../LegionsStoreForm/interface';
 export interface InstanceTabsForm<Model> {
   
   

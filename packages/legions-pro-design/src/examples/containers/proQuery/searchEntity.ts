@@ -1,5 +1,14 @@
+/*
+ * @Author: duanguang
+ * @Date: 2021-03-02 14:19:18
+ * @LastEditTime: 2021-03-03 15:15:52
+ * @LastEditors: duanguang
+ * @Description: 
+ * @FilePath: /legions-design-element/packages/legions-pro-design/src/examples/containers/proQuery/searchEntity.ts
+ * 「扫去窗上的尘埃，才可以看到窗外的美景。」
+ */
 import { JsonProperty } from 'json-mapper-object';
-import { BaseEntity } from '../../../components/models';
+import LegionsModels from '../../../components/LegionsModels';
 
 /** 海关基础参数 */
 export class SearchResponse {
@@ -33,7 +42,7 @@ export class SearchResponse {
 }
 
 /** 海关基础参数请求结果 */
-export class SearchEntity extends BaseEntity<SearchResponse>{
+export class SearchEntity extends LegionsModels.BaseEntity<SearchResponse>{
     // tslint:disable-next-line: typedef
     constructor(fromJson) {
         super();

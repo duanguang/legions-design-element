@@ -1,8 +1,8 @@
-import { IViewModelModalStore } from '../store/pro.modal/interface';
-import { ProModalStore } from '../store/pro.modal';
+import { IViewModelModalStore } from '../LegionsStoreModal/interface';
+import LegionsStoreModal from '../LegionsStoreModal';
 import { ModalProps } from '../interface/antd';
 export interface InstanceLegionsProModal {
-    store: ProModalStore;
+    store: InstanceType<typeof LegionsStoreModal>;
     uid: string;
     viewModel: IViewModelModalStore;
 }
@@ -11,7 +11,7 @@ interface IdraggableOptions {
     minWidth?: number;
 }
 export interface ILegionsProModalProps extends ModalProps {
-    store?: ProModalStore;
+    store?: InstanceType<typeof LegionsStoreModal>;
     onReady?: (instance: InstanceLegionsProModal) => void;
     /**
      * 组件类型，默认modal，也可以设置Drawer 抽屉形式

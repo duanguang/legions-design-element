@@ -2,7 +2,6 @@ import React from 'react';
 import { WrappedFormUtils } from '../interface/antd';
 import { InstanceFormElement } from './interface/formElement';
 import { ProFormStore } from '../store/pro.form';
-import { LabelWithSelectModel } from './interface/select';
 export interface IFormElementProps {
     form: WrappedFormUtils;
     elementKey: string;
@@ -58,36 +57,7 @@ export default class FormElement extends React.Component<IFormElementProps, {}> 
     /**  处理重复注册代理事件行为，已经注册过的代理事件,不重复注册*/
     onkeyDownProxy: () => () => void;
     componentWillMount(): void;
-    get formStore(): import("brain-store-utils").ViewModel<import("../store/pro.form/proFormStore").HlFormView> & {
-        elementList: import("../store/pro.form/interface").IObservableMap<string, import("../store/pro.form/interface").IElementList>;
-        focusUid: string;
-        enableEnterSwitch: boolean;
-        renderNodeQueue: import("../store/pro.form/interface").IObservableMap<string, string>;
-        errorReactNodeList: import("../store/pro.form/interface").IObservableMap<string, import("brain-store-utils").ViewModel<import("../store/pro.form/proFormStore").ErrorViewModel> & {
-            uid: string;
-            validateStatus: "" | "error";
-        }>;
-        errorListView: import("../store/pro.form/interface").IObservableMap<string, import("./interface").IErrorView[]>;
-        readonly computedErrorReactNodeList: import("../store/pro.form/interface").IObservableMap<string, import("brain-store-utils").ViewModel<import("../store/pro.form/proFormStore").ErrorViewModel> & {
-            uid: string;
-            validateStatus: "" | "error";
-        }>;
-        readonly computedAllElementList: string[];
-        readonly computedFormFields: (import("./FormInput").LabelWithInputModel | import("./FormInputNumber").LabelWithInputNumberModel | import("./FormDatePicker").LabelWithDatePickerModel | import("./FormMonthPicker").LabelWithMonthPickerModel | import("./FormRangePicker").LabelWithRangePickerModel | import("./FormUpload").LabelWithUploadModel | import("./FormSwitch").LabelWithSwitchModel | import("./FormRadioButton").LabelWithRadioButtonModel | import("./FormText").LabelWithTextModel | LabelWithSelectModel | import("./FormCheckbox").LabelWithCheckboxModel)[];
-        readonly computedAllFormFields: (import("./FormInput").LabelWithInputModel | import("./FormInputNumber").LabelWithInputNumberModel | import("./FormDatePicker").LabelWithDatePickerModel | import("./FormMonthPicker").LabelWithMonthPickerModel | import("./FormRangePicker").LabelWithRangePickerModel | import("./FormUpload").LabelWithUploadModel | import("./FormSwitch").LabelWithSwitchModel | import("./FormRadioButton").LabelWithRadioButtonModel | import("./FormText").LabelWithTextModel | LabelWithSelectModel | import("./FormCheckbox").LabelWithCheckboxModel)[];
-        readonly computedErrorListView: import("./interface").IErrorView[];
-        readonly computedFormSize: "default" | "small" | "table";
-        updateFormSize: (size: "default" | "small" | "table") => void;
-        collectErrorReactNode: (componentCode: string, errorUid: string) => void;
-        setErrorErrorReactNodeList: (componentCode: string, errorListView: import("./interface").IErrorView[]) => void;
-        handleIgnore: (componentCode: string, id: number) => void;
-        addAllElementKeys: (keys: string) => void;
-        getFormItemField: (key: string) => {
-            value: import("./FormInput").LabelWithInputModel | import("./FormInputNumber").LabelWithInputNumberModel | import("./FormDatePicker").LabelWithDatePickerModel | import("./FormMonthPicker").LabelWithMonthPickerModel | import("./FormRangePicker").LabelWithRangePickerModel | import("./FormUpload").LabelWithUploadModel | import("./FormSwitch").LabelWithSwitchModel | import("./FormRadioButton").LabelWithRadioButtonModel | import("./FormText").LabelWithTextModel | LabelWithSelectModel | import("./FormCheckbox").LabelWithCheckboxModel;
-            type: "normal" | "custom";
-        };
-        _initFormItemField: (key: string, value: import("./FormInput").LabelWithInputModel | import("./FormInputNumber").LabelWithInputNumberModel | import("./FormDatePicker").LabelWithDatePickerModel | import("./FormMonthPicker").LabelWithMonthPickerModel | import("./FormRangePicker").LabelWithRangePickerModel | import("./FormUpload").LabelWithUploadModel | import("./FormSwitch").LabelWithSwitchModel | import("./FormRadioButton").LabelWithRadioButtonModel | import("./FormText").LabelWithTextModel | LabelWithSelectModel | import("./FormCheckbox").LabelWithCheckboxModel, type?: "normal" | "custom") => void;
-    } & import("../store/pro.form/proFormStore").IOtherView;
+    get formStore(): any;
     /**
      *
      *  查询下拉单选dom

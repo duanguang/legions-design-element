@@ -8,19 +8,19 @@ import { getSystem,getToken,HttpConfig,SocketUrl } from '../../constants/httpCon
 import { InstanceForm } from '../../../components/LegionsProForm/interface'
 import { FormFields } from '../proForm/model';
 import { ClassOf } from 'legions-lunar/types/api/typescript';
-import { exportTaskDeleteService,getMenuList } from 'examples/services/menuService';
-import UserInfoStore from 'examples/stores/UserInfoStore';
-import { MenuStore } from 'components/store/pro.layout';
+import { exportTaskDeleteService,getMenuList } from '../../services/menuService';
+import UserInfoStore from '../../stores/UserInfoStore';
+import LegionsStoreLayout from '../../../components/LegionsStoreLayout';
 import { page } from 'legions-lunar/mobx-decorator';
-import { InstanceLegionsProModal } from 'components/LegionsProModal/interface';
-import { TableColumnConfig } from 'components/interface/antd';
-import { ExportTaskEntity } from 'examples/models/ExportTaskEntity';
+import { InstanceLegionsProModal } from '../../../components/LegionsProModal/interface';
+import { TableColumnConfig } from '../../../components/interface/antd';
+import { ExportTaskEntity } from '../../models/ExportTaskEntity';
 import { download } from 'legions-utils-tool/download';
 import { OpenConfirm } from 'legions-lunar/antd-toolkit';
-import { InstanceProTable } from 'components/LegionsProTable/interface';
+import { InstanceProTable } from '../../../components/LegionsProTable/interface';
 import { runInAction } from 'mobx'
-import TaskPlugin from 'examples/utils/TaskPlugin';
-import { ContainerEntity } from 'examples/models/common/baseEntity';
+import TaskPlugin from '../../utils/TaskPlugin';
+import { ContainerEntity } from '../../models/common/baseEntity';
 const LOGO = 'https://qa-scm.hoolinks.com/scm-static/scm-admin/common/images/8893a956.SCM-IMAG.png';
 const Columns = (that: ProLayout): TableColumnConfig<ExportTaskEntity>[] => [
     {
@@ -97,14 +97,14 @@ const Columns = (that: ProLayout): TableColumnConfig<ExportTaskEntity>[] => [
 ];
 interface IProps {
     store?: UserInfoStore,
-    menuStore?: MenuStore;
+    menuStore?:InstanceType<typeof LegionsStoreLayout['MenuStore']>;
 }
 interface IState {
 }
 const whiteList = ['uat-scm.hoolinks.com','qa-scm.hoolinks.com','scm.hoolinks.com','demo-scm.hoolinks.com',
     'jabil.hoolinks.com','qa-jabil.hoolinks.com','demo-jabil.hoolinks.com','uat-jabil.hoolinks.com','localhost:8057']
 let isRegisterTask = false;
-@bind({ store: UserInfoStore,menuStore: MenuStore })
+@bind({ store: UserInfoStore,menuStore: LegionsStoreLayout.MenuStore })
 @page<ProLayout,UserInfoStore>({
     sideEffect: (that,store: UserInfoStore) => {
         if (store.obUserInfo.isResolved) {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { WrappedFormUtils } from '../interface/antd';
 import { InstanceFormElement } from './interface/formElement';
-import { ProFormStore } from '../store/pro.form';
+import LegionsStoreForm from '../LegionsStoreForm';
 import { LabelWithSelectModel } from './interface/select';
 export interface IFormElementProps {
     form: WrappedFormUtils;
@@ -13,7 +13,7 @@ export interface IFormElementProps {
      * @memberof IFormWithInputProps
      */
     formUid: string;
-    store?: ProFormStore;
+    store?: InstanceType<typeof LegionsStoreForm>;
     /**
      * 组件类型
      *
@@ -58,17 +58,17 @@ export default class FormElement extends React.Component<IFormElementProps, {}> 
     /**  处理重复注册代理事件行为，已经注册过的代理事件,不重复注册*/
     onkeyDownProxy: () => () => void;
     componentWillMount(): void;
-    get formStore(): import("brain-store-utils").ViewModel<import("../store/pro.form/proFormStore").HlFormView> & {
-        elementList: import("../store/pro.form/interface").IObservableMap<string, import("../store/pro.form/interface").IElementList>;
+    get formStore(): import("brain-store-utils").ViewModel<import("../LegionsStoreForm/proFormStore").HlFormView> & {
+        elementList: import("../LegionsStoreForm/interface").IObservableMap<string, import("../LegionsStoreForm/interface").IElementList>;
         focusUid: string;
         enableEnterSwitch: boolean;
-        renderNodeQueue: import("../store/pro.form/interface").IObservableMap<string, string>;
-        errorReactNodeList: import("../store/pro.form/interface").IObservableMap<string, import("brain-store-utils").ViewModel<import("../store/pro.form/proFormStore").ErrorViewModel> & {
+        renderNodeQueue: import("../LegionsStoreForm/interface").IObservableMap<string, string>;
+        errorReactNodeList: import("../LegionsStoreForm/interface").IObservableMap<string, import("brain-store-utils").ViewModel<import("../LegionsStoreForm/proFormStore").ErrorViewModel> & {
             uid: string;
             validateStatus: "" | "error";
         }>;
-        errorListView: import("../store/pro.form/interface").IObservableMap<string, import("./interface").IErrorView[]>;
-        readonly computedErrorReactNodeList: import("../store/pro.form/interface").IObservableMap<string, import("brain-store-utils").ViewModel<import("../store/pro.form/proFormStore").ErrorViewModel> & {
+        errorListView: import("../LegionsStoreForm/interface").IObservableMap<string, import("./interface").IErrorView[]>;
+        readonly computedErrorReactNodeList: import("../LegionsStoreForm/interface").IObservableMap<string, import("brain-store-utils").ViewModel<import("../LegionsStoreForm/proFormStore").ErrorViewModel> & {
             uid: string;
             validateStatus: "" | "error";
         }>;
@@ -87,7 +87,7 @@ export default class FormElement extends React.Component<IFormElementProps, {}> 
             type: "normal" | "custom";
         };
         _initFormItemField: (key: string, value: import("./FormInput").LabelWithInputModel | import("./FormInputNumber").LabelWithInputNumberModel | import("./FormDatePicker").LabelWithDatePickerModel | import("./FormMonthPicker").LabelWithMonthPickerModel | import("./FormRangePicker").LabelWithRangePickerModel | import("./FormUpload").LabelWithUploadModel | import("./FormSwitch").LabelWithSwitchModel | import("./FormRadioButton").LabelWithRadioButtonModel | import("./FormText").LabelWithTextModel | LabelWithSelectModel | import("./FormCheckbox").LabelWithCheckboxModel, type?: "normal" | "custom") => void;
-    } & import("../store/pro.form/proFormStore").IOtherView;
+    } & import("../LegionsStoreForm/proFormStore").IOtherView;
     /**
      *
      *  查询下拉单选dom

@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.7
+  *  legions-pro-design v0.0.3
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -9,7 +9,7 @@ import { getStringLen } from 'legions-utils-tool/format.string';
 import { shortHash } from 'legions-lunar/object-hash';
 import { bind, observer } from 'legions/store-react';
 import { findDOMNode } from 'react-dom';
-import { ProFormStore } from '../store/pro.form';
+import LegionsStoreForm from '../LegionsStoreForm';
 import LegionsProErrorReportShow from '../LegionsProErrorReportShow';
 import classNames from 'classnames';
 import LegionsProUpload from '../LegionsProUpload';
@@ -441,7 +441,7 @@ var FormElement = /** @class */ (function (_super) {
         nextElementKey: '',
     };
     FormElement = __decorate([
-        bind({ store: ProFormStore }),
+        bind({ store: LegionsStoreForm }),
         observer,
         __metadata("design:paramtypes", [Object])
     ], FormElement);
@@ -2460,7 +2460,7 @@ var ProForm = /** @class */ (function (_super) {
         isDragSort: false,
     };
     ProForm = __decorate([
-        bind({ store: ProFormStore }),
+        bind({ store: LegionsStoreForm }),
         observer,
         __metadata("design:paramtypes", [Object])
     ], ProForm);
@@ -2543,7 +2543,7 @@ var LegionsProForm = /** @class */ (function (_super) {
     LegionsProForm.BaseFormFields = BaseFormFields;
     LegionsProForm.ProFormFields = ProFormFields;
     LegionsProForm = __decorate([
-        bind({ store: ProFormStore }),
+        bind({ store: LegionsStoreForm }),
         observer,
         __metadata("design:paramtypes", [Object])
     ], LegionsProForm);

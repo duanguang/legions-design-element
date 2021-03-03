@@ -1,11 +1,11 @@
 import React from 'react';
-import UserInfoStore from 'examples/stores/UserInfoStore';
-import { MenuStore } from 'components/store/pro.layout';
-import { InstanceLegionsProModal } from 'components/LegionsProModal/interface';
-import { InstanceProTable } from 'components/LegionsProTable/interface';
+import UserInfoStore from '../../stores/UserInfoStore';
+import LegionsStoreLayout from '../../../components/LegionsStoreLayout';
+import { InstanceLegionsProModal } from '../../../components/LegionsProModal/interface';
+import { InstanceProTable } from '../../../components/LegionsProTable/interface';
 interface IProps {
     store?: UserInfoStore;
-    menuStore?: MenuStore;
+    menuStore?: InstanceType<typeof LegionsStoreLayout['MenuStore']>;
 }
 interface IState {
 }

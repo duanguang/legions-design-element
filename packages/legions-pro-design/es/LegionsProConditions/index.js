@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.7
+  *  legions-pro-design v0.0.3
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -9,7 +9,7 @@ import { Radio, DatePicker, Select, Input, Checkbox, Icon, Tooltip, InputNumber,
 import moment from 'moment';
 import { bind, observer } from 'legions/store-react';
 import LegionsProSelect from '../LegionsProSelect';
-import { ProQueryConditionStore } from '../store/pro.query.conditions';
+import LegionsStoreConditions from '../LegionsStoreConditions';
 import { shortHash } from 'legions-lunar/object-hash';
 import { findDOMNode } from 'react-dom';
 import { debounce } from 'legions-utils-tool/debounce';
@@ -895,7 +895,7 @@ var LegionsProConditions = /** @class */ (function (_super) {
             var label = component.conditionsProps.label;
             var name_1 = component.containerProps.name;
             return (this.viewStore.computedSize !== 'small' ? React.createElement(Col, { className: "legions-pro-query-label", span: labelSpan },
-                React.createElement("label", { htmlFor: name_1, title: label, style: { lineHeight: '28px', position: 'absolute', right: '0px' } }, label)) :
+                React.createElement("label", { htmlFor: name_1, title: label, style: { lineHeight: '28px', right: '0px' } }, label)) :
                 React.createElement("label", { htmlFor: name_1, title: label, style: {
                         marginLeft: '5px', marginRight: '3px',
                         position: 'absolute', zIndex: 999, background: '#fff',
@@ -1035,7 +1035,7 @@ var LegionsProConditions = /** @class */ (function (_super) {
         defaultCollapsed: true,
     };
     LegionsProConditions = __decorate([
-        bind({ store: ProQueryConditionStore }),
+        bind({ store: LegionsStoreConditions }),
         observer,
         __metadata("design:paramtypes", [Object])
     ], LegionsProConditions);

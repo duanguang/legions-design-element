@@ -1,12 +1,12 @@
-import { ProFormStore } from '../store/pro.form';
+import LegionsStoreForm from '../LegionsStoreForm';
 import React from 'react';
-import { IProFormFields } from '../store/pro.form/interface';
+import { IProFormFields } from '../LegionsStoreForm/interface';
 import { ClassOf } from 'legions-lunar/types/api/typescript';
 import { IGroup, InstanceForm } from '../LegionsProForm/interface';
 import { InstanceLegionsModalForm } from './interface';
 import { ILegionsProModalProps, InstanceLegionsProModal } from '../LegionsProModal/interface';
 interface IProps<Model> {
-    store?: ProFormStore;
+    store?: InstanceType<typeof LegionsStoreForm>;
     /**
      * 主要用于当父组件中存在多个表单组件时，标记key 来保证父级组件中表单组件唯一
      * 注意，建议一定传递

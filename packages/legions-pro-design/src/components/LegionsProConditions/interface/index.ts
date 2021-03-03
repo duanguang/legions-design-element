@@ -1,14 +1,14 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-08 12:00:22
- * @LastEditTime: 2021-02-04 18:29:55
+ * @LastEditTime: 2021-03-02 19:15:51
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProConditions/interface/index.ts
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
-import { ProQueryConditionStore } from '../../store/pro.query.conditions';
-import { IViewQueryConditionStore,ISelectAutoQuery } from '../../store/pro.query.conditions/interface';
+import LegionsStoreConditions from '../../LegionsStoreConditions';
+import { IViewQueryConditionStore,ISelectAutoQuery } from '../../LegionsStoreConditions/interface';
 import { HlLabeledValue } from 'legions-lunar/model';
 import { Weaken } from '../../interface'
 import {
@@ -68,7 +68,7 @@ export interface IFieldsState {
     visable?: boolean
 }
 export interface IQueryConditionsInstance<Query = {}> {
-    store: ProQueryConditionStore<Query>;
+    store: InstanceType<typeof LegionsStoreConditions>;
     /** 只读 */
     readonly uid: string;
 

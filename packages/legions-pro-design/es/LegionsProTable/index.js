@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.7
+  *  legions-pro-design v0.0.3
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -8,7 +8,7 @@ import ReactDOM, { unmountComponentAtNode, findDOMNode, unstable_renderSubtreeIn
 import { message, Menu, Button, Icon, Dropdown, Row, Col, Table } from 'antd';
 import './style/index.less';
 import { bind, observer } from 'legions/store-react';
-import { ProTableStore } from '../store/pro.table';
+import LegionsStoreTable from '../LegionsStoreTable';
 import { compare } from 'legions-utils-tool/object.utils';
 import { warningOnce } from 'legions-utils-tool';
 import { shortHash } from 'legions-lunar/object-hash';
@@ -21,7 +21,7 @@ import { legionsThirdpartyPlugin } from 'legions-thirdparty-plugin';
 import { LoggerManager } from 'legions-lunar/legion.plugin.sdk';
 import { cloneDeep } from 'lodash';
 import { observable, action } from 'legions/store';
-import { BaseEntity } from '../models';
+import LegionsModels from '../LegionsModels';
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -171,7 +171,7 @@ var PageListEntity = /** @class */ (function (_super) {
         return _this;
     }
     return PageListEntity;
-}(BaseEntity));
+}(LegionsModels.BaseEntity));
 
 /**
  * 列表组件基类
@@ -1253,7 +1253,7 @@ var LegionsProTable = /** @class */ (function (_super) {
      */
     LegionsProTable.ProTableBaseClass = ProTableBaseClass;
     LegionsProTable = LegionsProTable_1 = __decorate([
-        bind({ store: ProTableStore }),
+        bind({ store: LegionsStoreTable }),
         observer,
         __metadata("design:paramtypes", [Object])
     ], LegionsProTable);

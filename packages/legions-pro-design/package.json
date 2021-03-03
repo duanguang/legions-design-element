@@ -1,6 +1,6 @@
 {
   "name": "legions-pro-design",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "前端业务组件库",
   "keywords": [
     "design",
@@ -76,7 +76,8 @@
     "ts-plugin-legions": "^0.0.10-beta.1"
   },
   "files": [
-    "es"
+    "es",
+    "types"
   ],
   "browserslist": [
     "> 1%",

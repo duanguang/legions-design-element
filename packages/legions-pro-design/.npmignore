@@ -6,8 +6,6 @@ docs
 docs/_book
 examples/**/build.js
 types/typings
-types
-src
 build
 types/test/*.js
 explorations

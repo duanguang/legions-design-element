@@ -3,7 +3,7 @@ import './style/index.less';
 import { IRouter } from './content';
 import { IUserInfo } from '../interface';
 import { MenuProps } from 'antd/lib/menu';
-import { MenuContainerEntity, MenuEntity } from '../models';
+import LegionsModels from '../LegionsModels';
 interface IProps extends IUserInfo {
     /** 路由访问模块时使用 */
     router?: Array<IRouter>;
@@ -12,7 +12,7 @@ interface IProps extends IUserInfo {
     /** logo 图片地址 */
     logo: string;
     /** 获取菜单数据接口 */
-    onQueryPromiseMenus: () => Promise<MenuContainerEntity>;
+    onQueryPromiseMenus: () => Promise<InstanceType<typeof LegionsModels.MenuContainerEntity>>;
     /** 退出登录 */
     onLoginOut: () => void;
     /** 菜单地址主域地址信息
@@ -78,7 +78,7 @@ interface IProps extends IUserInfo {
      */
     fixedLayoutPosition?: 'fixedSider' | 'fixedSiderHeader';
     /** 在菜单数据接口请求完成后，如果需要对菜单数据项进行自定义加工，可传入此函数 */
-    loadedMenuTransformData?: (menuList: MenuEntity[]) => void;
+    loadedMenuTransformData?: (menuList: InstanceType<typeof LegionsModels.MenuEntity>[]) => void;
 }
 declare const LegionsProLayout: (props: IProps) => JSX.Element;
 export default LegionsProLayout;

@@ -4,8 +4,8 @@ import { Table,Row,Col,Button,Icon,Input,message,Menu,Dropdown } from 'antd';
 import './style/index.less';
 import { TableColumnConfig,TableProps,TableRowSelection } from 'antd/lib/table/Table';
 import { observer,bind } from 'legions/store-react';
-import {ProTableStore} from '../store/pro.table';
-import { IViewModelProTableStore,ILocalViewModelProTableStore,ITableAutoQuery } from '../store/pro.table/interface';
+import LegionsStoreTable from '../LegionsStoreTable';
+import { IViewModelProTableStore,ILocalViewModelProTableStore,ITableAutoQuery } from '../LegionsStoreTable/interface';
 import {
     compare,
 } from 'legions-utils-tool/object.utils';
@@ -18,7 +18,7 @@ import {
     PaginationProps
 } from '../interface/antd';
 import { ITableColumnConfig,IExportCsv, IProTableProps, ICustomColumnsConfig } from './interface';
-import { ISchedule } from '../store/interface';
+import { ISchedule } from '../LegionsStore/interface';
 import moment from 'moment';
 import LegionsProTableCustomColumns from '../LegionsProTableCustomColumns';
 import LegionsProLineOverflow from '../LegionsProLineOverflow';
@@ -45,7 +45,7 @@ const errorMessage = {
     Repeat: 'uniqueKey[接口数据作为唯一字段不可靠，建议前端自己生成唯一字段。开发环境检测，如果用的接口数据字段作为唯一值，也请确保绝对唯一]:存在相同数据,请认真检查数据是否绝对唯一，否则会引发部分功能异常'
 }
 
-@bind({ store: ProTableStore })
+@bind({ store: LegionsStoreTable })
 @observer
 export default class LegionsProTable<TableRow = {},Model = {}> extends React.Component<IProTableProps<TableRow,Model>,IState>{
     timeId = new Date().getTime()

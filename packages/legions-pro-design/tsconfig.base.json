@@ -19,14 +19,11 @@
         "esnext",
         "ES2015.Promise"
       ],
-      "paths": {
-        "dexie": ["src/components/interface/dexie"],
-        // "@/*": ["src/*"]
-      },
+      
       "allowJs": true,
-      "isolatedModules": false,
+       /* "isolatedModules": true, */
       "jsx": "react",
-      "resolveJsonModule": true,
+      "resolveJsonModule": false,
       "esModuleInterop": true,
       /*  "strict": true, */
       "pretty": true,
@@ -36,13 +33,13 @@
       "forceConsistentCasingInFileNames": true,
       "noFallthroughCasesInSwitch": true,
       "noImplicitReturns": true,
-      /* "skipLibCheck": true, */
+      "skipLibCheck": true,
       /* "allowSyntheticDefaultImports": true, */
       /* "stripInternal": true, */
       "emitDecoratorMetadata": true,
       "experimentalDecorators": true,
      /*  "strictPropertyInitialization": true, */
-      /* "typeRoots": ["./types"], */
+     /*  "typeRoots": ["./types"], */
       "importHelpers": true,
       "sourceMap": true,
       /* "strictNullChecks": true, */
@@ -50,7 +47,7 @@
       /* "noImplicitThis": true, */
       /* "alwaysStrict": true */
     },
-    "include": ["src/**/*"],
+    "include": ["./src/**/*"],
     "exclude": [
       "node_modules",
       "dist",

@@ -1,5 +1,5 @@
-import { MenuEntity } from '../models/pro.menu.model';
-import { IPanes } from '../store/pro.layout/interface';
+import LegionsModels from '../LegionsModels';
+import { IPanes } from '../LegionsStoreLayout/interface';
 /**
  *  使用 typescript 有时候需要重写一个库提供的 interface 的某个属性，但是重写 interface 有可能会导致冲突：
  *  原理是，将 类型 T 的所有 K 属性置为 any，
@@ -18,6 +18,7 @@ export interface ClassOf<T> {
 type A = Exclude<'a'|'b'|'c'|'d' ,'b'|'c'|'e' >  // 'a' | 'd'
 */
 export declare type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+export declare type InstanceType<T extends new (...args: any) => any> = T extends new (...args: any) => infer R ? R : any;
 export interface IUserInfo<U = {}> {
     userEntity?: {
         userName: string;
@@ -69,7 +70,7 @@ export interface IGlobalStates {
         /** 关闭菜单页签 */
         removeTablePane?: (targetKey: string | string[]) => void;
     };
-    menuList?: MenuEntity[];
+    menuList?: InstanceType<typeof LegionsModels.MenuEntity>[];
     user?: IGlobalUserInfo<any>;
 }
 interface IOperation {

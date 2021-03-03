@@ -1,8 +1,8 @@
 import React from 'react';
-import { MenuStore } from '../../store/pro.layout';
+import LegionsStoreLayout from '../../LegionsStoreLayout';
 import { IUserInfo } from '../../interface';
 interface IProps extends IUserInfo {
-    store?: MenuStore;
+    store?: InstanceType<typeof LegionsStoreLayout.MenuStore>;
     onLoginOut: () => void;
     /** 扩展系统设置下拉菜单项 */
     sysSettingDropdown?: {

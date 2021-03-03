@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-10 16:14:09
- * @LastEditTime: 2021-02-05 10:38:32
+ * @LastEditTime: 2021-03-03 15:21:45
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/script/rollupPlugin.js
@@ -9,17 +9,32 @@
  */
 const babel = { browser: {}, umd: { babel: false },es:{babel: false} };
 const externalLib = [
-  /* 'legions-lunar/types/api/typescript', */
+/* 'legions-lunar/types/api/typescript', */
+  'mobx-react',
   'legions-utils-tool/dom',
   'legions/store',
+  './LegionsCore',
+  './LegionsModels',
+  './LegionsStore',
+  './LegionsStoreConditions',
+  './LegionsStoreForm',
+  './LegionsStoreLayout',
+  './LegionsStoreModal',
+  './LegionsStoreTable',
+  '../../LegionsCore',
+  '../LegionsStoreForm',
+  '../../LegionsStoreLayout',
+  '../../LegionsStore',
+  '../../LegionsStoreTable',
+  '../LegionsCore',
   'legions-micro-service',
-  '../../models',
-  '../../store/StoreBase',
-  '../../store/pro.table',
+  '../../LegionsModels',
+  '../LegionsStore',
+  '../LegionsStoreTable',
   'legions-lunar/object-hash',
   'json-mapper-object',
   'legions-thirdparty-plugin',
-  '../models',
+  '../LegionsModels',
   'legions-lunar/schedule',
   '../index',
   'legions/store-utils',
@@ -27,6 +42,7 @@ const externalLib = [
   'mobx',
   'legions-lunar',
   'lodash',
+  '../db',
   '../../db',
   'legions-utils-tool/storage',
   '../../core',
@@ -56,7 +72,7 @@ const externalLib = [
   '../LegionsProErrorReportShow',
   '../style/content.modules.less',
   '../style/memu.less',
-  '../../store/pro.layout',
+  '../LegionsStoreLayout',
   'legions-lunar/mobx-decorator',
   '../../LegionsProTable',
   '../../LegionsProModal',
@@ -66,16 +82,16 @@ const externalLib = [
   '../../LegionsProIframe',
   'legions-thirdparty-plugin/focus-outside',
   '../../LegionsProSelect',
-  '../store/pro.modal',
+  '../LegionsStoreModal',
   'moment',
-  '../store/pro.query.conditions',
+  '../LegionsStoreConditions',
   'react-raphael',
   'legions-utils-tool/type.validation',
   'legions-utils-tool',
   '../LegionsProTableCustomColumns',
   'lodash.throttle',
   '../LegionsProModa',
-  '../store/pro.table',
+  '../LegionsStoreTable',
   'legions-utils-tool/object.utils',
   '../LegionsProDragger',
   '../LegionsProModal',
@@ -83,8 +99,7 @@ const externalLib = [
   '../LegionsProForm',
   'lodash/has',
   'lodash/set',
-  '../LegionsProForm/HlForm',
-  '../../../models',
+  '../../../LegionsModels',
   'legions-decorator/async.validator',
   
   'react',
