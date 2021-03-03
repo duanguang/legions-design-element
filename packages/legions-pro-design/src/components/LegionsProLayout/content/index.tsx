@@ -9,7 +9,7 @@ import { Tabs,Layout,Form,Icon,Dropdown,Menu,message,Spin } from 'antd';
 const { Content } = Layout;
 const TabPane = Tabs.TabPane;
 import { observer,bind } from "legions/store-react";
-import {TabPaneViewStore,MenuStore} from "../../store/pro.layout";
+import LegionsStoreLayout from "../../LegionsStoreLayout";
 import ReactDOM,{ findDOMNode } from "react-dom";
 import { observableViewModel } from 'legions/store-utils'
 import { debounce } from 'legions-utils-tool/debounce'
@@ -18,7 +18,7 @@ import classNames from 'classnames';
 import { observable } from 'mobx';
 import { shortHash } from 'legions-lunar/object-hash';
 import { focusBind,focusUnbind } from 'legions-thirdparty-plugin/focus-outside'
-import { IPanes } from '../../store/pro.layout/interface';
+import { IPanes } from '../../LegionsStoreLayout/interface';
 import { IUserInfo } from '../../interface';
 import { LayoutContentUtils } from './layoutContentUtils';
 
@@ -34,8 +34,8 @@ export interface IRouter {
   component: any;
 }
 interface IProps extends IUserInfo {
-  store?: TabPaneViewStore;
-  menuStore?: MenuStore;
+  store?: InstanceType<typeof LegionsStoreLayout.TabPaneViewStore>;
+  menuStore?: InstanceType<typeof LegionsStoreLayout.MenuStore>;
   router: Array<IRouter>;
 
   /**
@@ -66,7 +66,7 @@ class ViewModels {
 }
 interface IState{
 }
-@bind({ store: TabPaneViewStore,menuStore: MenuStore })
+@bind({ store: LegionsStoreLayout.TabPaneViewStore,menuStore: LegionsStoreLayout.MenuStore })
 @observer
 export default class ContentPart extends React.Component<IProps,IState> {
   history = this.props.store.context._manage.history;

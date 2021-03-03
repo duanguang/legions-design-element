@@ -23,8 +23,8 @@ import { bind,observer } from 'legions/store-react'
 import { Weaken } from '../interface'
 import LegionsProSelect from '../LegionsProSelect';
 import { IProSelectProps } from '../LegionsProSelect/interface'
-import { ProQueryConditionStore } from '../store/pro.query.conditions';
-import { IViewQueryConditionStore,ISelectAutoQuery } from '../store/pro.query.conditions/interface';
+import LegionsStoreConditions from '../LegionsStoreConditions';
+import { IViewQueryConditionStore,ISelectAutoQuery } from '../LegionsStoreConditions/interface';
 import { shortHash } from 'legions-lunar/object-hash';
 import ReactDOM,{ findDOMNode } from "react-dom";
 import { debounce } from 'legions-utils-tool/debounce'
@@ -47,7 +47,7 @@ interface IRadioButtonProps {
 
 interface IProps {
     query: Array<IProConditions['componentModel']>,
-    store?: ProQueryConditionStore,
+    store?: InstanceType<typeof LegionsStoreConditions>,
     /**
      *
      * 组件完成渲染时执行，有DOM结构，执行的钩子函数
@@ -99,7 +99,7 @@ interface IProps {
 interface IState {
     collapsed: boolean
 }
-@bind({ store: ProQueryConditionStore })
+@bind({ store: LegionsStoreConditions })
 @observer
 export default class LegionsProConditions<Query = {}> extends React.Component<IProps,IState>{
     /* search =debounce((options,val)=>{
@@ -850,7 +850,7 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
                 this.viewStore.computedSize !== 'small' ? <Col className="legions-pro-query-label" span={labelSpan}>
                     <label
                         htmlFor={name}
-                        title={label} style={{ lineHeight: '28px',position: 'absolute',right: '0px' }}>
+                        title={label} style={{ lineHeight: '28px',right: '0px' }}>
                         {label}
                     </label>
                 </Col> :

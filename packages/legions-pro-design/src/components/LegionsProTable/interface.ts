@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-26 17:07:34
- * @LastEditTime: 2021-02-19 18:19:12
+ * @LastEditTime: 2021-03-02 19:07:57
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProTable/interface.ts
@@ -11,9 +11,8 @@ import  {
   IViewModelProTableStore,
   ILocalViewModelProTableStore,
   ITableAutoQuery,
-} from '../store/pro.table/interface';
-import {ProTableStore
-} from '../store/pro.table';
+} from '../LegionsStoreTable/interface';
+import LegionsStoreTable from '../LegionsStoreTable';
 import { TableColumnConfig,TableRowSelection } from '../interface/antd';
 import {  TableProps} from 'antd/lib/table/Table';
 export interface ITableColumnConfig {
@@ -113,7 +112,7 @@ export interface IExportCsv {
 }
 
 export interface InstanceProTable {
-  store: ProTableStore;
+  store: InstanceType<typeof LegionsStoreTable>;
   readonly uid: string;
 
   /**
@@ -210,7 +209,7 @@ export declare type IViewModelProTable = IViewModelProTableStore;
 
 
 export interface IProTableProps<TableRow = {},Model = {}> extends TableProps<TableRow> {
-  readonly store?: ProTableStore,
+  readonly store?: InstanceType<typeof LegionsStoreTable>,
   pageSize?: number,
 
   /**

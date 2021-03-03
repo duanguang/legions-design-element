@@ -1,5 +1,5 @@
 /// <reference types="react" />
-import { ITabsFormViewModelStore } from '../../store/pro.form/interface';
+import { ITabsFormViewModelStore } from '../../LegionsStoreForm/interface';
 export interface InstanceTabsForm<Model> {
     /**
      * 表单UI数据

@@ -1,14 +1,14 @@
 import React,{ Component } from 'react'
 import { bind,observer } from 'legions/store-react'
-import { ProFormStore } from '../store/pro.form';
+import LegionsStoreForm from '../LegionsStoreForm';
 import { shortHash } from 'legions-lunar/object-hash';
 import { Icon,Popover } from 'antd';
 import styles from './style/index.modules.less'
 import './style/index.less'
-import { IErrorView } from '../store/pro.form/interface';
+import { IErrorView } from '../LegionsStoreForm/interface';
 import { runInAction } from 'mobx';
 interface IProps {
-    store?: ProFormStore;
+    store?: InstanceType<typeof LegionsStoreForm>;
     errorClassName?: string;
     className?: string
 
@@ -32,7 +32,7 @@ interface IProps {
 interface IState {
 
 }
-@bind({ store: ProFormStore })
+@bind({ store: LegionsStoreForm })
 @observer
 export default class LegionsProErrorReportShow extends Component<IProps,IState> {
     timeId = new Date().getTime()

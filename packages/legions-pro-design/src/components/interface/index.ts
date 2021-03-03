@@ -2,7 +2,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-26 10:27:24
- * @LastEditTime: 2021-01-08 15:29:38
+ * @LastEditTime: 2021-03-02 17:38:01
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/interface/index.ts
@@ -10,6 +10,6 @@
  */
 export type {
     Weaken,Omit,IUserInfo,ILegionsPluginDataOrigin,
-    ClassOf,
+    ClassOf,InstanceType,
     IResource,IGlobalStates,IGlobalUserInfo,IGlobalStateEvent,typeOpenPaneParames
 } from './interface';

@@ -2,11 +2,11 @@ import React from 'react'
 import { Layout,Icon,Badge,Avatar,Breadcrumb,Menu,Dropdown,Button } from 'antd';
 const { Header } = Layout;
 import { observer,bind } from 'legions/store-react'
-import { MenuStore } from '../../store/pro.layout';
+import LegionsStoreLayout from '../../LegionsStoreLayout';
 import LegionsProSelect from '../../LegionsProSelect';
 import { IUserInfo } from '../../interface';
 interface IProps extends IUserInfo {
-  store?: MenuStore,
+  store?: InstanceType<typeof LegionsStoreLayout.MenuStore>,
   onLoginOut: () => void,
   /** 扩展系统设置下拉菜单项 */
   sysSettingDropdown?: {
@@ -32,7 +32,7 @@ interface IProps extends IUserInfo {
    */
   fixedLayoutPosition?: 'fixedSider' | 'fixedSiderHeader'
 }
-@bind({ store: MenuStore })
+@bind({ store: LegionsStoreLayout.MenuStore })
 @observer
 export default class HeaderPart extends React.Component<IProps>{
   constructor(props) {

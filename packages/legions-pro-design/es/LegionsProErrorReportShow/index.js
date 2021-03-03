@@ -1,11 +1,11 @@
 /**
-  *  legions-pro-design v0.0.7
+  *  legions-pro-design v0.0.3
   * (c) 2021 duanguang
   * @license MIT
   */
 import React, { Component } from 'react';
 import { bind, observer } from 'legions/store-react';
-import { ProFormStore } from '../store/pro.form';
+import LegionsStoreForm from '../LegionsStoreForm';
 import { shortHash } from 'legions-lunar/object-hash';
 import { Popover, Icon } from 'antd';
 import styles from './style/index.modules.less';
@@ -121,7 +121,7 @@ var LegionsProErrorReportShow = /** @class */ (function (_super) {
             this.props.children));
     };
     LegionsProErrorReportShow = __decorate([
-        bind({ store: ProFormStore }),
+        bind({ store: LegionsStoreForm }),
         observer,
         __metadata("design:paramtypes", [Object])
     ], LegionsProErrorReportShow);

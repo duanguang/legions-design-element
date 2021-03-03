@@ -13,7 +13,7 @@ import { observer,bind } from 'legions/store-react'
 import {
     TableColumnConfig,
 } from '../interface/antd';
-import { ISchedule} from '../store/interface';
+import { ISchedule} from '../LegionsStore/interface';
 import LegionsProLineOverflow from '../LegionsProLineOverflow';
 import { observable,runInAction } from 'mobx';
 interface IState {

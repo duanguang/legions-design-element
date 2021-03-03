@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.7
+  *  legions-pro-design v0.0.3
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -30,3 +30,11 @@ export { default as LegionsProUpload } from './LegionsProUpload';
 export { default as LegionsProVirtualTable } from './LegionsProVirtualTable';
 export { default as LegionsProModalForm } from './LegionsProModalForm';
 export { default as LegionsProTabsForm } from './LegionsProTabsForm';
+export { default as LegionsCore } from './LegionsCore';
+export { default as LegionsModels } from './LegionsModels';
+export { default as LegionsStore } from './LegionsStore';
+export { default as LegionsStoreConditions } from './LegionsStoreConditions';
+export { default as LegionsStoreForm } from './LegionsStoreForm';
+export { default as LegionsStoreLayout } from './LegionsStoreLayout';
+export { default as LegionsStoreModal } from './LegionsStoreModal';
+export { default as LegionsStoreTable } from './LegionsStoreTable';

@@ -7,7 +7,7 @@ import { bind,observer } from 'legions/store-react';
 import { findDOMNode } from 'react-dom';
 import { InstanceFormElement } from './interface/formElement';
 import { inject } from 'legions/store';
-import { ProFormStore } from '../store/pro.form';
+import LegionsStoreForm from '../LegionsStoreForm';
 import { LabelWithSelectModel } from './interface/select';
 export interface IFormElementProps{
     form: WrappedFormUtils;
@@ -19,7 +19,7 @@ export interface IFormElementProps{
      * @memberof IFormWithInputProps
      */
     formUid:string;
-    store?:ProFormStore;
+    store?:InstanceType<typeof LegionsStoreForm>;
 
     /**
      * 组件类型
@@ -72,7 +72,7 @@ const selectionMultipleClass = 'ant-select-selection--multiple';
  * @class FormElement
  * @extends {AbstractForm<IFormElementProps>}
  */
-@bind({store:ProFormStore})
+@bind({store:LegionsStoreForm})
 @observer
 export default class FormElement extends React.Component<IFormElementProps,{}>{
     static defaultProps ={

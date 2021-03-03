@@ -6,9 +6,8 @@ import ContentPart,{ IRouter } from './content';
 import MenuParts from './SideMenu';
 import HeaderPart from './Header';
 import { IUserInfo } from '../interface';
-import { InstanceLegionsProModal } from '../LegionsProModal/interface';
 import { MenuProps } from 'antd/lib/menu';
-import { MenuContainerEntity, MenuEntity } from '../models';
+import LegionsModels from '../LegionsModels';
 const baseCls = 'legions-pro-layout'
 
 interface IProps extends IUserInfo {
@@ -20,7 +19,7 @@ interface IProps extends IUserInfo {
     logo: string,
 
      /** 获取菜单数据接口 */
-    onQueryPromiseMenus: () => Promise<MenuContainerEntity>;
+    onQueryPromiseMenus: () => Promise<InstanceType<typeof LegionsModels.MenuContainerEntity>>;
     /** 退出登录 */
     onLoginOut: () => void,
     /** 菜单地址主域地址信息
@@ -92,7 +91,7 @@ interface IProps extends IUserInfo {
     fixedLayoutPosition?: 'fixedSider' | 'fixedSiderHeader'
 
     /** 在菜单数据接口请求完成后，如果需要对菜单数据项进行自定义加工，可传入此函数 */
-    loadedMenuTransformData?: (menuList: MenuEntity[]) => void;
+    loadedMenuTransformData?: (menuList: InstanceType<typeof LegionsModels.MenuEntity>[]) => void;
 }
 const theme = {
     dark: '0',

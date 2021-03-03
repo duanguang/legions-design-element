@@ -1,14 +1,14 @@
 import React from 'react';
 import './style/index.less';
 import moment from 'moment';
-import { ProQueryConditionStore } from '../store/pro.query.conditions';
-import { IViewQueryConditionStore, ISelectAutoQuery } from '../store/pro.query.conditions/interface';
+import LegionsStoreConditions from '../LegionsStoreConditions';
+import { IViewQueryConditionStore, ISelectAutoQuery } from '../LegionsStoreConditions/interface';
 import { IQueryConditionsInstance } from './interface';
 import { ConditionCheckBoxModel, ConditionDateModel, ConditionGroupCheckBoxModel, ConditionRadioButtonModel, ConditionRangePickerModel, ConditionSearchModel, ConditionSelectModel, ConditionTextAreaModel, ConditionTextModel, ConditionTextNumberModel, IProConditions, ProConditions } from './ProConditionsUtils';
 import { CheckboxValueType } from 'antd/lib/checkbox/Group';
 interface IProps {
     query: Array<IProConditions['componentModel']>;
-    store?: ProQueryConditionStore;
+    store?: InstanceType<typeof LegionsStoreConditions>;
     /**
      *
      * 组件完成渲染时执行，有DOM结构，执行的钩子函数
@@ -73,11 +73,11 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
     uid: string;
     queryPrams: {};
     constructor(props: any);
-    get viewStore(): import("brain-store-utils").ViewModel<import("../store/pro.query.conditions/conditionView").ConditionView<{}>> & {
-        tranQuery: {};
+    get viewStore(): import("brain-store-utils").ViewModel<import("../LegionsStoreConditions/conditionView").ConditionView<unknown>> & {
+        tranQuery: unknown;
         domHeight: number;
         widthContainer: number;
-        selectOptions: import("../store/pro.query.conditions/interface").IObservableMap<string, import("../store/pro.query.conditions/interface").ISelectOptions>;
+        selectOptions: import("../LegionsStoreConditions/interface").IObservableMap<string, import("../LegionsStoreConditions/interface").ISelectOptions>;
         readonly computedQuery: (ConditionSelectModel | ConditionTextNumberModel | ConditionRadioButtonModel | ConditionTextAreaModel | ConditionTextModel | ConditionDateModel | ConditionSearchModel | ConditionRangePickerModel | ConditionGroupCheckBoxModel)[];
         readonly computedVmModel: any;
         readonly computedSize: "small" | "default";

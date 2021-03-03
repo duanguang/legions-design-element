@@ -3,22 +3,23 @@ import { Layout,Menu,Icon,message } from 'antd';
 const { Sider } = Layout;
 const SubMenu = Menu.SubMenu;
 import { observer,bind } from 'legions/store-react'
-import {MenuStore,TabPaneViewStore} from '../../store/pro.layout';
-import { MenuContainerEntity, MenuEntity } from '../../models';
+import LegionsStoreLayout from '../../LegionsStoreLayout';
+import LegionsModels from '../../LegionsModels';
 import { SelectParam,MenuProps,ClickParam } from 'antd/lib/menu'
 import '../style/memu.less';
 import { autorun,isObservableArray } from 'mobx';
 import { RegExChk,validatorType } from 'legions-utils-tool/regex';
 import { page } from 'legions-lunar/mobx-decorator';
-import { MasterGlobalStateStore } from '../../core/cross-module';
+import LegionsCore from '../../LegionsCore';
 import { inject } from 'legions/store';
-import { IPanes } from '../../store/pro.layout/interface';
+import { IPanes } from '../../LegionsStoreLayout/interface';
 import { IRouter } from '../../interface/router';
 import { IUserInfo,ILegionsPluginDataOrigin } from '../../interface';
+import { ClassOf } from 'legions-lunar/types/api/typescript';
 interface IProps extends IUserInfo,MenuProps {
-  store?: MenuStore
+  store?: InstanceType<typeof LegionsStoreLayout.MenuStore>
   logo: string,
-  onQueryPromiseMenus: () => Promise<MenuContainerEntity>;
+  onQueryPromiseMenus: () => Promise<InstanceType<typeof LegionsModels.MenuContainerEntity>>;
   /** 外部链接跳转，打开指定菜单 */
   defaultOpenMenuTabs?: {
     /** 指定菜单Key */
@@ -36,11 +37,11 @@ interface IProps extends IUserInfo,MenuProps {
   fixedLayoutPosition?: 'fixedSider' | 'fixedSiderHeader'
 
   /** 在菜单数据接口请求完成后，如果需要对菜单数据项进行自定义加工，可传入此函数 */
-  loadedMenuTransformData?: (menuList: MenuEntity[]) => void;
+  loadedMenuTransformData?: (menuList:InstanceType<typeof LegionsModels.MenuEntity> []) => void;
 }
-@bind({ store: MenuStore })
-@page<MenuParts,MenuStore>({
-  sideEffect: (that,store: MenuStore) => {
+@bind({ store: LegionsStoreLayout.MenuStore })
+@page<MenuParts,InstanceType<typeof LegionsStoreLayout.MenuStore>>({
+  sideEffect: (that,store: InstanceType<typeof LegionsStoreLayout.MenuStore>) => {
     if (store.obMenuList.isResolved) {
       /** 首次加载完成 */
       that.masterGlobalStateStore.menuList = store.getAllMenuList(store.obMenuList.value.result,that.props.loadedMenuTransformData)
@@ -50,8 +51,8 @@ interface IProps extends IUserInfo,MenuProps {
 })
 @observer
 export default class MenuParts extends React.Component<IProps>{
-  @inject(MasterGlobalStateStore)
-  masterGlobalStateStore: MasterGlobalStateStore
+  @inject(LegionsCore.MasterGlobalStateStore)
+  masterGlobalStateStore: InstanceType<typeof LegionsCore.MasterGlobalStateStore>
   constructor(props) {
     super(props)
     this.onSelect = this.onSelect.bind(this);
@@ -94,7 +95,7 @@ export default class MenuParts extends React.Component<IProps>{
     }
   }
   /** 在打开菜单页面路由时，获取菜单完毕时，打开菜单页签 */
-  onPageloadedOpenTabpane(menuList: MenuEntity[]) {
+  onPageloadedOpenTabpane(menuList: InstanceType<typeof LegionsModels.MenuEntity>[]) {
     const { store } = this.props;
     store.context.TabPaneApp.syncTabPanes(menuList);
     const {defaultOpenMenuTabs={} } = this.props;
@@ -121,7 +122,7 @@ export default class MenuParts extends React.Component<IProps>{
         }
     }
   }
-  renderFirstMenuItemElement(item: MenuEntity) {
+  renderFirstMenuItemElement(item: InstanceType<typeof LegionsModels.MenuEntity>) {
     const skin = this.props.store.viewModel.getSkinInfos()
     this.props.store.setRootSubMenu(item.key.toString(),'0')
     return (
@@ -137,7 +138,7 @@ export default class MenuParts extends React.Component<IProps>{
       </Menu.Item>
     )
   }
-  renderFirstSubMenuELement(item: MenuEntity) {
+  renderFirstSubMenuELement(item: InstanceType<typeof LegionsModels.MenuEntity>) {
     const skin = this.props.store.viewModel.getSkinInfos()
     this.props.store.setRootSubMenu(item.key.toString(),'0')
     let icon = ''
@@ -160,7 +161,7 @@ export default class MenuParts extends React.Component<IProps>{
     )
   }
   /** 渲染末级菜单选项 */
-  renderMenuItemElement(item: MenuEntity) {
+  renderMenuItemElement(item: InstanceType<typeof LegionsModels.MenuEntity>) {
     const skin = this.props.store.viewModel.getSkinInfos()
     return (
       <Menu.Item
@@ -171,7 +172,7 @@ export default class MenuParts extends React.Component<IProps>{
       </Menu.Item>
     )
   }
-  renderSubMenuElement(item: MenuEntity) {
+  renderSubMenuElement(item: InstanceType<typeof LegionsModels.MenuEntity>) {
     const skin = this.props.store.viewModel.getSkinInfos()
     return (
       <SubMenu
@@ -183,7 +184,7 @@ export default class MenuParts extends React.Component<IProps>{
     )
   }
   /** 递归调用不断遍历所有菜单，并按照顺序渲染相应层级菜单 */
-  renderRecursiveCallsMenu(list: Array<MenuEntity>,isFirst = true) {
+  renderRecursiveCallsMenu(list: Array<InstanceType<typeof LegionsModels.MenuEntity>>,isFirst = true) {
     if (isFirst) {
       return list.map((item,index) => {
         return !item.children.length ? this.renderFirstMenuItemElement(item) : this.renderFirstSubMenuELement(item)

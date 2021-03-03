@@ -1,10 +1,10 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-19 17:47:07
- * @LastEditTime: 2021-01-19 17:47:58
+ * @LastEditTime: 2021-03-03 09:59:37
  * @LastEditors: duanguang
  * @Description: 
- * @FilePath: /legions-design-element/packages/legions-pro-design/components/legionsproform/model.ts
+ * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProConditions/demoTest/model.ts
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
 import { LegionsProForm, LegionsProPageContainer } from 'legions-pro-design';
@@ -131,7 +131,7 @@ export class FormFields extends LegionsProForm.ProFormFields<FormFields>{
      * @type {IBaseFormFields<IFormFieldUserRenderInput1,{},FormFields>}
      * @memberof FormFields
      */
-    customRender: IBaseFormFields<IFormFieldUserRenderInput1,{},FormFields>= {
+    customRender: IBaseFormFields<any,{},FormFields>= {
         value:{
             currency:'rmb',
             number:0,
