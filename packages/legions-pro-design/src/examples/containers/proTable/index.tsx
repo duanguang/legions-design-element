@@ -1,13 +1,14 @@
 import { Button,Radio,Row } from 'antd';
 import React from 'react';
 import { bind,observer } from 'legions/store-react';
-import { LegionsProTable,LegionsProPageContainer } from '../../../components';
+import { LegionsProTable,LegionsProPageContainer, LegionsStore,LegionsStoreTable } from '../../../components';
 import { InstanceProTable } from '../../../components/LegionsProTable/interface';
 import { observablePromise } from 'legions/store-utils';
 import { ResponseVModelNameDataEntity } from './model';
 import { observable } from 'legions/store';
 import { runInAction } from 'mobx'
-import { getSystem, HttpConfig } from '../../constants/httpConfig';
+import { getSystem,HttpConfig } from '../../constants/httpConfig';
+
 /* LegionsProTable.customColumnsConfig.editApi = `${HttpConfig.bffService}/table/edit`;
 LegionsProTable.customColumnsConfig.queryApi = `${HttpConfig.bffService}/table/query`; */
 
@@ -64,6 +65,9 @@ export class ProTable extends LegionsProTable.ProTableBaseClass<IProps,{size:any
         return <span style={{ color: `${this.status.color}` }}>{text}</span>
       }
     })
+  }
+  componentDidMount() {
+    const store = LegionsStore.get<LegionsStoreTable>(LegionsStoreTable);
   }
   componentWillUnmount() {
     console.log('componentWillUnmount');

@@ -1,9 +1,9 @@
 /**
-  *  legions-pro-design v0.0.3
+  *  legions-pro-design v0.0.6-beta.2
   * (c) 2021 duanguang
   * @license MIT
   */
-import Store, { resource, Lifecycle } from 'legions/store';
+import Store, { resource, Lifecycle, getInjector } from 'legions/store';
 import { schedule } from 'legions-lunar/schedule';
 
 /*! *****************************************************************************
@@ -127,19 +127,27 @@ var UiStoreBase = /** @class */ (function (_super) {
 /*
  * @Author: duanguang
  * @Date: 2021-01-07 16:20:33
- * @LastEditTime: 2021-03-02 18:14:24
+ * @LastEditTime: 2021-03-04 15:49:24
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStore/index.ts
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
+function getStore(store) {
+    if (typeof store === 'function' && store['meta']) {
+        var stores = getInjector();
+        return stores.getState(store);
+    }
+    return null;
+}
 var LegionsStore = {
     StoreBase: StoreBase,
     UiStoreBase: UiStoreBase,
     CollapsedResource: CollapsedResource,
     MenuPanesStorageResource: MenuPanesStorageResource,
     BreadCrumbsResourceEven: BreadCrumbsResourceEven,
-    project: project
+    project: project,
+    get: getStore
 };
 
 export default LegionsStore;
