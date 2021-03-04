@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.3
+  *  legions-pro-design v0.0.6-beta.1
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -423,6 +423,7 @@ var LegionsProVirtualTable = /** @class */ (function (_super) {
                 value.localViewModel.dispatchRequest(_this.props.autoQuery, Object.assign({
                     pageIndex: value.viewModel.pageIndex,
                     pageSize: value.viewModel.pageSize,
+                    isShowLoading: true,
                 }, options));
             };
         }

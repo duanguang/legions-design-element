@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-10 16:14:09
- * @LastEditTime: 2021-03-04 13:54:55
+ * @LastEditTime: 2021-03-04 14:24:15
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/script/entiy.js
@@ -31,7 +31,7 @@ const array_component = [
 'LegionsProException',
  'LegionsProIframe', */
  /* 'LegionsProForm', */
-  
+ 'LegionsProVirtualTable',
 /*  'LegionsProInput',
   'LegionsProLayout',
 'LegionsProLineOverflow',
@@ -80,7 +80,7 @@ const umd = [
   },
 ];
 const es = [
-  ...array_componentsStore.map((item) => {
+  ...array_component.map((item) => {
     let input = '';
     let file = '';
     if (item === 'index') {

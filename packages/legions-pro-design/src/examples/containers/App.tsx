@@ -1,3 +1,12 @@
+/*
+ * @Author: duanguang
+ * @Date: 2021-03-02 14:19:18
+ * @LastEditTime: 2021-03-04 14:07:04
+ * @LastEditors: duanguang
+ * @Description: 
+ * @FilePath: /legions-design-element/packages/legions-pro-design/src/examples/containers/App.tsx
+ * 「扫去窗上的尘埃，才可以看到窗外的美景。」
+ */
 import { Route,Switch } from 'legions/router';
 import React from 'react';
 /* import '../assets/css/theme.less'; */
@@ -15,7 +24,6 @@ import { LegionsProEchartsMapDemo } from './pro.echarts.map'; */
 import { ProTable } from './proTable';
 import ZoomableDemo from './react-zoomable/demo';
 import { ProTabsForm } from './tabsForm';
-
 
 export default class App extends React.Component {
     /* unstable_handleError(e) {

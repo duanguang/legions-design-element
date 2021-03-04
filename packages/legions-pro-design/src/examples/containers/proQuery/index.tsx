@@ -11,6 +11,7 @@ import { SearchEntity } from './searchEntity';
 interface Istate{
     visable:boolean
 }
+
 @observer
 export default class QueryDemo extends React.Component<{},Istate>{
     queryRef: IQueryConditionsInstance = null
