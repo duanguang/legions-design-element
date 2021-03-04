@@ -18,7 +18,7 @@
     "legions": "^1.0.9-rc.2",
     "legions-thirdparty-plugin": "^0.0.8",
     "legions-lunar": "0.0.5-rc.2",
-    "legions-decorator": "0.0.5",
+    "legions-decorator": "0.0.6-beta.1",
     "legions-micro-service":"^0.0.9",
     "legions-control-container": "^0.0.5",
     "legions-nprogress": "^0.0.5",
