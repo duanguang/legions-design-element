@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.3
+  *  legions-pro-design v0.0.5
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -401,18 +401,20 @@ var LegionsProTable = /** @class */ (function (_super) {
         /** 全链路监控跟踪id */
         _this.traceId = '';
         _this.log = function (uid) {
-            if (_this.getLocalViewStore && _this.props.autoQuery && _this.getLocalViewStore.obState.isPending) {
-                _this.getLocalViewStore.loading = true;
-            }
-            if (_this.getLocalViewStore && !_this.getLocalViewStore.obState.isPending && _this.props.autoQuery && _this.getLocalViewStore.loading) {
+            if (_this.getLocalViewStore && !_this.getLocalViewStore.obState.isPending && _this.props.autoQuery && _this.getLocalViewStore.computedRequest === 'pending') {
                 runInAction(function () {
+                    _this.getLocalViewStore._setLoadingState(false);
+                    _this.getLocalViewStore._setRequestState('complete');
                     var data = _this.props.autoQuery.transform(_this.getLocalViewStore.obState);
                     if (data) {
-                        _this.props.store.HlTableContainer.get(uid)._renderData = data.data.slice();
+                        var newData = data.data.slice();
+                        _this.getLocalViewStore._obStateMap.set(_this.getViewStore.pageIndex.toString(), {
+                            data: newData,
+                            total: data.total,
+                        });
+                        _this.props.store.HlTableContainer.get(uid)._renderData = newData;
                         _this.props.store.HlTableContainer.get(uid).setTotal(data.total);
-                        /* this.forceUpdate&&this.forceUpdate() */
                     }
-                    _this.getLocalViewStore.loading = false;
                 });
                 _this.consoleLog('watchData', { uid: uid });
                 _this.logger('watchData', {
@@ -489,15 +491,20 @@ var LegionsProTable = /** @class */ (function (_super) {
             if (!_this.props.store.HlTableLocalStateContainer.has(_this.freezeuid)) {
                 _this.props.store._addLocalState(_this.freezeuid);
             }
+            if (!_this.props.store.HlTableContainer.has(_this.freezeuid)) {
+                _this.props.store.add(_this.freezeuid, _this.props.tableModulesName, _this.uid);
+            }
+            var isShowLoading = false;
+            if (_this.getLocalViewStore && _this.getLocalViewStore.obState && _this.getLocalViewStore.obState.state === 'none') {
+                isShowLoading = true;
+            }
             if (_this.props.autoQuery && _this.getLocalViewStore && (_this.props.autoQuery.isDefaultLoad === void 0 || _this.props.autoQuery.isDefaultLoad)) {
                 _this.getLocalViewStore.dispatchRequest(_this.props.autoQuery, {
                     pageIndex: _this.getViewStore.pageIndex,
                     pageSize: _this.getViewStore.pageSize,
+                    isShowLoading: isShowLoading,
                 });
             }
-        }
-        if (!_this.props.store.HlTableContainer.has(_this.freezeuid)) {
-            _this.props.store.add(_this.freezeuid, _this.props.tableModulesName, _this.uid);
         }
         _this.initPagination();
         _this.initProps();
@@ -567,8 +574,14 @@ var LegionsProTable = /** @class */ (function (_super) {
     };
     LegionsProTable.prototype.search = function (options) {
         if (this.props.autoQuery && this.getLocalViewStore) {
-            if (options && options.pageIndex) { /** 如果主动设置页码，则以主动设置为准 */
-                this.getViewStore.pageIndex = options.pageIndex;
+            var isShowLoading = true;
+            if (options) {
+                if (options.pageIndex) { /** 如果主动设置页码，则以主动设置为准 */
+                    this.getViewStore.pageIndex = options.pageIndex;
+                }
+                if (typeof options.isShowLoading === 'boolean') {
+                    isShowLoading = options.isShowLoading;
+                }
             }
             else {
                 this.getViewStore.pageIndex = 1;
@@ -577,6 +590,7 @@ var LegionsProTable = /** @class */ (function (_super) {
             this.getLocalViewStore.dispatchRequest(this.props.autoQuery, Object.assign({
                 pageIndex: this.getViewStore.pageIndex,
                 pageSize: this.getViewStore.pageSize,
+                isShowLoading: isShowLoading,
             }, options));
         }
     };
@@ -699,7 +713,6 @@ var LegionsProTable = /** @class */ (function (_super) {
                 exportCsv: function (prams) {
                     _this.exportCsv(prams);
                 },
-                //@ts-ignore
                 onSearch: function (options) {
                     _this.search(options);
                 },
@@ -773,6 +786,12 @@ var LegionsProTable = /** @class */ (function (_super) {
         }
         return false;
     };
+    LegionsProTable.prototype.isSmallData = function () {
+        if (this.props.displayType === 'smallData') {
+            return true;
+        }
+        return false;
+    };
     LegionsProTable.prototype.componentWillUnmount = function () {
         /* this.props.store.delete(this.freezeuid); */
         if (this.props.tableModulesName) {
@@ -785,7 +804,7 @@ var LegionsProTable = /** @class */ (function (_super) {
     };
     LegionsProTable.prototype.componentDidMount = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var table, _index, data, UniqueKey, Repeat, anttablefixed, thead, span, RootContainer, spanth;
+            var table, _index, data, keys, result, UniqueKey, Repeat, anttablefixed, thead, span, RootContainer, spanth;
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -833,14 +852,24 @@ var LegionsProTable = /** @class */ (function (_super) {
                         this.setTableContainerWidth();
                         data = this.props.dataSource;
                         if (this.props.autoQuery) {
-                            // @ts-ignore
-                            data = this.getLocalViewStore.obData;
+                            if (this.getLocalViewStore && this.getViewStore) {
+                                keys = this.getViewStore.pageIndex.toString();
+                                if (this.getLocalViewStore._obStateMap.has(keys)) {
+                                    result = this.getLocalViewStore._obStateMap.get(keys);
+                                    //@ts-ignore
+                                    data = result.data;
+                                    this.getViewStore.setTotal(result.total);
+                                }
+                            }
+                        }
+                        else {
+                            if (this.isSmallData()) {
+                                this.getViewStore.setTotal(this.props.total || 0);
+                            }
                         }
                         if (data) {
-                            if (this.props.displayType === 'smallData') {
-                                /* this.getViewStore._renderData = [...this.props.data] */
+                            if (this.isSmallData()) {
                                 this.getViewStore._renderData = __spread(data);
-                                this.getViewStore.setTotal(this.props.total || 0);
                             }
                             if (this.getViewStore._renderData.length) {
                                 UniqueKey = this.isHasUniqueKeyData();
@@ -1171,9 +1200,17 @@ var LegionsProTable = /** @class */ (function (_super) {
                 _this.props.store.get(_this.freezeuid).pageSize = pageSize;
                 _this.props.onPagingQuery && _this.props.onPagingQuery(pageIndex, pageSize, false);
                 if (_this.props.autoQuery && _this.getLocalViewStore) {
+                    var isShowLoading = true;
+                    var result = _this.getLocalViewStore._obStateMap.get(_this.getViewStore.pageIndex.toString());
+                    if (result) {
+                        isShowLoading = false;
+                        _this.getViewStore._renderData = __spread(result.data);
+                        _this.getViewStore.setTotal(result.total);
+                    }
                     _this.getLocalViewStore.dispatchRequest(_this.props.autoQuery, {
                         pageIndex: pageIndex,
                         pageSize: pageSize,
+                        isShowLoading: isShowLoading,
                     });
                 }
             },
@@ -1186,6 +1223,7 @@ var LegionsProTable = /** @class */ (function (_super) {
                     _this.getLocalViewStore.dispatchRequest(_this.props.autoQuery, {
                         pageIndex: current,
                         pageSize: pageSize,
+                        isShowLoading: true,
                     });
                 }
             },
@@ -1201,7 +1239,7 @@ var LegionsProTable = /** @class */ (function (_super) {
                     , __assign({}, locale, this.props, { scroll: __assign({
                             x: store.tableXAutoWidth,
                             y: 300,
-                        }, this.props.scroll), columns: this.viewModel.computedRenderColumns, bordered: true, bodyStyle: bodyStyle, rowClassName: this.onRowClassName.bind(this), pagination: (this.getViewStore._pagination) ? pagination : false, loading: { tip: 'loading', spinning: this.props.autoQuery ? this.getLocalViewStore.loading : this.props.loading }, rowKey: this.props.uniqueKey, 
+                        }, this.props.scroll), columns: this.viewModel.computedRenderColumns, bordered: true, bodyStyle: bodyStyle, rowClassName: this.onRowClassName.bind(this), pagination: (this.getViewStore._pagination) ? pagination : false, loading: { tip: 'loading', spinning: this.props.autoQuery ? this.getLocalViewStore.computedLoading : this.props.loading }, rowKey: this.props.uniqueKey, 
                         // locale={{emptyText:<span>2222</span>}}
                         onRowClick: this.onRowClick.bind(this), rowSelection: rowSelection, dataSource: __spread(this.getViewStore._renderData), onChange: function (pagination, filters, sorter) {
                             if (sorter.column && sorter.column.sorter && typeof sorter.column.sorter === 'boolean' && _this.props.displayType === 'smallData') {

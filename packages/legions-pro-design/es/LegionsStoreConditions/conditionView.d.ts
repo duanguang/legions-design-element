@@ -71,7 +71,7 @@ export declare class ConditionView<Query = {}> {
         isCache: boolean;
     }): void;
     /** 改变搜索条件配置数据 */
-    _setQueryState(name: string, callback: (value: IProConditions['componentModel']) => void): void;
+    _setQueryState<T extends IProConditions['componentModel']>(name: string, callback: (value: T) => void): void;
     private _getQueryItem;
     _setSize(size: 'small' | 'default'): void;
     _dispatchRequest(name: string, autoQuery: ISelectAutoQuery, options?: {

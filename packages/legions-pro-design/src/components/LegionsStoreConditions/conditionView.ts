@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-07 16:49:31
- * @LastEditTime: 2021-03-02 18:47:07
+ * @LastEditTime: 2021-03-04 13:40:18
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreConditions/conditionView.ts
@@ -170,9 +170,10 @@ export class ConditionView<Query = {}> {
         }
     }
     /** 改变搜索条件配置数据 */
-    @action _setQueryState(name:string,callback: (value: IProConditions['componentModel']) => void) {
+    @action _setQueryState<T extends IProConditions['componentModel']>(name:string,callback: (value: T) => void) {
         const item = this._getQueryItem(name);
         if (item) {
+            //@ts-ignore
             callback && callback(item)
             if (this.query.has(item.containerProps.uuid)) {
                 this.query.set(item.containerProps.uuid,cloneDeep(item))

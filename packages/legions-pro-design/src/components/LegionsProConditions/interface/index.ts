@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-08 12:00:22
- * @LastEditTime: 2021-03-02 19:15:51
+ * @LastEditTime: 2021-03-04 13:38:34
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProConditions/interface/index.ts
@@ -40,7 +40,7 @@ interface IMethods {
      */
     reset: () => void;
 
-    setFieldsValues?:(name: string,callback: (value: IProConditions['componentModel']) => void)=>void
+    setFieldsValues?:<T extends IProConditions['componentModel']>(name: string,callback: (value: T) => void)=>void
     /** 查询指定下拉组件数据项 */
     getQuerySelectOption: (/** 下拉组件name值 */name: string,/** 下拉选项key值*/optionKey: string) => { readonly item: HlLabeledValue,readonly options: Array<ISelectProps> };
 

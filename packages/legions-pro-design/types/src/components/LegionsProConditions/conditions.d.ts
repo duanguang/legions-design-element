@@ -88,7 +88,7 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
         _initQuery: (query: (ConditionSelectModel | ConditionTextNumberModel | ConditionRadioButtonModel | ConditionTextAreaModel | ConditionTextModel | ConditionDateModel | ConditionSearchModel | ConditionRangePickerModel | ConditionGroupCheckBoxModel)[], options?: {
             isCache: boolean;
         }) => void;
-        _setQueryState: (name: string, callback: (value: ConditionSelectModel | ConditionTextNumberModel | ConditionRadioButtonModel | ConditionTextAreaModel | ConditionTextModel | ConditionDateModel | ConditionSearchModel | ConditionRangePickerModel | ConditionGroupCheckBoxModel) => void) => void;
+        _setQueryState: <T extends ConditionSelectModel | ConditionTextNumberModel | ConditionRadioButtonModel | ConditionTextAreaModel | ConditionTextModel | ConditionDateModel | ConditionSearchModel | ConditionRangePickerModel | ConditionGroupCheckBoxModel>(name: string, callback: (value: T) => void) => void;
         _setSize: (size: "small" | "default") => void;
         _dispatchRequest: (name: string, autoQuery: ISelectAutoQuery<{}>, options?: {
             pageIndex: number;
@@ -110,7 +110,7 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
     componentDidUpdate(): void;
     dispatchRequest(): void;
     onDidMount(): void;
-    setFieldsValues(name: string, callback: (value: IProConditions['componentModel']) => void): void;
+    setFieldsValues<T extends IProConditions['componentModel']>(name: string, callback: (value: T) => void): void;
     initVModel(): void;
     /**
      * 把组件元素结果映射至查询条件

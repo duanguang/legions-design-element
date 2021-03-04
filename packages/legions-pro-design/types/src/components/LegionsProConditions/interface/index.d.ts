@@ -18,7 +18,7 @@ interface IMethods {
      * @memberof IMethods
      */
     reset: () => void;
-    setFieldsValues?: (name: string, callback: (value: IProConditions['componentModel']) => void) => void;
+    setFieldsValues?: <T extends IProConditions['componentModel']>(name: string, callback: (value: T) => void) => void;
     /** 查询指定下拉组件数据项 */
     getQuerySelectOption: (/** 下拉组件name值 */ name: string, /** 下拉选项key值*/ optionKey: string) => {
         readonly item: HlLabeledValue;

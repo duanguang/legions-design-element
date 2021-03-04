@@ -108,7 +108,7 @@ export default class LegionsProTable<TableRow = {}, Model = {}> extends React.Co
         readonly computedUnShowColumns: import("../LegionsStoreTable/interface").IShowColumns[];
         readonly computedStorageShowColumnsKeys: string;
         readonly computedRenderColumns: (TableColumnConfig<{}> & import("../LegionsStoreTable/interface").ITableColumnConfig)[];
-        readonly tableXAutoWidth: React.ReactText;
+        readonly tableXAutoWidth: string | number;
         readonly computedTotal: number;
         _filterColumns: () => void;
         _moveRightShowColumns: (Columns: string[]) => void;
@@ -126,16 +126,25 @@ export default class LegionsProTable<TableRow = {}, Model = {}> extends React.Co
     };
     get getLocalViewStore(): import("brain-store-utils").ViewModel<import("../LegionsStoreTable/ProTableLocalView").ProTableLocalView> & {
         obState: import("brain-store-utils").observablePromise.PramsResult<import("./pageListEntity").PageListEntity<any>>;
-        loading: boolean;
+        _obStateMap: import("mobx").ObservableMap<string, {
+            data: any[];
+            total: number;
+        }>;
+        readonly computedLoading: boolean;
+        readonly computedRequest: "none" | "pending" | "complete";
+        _setLoadingState: (_loading: boolean) => void;
+        _setRequestState: (request: "none" | "pending" | "complete") => void;
         dispatchRequest: (autoQuery: ITableAutoQuery<{}>, options: {
             pageIndex: number;
             pageSize: number;
+            isShowLoading: boolean;
         }) => void;
     };
     consoleLog(type: string, logObj?: Object): void;
     logger(type: Parameters<LegionsProTable['consoleLog']>[0], logObj?: Object): void;
     search(options?: {
         pageIndex?: number;
+        isShowLoading?: boolean;
     }): void;
     /**
      *
@@ -155,6 +164,7 @@ export default class LegionsProTable<TableRow = {}, Model = {}> extends React.Co
     private initCustomColumns;
     /** 是否设置自定义列服务端同步接口配置信息 */
     private isSettingColumnApiConfig;
+    private isSmallData;
     componentWillUnmount(): void;
     componentDidMount(): Promise<void>;
     setTableContainerWidth(): void;

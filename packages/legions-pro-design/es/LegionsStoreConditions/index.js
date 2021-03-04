@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.3
+  *  legions-pro-design v0.0.5
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -91,7 +91,7 @@ function __values(o) {
 /*
  * @Author: duanguang
  * @Date: 2021-01-07 16:49:31
- * @LastEditTime: 2021-03-02 18:47:07
+ * @LastEditTime: 2021-03-04 13:40:18
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreConditions/conditionView.ts
@@ -262,6 +262,7 @@ var ConditionView = /** @class */ (function () {
     ConditionView.prototype._setQueryState = function (name, callback) {
         var item = this._getQueryItem(name);
         if (item) {
+            //@ts-ignore
             callback && callback(item);
             if (this.query.has(item.containerProps.uuid)) {
                 this.query.set(item.containerProps.uuid, cloneDeep(item));

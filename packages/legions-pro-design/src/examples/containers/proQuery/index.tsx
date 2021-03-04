@@ -318,11 +318,9 @@ export default class QueryDemo extends React.Component<{},Istate>{
                         fieldName: 'vmOrderNo6',
                         value:2,
                     }]) */
-                    this.queryRef.methods.setFieldsValues('vmOrderNo',(value) => {
-                        if (value instanceof LegionsProConditions.ConditionTextModel) {
+                    this.queryRef.methods.setFieldsValues<InstanceType<typeof LegionsProConditions.ConditionTextModel>>('vmOrderNo',(value) => {
                             value.conditionsProps.label = 'sss';
                             value.conditionsProps.value = '222';
-                        }
                     })
                 
                 }}> 设置指定数据值{this.smp.get('ss').a.b}</Button>
@@ -338,14 +336,11 @@ export default class QueryDemo extends React.Component<{},Istate>{
                 }}> 获取车牌数据指定项数据</Button>
                 <Button onClick={() => {
                     this.setState({visable:!this.state.visable})
-                    this.queryRef.methods.setFieldsValues('vmOrderNo7',(value) => {
-                        if (value instanceof LegionsProConditions.ConditionRadioButtonModel) {
-                            if(value.conditionsProps.visable ===void 0){
-                                value.conditionsProps.visable =true
-                            }
-                            value.conditionsProps.visable = !value.conditionsProps.visable;
-            
+                    this.queryRef.methods.setFieldsValues<InstanceType<typeof LegionsProConditions.ConditionRadioButtonModel>>('vmOrderNo7',(value) => {
+                        if(value.conditionsProps.visable ===void 0){
+                            value.conditionsProps.visable =true
                         }
+                        value.conditionsProps.visable = !value.conditionsProps.visable;
                     })
                 }}>设置指定元素隐藏/隐藏</Button>
                 <Row style={{ marginTop: '10px' }}><LegionsProConditions

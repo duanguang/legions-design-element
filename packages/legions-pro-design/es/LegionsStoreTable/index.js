@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.3
+  *  legions-pro-design v0.0.5
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -1007,8 +1007,39 @@ var ProTableLocalView = /** @class */ (function () {
          * @memberof HLTableLocalView
          */
         this.obState = observablePromise();
-        this.loading = false;
+        this._obStateMap = observable.map();
+        /** 查询数据状态
+         *
+         * 在loading动画展示时使用
+         */
+        this._loading = false;
+        /** http 请求状态 */
+        this._request = 'none';
     }
+    Object.defineProperty(ProTableLocalView.prototype, "computedLoading", {
+        /** 数据请求状态 */
+        get: function () {
+            return this._loading;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(ProTableLocalView.prototype, "computedRequest", {
+        /** http 请求状态 */
+        get: function () {
+            return this._request;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    /** 更新动画状态,组件内部私有方法 */
+    ProTableLocalView.prototype._setLoadingState = function (_loading) {
+        this._loading = _loading;
+    };
+    /** 更新http请求接口状态,组件内部私有方法  */
+    ProTableLocalView.prototype._setRequestState = function (request) {
+        this._request = request;
+    };
     ProTableLocalView.prototype.dispatchRequest = function (autoQuery, options) {
         if (autoQuery) {
             var server_1 = new LegionsCore.LegionsFetch();
@@ -1036,8 +1067,13 @@ var ProTableLocalView = /** @class */ (function () {
                     return server_1.get(__assign({ url: autoQuery.ApiUrl, parameter: params, headers: __assign(__assign({}, autoQuery.options), { 'api-cookie': autoQuery.token }) }, model));
                 }
             };
+            if (options.isShowLoading) {
+                this._setLoadingState(true);
+            }
+            this._request = 'none';
             // @ts-ignore
             this.obState = observablePromise(apiServer());
+            this._request = 'pending';
         }
     };
     __decorate([
@@ -1047,7 +1083,37 @@ var ProTableLocalView = /** @class */ (function () {
     __decorate([
         observable,
         __metadata("design:type", Object)
-    ], ProTableLocalView.prototype, "loading", void 0);
+    ], ProTableLocalView.prototype, "_obStateMap", void 0);
+    __decorate([
+        observable,
+        __metadata("design:type", Object)
+    ], ProTableLocalView.prototype, "_loading", void 0);
+    __decorate([
+        observable,
+        __metadata("design:type", String)
+    ], ProTableLocalView.prototype, "_request", void 0);
+    __decorate([
+        computed,
+        __metadata("design:type", Object),
+        __metadata("design:paramtypes", [])
+    ], ProTableLocalView.prototype, "computedLoading", null);
+    __decorate([
+        computed,
+        __metadata("design:type", Object),
+        __metadata("design:paramtypes", [])
+    ], ProTableLocalView.prototype, "computedRequest", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [Boolean]),
+        __metadata("design:returntype", void 0)
+    ], ProTableLocalView.prototype, "_setLoadingState", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [String]),
+        __metadata("design:returntype", void 0)
+    ], ProTableLocalView.prototype, "_setRequestState", null);
     __decorate([
         action,
         __metadata("design:type", Function),

@@ -71,18 +71,20 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
     /** 全链路监控跟踪id */
     traceId: string = '';
     log = (uid) => {
-        if (this.getLocalViewStore && this.props.autoQuery && this.getLocalViewStore.obState.isPending) {
-            this.getLocalViewStore.loading = true;
-        }
-        if (this.getLocalViewStore && !this.getLocalViewStore.obState.isPending && this.props.autoQuery && this.getLocalViewStore.loading) {
+        if (this.getLocalViewStore && !this.getLocalViewStore.obState.isPending && this.props.autoQuery&&this.getLocalViewStore.computedRequest==='pending') {
             runInAction(() => {
+                this.getLocalViewStore._setLoadingState(false);
+                this.getLocalViewStore._setRequestState('complete');
                 const data = this.props.autoQuery.transform(this.getLocalViewStore.obState);
                 if (data) {
-                    this.props.store.HlTableContainer.get(uid)._renderData = data.data.slice();
+                    const newData = data.data.slice();
+                    this.getLocalViewStore._obStateMap.set(this.getViewStore.pageIndex.toString(),{
+                        data: newData,
+                        total:data.total,
+                    });
+                    this.props.store.HlTableContainer.get(uid)._renderData = newData;
                     this.props.store.HlTableContainer.get(uid).setTotal(data.total)
-                    /* this.forceUpdate&&this.forceUpdate() */
                 }
-                this.getLocalViewStore.loading = false;
             })
             this.consoleLog('watchData',{ uid });
             this.logger('watchData',{
@@ -154,16 +156,22 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
             if (!this.props.store.HlTableLocalStateContainer.has(this.freezeuid)) {
                 this.props.store._addLocalState(this.freezeuid)
             }
-            if (this.props.autoQuery && this.getLocalViewStore && (this.props.autoQuery.isDefaultLoad === void 0 || this.props.autoQuery.isDefaultLoad)) {
+            if (!this.props.store.HlTableContainer.has(this.freezeuid)) {
+                this.props.store.add(this.freezeuid,this.props.tableModulesName,this.uid)
+            }
+            let isShowLoading = false;
+            if (this.getLocalViewStore && this.getLocalViewStore.obState && this.getLocalViewStore.obState.state === 'none') {
+                isShowLoading = true;
+            }
+            if (this.props.autoQuery &&this.getLocalViewStore && (this.props.autoQuery.isDefaultLoad === void 0 || this.props.autoQuery.isDefaultLoad)) {
                 this.getLocalViewStore.dispatchRequest(this.props.autoQuery,{
                     pageIndex: this.getViewStore.pageIndex,
                     pageSize: this.getViewStore.pageSize,
+                    isShowLoading,
                 })
             }
         }
-        if (!this.props.store.HlTableContainer.has(this.freezeuid)) {
-            this.props.store.add(this.freezeuid,this.props.tableModulesName,this.uid)
-        }
+        
         this.initPagination();
         this.initProps();
         this.onReady();
@@ -227,10 +235,17 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
     }
     search(options?: {
         pageIndex?: number;
+        isShowLoading?: boolean;
     }) {
         if (this.props.autoQuery && this.getLocalViewStore) {
-            if (options && options.pageIndex) { /** 如果主动设置页码，则以主动设置为准 */
-                this.getViewStore.pageIndex = options.pageIndex;
+            let isShowLoading = true;
+            if (options) { 
+                if (options.pageIndex) {/** 如果主动设置页码，则以主动设置为准 */
+                    this.getViewStore.pageIndex = options.pageIndex;
+                }
+                if (typeof options.isShowLoading === 'boolean') {
+                    isShowLoading = options.isShowLoading;
+                }
             } else {
                 this.getViewStore.pageIndex = 1;
             }
@@ -238,6 +253,7 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
             this.getLocalViewStore.dispatchRequest(this.props.autoQuery,Object.assign({
                 pageIndex: this.getViewStore.pageIndex,
                 pageSize: this.getViewStore.pageSize,
+                isShowLoading,
             },options))
         }
     }
@@ -358,10 +374,9 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
                 exportCsv: (prams: Partial<IExportCsv>) => {
                     this.exportCsv(prams)
                 },
-                //@ts-ignore
                 onSearch: (options?: {
                     pageIndex: number;
-                    pageSize: number;
+                    isShowLoading?: boolean;
                 }) => {
                     this.search(options)
                 },
@@ -426,6 +441,12 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
         }
         return false;
     }
+    private isSmallData() {
+        if (this.props.displayType === 'smallData') {
+            return true;
+        }
+        return false;
+    }
     componentWillUnmount() {
         /* this.props.store.delete(this.freezeuid); */
         if (this.props.tableModulesName) {
@@ -476,14 +497,24 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
         this.setTableContainerWidth();
         const data = this.props.dataSource;
         if (this.props.autoQuery) {
-            // @ts-ignore
-            data = this.getLocalViewStore.obData;
+            if (this.getLocalViewStore && this.getViewStore) {
+                const keys = this.getViewStore.pageIndex.toString();
+                if (this.getLocalViewStore._obStateMap.has(keys)) {
+                    const result = this.getLocalViewStore._obStateMap.get(keys)
+                    //@ts-ignore
+                    data = result.data;
+                    this.getViewStore.setTotal(result.total);
+                }
+            }
+        }
+        else {
+            if (this.isSmallData()) {
+                this.getViewStore.setTotal(this.props.total || 0)
+            }
         }
         if (data) {
-            if (this.props.displayType === 'smallData') {
-                /* this.getViewStore._renderData = [...this.props.data] */
+            if (this.isSmallData()) {
                 this.getViewStore._renderData = [...data]
-                this.getViewStore.setTotal(this.props.total || 0)
             }
             if (this.getViewStore._renderData.length) {
                 const UniqueKey = this.isHasUniqueKeyData()
@@ -848,9 +879,17 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
                 this.props.store.get(this.freezeuid).pageSize = pageSize
                 this.props.onPagingQuery && this.props.onPagingQuery(pageIndex,pageSize,false)
                 if (this.props.autoQuery && this.getLocalViewStore) {
+                    let isShowLoading = true;
+                    const result = this.getLocalViewStore._obStateMap.get(this.getViewStore.pageIndex.toString())
+                    if (result) {
+                        isShowLoading = false;
+                        this.getViewStore._renderData = [...result.data];
+                        this.getViewStore.setTotal(result.total);
+                    }
                     this.getLocalViewStore.dispatchRequest(this.props.autoQuery,{
                         pageIndex,
                         pageSize,
+                        isShowLoading,
                     })
                 }
             },
@@ -863,6 +902,7 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
                     this.getLocalViewStore.dispatchRequest(this.props.autoQuery,{
                         pageIndex: current,
                         pageSize,
+                        isShowLoading:true,
                     })
                 }
             },
@@ -886,7 +926,7 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
                         bodyStyle={bodyStyle}
                         rowClassName={this.onRowClassName.bind(this)}
                         pagination={(this.getViewStore._pagination) ? pagination : false}
-                        loading={{ tip: 'loading',spinning: this.props.autoQuery ? this.getLocalViewStore.loading : this.props.loading }}
+                        loading={{ tip: 'loading',spinning: this.props.autoQuery ? this.getLocalViewStore.computedLoading : this.props.loading }}
                         rowKey={this.props.uniqueKey}
                         // locale={{emptyText:<span>2222</span>}}
                         onRowClick={this.onRowClick.bind(this)}

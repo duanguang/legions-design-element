@@ -175,7 +175,7 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
                 reset: () => {
                     this.handleReset()
                 },
-                setFieldsValues: (name: string,callback: (value: IProConditions['componentModel']) => void)=>{
+                setFieldsValues: (name: string,callback: (value) => void)=>{
                     this.setFieldsValues(name,callback);
                 },
                 getQuerySelectOption: (name: string,optionKey: string) => {
@@ -270,8 +270,8 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
             }
         }
     }
-    setFieldsValues(name: string,callback: (value: IProConditions['componentModel']) => void) {
-        this.viewStore._setQueryState(name,(value) => {
+    setFieldsValues<T extends IProConditions['componentModel']>(name: string,callback: (value:T) => void) {
+        this.viewStore._setQueryState<T>(name,(value) => {
             callback(value);
         });
     }

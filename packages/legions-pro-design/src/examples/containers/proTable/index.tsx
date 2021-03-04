@@ -8,8 +8,8 @@ import { ResponseVModelNameDataEntity } from './model';
 import { observable } from 'legions/store';
 import { runInAction } from 'mobx'
 import { getSystem, HttpConfig } from '../../constants/httpConfig';
-LegionsProTable.customColumnsConfig.editApi = `${HttpConfig.bffService}/table/edit`;
-LegionsProTable.customColumnsConfig.queryApi = `${HttpConfig.bffService}/table/query`;
+/* LegionsProTable.customColumnsConfig.editApi = `${HttpConfig.bffService}/table/edit`;
+LegionsProTable.customColumnsConfig.queryApi = `${HttpConfig.bffService}/table/query`; */
 
 interface Materialsparames {
   baseCommodityItemNo?: string,
@@ -43,18 +43,21 @@ export class ProTable extends LegionsProTable.ProTableBaseClass<IProps,{size:any
     this.state = {
       size:'default'
     }
-    this.pushColumns('name',{
-      title: '姓名',
+    this.pushColumns('key',{
+      title: '行号',
+      width: '60px',
+      sorter: true,
+      render: (_, __, index: number) => {
+        return this.tableRef.viewModel.pageSize * (this.tableRef.viewModel.pageIndex - 1) + 1 + index;
+     },
+    })
+    this.pushColumns('gname',{
+      title: '货物名称',
       width: '100px',
       sorter: true,
     })
-    this.pushColumns('age',{
-      title: '年龄',
-      width: '100px',
-      sorter: true,
-    })
-    this.pushColumns('address',{
-      title: '住址',
+    this.pushColumns('typeName',{
+      title: '类别',
       width: '100px',
       sorter: true,
       render: (text) => {
@@ -137,7 +140,7 @@ export class ProTable extends LegionsProTable.ProTableBaseClass<IProps,{size:any
               
               },
               token: (() => {
-                return process.env.environment === 'dev' ? 'SESSION=51de1ec3-354e-4dc0-b043-90d954463e37' : 'SESSION=e3bdf8a8-eae4-40b3-9da8-99152b5239f8';
+                return process.env.environment === 'dev' ? 'SESSION=86ccd0dd-a4f5-4d27-9ecd-fa3604614977' : 'SESSION=86ccd0dd-a4f5-4d27-9ecd-fa3604614977';
               })(),
 
               method: 'post',
