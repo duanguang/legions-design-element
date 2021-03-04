@@ -80,7 +80,7 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
         selectOptions: import("../LegionsStoreConditions/interface").IObservableMap<string, import("../LegionsStoreConditions/interface").ISelectOptions>;
         readonly computedQuery: (ConditionSelectModel | ConditionTextNumberModel | ConditionRadioButtonModel | ConditionTextAreaModel | ConditionTextModel | ConditionDateModel | ConditionSearchModel | ConditionRangePickerModel | ConditionGroupCheckBoxModel)[];
         readonly computedVmModel: any;
-        readonly computedSize: "default" | "small";
+        readonly computedSize: "small" | "default";
         readonly compuedResolution: "xs" | "sm" | "md" | "lg" | "xl";
         _setVmModel: (model: Object) => void;
         _clearQuery: () => void;
@@ -89,7 +89,7 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
             isCache: boolean;
         }) => void;
         _setQueryState: <T extends ConditionSelectModel | ConditionTextNumberModel | ConditionRadioButtonModel | ConditionTextAreaModel | ConditionTextModel | ConditionDateModel | ConditionSearchModel | ConditionRangePickerModel | ConditionGroupCheckBoxModel>(name: string, callback: (value: T) => void) => void;
-        _setSize: (size: "default" | "small") => void;
+        _setSize: (size: "small" | "default") => void;
         _dispatchRequest: (name: string, autoQuery: ISelectAutoQuery<{}>, options?: {
             pageIndex: number;
             pageSize?: number;

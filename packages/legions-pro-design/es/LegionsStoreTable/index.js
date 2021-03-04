@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.5
+  *  legions-pro-design v0.0.6-beta.1
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -9,6 +9,7 @@ import { observablePromise, observableViewModel } from 'legions/store-utils';
 import { shortHash } from 'legions-lunar/object-hash';
 import { isObservableArray, computed, runInAction, useStrict, configure } from 'mobx';
 import LegionsModels from '../LegionsModels';
+import { editTableColumns, queryTableColumns } from '../services';
 import LegionsCore from '../LegionsCore';
 import { cloneDeep } from 'lodash';
 import LegionsProTable from '../LegionsProTable';
@@ -100,52 +101,6 @@ function __generator(thisArg, body) {
         } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
-}
-
-/*
- * @Author: duanguang
- * @Date: 2020-12-26 11:55:33
- * @LastEditTime: 2021-03-02 17:53:40
- * @LastEditors: duanguang
- * @Description:
- * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/services/index.ts
- * @「扫去窗上的尘埃，才可以看到窗外的美景。」
- */
-/**
- *
- * 编辑自定义table列信息
- * @export
- * @returns
- */
-function editTableColumns(modulesUid, customColumns, url) {
-    return __awaiter(this, void 0, void 0, function () {
-        var httpClient;
-        return __generator(this, function (_a) {
-            httpClient = new LegionsCore.LegionsFetch();
-            return [2 /*return*/, httpClient.post({
-                    url: url,
-                    parameter: { modulesUid: modulesUid, customColumns: customColumns },
-                    model: LegionsModels.TableColumnsContainerEntity,
-                }).then(function (result) {
-                    return result;
-                })];
-        });
-    });
-}
-function queryTableColumns(modulesUid, url) {
-    return __awaiter(this, void 0, void 0, function () {
-        var httpClient;
-        return __generator(this, function (_a) {
-            httpClient = new LegionsCore.LegionsFetch();
-            return [2 /*return*/, httpClient.get({
-                    url: url,
-                    parameter: { modulesUid: modulesUid },
-                    model: LegionsModels.TableColumnsContainerEntity
-                }).then(function (result) {
-                    return result;
-                })];
-        });
-    });
 }
 
 var ProTableView = /** @class */ (function () {

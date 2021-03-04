@@ -324,35 +324,29 @@ class ProQueryDemo extends React.Component<IProps,IState> {
           wrapperCol={{ span: 18, offset: 1 }}
         >
           <Button type="primary" htmlType="submit" onClick={()=>{
-                  this.queryRef.methods.setFieldsValues('vmOrderNo',(value) => {
-                        if (value instanceof LegionsProConditions.ConditionTextModel) {
-                            value.conditionsProps.value = '郭某嘉';
-                        }
+                  this.queryRef.methods.setFieldsValues<InstanceType<typeof LegionsProConditions.ConditionTextModel>>('vmOrderNo',(value) => {
+                        value.conditionsProps.value = '郭某嘉';
                     })
                 }}>填充司机信息</Button>
 
           <Button style={{marginLeft:'10px'}} type="primary" htmlType="submit" onClick={()=>{
-                   this.queryRef.methods.setFieldsValues('vmOrderNo',(value) => {
-                        if (value instanceof LegionsProConditions.ConditionTextModel) {
-                            value.conditionsProps.disabled = !value.conditionsProps.disabled;
-                            this.setState({
-                                disabledText:!value.conditionsProps.disabled
-                            })
-                        }
+                   this.queryRef.methods.setFieldsValues<InstanceType<typeof LegionsProConditions.ConditionTextModel>>('vmOrderNo',(value) => {
+                        value.conditionsProps.disabled = !value.conditionsProps.disabled;
+                        this.setState({
+                            disabledText:!value.conditionsProps.disabled
+                        })
                     })
                     
                 }}>{!this.state.disabledText?'启用司机信息':'禁用司机信息'}</Button>
          <Button style={{marginLeft:'10px'}} type="primary" htmlType="submit" onClick={()=>{
-                  this.queryRef.methods.setFieldsValues('vmOrderNo7',(value) => {
-                        if (value instanceof LegionsProConditions.ConditionRadioButtonModel) {
-                            if(value.conditionsProps.visable ===void 0){
+                  this.queryRef.methods.setFieldsValues<InstanceType<typeof LegionsProConditions.ConditionRadioButtonModel>>('vmOrderNo7',(value) => {
+                        if(value.conditionsProps.visable ===void 0){
                                 value.conditionsProps.visable =true
-                            }
-                            value.conditionsProps.visable = !value.conditionsProps.visable;
-                            this.setState({
-                                visibleText:!value.conditionsProps.visable
-                            })
                         }
+                        value.conditionsProps.visable = !value.conditionsProps.visable;
+                        this.setState({
+                            visibleText:!value.conditionsProps.visable
+                        })
                     })
                  
                 }}>{!this.state.visibleText?'隐藏城市':'显示城市'}</Button>       

@@ -48,7 +48,6 @@ legionFetchInstance.register({
     request: function (configs) {
         /* const credential:'same-origin'|'include'|'omit'='include' */
         var credentials = configs.credentials, props = __rest(configs, ["credentials"]);
-        console.log(credentials, 'credentials');
         return __assign({}, props);
     }
 });
