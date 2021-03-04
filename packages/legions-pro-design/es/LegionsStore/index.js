@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.6-beta.2
+  *  legions-pro-design v0.0.7-beta.2
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -127,7 +127,7 @@ var UiStoreBase = /** @class */ (function (_super) {
 /*
  * @Author: duanguang
  * @Date: 2021-01-07 16:20:33
- * @LastEditTime: 2021-03-04 15:49:24
+ * @LastEditTime: 2021-03-04 16:04:38
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStore/index.ts
@@ -136,7 +136,7 @@ var UiStoreBase = /** @class */ (function (_super) {
 function getStore(store) {
     if (typeof store === 'function' && store['meta']) {
         var stores = getInjector();
-        return stores.getState(store);
+        return stores.getState(store, true);
     }
     return null;
 }
@@ -147,6 +147,7 @@ var LegionsStore = {
     MenuPanesStorageResource: MenuPanesStorageResource,
     BreadCrumbsResourceEven: BreadCrumbsResourceEven,
     project: project,
+    /** 获取指定store 实例 */
     get: getStore
 };
 

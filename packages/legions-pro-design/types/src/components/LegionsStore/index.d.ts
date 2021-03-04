@@ -11,6 +11,7 @@ declare const LegionsStore: {
     project: {
         name: string;
     };
+    /** 获取指定store 实例 */
     get: typeof getStore;
 };
 export default LegionsStore;

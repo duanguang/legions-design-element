@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-07 16:20:33
- * @LastEditTime: 2021-03-04 15:49:24
+ * @LastEditTime: 2021-03-04 16:04:38
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStore/index.ts
@@ -19,7 +19,7 @@ import { ClassOf } from 'legions-lunar/types/api/typescript';
 function getStore<T extends InstanceType<typeof StoreBase>>(store: ClassOf<T>): T{
   if (typeof store === 'function' && store['meta']) {
     const stores = getInjector()
-    return stores.getState(store);
+    return stores.getState(store,true);
   }
   return null
 }
@@ -30,6 +30,7 @@ const LegionsStore = {
   MenuPanesStorageResource,
   BreadCrumbsResourceEven,
   project,
+  /** 获取指定store 实例 */
   get:getStore
 }  
 export default LegionsStore;
