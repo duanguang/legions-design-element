@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-07 17:17:41
- * @LastEditTime: 2021-03-02 18:47:37
+ * @LastEditTime: 2021-03-05 16:40:03
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreTable/interface/index.ts
@@ -79,7 +79,7 @@ export interface ITableAutoQuery<Model = {}> {
    * @type {string}
    * @memberof IAutoQuery
    */
-  token: string;
+  token?: string;
 
   /**
    * 表格绑定数据前转换符合表格数据结构的数据

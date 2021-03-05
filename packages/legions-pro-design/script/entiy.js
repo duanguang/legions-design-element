@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-10 16:14:09
- * @LastEditTime: 2021-03-05 16:36:41
+ * @LastEditTime: 2021-03-05 16:41:08
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/script/entiy.js
@@ -16,11 +16,11 @@ const array_components1 = ['LegionsModels','LegionsCore','LegionsCrossModule'
 /* 'services' */]
 const array_componentsStore = [
 'LegionsStore',
-'LegionsStoreConditions',
-'LegionsStoreForm',
+/* 'LegionsStoreConditions', */
+/* 'LegionsStoreForm', */
 /* 'LegionsStoreLayout',
 'LegionsStoreModal', */
-  'LegionsStoreTable',
+/*   'LegionsStoreTable', */
   /* 'services', */
 ]
 const array_component = [

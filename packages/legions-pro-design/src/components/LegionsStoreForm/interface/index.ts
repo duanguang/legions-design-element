@@ -238,7 +238,7 @@ export interface ISelectAutoQuery<Model = {}> {
    * @type {string}
    * @memberof ISelectAutoQuery
    */
-  token: string;
+  token?: string;
 }
 export interface ISelectOptions {
   keywords: string;
