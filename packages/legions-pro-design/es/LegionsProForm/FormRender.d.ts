@@ -1,6 +1,6 @@
 import React from 'react';
 import { WrappedFormUtils, IAntdProps, IAntdFormItemProps, IAntdRule } from '../interface/antd';
-import { InstanceForm } from './interface/form';
+import { InstanceProForm } from './interface/form';
 /**
  * 使用Render模型自定义组件时，需要要主动用FormItem 包裹住自定义的组件
  *
@@ -41,7 +41,7 @@ export interface IFormRenderProps extends IAntdFormItemProps {
      *
      * @memberof IFormRenderProps
      */
-    formRef?: InstanceForm) => JSX.Element;
+    formRef?: InstanceProForm) => JSX.Element;
 }
 interface IFormWithRenderProps {
     iAntdProps: IAntdProps;
@@ -54,7 +54,7 @@ interface IFormWithRenderProps {
      * @type {string}
      * @memberof IFormWithInputProps
      */
-    formRef: InstanceForm;
+    formRef: InstanceProForm;
 }
 export default class FormRender extends React.Component<IFormWithRenderProps> {
     constructor(props: any);

@@ -4,7 +4,7 @@ import { HlLabeledValue } from 'legions-lunar/model';
 import { ILocalViewModelHlFormStore, IViewModelHlFormStore, IErrorView, IProFormFields } from '../../LegionsStoreForm/interface';
 import LegionsStoreForm from '../../LegionsStoreForm';
 export type { IErrorView };
-export interface InstanceForm {
+export interface InstanceProForm {
     store: InstanceType<typeof LegionsStoreForm>;
     /**
      * 只读数据，请勿篡改
@@ -88,7 +88,7 @@ interface IMethods {
     /** 下拉选项key值*/ optionKey: string) => {
         readonly option: HlLabeledValue;
     };
-    setFormStates: (name: string, callback: (state: IProFormFields['componentModel']) => void) => void;
+    setFormStates: <T extends IProFormFields['componentModel']>(name: string, callback: (state: T) => void) => void;
 }
 export interface IFormState {
     /**

@@ -4,7 +4,7 @@ import { IErrorView } from './interface';
 import AbstractForm from './AbstractForm';
 import { InstanceFormElement } from './interface/formElement';
 import { TooltipProps } from 'antd/lib/tooltip';
-import { InstanceForm } from './interface/form';
+import { InstanceProForm } from './interface/form';
 export declare class LabelWithInputModel {
     iAntdProps: IAntdProps;
     iFormProps: IFormInputProps;
@@ -23,7 +23,7 @@ export interface IFormInputProps extends Omit<InputProps, 'onChange'>, TextAreaP
      *
      * @memberof IFormRenderProps
      */
-    formRef?: InstanceForm) => JSX.Element;
+    formRef?: InstanceProForm) => JSX.Element;
     type?: 'textarea' | 'text' | 'number' | 'password';
     onChange?: (value: string) => void;
 }
@@ -45,7 +45,7 @@ interface IFormWithInputProps {
      * @type {string}
      * @memberof IFormWithInputProps
      */
-    formStore?: InstanceForm;
+    formStore?: InstanceProForm;
 }
 interface IForm {
     form: WrappedFormUtils;
@@ -85,8 +85,8 @@ export declare class TooltipInput extends React.Component<ITooltipInputProps, {}
         setErrorErrorReactNodeList: (componentCode: string, errorListView: IErrorView[]) => void;
         handleIgnore: (componentCode: string, id: number) => void;
         addAllElementKeys: (keys: string) => void;
-        getFormItemField: (key: string) => {
-            value: LabelWithInputModel | import("./FormInputNumber").LabelWithInputNumberModel | import("./FormDatePicker").LabelWithDatePickerModel | import("./FormMonthPicker").LabelWithMonthPickerModel | import("./FormRangePicker").LabelWithRangePickerModel | import("./FormUpload").LabelWithUploadModel | import("./FormSwitch").LabelWithSwitchModel | import("./FormRadioButton").LabelWithRadioButtonModel | import("./FormText").LabelWithTextModel | import("./interface").LabelWithSelectModel | import("./FormCheckbox").LabelWithCheckboxModel;
+        getFormItemField: <T extends LabelWithInputModel | import("./FormInputNumber").LabelWithInputNumberModel | import("./FormDatePicker").LabelWithDatePickerModel | import("./FormMonthPicker").LabelWithMonthPickerModel | import("./FormRangePicker").LabelWithRangePickerModel | import("./FormUpload").LabelWithUploadModel | import("./FormSwitch").LabelWithSwitchModel | import("./FormRadioButton").LabelWithRadioButtonModel | import("./FormText").LabelWithTextModel | import("./interface").LabelWithSelectModel | import("./FormCheckbox").LabelWithCheckboxModel>(key: string) => {
+            value: T;
             type: "normal" | "custom";
         };
         _initFormItemField: (key: string, value: LabelWithInputModel | import("./FormInputNumber").LabelWithInputNumberModel | import("./FormDatePicker").LabelWithDatePickerModel | import("./FormMonthPicker").LabelWithMonthPickerModel | import("./FormRangePicker").LabelWithRangePickerModel | import("./FormUpload").LabelWithUploadModel | import("./FormSwitch").LabelWithSwitchModel | import("./FormRadioButton").LabelWithRadioButtonModel | import("./FormText").LabelWithTextModel | import("./interface").LabelWithSelectModel | import("./FormCheckbox").LabelWithCheckboxModel, type?: "normal" | "custom") => void;
@@ -121,8 +121,8 @@ export default class FormInput extends AbstractForm<IFormWithInputProps> {
         setErrorErrorReactNodeList: (componentCode: string, errorListView: IErrorView[]) => void;
         handleIgnore: (componentCode: string, id: number) => void;
         addAllElementKeys: (keys: string) => void;
-        getFormItemField: (key: string) => {
-            value: LabelWithInputModel | import("./FormInputNumber").LabelWithInputNumberModel | import("./FormDatePicker").LabelWithDatePickerModel | import("./FormMonthPicker").LabelWithMonthPickerModel | import("./FormRangePicker").LabelWithRangePickerModel | import("./FormUpload").LabelWithUploadModel | import("./FormSwitch").LabelWithSwitchModel | import("./FormRadioButton").LabelWithRadioButtonModel | import("./FormText").LabelWithTextModel | import("./interface").LabelWithSelectModel | import("./FormCheckbox").LabelWithCheckboxModel;
+        getFormItemField: <T extends LabelWithInputModel | import("./FormInputNumber").LabelWithInputNumberModel | import("./FormDatePicker").LabelWithDatePickerModel | import("./FormMonthPicker").LabelWithMonthPickerModel | import("./FormRangePicker").LabelWithRangePickerModel | import("./FormUpload").LabelWithUploadModel | import("./FormSwitch").LabelWithSwitchModel | import("./FormRadioButton").LabelWithRadioButtonModel | import("./FormText").LabelWithTextModel | import("./interface").LabelWithSelectModel | import("./FormCheckbox").LabelWithCheckboxModel>(key: string) => {
+            value: T;
             type: "normal" | "custom";
         };
         _initFormItemField: (key: string, value: LabelWithInputModel | import("./FormInputNumber").LabelWithInputNumberModel | import("./FormDatePicker").LabelWithDatePickerModel | import("./FormMonthPicker").LabelWithMonthPickerModel | import("./FormRangePicker").LabelWithRangePickerModel | import("./FormUpload").LabelWithUploadModel | import("./FormSwitch").LabelWithSwitchModel | import("./FormRadioButton").LabelWithRadioButtonModel | import("./FormText").LabelWithTextModel | import("./interface").LabelWithSelectModel | import("./FormCheckbox").LabelWithCheckboxModel, type?: "normal" | "custom") => void;

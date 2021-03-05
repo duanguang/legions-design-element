@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Button, Row, Col, Card, Tooltip, message, Icon } from 'antd';
 import LegionsProModal from  '../LegionsProModal';
-import { InstanceLegionsProModal} from '../LegionsProModal/interface'
+import { InstanceProModal} from '../LegionsProModal/interface'
 import LegionsStoreTable from '../LegionsStoreTable';
 import { observer, bind } from 'legions/store-react'
 import LegionsProDragger from '../LegionsProDragger';
@@ -21,7 +21,7 @@ interface IProps {
      *
      * @memberof IHLTableProps
      */
-    onReady?: (instance: InstanceLegionsProModal) => void;
+    onReady?: (instance: InstanceProModal) => void;
     /** 本地数据同步到服务端的接口 */
     
     customColumnsConfig: {
@@ -37,7 +37,7 @@ interface IState {
 @bind({ store: LegionsStoreTable })
 @observer
 export default class LegionsProTableCustomColumns extends Component<IProps, IState> {
-    modalRef: InstanceLegionsProModal = null
+    modalRef: InstanceProModal = null
     constructor(props) {
         super(props)
         this.state = {

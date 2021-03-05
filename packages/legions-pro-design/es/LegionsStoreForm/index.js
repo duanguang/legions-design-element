@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.5
+  *  legions-pro-design v0.0.7-beta.2
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -626,12 +626,14 @@ var HlFormView = /** @class */ (function () {
     HlFormView.prototype.getFormItemField = function (key) {
         if (this.formfields.has(key)) {
             return {
+                //@ts-ignore
                 value: this.formfields.get(key),
                 type: 'normal',
             };
         }
         else if (this.customFormFields.has(key)) {
             return {
+                //@ts-ignore
                 value: this.customFormFields.get(key),
                 type: 'custom',
             };
@@ -982,11 +984,15 @@ var HLFormLocalView = /** @class */ (function () {
                         };
                     },
                 };
+                var headers = {};
+                if (autoQuery.token) {
+                    headers = { 'api-cookie': autoQuery.token };
+                }
                 if (autoQuery.method === 'post') {
-                    return server_1.post(__assign({ url: autoQuery.ApiUrl, parameter: params, headers: __assign(__assign({}, autoQuery.options), { 'api-cookie': autoQuery.token }), model: LegionsModels.SelectKeyValue }, model));
+                    return server_1.post(__assign({ url: autoQuery.ApiUrl, parameter: params, headers: __assign(__assign({}, autoQuery.options), headers), model: LegionsModels.SelectKeyValue }, model));
                 }
                 else if (autoQuery.method === 'get') {
-                    return server_1.get(__assign({ url: autoQuery.ApiUrl, parameter: params, headers: __assign(__assign({}, autoQuery.options), { 'api-cookie': autoQuery.token }), model: LegionsModels.SelectKeyValue }, model));
+                    return server_1.get(__assign({ url: autoQuery.ApiUrl, parameter: params, headers: __assign(__assign({}, autoQuery.options), headers), model: LegionsModels.SelectKeyValue }, model));
                 }
             };
             var data = this.selectOptions.get(name); // 查询指定下拉组件数据

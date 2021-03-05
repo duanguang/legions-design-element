@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-29 10:18:01
- * @LastEditTime: 2021-03-02 18:40:42
+ * @LastEditTime: 2021-03-05 16:35:06
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreForm/proFormStore.ts
@@ -284,15 +284,17 @@ export class HlFormView {
     }
   }
   /** 查询表单元素字段配置信息 */
-  @action getFormItemField(key: string):{value:IProFormFields['componentModel'],type:'normal' | 'custom'} {
+  @action getFormItemField<T extends IProFormFields['componentModel']>(key: string):{value:T,type:'normal' | 'custom'} {
     if (this.formfields.has(key)) {
       return {
+        //@ts-ignore
         value: this.formfields.get(key),
         type:'normal',
       };   
     }
     else if (this.customFormFields.has(key)) {
       return {
+        //@ts-ignore
         value: this.customFormFields.get(key),
         type:'custom',
       };
@@ -581,12 +583,15 @@ export class HLFormLocalView {
             }
           },
         }
-        
+        let headers = {};
+        if (autoQuery.token) {
+            headers={'api-cookie': autoQuery.token}
+        }
         if (autoQuery.method === 'post') {
           return server.post<any, any>({
             url: autoQuery.ApiUrl,
             parameter: params,
-            headers: { ...autoQuery.options,'api-cookie': autoQuery.token },
+            headers: { ...autoQuery.options,...headers },
             model:LegionsModels.SelectKeyValue,
               ...model,
           });
@@ -594,7 +599,7 @@ export class HLFormLocalView {
           return server.get<any, any>({
             url: autoQuery.ApiUrl,
             parameter: params,
-            headers: { ...autoQuery.options,'api-cookie': autoQuery.token },
+            headers: { ...autoQuery.options,...headers },
             model:LegionsModels.SelectKeyValue,
             ...model,
           });

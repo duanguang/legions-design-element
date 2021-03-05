@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-28 15:58:15
- * @LastEditTime: 2021-03-02 19:19:40
+ * @LastEditTime: 2021-03-05 15:57:34
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProTabsForm/index.tsx
@@ -15,7 +15,7 @@ import { shortHash } from 'legions-lunar/object-hash';
 import LegionsProForm from '../LegionsProForm';
 import { IProFormFields, ITabsFormItem } from '../LegionsStoreForm/interface';
 import { ClassOf } from 'legions-lunar/types/api/typescript';
-import { IGroup,InstanceForm } from '../LegionsProForm/interface';
+import { IGroup,InstanceProForm } from '../LegionsProForm/interface';
 import { TabPaneProps, TabsProps } from 'antd/lib/tabs';
 import { Weaken } from '../interface';
 import { InstanceTabsForm } from './interface';
@@ -166,7 +166,7 @@ export default class LegionsProTabsForm<Model> extends React.Component<IProps<Mo
             onFieldsChange={(_,fields: Partial<Model>) => {
                 tab.formInstance.store.updateFormInputData(tab.formInstance.uid,fields)
             }}
-            onReady={(_,formInstance?: InstanceForm) => {
+            onReady={(_,formInstance?: InstanceProForm) => {
                 tab.formInstance = { ...formInstance,that: this };
             }}
             uniqueKeys={key}

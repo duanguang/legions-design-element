@@ -2,7 +2,7 @@ import { IProSelectProps } from '../../LegionsProSelect/interface';
 import { observablePromise } from 'legions/store-utils';
 import { WrappedFormUtils, IAntdProps, IAntdFormItemProps, IAntdRule, IAntdSelectOption } from '../../interface/antd';
 import { InstanceFormElement } from './formElement';
-import { IErrorView, InstanceForm } from './form';
+import { IErrorView, InstanceProForm } from './form';
 import LegionsModels from '../../LegionsModels';
 import { request } from 'legions/request';
 declare type HeadersPrams = {
@@ -124,7 +124,7 @@ export interface IFormWithSelectProps {
      * @memberof IFormWithInputProps
      */
     formUid: string;
-    formStore?: InstanceForm;
+    formStore?: InstanceProForm;
 }
 export interface IFormSelectWrapError {
     formItemName: string;

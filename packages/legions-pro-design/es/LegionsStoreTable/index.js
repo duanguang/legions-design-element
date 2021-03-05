@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.6-beta.1
+  *  legions-pro-design v0.0.7-beta.2
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -1015,11 +1015,15 @@ var ProTableLocalView = /** @class */ (function () {
                         }
                     };
                 }
+                var headers = {};
+                if (autoQuery.token) {
+                    headers = { 'api-cookie': autoQuery.token };
+                }
                 if (autoQuery.method === 'post') {
-                    return server_1.post(__assign({ url: autoQuery.ApiUrl, parameter: params, headers: __assign(__assign({}, autoQuery.options), { 'api-cookie': autoQuery.token }) }, model));
+                    return server_1.post(__assign({ url: autoQuery.ApiUrl, parameter: params, headers: __assign(__assign({}, autoQuery.options), headers) }, model));
                 }
                 else if (autoQuery.method === 'get') {
-                    return server_1.get(__assign({ url: autoQuery.ApiUrl, parameter: params, headers: __assign(__assign({}, autoQuery.options), { 'api-cookie': autoQuery.token }) }, model));
+                    return server_1.get(__assign({ url: autoQuery.ApiUrl, parameter: params, headers: __assign(__assign({}, autoQuery.options), headers) }, model));
                 }
             };
             if (options.isShowLoading) {

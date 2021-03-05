@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-07 16:49:31
- * @LastEditTime: 2021-03-04 13:40:18
+ * @LastEditTime: 2021-03-05 16:33:06
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreConditions/conditionView.ts
@@ -206,6 +206,10 @@ export class ConditionView<Query = {}> {
                 delete params.pageIndex;
                 delete params.pageSize
                 delete params.defaultKeyWords;
+                let headers = {};
+                if (autoQuery.token) {
+                    headers={'api-cookie': autoQuery.token}
+                }
                 if (autoQuery.requestBeforeTransformParams) {
                     params = autoQuery.requestBeforeTransformParams({...params,pageIndex:options.pageIndex,pageSize:options.pageSize})
                 }
@@ -222,7 +226,7 @@ export class ConditionView<Query = {}> {
                     return server.post<any,any>({
                         url: autoQuery.ApiUrl,
                         parameter: params,
-                        headers: { ...autoQuery.options,'api-cookie': autoQuery.token },
+                        headers: { ...autoQuery.options,...headers },
                         model: LegionsModels.SelectKeyValue,
                         ...model,
                     })
@@ -231,7 +235,7 @@ export class ConditionView<Query = {}> {
                     return server.get<any,any>({
                         url: autoQuery.ApiUrl,
                         parameter: params,
-                        headers: { ...autoQuery.options,'api-cookie': autoQuery.token },
+                        headers: { ...autoQuery.options,...headers },
                         model:LegionsModels.SelectKeyValue,
                         ...model,
                     })

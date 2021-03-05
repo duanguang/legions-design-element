@@ -121,8 +121,8 @@ export declare class HlFormView {
      */
     addAllElementKeys(keys: string): void;
     /** 查询表单元素字段配置信息 */
-    getFormItemField(key: string): {
-        value: IProFormFields['componentModel'];
+    getFormItemField<T extends IProFormFields['componentModel']>(key: string): {
+        value: T;
         type: 'normal' | 'custom';
     };
     /** 初始化表单配置项元素 */

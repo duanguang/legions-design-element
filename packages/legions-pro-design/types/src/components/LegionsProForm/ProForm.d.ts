@@ -10,7 +10,7 @@ import { IElementList, IProFormFields } from '../LegionsStoreForm/interface';
 import { LabelWithSwitchModel } from './FormSwitch';
 import { LabelWithRadioButtonModel } from './FormRadioButton';
 import { LabelWithTextModel } from './FormText';
-import { InstanceForm } from './interface/form';
+import { InstanceProForm } from './interface/form';
 import { LabelWithCheckboxModel } from './FormCheckbox';
 import { BaseFormFields } from 'legions-lunar/model';
 import { ProFormFields, ProFormUtils } from './ProFormUtils';
@@ -62,7 +62,7 @@ export interface IProFormProps<mapProps = {}> {
      */
     onReady: (
     /**即将废弃，请formRef.viewModel.form 获取 */
-    form: WrappedFormUtils, formRef?: InstanceForm) => void;
+    form: WrappedFormUtils, formRef?: InstanceProForm) => void;
     size?: 'default' | 'small' | 'table';
     /**
      *
@@ -142,8 +142,8 @@ export declare class LegionsProForm<mapProps = {}> extends React.Component<IProF
         setErrorErrorReactNodeList: (componentCode: string, errorListView: IErrorView[]) => void;
         handleIgnore: (componentCode: string, id: number) => void;
         addAllElementKeys: (keys: string) => void;
-        getFormItemField: (key: string) => {
-            value: LabelWithInputModel | LabelWithInputNumberModel | LabelWithDatePickerModel | LabelWithMonthPickerModel | LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel | LabelWithRadioButtonModel | LabelWithTextModel | LabelWithSelectModel | LabelWithCheckboxModel;
+        getFormItemField: <T extends LabelWithInputModel | LabelWithInputNumberModel | LabelWithDatePickerModel | LabelWithMonthPickerModel | LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel | LabelWithRadioButtonModel | LabelWithTextModel | LabelWithSelectModel | LabelWithCheckboxModel>(key: string) => {
+            value: T;
             type: "normal" | "custom";
         };
         _initFormItemField: (key: string, value: LabelWithInputModel | LabelWithInputNumberModel | LabelWithDatePickerModel | LabelWithMonthPickerModel | LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel | LabelWithRadioButtonModel | LabelWithTextModel | LabelWithSelectModel | LabelWithCheckboxModel, type?: "normal" | "custom") => void;

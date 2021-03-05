@@ -2,9 +2,9 @@ import LegionsStoreForm from '../LegionsStoreForm';
 import React from 'react';
 import { IProFormFields } from '../LegionsStoreForm/interface';
 import { ClassOf } from 'legions-lunar/types/api/typescript';
-import { IGroup, InstanceForm } from '../LegionsProForm/interface';
+import { IGroup, InstanceProForm } from '../LegionsProForm/interface';
 import { InstanceLegionsModalForm } from './interface';
-import { ILegionsProModalProps, InstanceLegionsProModal } from '../LegionsProModal/interface';
+import { ILegionsProModalProps, InstanceProModal } from '../LegionsProModal/interface';
 interface IProps<Model> {
     store?: InstanceType<typeof LegionsStoreForm>;
     /**
@@ -41,8 +41,8 @@ interface IProps<Model> {
  */
 export default class LegionsProModalForm<Model> extends React.Component<IProps<Model>> {
     timeId: number;
-    formInstance: InstanceForm;
-    modalInstance: InstanceLegionsProModal;
+    formInstance: InstanceProForm;
+    modalInstance: InstanceProModal;
     constructor(props: any);
     onVisibleChange: (value: boolean) => void;
     render(): JSX.Element;

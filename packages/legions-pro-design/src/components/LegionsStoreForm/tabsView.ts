@@ -1,18 +1,18 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-28 16:13:01
- * @LastEditTime: 2021-03-02 18:40:53
+ * @LastEditTime: 2021-03-05 15:58:27
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreForm/tabsView.ts
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
-import { InstanceForm } from '../LegionsProForm/interface';
+import { InstanceProForm } from '../LegionsProForm/interface';
 import { action,autorun,computed,observable } from 'mobx';
 import { shortHash } from 'legions-lunar/object-hash';
 export class TabsItemView{
     /** 每个tab拥有的自己独立的from实体 */
-    formInstance: InstanceForm = null;
+    formInstance: InstanceProForm = null;
     keys: string = '';
     @observable private _style: React.CSSProperties = {};
     

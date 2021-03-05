@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-29 10:26:57
- * @LastEditTime: 2021-03-02 18:57:49
+ * @LastEditTime: 2021-03-05 16:14:36
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProForm/interface/form.ts
@@ -18,7 +18,7 @@ import  {
 import LegionsStoreForm from '../../LegionsStoreForm'
 export type {IErrorView}
 
-export interface InstanceForm {
+export interface InstanceProForm {
   store: InstanceType<typeof LegionsStoreForm>;
 
   /**
@@ -110,7 +110,7 @@ interface IMethods {
     /** 下拉选项key值*/ optionKey: string
   ) => { readonly option: HlLabeledValue };
 
-  setFormStates: (name: string,callback: (state: IProFormFields['componentModel']) => void) => void
+  setFormStates: <T extends IProFormFields['componentModel']>(name: string,callback: (state: T) => void) => void
 }
 export interface IFormState {
   /**

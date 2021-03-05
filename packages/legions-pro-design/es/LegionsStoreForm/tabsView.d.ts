@@ -1,8 +1,8 @@
 /// <reference types="react" />
-import { InstanceForm } from '../LegionsProForm/interface';
+import { InstanceProForm } from '../LegionsProForm/interface';
 export declare class TabsItemView {
     /** 每个tab拥有的自己独立的from实体 */
-    formInstance: InstanceForm;
+    formInstance: InstanceProForm;
     keys: string;
     private _style;
     private _className;

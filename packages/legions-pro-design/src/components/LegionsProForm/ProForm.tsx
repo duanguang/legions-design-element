@@ -20,7 +20,7 @@ import { LabelWithSwitchModel } from './FormSwitch';
 import { LabelWithRadioButtonModel } from './FormRadioButton';
 import { debounce } from 'legions-utils-tool/debounce'
 import { LabelWithTextModel } from './FormText';
-import { InstanceForm } from './interface/form';
+import { InstanceProForm } from './interface/form';
 import { computed,observable,runInAction,toJS } from 'mobx';
 import LegionsProDragger from '../LegionsProDragger';
 import get from 'lodash/get'
@@ -86,7 +86,7 @@ export interface IProFormProps<mapProps = {}> {
     onReady: (
         /**即将废弃，请formRef.viewModel.form 获取 */
         form: WrappedFormUtils,
-        formRef?: InstanceForm) => void;
+        formRef?: InstanceProForm) => void;
     size?: 'default' | 'small' | 'table';
 
 
@@ -272,7 +272,7 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
         // @ts-ignore
         this.props.form.validateFields(...options)
     }
-    setFormStates(name: string,callback: (state: IProFormFields['componentModel']) => void) {
+    setFormStates<T extends IProFormFields['componentModel']>(name: string,callback: (state: T) => void) {
         this.storeLocalView.dispatchAction(() => {
             const insertRenderEle = () => {
                 if (!this.storeView.renderNodeQueue.has(name)) {
@@ -282,10 +282,12 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
             const value = this.storeView.getFormItemField(name);
             if (value) {
                 if (value.type === 'normal') {
+                    //@ts-ignore
                     callback && callback(value.value)
                     insertRenderEle()
                 }
                 if (value.type === 'custom') {
+                     //@ts-ignore
                     callback && callback(value.value)
                     insertRenderEle();
                     this.forceUpdate()
@@ -738,7 +740,7 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
         }
         const view = this.props.store.HLFormContainer.get(this.uid)
         const localview = this.props.store.HLFormLocalDataContainer.get(this.freezeUid)
-        let viewModel: InstanceForm = {
+        let viewModel: InstanceProForm = {
             store: this.props.store,
             uid: this.uid,
             viewModel: view,

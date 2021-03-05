@@ -30,7 +30,7 @@ import ReactDOM,{ findDOMNode } from "react-dom";
 import { debounce } from 'legions-utils-tool/debounce'
 import { cloneDeep } from 'lodash'
 import { HlLabeledValue } from 'legions-lunar/model';
-import { IFieldsState,IQueryConditionsInstance,IQueryDateProps,IQueryProps,IQueryRangePickerProps,IQuerySelectProps,IQueryTextAreaProps,IQueryTextProps,ISelectProps } from './interface';
+import { IFieldsState,InstanceQueryConditions,IQueryDateProps,IQueryProps,IQueryRangePickerProps,IQuerySelectProps,IQueryTextAreaProps,IQueryTextProps,ISelectProps } from './interface';
 import { ConditionCheckBoxModel,ConditionDateModel,ConditionGroupCheckBoxModel,ConditionRadioButtonModel,ConditionRangePickerModel,ConditionSearchModel,ConditionSelectModel,ConditionTextAreaModel,ConditionTextModel,ConditionTextNumberModel,IProConditions,ProConditions } from './ProConditionsUtils';
 import { isArray } from 'legions-utils-tool/type.validation';
 import { CheckboxValueType } from 'antd/lib/checkbox/Group';
@@ -72,7 +72,7 @@ interface IProps {
     /**
       *  组件componentWillMount 执行
       */
-    onReady?: (instance: IQueryConditionsInstance) => void;
+    onReady?: (instance: InstanceQueryConditions) => void;
 
     size?: 'default' | 'small';
 

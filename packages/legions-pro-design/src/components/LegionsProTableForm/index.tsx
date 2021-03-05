@@ -17,7 +17,7 @@ import {Weaken,ClassOf} from '../interface'
 import { IProTableProps,InstanceProTable,ITableColumnConfigProps,ITableColumnConfig} from '../LegionsProTable/interface';
 
 import LegionsProForm from '../LegionsProForm'
-import { InstanceForm } from '../LegionsProForm/interface';
+import { InstanceProForm } from '../LegionsProForm/interface';
 import { IProFormProps } from '../LegionsProForm/ProForm';
 import styles from './style/index.modules.less';
 import { toJS } from 'mobx';
@@ -38,7 +38,7 @@ interface IHlFormConfig<F> extends Partial<IProFormProps<F>>,Weaken<Partial<IPro
    onReady?: (
         /**即将废弃，请formRef.viewModel.form 获取 */
         form: WrappedFormUtils,
-        formRef?: InstanceForm) => void;
+        formRef?: InstanceProForm) => void;
     controls: any[];
     /** 表单验证规则函数类 */
     ruleClassDeclaration?: Function;
@@ -98,7 +98,7 @@ export default class LegionsProTableForm<T = {},F = {}> extends LegionsProForm.C
     /** 行缓存, 避免表格render多次执行导致表单各种行为异常 */
     recordCache = new Map();
     /** 表单实体 */
-    formRef: InstanceForm = null;
+    formRef: InstanceProForm = null;
     rules: IFormRules<any> = null;
     /** 行唯一id */
     get uniqueKey() {
@@ -170,7 +170,7 @@ export default class LegionsProTableForm<T = {},F = {}> extends LegionsProForm.C
              });
          } */
     }
-    createControl = (control: any,key: number,formRef: InstanceForm) => {
+    createControl = (control: any,key: number,formRef: InstanceProForm) => {
         const { uid,viewModel: { form } } = formRef;
         /** 给表单字段id，名称，校验规则添加下标 */
         const newControl = {
@@ -225,7 +225,7 @@ export default class LegionsProTableForm<T = {},F = {}> extends LegionsProForm.C
         const formUtils = new LegionsProForm.ProFormUtils();
         const { proTableConfig,proTableConfig: { columns } = {},proFormConfig: { controls } = {} } = this.props;
         /** 根据表格列名和表单字段名自动匹配渲染 */
-        const newColumns = (formRef: InstanceForm) => (columns || []).map((item,pIndex): ITableColumnConfigProps => {
+        const newColumns = (formRef: InstanceProForm) => (columns || []).map((item,pIndex): ITableColumnConfigProps => {
             const control = controls && controls.find((i) => i.iAntdProps.id === item.dataIndex);
             const itemRender = {};
             if (item.render) {
@@ -253,7 +253,7 @@ export default class LegionsProTableForm<T = {},F = {}> extends LegionsProForm.C
         formUtils.renderCustomConfig({
             iAntdProps: formUtils.createAntdProps('table',1,'',{ span: 24 }),
             iFormProps: {
-                render: (form,iAntdProps,rules,formRef: InstanceForm) => {
+                render: (form,iAntdProps,rules,formRef: InstanceProForm) => {
                     const { data } = this.state
                     return formRef && <LegionsProTable<T>
                         {...proTableConfig}

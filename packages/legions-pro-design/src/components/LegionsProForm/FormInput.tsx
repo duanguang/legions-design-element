@@ -22,7 +22,7 @@ const { TextArea } = Input;
 import classNames from 'classnames';
 import { TooltipProps } from 'antd/lib/tooltip'
 /* import { debounce as debounces } from 'lodash' */
-import { InstanceForm } from './interface/form';
+import { InstanceProForm } from './interface/form';
 export class LabelWithInputModel {
     constructor(public iAntdProps: IAntdProps,
         public iFormProps: IFormInputProps,
@@ -44,7 +44,7 @@ export interface IFormInputProps extends Omit<InputProps,'onChange'>,TextAreaPro
          *
          * @memberof IFormRenderProps
          */
-        formRef?: InstanceForm) => JSX.Element,
+        formRef?: InstanceProForm) => JSX.Element,
     type?: 'textarea' | 'text' | 'number' | 'password',
     onChange?: (value: string) => void;
 }
@@ -67,7 +67,7 @@ interface IFormWithInputProps {
      * @type {string}
      * @memberof IFormWithInputProps
      */
-    formStore?: InstanceForm;
+    formStore?: InstanceProForm;
     // children?: React.ReactNode;
 }
 interface IForm {

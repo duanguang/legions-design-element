@@ -2,7 +2,7 @@ import React from 'react'
 
 import { Form,Input } from 'antd';
 import { WrappedFormUtils,IAntdProps,IAntdFormItemProps,IAntdRule } from '../interface/antd';
-import { InstanceForm } from './interface/form';
+import { InstanceProForm } from './interface/form';
 
 
 /**
@@ -52,7 +52,7 @@ export interface IFormRenderProps extends IAntdFormItemProps {
          *
          * @memberof IFormRenderProps
          */
-        formRef?: InstanceForm) => JSX.Element
+        formRef?: InstanceProForm) => JSX.Element
 }
 
 interface IFormWithRenderProps {
@@ -66,7 +66,7 @@ interface IFormWithRenderProps {
      * @type {string}
      * @memberof IFormWithInputProps
      */
-    formRef: InstanceForm;
+    formRef: InstanceProForm;
     // children?: React.ReactNode;
 }
 export default class FormRender extends React.Component<IFormWithRenderProps>{

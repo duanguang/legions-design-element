@@ -23,7 +23,7 @@ import moment from 'moment';
 import LegionsProTableCustomColumns from '../LegionsProTableCustomColumns';
 import LegionsProLineOverflow from '../LegionsProLineOverflow';
 import throttle from 'lodash.throttle';
-import { InstanceLegionsProModal } from '../LegionsProModal/interface';
+import { InstanceProModal } from '../LegionsProModal/interface';
 import { observable,runInAction,toJS,isObservable } from 'mobx'
 import { observableViewModel } from 'legions/store-utils'
 import { legionsThirdpartyPlugin } from 'legions-thirdparty-plugin';
@@ -65,8 +65,8 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
     viewModel: IViewModelProTableStore = null;
     tableThead = `table-thead${this.uid}`;
     clientHeight = document.body.clientHeight;
-    modalRef: InstanceLegionsProModal = null;
-    customColumnsModalRef: InstanceLegionsProModal = null;
+    modalRef: InstanceProModal = null;
+    customColumnsModalRef: InstanceProModal = null;
     selections: SelectionDecorator[] = [];
     /** 全链路监控跟踪id */
     traceId: string = '';

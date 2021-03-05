@@ -45,7 +45,7 @@ export interface IFieldsState {
     /**组件是否可见，一般用来控制组件显隐，默认值true 可见，false不可见   */
     visable?: boolean;
 }
-export interface IQueryConditionsInstance<Query = {}> {
+export interface InstanceQueryConditions<Query = {}> {
     store: InstanceType<typeof LegionsStoreConditions>;
     /** 只读 */
     readonly uid: string;

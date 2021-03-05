@@ -3,7 +3,7 @@ import { bind,observer } from 'legions/store-react'
 import { Button, Row } from 'antd';
 import { LegionsProConditions, LegionsProModalForm,LegionsProPageContainer } from '../../../components';
 import { observablePromise } from 'legions/store-utils';
-import {  IQueryConditionsInstance } from 'components/LegionsProConditions/interface';
+import {  InstanceQueryConditions } from 'components/LegionsProConditions/interface';
 import moment from 'moment';
 import { observable } from 'legions/store';
 import { ObservableMap,runInAction } from 'mobx';
@@ -14,7 +14,7 @@ interface Istate{
 
 @observer
 export default class QueryDemo extends React.Component<{},Istate>{
-    queryRef: IQueryConditionsInstance = null
+    queryRef: InstanceQueryConditions = null
     @observable smp:ObservableMap<string,{a:{b:number}}>=observable.map()
     constructor(props:{}) {
         super(props)

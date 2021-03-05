@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-02-01 22:24:42
- * @LastEditTime: 2021-03-02 19:05:45
+ * @LastEditTime: 2021-03-05 15:54:53
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProModalForm/index.tsx
@@ -15,12 +15,12 @@ import { shortHash } from 'legions-lunar/object-hash';
 import LegionsProForm from '../LegionsProForm';
 import { IProFormFields,ITabsFormItem } from '../LegionsStoreForm/interface';
 import { ClassOf } from 'legions-lunar/types/api/typescript';
-import { IGroup,InstanceForm } from '../LegionsProForm/interface';
+import { IGroup,InstanceProForm } from '../LegionsProForm/interface';
 import { TabPaneProps,TabsProps } from 'antd/lib/tabs';
 import { Weaken } from '../interface';
 import { InstanceLegionsModalForm } from './interface';
 import { ValidateCallback } from 'antd/lib/form/Form';
-import { ILegionsProModalProps,InstanceLegionsProModal } from '../LegionsProModal/interface';
+import { ILegionsProModalProps,InstanceProModal } from '../LegionsProModal/interface';
 import LegionsProModal from '../LegionsProModal'
 interface IProps<Model> {
     store?: InstanceType<typeof LegionsStoreForm>;
@@ -62,8 +62,8 @@ interface IProps<Model> {
 export default class LegionsProModalForm<Model> extends React.Component<IProps<Model>> {
 
     timeId = new Date().getTime();
-    formInstance: InstanceForm = null;
-    modalInstance: InstanceLegionsProModal = null;
+    formInstance: InstanceProForm = null;
+    modalInstance: InstanceProModal = null;
     constructor(props) {
         super(props);
 
@@ -103,7 +103,7 @@ export default class LegionsProModalForm<Model> extends React.Component<IProps<M
                             onFieldsChange={(_,fields: Partial<Model>) => {
                                 this.formInstance.store.updateFormInputData(this.formInstance.uid,fields)
                             }}
-                            onReady={(_,formInstance?: InstanceForm) => {
+                            onReady={(_,formInstance?: InstanceProForm) => {
                                 this.formInstance = { ...formInstance,that: this };
                                 this.props.onReady && this.props.onReady({
                                     formInstance: this.formInstance,

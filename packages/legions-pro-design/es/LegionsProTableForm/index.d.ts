@@ -3,7 +3,7 @@ import { IAntdRule, TableColumnConfig, WrappedFormUtils } from '../interface/ant
 import { Weaken } from '../interface';
 import { IProTableProps, ITableColumnConfig } from '../LegionsProTable/interface';
 import LegionsProForm from '../LegionsProForm';
-import { InstanceForm } from '../LegionsProForm/interface';
+import { InstanceProForm } from '../LegionsProForm/interface';
 import { IProFormProps } from '../LegionsProForm/ProForm';
 /** 分割符，用于给表单字段添加下标时使用 */
 export declare const HLTableFormSeparator = "___";
@@ -16,7 +16,7 @@ interface IHlFormConfig<F> extends Partial<IProFormProps<F>>, Weaken<Partial<IPr
     */
     onReady?: (
     /**即将废弃，请formRef.viewModel.form 获取 */
-    form: WrappedFormUtils, formRef?: InstanceForm) => void;
+    form: WrappedFormUtils, formRef?: InstanceProForm) => void;
     controls: any[];
     /** 表单验证规则函数类 */
     ruleClassDeclaration?: Function;
@@ -70,7 +70,7 @@ export default class LegionsProTableForm<T = {}, F = {}> extends LegionsProForm.
     /** 行缓存, 避免表格render多次执行导致表单各种行为异常 */
     recordCache: Map<any, any>;
     /** 表单实体 */
-    formRef: InstanceForm;
+    formRef: InstanceProForm;
     rules: IFormRules<any>;
     /** 行唯一id */
     get uniqueKey(): string;
@@ -81,7 +81,7 @@ export default class LegionsProTableForm<T = {}, F = {}> extends LegionsProForm.
     } & T)[];
     componentWillReceiveProps(nextProps: ProTableFormProps<T, F>): void;
     renderComponent(column: TableColumnConfig<T> & ITableColumnConfig): void;
-    createControl: (control: any, key: number, formRef: InstanceForm) => JSX.Element;
+    createControl: (control: any, key: number, formRef: InstanceProForm) => JSX.Element;
     /** 创建行表单 */
     createTable: () => (import("../LegionsProForm/FormInput").LabelWithInputModel | import("../LegionsProForm/FormInputNumber").LabelWithInputNumberModel | import("../LegionsProForm/FormDatePicker").LabelWithDatePickerModel | import("../LegionsProForm/FormMonthPicker").LabelWithMonthPickerModel | import("../LegionsProForm/FormRangePicker").LabelWithRangePickerModel | import("../LegionsProForm/FormUpload").LabelWithUploadModel | import("../LegionsProForm/FormSwitch").LabelWithSwitchModel | import("../LegionsProForm/FormRadioButton").LabelWithRadioButtonModel | import("../LegionsProForm/FormText").LabelWithTextModel | import("../LegionsProForm/interface").LabelWithSelectModel)[];
     /** 数据转化，列表数据转化为表单数据 */

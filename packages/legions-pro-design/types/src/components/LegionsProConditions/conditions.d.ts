@@ -3,7 +3,7 @@ import './style/index.less';
 import moment from 'moment';
 import LegionsStoreConditions from '../LegionsStoreConditions';
 import { IViewQueryConditionStore, ISelectAutoQuery } from '../LegionsStoreConditions/interface';
-import { IQueryConditionsInstance } from './interface';
+import { InstanceQueryConditions } from './interface';
 import { ConditionCheckBoxModel, ConditionDateModel, ConditionGroupCheckBoxModel, ConditionRadioButtonModel, ConditionRangePickerModel, ConditionSearchModel, ConditionSelectModel, ConditionTextAreaModel, ConditionTextModel, ConditionTextNumberModel, IProConditions, ProConditions } from './ProConditionsUtils';
 import { CheckboxValueType } from 'antd/lib/checkbox/Group';
 interface IProps {
@@ -31,7 +31,7 @@ interface IProps {
     /**
       *  组件componentWillMount 执行
       */
-    onReady?: (instance: IQueryConditionsInstance) => void;
+    onReady?: (instance: InstanceQueryConditions) => void;
     size?: 'default' | 'small';
     /**
      * 默认是否展开 折叠区域内容

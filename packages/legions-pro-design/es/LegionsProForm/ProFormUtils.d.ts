@@ -1,6 +1,6 @@
 import React from 'react';
 import { IAntdProps, IAntdRule, WrappedFormUtils, ColProps } from '../interface/antd';
-import { IFormCheckboxProps, IFormDatePickerProps, IFormInputNumberProps, IFormInputProps, IFormMonthPickerProps, IFormRadioButtonProps, IFormRangePickerProps, IFormRenderProps, IFormSelectProps, IFormSwitchProps, IFormTextProps, IFormUploadProps, InstanceForm, LabelWithCheckboxModel, LabelWithDatePickerModel, LabelWithSelectModel, LabelWithInputModel, LabelWithInputNumberModel, LabelWithMonthPickerModel, LabelWithRadioButtonModel, LabelWithRangePickerModel, LabelWithRenderModel, LabelWithSwitchModel, LabelWithTextModel, LabelWithUploadModel } from './interface';
+import { IFormCheckboxProps, IFormDatePickerProps, IFormInputNumberProps, IFormInputProps, IFormMonthPickerProps, IFormRadioButtonProps, IFormRangePickerProps, IFormRenderProps, IFormSelectProps, IFormSwitchProps, IFormTextProps, IFormUploadProps, InstanceProForm, LabelWithCheckboxModel, LabelWithDatePickerModel, LabelWithSelectModel, LabelWithInputModel, LabelWithInputNumberModel, LabelWithMonthPickerModel, LabelWithRadioButtonModel, LabelWithRangePickerModel, LabelWithRenderModel, LabelWithSwitchModel, LabelWithTextModel, LabelWithUploadModel } from './interface';
 import { BaseFormFields } from 'legions-lunar/model';
 import { ClassOf } from 'legions-lunar/types/api/typescript';
 interface IRenderComponentParams<T> {
@@ -29,7 +29,7 @@ interface IRenderComponentParams<T> {
      *
      * 可选参数，在自定义表单组件时，需要传入此数据，用于初始化表单组件项数据
      */
-    formRef?: InstanceForm;
+    formRef?: InstanceProForm;
 }
 interface IProFormUtils {
     componentModel: LabelWithInputModel | LabelWithInputNumberModel | LabelWithDatePickerModel | LabelWithMonthPickerModel | LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel | LabelWithRadioButtonModel | LabelWithTextModel | LabelWithSelectModel;
@@ -117,7 +117,7 @@ export declare class ProFormUtils<Store, global = {}> {
      * @returns
      * @memberof HLFormUtils
      */
-    createFormComponent(controls: IProFormUtils['componentModel'], form: WrappedFormUtils, formUid: string, formRef: InstanceForm, key?: string | number): JSX.Element;
+    createFormComponent(controls: IProFormUtils['componentModel'], form: WrappedFormUtils, formUid: string, formRef: InstanceProForm, key?: string | number): JSX.Element;
 }
 declare type IFormRules<FormRules> = {
     [P in keyof FormRules]: IAntdRule[];

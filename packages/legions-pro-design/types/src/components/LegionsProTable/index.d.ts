@@ -5,7 +5,7 @@ import { IViewModelProTableStore, ITableAutoQuery } from '../LegionsStoreTable/i
 import { SelectionDecorator } from '../interface/antd';
 import { ITableColumnConfig, IExportCsv, IProTableProps, ICustomColumnsConfig } from './interface';
 import { ISchedule } from '../LegionsStore/interface';
-import { InstanceLegionsProModal } from '../LegionsProModal/interface';
+import { InstanceProModal } from '../LegionsProModal/interface';
 import { ProTableBaseClass } from './ProTableBaseClass';
 interface IState {
 }
@@ -27,8 +27,8 @@ export default class LegionsProTable<TableRow = {}, Model = {}> extends React.Co
     viewModel: IViewModelProTableStore;
     tableThead: string;
     clientHeight: number;
-    modalRef: InstanceLegionsProModal;
-    customColumnsModalRef: InstanceLegionsProModal;
+    modalRef: InstanceProModal;
+    customColumnsModalRef: InstanceProModal;
     selections: SelectionDecorator[];
     /** 全链路监控跟踪id */
     traceId: string;
