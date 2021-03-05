@@ -56,6 +56,7 @@ export class ProTable extends LegionsProTable.ProTableBaseClass<IProps,{size:any
       title: '货物名称',
       width: '100px',
       sorter: true,
+      tooltip:true,
     })
     this.pushColumns('typeName',{
       title: '类别',
@@ -144,7 +145,7 @@ export class ProTable extends LegionsProTable.ProTableBaseClass<IProps,{size:any
               
               },
               token: (() => {
-                return process.env.environment === 'dev' ? 'SESSION=86ccd0dd-a4f5-4d27-9ecd-fa3604614977' : 'SESSION=86ccd0dd-a4f5-4d27-9ecd-fa3604614977';
+                return process.env.environment === 'dev' ? 'SESSION=61e35aa5-13b4-46c2-9d8b-1cf3cf17864f' : 'SESSION=61e35aa5-13b4-46c2-9d8b-1cf3cf17864f';
               })(),
 
               method: 'post',

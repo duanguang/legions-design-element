@@ -1,0 +1,22 @@
+.legions-pro-lineoverflow{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+    word-break: break-all;
+    box-sizing: border-box;
+    .tooltip-rel{
+        position: relative;
+        overflow-y: hidden;
+        display: flex;
+        align-items: center;
+        .tooltip-content{
+            height: 19px;
+            display: inline-block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            /* white-space: pre-wrap; */
+            white-space: nowrap;
+            vertical-align: middle;
+        }
+    }
+}

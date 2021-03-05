@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-13 11:06:29
- * @LastEditTime: 2021-02-18 16:55:22
+ * @LastEditTime: 2021-03-05 17:05:06
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProTable/ProTableBaseClass.tsx
@@ -12,7 +12,7 @@ import { observable,action,StoreModules, } from 'legions/store';
 import { ObservableMap,toJS } from 'mobx';
 import * as mobx from 'mobx';
 import { TableColumnConfig } from '../interface/antd';
-import { InstanceProTable } from './interface';
+import { InstanceProTable, ITableColumnConfigProps } from './interface';
 import { PageListEntity } from './pageListEntity';
 import { ClassOf } from 'legions-lunar/types/api/typescript';
 
@@ -33,9 +33,9 @@ export class ProTableBaseClass<P,S,Columns = {},QueryParams = any> extends React
     tableRef: InstanceProTable = null;
     //@ts-ignore
     queryPrams: QueryParams = {}
-    @observable private columnsDataMap = observable.map<string,TableColumnConfig<Columns>>();
+    @observable private columnsDataMap = observable.map<string,ITableColumnConfigProps<Columns>>();
     /** 列描述数据对象*/
-    @observable columnsData: Array<TableColumnConfig<Columns>> = [];
+    @observable columnsData: Array<ITableColumnConfigProps<Columns>> = [];
     
     constructor(props:P) { 
         super(props)
@@ -47,7 +47,7 @@ export class ProTableBaseClass<P,S,Columns = {},QueryParams = any> extends React
                     this.columnsData = toJS(this.columnsDataMap.values())
                 }
             } else if (mobx['configure']) { 
-                const values:TableColumnConfig<Columns>[] = [];
+                const values:ITableColumnConfigProps<Columns>[] = [];
                 this.columnsDataMap.forEach((item, key) => {
                   values.push(item);
                 });
@@ -64,7 +64,7 @@ export class ProTableBaseClass<P,S,Columns = {},QueryParams = any> extends React
      * @param {string} key column.dataIndex 或者 column.key 
      * @memberof ProTableBaseClass
      */
-    @action pushColumns(key:string,column:TableColumnConfig<Columns>) {
+    @action pushColumns(key:string,column:ITableColumnConfigProps<Columns>) {
         if (!this.columnsDataMap.has(key)) {
             if (!column['key']) {
                 column['key'] = key;
@@ -82,7 +82,7 @@ export class ProTableBaseClass<P,S,Columns = {},QueryParams = any> extends React
      * @param {TableColumnConfig<Columns>} column
      * @memberof ProTableBaseClass
      */
-    @action updateColumns(key: string,column: TableColumnConfig<Columns>) {
+    @action updateColumns(key: string,column: ITableColumnConfigProps<Columns>) {
         if (this.columnsDataMap.has(key)) {
             const old = this.columnsDataMap.get(key);
             this.columnsDataMap.set(key,{...old,...column});

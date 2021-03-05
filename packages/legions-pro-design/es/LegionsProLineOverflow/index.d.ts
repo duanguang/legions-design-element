@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import './style/index.less';
 interface IProps {
     width?: number | string;
     text: string | React.ReactNode;

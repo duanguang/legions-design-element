@@ -1,6 +1,5 @@
 import React from 'react';
-import { TableColumnConfig } from '../interface/antd';
-import { InstanceProTable } from './interface';
+import { InstanceProTable, ITableColumnConfigProps } from './interface';
 import { PageListEntity } from './pageListEntity';
 /**
  * 列表组件基类
@@ -20,7 +19,7 @@ export declare class ProTableBaseClass<P, S, Columns = {}, QueryParams = any> ex
     queryPrams: QueryParams;
     private columnsDataMap;
     /** 列描述数据对象*/
-    columnsData: Array<TableColumnConfig<Columns>>;
+    columnsData: Array<ITableColumnConfigProps<Columns>>;
     constructor(props: P);
     /**
      * 添加表格列数据
@@ -30,7 +29,7 @@ export declare class ProTableBaseClass<P, S, Columns = {}, QueryParams = any> ex
      * @param {string} key column.dataIndex 或者 column.key
      * @memberof ProTableBaseClass
      */
-    pushColumns(key: string, column: TableColumnConfig<Columns>): void;
+    pushColumns(key: string, column: ITableColumnConfigProps<Columns>): void;
     /**
      * 更新表格列数据信息
      *
@@ -38,7 +37,7 @@ export declare class ProTableBaseClass<P, S, Columns = {}, QueryParams = any> ex
      * @param {TableColumnConfig<Columns>} column
      * @memberof ProTableBaseClass
      */
-    updateColumns(key: string, column: TableColumnConfig<Columns>): void;
+    updateColumns(key: string, column: ITableColumnConfigProps<Columns>): void;
     /**
      * 刷新表格项数据
      *
