@@ -8,6 +8,7 @@ import { ProPieDemo } from './pro.echart.pie/base';
 import PartsDemo from './pro.echarts.parts';
 import { MapDemo, MapSimpleDemo } from './pro.echarts.chart/charts.map';
 import { LegionsProEchartsLayout } from 'components';
+import { TableDemo } from './pro.echarts.parts/table';
 
 export default class App extends React.Component {
     unstable_handleError(e) {
@@ -26,11 +27,11 @@ export default class App extends React.Component {
                 {/* chart合集 */}
                 <Route path="/chart" exact component={LegionsProEchartsChartPieDemo}></Route>
                 {/* chart.map */}
-                <Route path="/chart/map" component={() =>
-                    <LegionsProEchartsLayout><MapSimpleDemo></MapSimpleDemo><MapDemo/></LegionsProEchartsLayout>
-                }></Route>
+                <Route path="/chart/map" component={() =><LegionsProEchartsLayout><MapSimpleDemo></MapSimpleDemo><MapDemo/></LegionsProEchartsLayout>}></Route>
                 {/* 零件，button，input，date-picker, radio等等 */}
-                <Route path="/parts" component={PartsDemo}></Route>
+                <Route path="/parts" exact component={PartsDemo}></Route>
+                {/* 表格 */}
+                <Route path="/parts/table" component={TableDemo}></Route>
                 {/* 列表模型 */}
                 <Route path="/box" component={LegionsProEchartsBoxDemo}></Route>
                 {/* 饼图 */}

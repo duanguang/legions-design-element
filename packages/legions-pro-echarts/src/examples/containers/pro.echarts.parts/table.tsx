@@ -67,19 +67,27 @@ export class TableDemo extends React.Component{
                 </ProCol>
                 {/* 分页 */}
                 <ProCol span={6}>
-                    <LegionsProEchartsBox title="分页" height="300px">
+                    <LegionsProEchartsBox title="横竖向滚动条+分页" height="300px">
                         <LegionsProEchartsTable
                             style={{padding: 10}}
-                            scroll={{y: 170}}
+                            scroll={{x: 500, y: 180}}
                             columns={[
                                 {title: '排名',width: 100,dataIndex: 'a', sorter: true},
                                 {title: '订单数',width: 100,dataIndex: 'b', sorter: true},
-                                {title: '涨幅',width: 100,dataIndex: 'c', sorter: true},
+                                {title: '涨幅1',width: 100,dataIndex: 'c', sorter: true},
+                                {title: '涨幅2',width: 100,dataIndex: 'd', sorter: true},
+                                {title: '涨幅3',width: 100,dataIndex: 'e', sorter: true},
+                                {title: '涨幅4',width: 100,dataIndex: 'f', sorter: true},
+                                {title: '涨幅5',width: 100,dataIndex: 'g', sorter: true},
                             ]}
                             dataSource={Array.from({length: 25}).map((_, index) => ({
                                 a: index,
                                 b: index,
                                 c: index,
+                                d: index,
+                                e: index,
+                                f: index,
+                                g: index,
                             }))}
                             pagination={{
                                 pageSize: 10,
@@ -101,67 +109,18 @@ export class TableDemo extends React.Component{
                                 {title: '订单数',width: 100,dataIndex: 'b', sorter: true},
                                 {title: '涨幅',width: 100,dataIndex: 'c', sorter: true},
                             ]}
-                            dataSource={Array.from({length: 25}).map((_, index) => ({
+                            dataSource={Array.from({length: 5}).map((_, index) => ({
                                 a: index,
                                 b: index,
                                 c: index,
                             }))}
-                            pagination={{
-                                pageSize: 10,
-                                total: 25
-                            }}
+                            pagination={false}
                         ></LegionsProEchartsTable>
                     </LegionsProEchartsBox>
                 </ProCol>
-                {/* 高度自适应400px */}
+                {/* 高度自适应300px */}
                 <ProCol span={6}>
-                    <LegionsProEchartsBox title="高度自适应400px" height="400px">
-                        <LegionsProEchartsTable
-                            isFullScreen
-                            style={{padding: 10}}
-                            columns={[
-                                {title: '排名',width: 100,dataIndex: 'a', sorter: true},
-                                {title: '订单数',width: 100,dataIndex: 'b', sorter: true},
-                                {title: '涨幅',width: 100,dataIndex: 'c', sorter: true},
-                            ]}
-                            dataSource={Array.from({length: 25}).map((_, index) => ({
-                                a: index,
-                                b: index,
-                                c: index,
-                            }))}
-                            pagination={{
-                                pageSize: 10,
-                                total: 25
-                            }}
-                        ></LegionsProEchartsTable>
-                    </LegionsProEchartsBox>
-                </ProCol>
-                {/* 高度自适应500px */}
-                <ProCol span={6}>
-                    <LegionsProEchartsBox title="高度自适应500px(有分页)" height="500px">
-                        <LegionsProEchartsTable
-                            isFullScreen
-                            style={{padding: 10}}
-                            columns={[
-                                {title: '排名',width: 100,dataIndex: 'a', sorter: true},
-                                {title: '订单数',width: 100,dataIndex: 'b', sorter: true},
-                                {title: '涨幅',width: 100,dataIndex: 'c', sorter: true},
-                            ]}
-                            dataSource={Array.from({length: 25}).map((_, index) => ({
-                                a: index,
-                                b: index,
-                                c: index,
-                            }))}
-                            pagination={{
-                                pageSize: 10,
-                                total: 25
-                            }}
-                        ></LegionsProEchartsTable>
-                    </LegionsProEchartsBox>
-                </ProCol>
-                {/* 高度自适应500px */}
-                <ProCol span={6}>
-                    <LegionsProEchartsBox title="高度自适应500px(无分页)" height="500px">
+                    <LegionsProEchartsBox title="高度自适应300px" height="300px">
                         <LegionsProEchartsTable
                             isFullScreen
                             style={{padding: 10}}
@@ -176,6 +135,29 @@ export class TableDemo extends React.Component{
                                 c: index,
                             }))}
                             pagination={false}
+                        ></LegionsProEchartsTable>
+                    </LegionsProEchartsBox>
+                </ProCol>
+                {/* 高度自适应300px */}
+                <ProCol span={6}>
+                    <LegionsProEchartsBox title="高度自适应300px(分页)" height="300px">
+                        <LegionsProEchartsTable
+                            isFullScreen
+                            style={{padding: 10}}
+                            columns={[
+                                {title: '排名',width: 100,dataIndex: 'a', sorter: true},
+                                {title: '订单数',width: 100,dataIndex: 'b', sorter: true},
+                                {title: '涨幅',width: 100,dataIndex: 'c', sorter: true},
+                            ]}
+                            dataSource={Array.from({length: 55}).map((_, index) => ({
+                                a: index,
+                                b: index,
+                                c: index,
+                            }))}
+                            pagination={{
+                                pageSize: 20,
+                                total: 55
+                            }}
                         ></LegionsProEchartsTable>
                     </LegionsProEchartsBox>
                 </ProCol>

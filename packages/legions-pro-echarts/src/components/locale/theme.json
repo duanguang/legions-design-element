@@ -37,6 +37,9 @@
                 "width": "3"
             }
         },
+        "areaStyle": {
+            "opacity": 0.2
+        },
         "symbolSize": "8",
         "symbol": "emptyCircle",
         "smooth": false

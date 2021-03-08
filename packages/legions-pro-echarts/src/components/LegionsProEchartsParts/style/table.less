@@ -2,6 +2,7 @@
 
 @tableCls: ~'@{prefixCls}-table';
 @tableFullCls: ~'@{prefixCls}-table-full';
+@tablePaginationCls: ~'@{prefixCls}-table-pagination';
 
 /* 配置大屏主题，修改antd表格样式 */
 .@{tableCls}.ant-table-wrapper{
@@ -83,7 +84,7 @@
         border-bottom: 0;
     }
     .ant-table-pagination{
-        margin: 10px 0;
+        margin: 10px 0 2px;
         .ant-pagination-item,
         .ant-pagination-prev,
         .ant-pagination-next
@@ -116,9 +117,16 @@
     .ant-spin-container,
     .ant-table,
     .ant-table-content,
-    .ant-table-body,
-    table{
+    .ant-table-scroll,
+    .ant-table-body{
         height: 100%;
     }
-
+    .ant-table-pagination{
+        position: absolute;
+        bottom: 0;
+        right: 0;
+    }
+    &.@{tablePaginationCls} .ant-table{
+        height: calc(100% - 30px);
+    }
 }

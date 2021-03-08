@@ -18,11 +18,12 @@ export default class LegionsProEchartsTable<T> extends React.Component<IProps<T>
     render() {
         const {className = '', isFullScreen, ...props} = this.props;
         const full = isFullScreen ? `${prefixCls}-table-full` : '';
+        const pagination = props.pagination ? `${prefixCls}-table-pagination` : '';
         return (
             <Table<T>
                 size="middle"
                 {...props}
-                className={`${prefixCls}-table ${full} ${className}`}
+                className={`${prefixCls}-table ${full} ${pagination} ${className}`}
             ></Table>
         )
     }
