@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.3
+  *  legions-pro-design v0.0.7-beta.4
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -161,7 +161,7 @@ var LegionsProTabsForm = /** @class */ (function (_super) {
                 },
                 submit: function (callback) {
                     var e_2, _a;
-                    if (_this.validateFields()) {
+                    if (!_this.validateFields()) {
                         var values = [];
                         try {
                             for (var _b = __values(_this.storeView.entries), _c = _b.next(); !_c.done; _c = _b.next()) {
@@ -200,6 +200,10 @@ var LegionsProTabsForm = /** @class */ (function (_super) {
             }
         });
     };
+    /** 验证表单
+     *
+     * 如果有错误信息则返回true,否则返回false
+     */
     LegionsProTabsForm.prototype.validateFields = function () {
         var e_3, _a;
         var values = [];

@@ -71,6 +71,10 @@ export default class LegionsProTabsForm<Model> extends React.Component<IProps<Mo
         addTabsMap: (isSwitchTabKey?: boolean, index?: number, callback?: () => void) => string;
     };
     componentWillMount(): void;
+    /** 验证表单
+     *
+     * 如果有错误信息则返回true,否则返回false
+     */
     validateFields(): boolean;
     renderForm(key: string, tab: any): JSX.Element;
     handleTabChange: (activeKey: string) => void;

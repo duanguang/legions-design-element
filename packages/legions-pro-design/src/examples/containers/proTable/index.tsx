@@ -125,7 +125,7 @@ export class ProTable extends LegionsProTable.ProTableBaseClass<IProps,{size:any
               },
               transform: (value) => {
                 if (value && !value.isPending && value.value) {
-                  const { result,current,pageSize,total } = value.value;
+                  const { result=[],current,pageSize,total } = value.value;
 
                   return {
                     data: result.map((item,index) => {

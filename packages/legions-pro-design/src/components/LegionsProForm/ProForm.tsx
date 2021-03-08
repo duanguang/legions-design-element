@@ -246,7 +246,6 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
     }
     /** 重写表单验证提交方法 */
     validateFields(...options) {
-        console.log(options);
         let callback: ValidateCallback = null;
         const newCallback = (callbacks: ValidateCallback) => (error,values) => {
             this.logger('hlFormContainer-validateFields',{ error,values,traceId: this.traceId })

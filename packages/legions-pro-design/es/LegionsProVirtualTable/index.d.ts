@@ -60,9 +60,9 @@ export default class LegionsProVirtualTable extends Component<IProTableProps, IS
         onFilterDropdownVisibleChange?: (visible: boolean) => void;
         sorter: boolean | ((a: any, b: any) => number);
         colSpan?: number;
-        width?: string | number;
+        width?: React.ReactText;
         className?: string;
-        fixed?: boolean | "left" | "right";
+        fixed?: boolean | "right" | "left";
         filterIcon?: React.ReactNode;
         filteredValue?: any[];
         sortOrder?: boolean | "ascend" | "descend";

@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.3
+  *  legions-pro-design v0.0.7-beta.4
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -151,9 +151,6 @@ var AbstractForm = /** @class */ (function (_super) {
         if (formref) {
             var viewStore = formref.store.get(uid);
             if (viewStore.renderNodeQueue.has(eleId)) {
-                if (eleId === 'text') {
-                    console.log(viewStore.renderNodeQueue, viewStore.renderNodeQueue.has(eleId), eleId);
-                }
                 viewStore.renderNodeQueue.delete(eleId);
                 return true;
             }
@@ -1773,7 +1770,6 @@ var ProForm = /** @class */ (function (_super) {
         for (var _i = 0; _i < arguments.length; _i++) {
             options[_i] = arguments[_i];
         }
-        console.log(options);
         var callback = null;
         var newCallback = function (callbacks) { return function (error, values) {
             _this.logger('hlFormContainer-validateFields', { error: error, values: values, traceId: _this.traceId });
@@ -1809,10 +1805,12 @@ var ProForm = /** @class */ (function (_super) {
             var value = _this.storeView.getFormItemField(name);
             if (value) {
                 if (value.type === 'normal') {
+                    //@ts-ignore
                     callback && callback(value.value);
                     insertRenderEle();
                 }
                 if (value.type === 'custom') {
+                    //@ts-ignore
                     callback && callback(value.value);
                     insertRenderEle();
                     _this.forceUpdate();

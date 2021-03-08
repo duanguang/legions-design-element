@@ -2,16 +2,16 @@
 category: Components
 cols: 1
 type: 数据展示
-title: ProMLayout
+title: ProLayout
 subtitle: 页面布局
 ---
 
-ProTable 的诞生是为了解决项目中需要写很多 table 的样板代码的问题，所以在其中做了封装了很多常用的逻辑。这些封装可以简单的分类为预设行为与预设逻辑。
+ProLayout 可以提供一个标准又不失灵活的中后台标准布局，同时提供一键切换布局形态，自动生成菜单等功能。与 PageContainer 配合使用可以自动生成面包屑，页面标题，并且提供低成本方案接入页脚工具栏。
 
 
 ## 何时使用
 
-当你的表格需要与服务端进行交互或者需要多种单元格样式时，ProTable 是不二选择。
+页面中需要承载内容时，可以使用 ProLayout 来减少布局成本
 
 ## API
 

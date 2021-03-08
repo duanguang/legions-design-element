@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-28 15:58:15
- * @LastEditTime: 2021-03-05 15:57:34
+ * @LastEditTime: 2021-03-08 09:33:59
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProTabsForm/index.tsx
@@ -107,7 +107,7 @@ export default class LegionsProTabsForm<Model> extends React.Component<IProps<Mo
                     return this.validateFields();
                 },
                 submit: (callback?) => {
-                    if (this.validateFields()) {
+                    if (!this.validateFields()) {
                         const values:Array<ITabsFormItem> =[]
                         for (let item of this.storeView.entries) {
                             const key = item[0]
@@ -137,6 +137,10 @@ export default class LegionsProTabsForm<Model> extends React.Component<IProps<Mo
             }
         })
     }
+    /** 验证表单
+     * 
+     * 如果有错误信息则返回true,否则返回false
+     */
     validateFields() {
         const values:Array<ITabsFormItem> =[]
         for (let item of this.storeView.entries) {

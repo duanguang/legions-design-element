@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-10 16:14:09
- * @LastEditTime: 2021-03-05 17:14:14
+ * @LastEditTime: 2021-03-08 09:39:30
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/script/entiy.js
@@ -39,9 +39,6 @@ const array_component = [
 'LegionsProNumericInput',
 'LegionsProPageContainer',
   'LegionsProPrint', */
-  
-  'LegionsProLineOverflow',
-
 /*   'LegionsProQrCode',
 'LegionsProConditions',
   'LegionsProScrawl',
