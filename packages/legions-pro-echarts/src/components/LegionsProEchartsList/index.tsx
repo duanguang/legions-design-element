@@ -73,13 +73,12 @@ export default class LegionsProEchartsList<T = {}> extends React.Component<IProp
                             if (renderItems.render === void 0) {
                                 if(renderItems.tooltip){
                                     cells.push(
-                                        <LegionsProLineOverflow text={item[keys]}>
-                                            <Col span={renderItems.colSpan || 3}
-                                                offset={renderItems.offset || 2}
-                                                className={`box-lit-title-text-overflow  ${renderItems.className || 'box-lit-title'}`}>
-                                                {item[keys]}
-                                            </Col>
-                                        </LegionsProLineOverflow>
+                                        <Col span={renderItems.colSpan || 3}
+                                            offset={renderItems.offset || 2}
+                                            className={`${renderItems.className || 'box-lit-title'}`}>
+                                            {<LegionsProLineOverflow text={item[keys]}></LegionsProLineOverflow>}
+                                        </Col>
+
                                     )
                                 }else{
                                     cells.push(

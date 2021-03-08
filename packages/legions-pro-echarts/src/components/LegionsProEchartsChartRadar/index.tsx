@@ -18,7 +18,7 @@ export class LegionsProEchartsRadarProps extends LegionsProEchartsPropsTypes<Rad
 
 }
 
-/** 饼图组件 */
+/** 雷达组件 */
 export default class LegionsProEchartsChartRadar extends React.PureComponent<LegionsProEchartsRadarProps>{
     static defaultProps: Readonly<LegionsProEchartsRadarProps> = new LegionsProEchartsRadarProps()
 

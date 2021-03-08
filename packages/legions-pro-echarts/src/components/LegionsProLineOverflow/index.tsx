@@ -1,15 +1,18 @@
 import React,{ Component } from 'react'
 import { Tooltip } from 'antd';
 import { TooltipProps } from 'antd/lib/tooltip';
-interface IProps extends TooltipProps{
+interface IProps{
     text: string | React.ReactNode,
+    width?:number | string
 }
 export default class LegionsProLineOverflow extends Component<IProps> {
     render() {
-        const {text,title,placement} = this.props
+        const {text,width} = this.props
         return (
-            <Tooltip placement={placement || 'leftTop'} title={title || text || ''}>
-              {this.props.children}
+            <Tooltip placement={'leftTop'} title={text || ''}>
+                <div style={{whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis',width:width || '100%'}}>
+                    {text || ''}
+                </div>
             </Tooltip>
         )
     }

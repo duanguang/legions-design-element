@@ -20,9 +20,7 @@ import { LegionsProEchartsBox,LegionsProLineOverflow } from 'legions-pro-echarts
 export class Demo extends React.Component {
     render() {
         return (
-            <LegionsProEchartsBox title="气泡框" height={100}>
-                <LegionsProLineOverflow text={'prompt text'} >气泡框</LegionsProLineOverflow>
-            </LegionsProEchartsBox>
+             <div><LegionsProLineOverflow text={'prompt text'} width={65}></LegionsProLineOverflow></div>
         )
     }
 }

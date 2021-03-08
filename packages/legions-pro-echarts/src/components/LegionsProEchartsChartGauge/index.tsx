@@ -18,7 +18,7 @@ export class LegionsProEchartsGaugeProps extends LegionsProEchartsPropsTypes<Gau
 
 }
 
-/** 饼图组件 */
+/** 仪表盘组件 */
 export default class LegionsProEchartsChartGauge extends React.PureComponent<LegionsProEchartsGaugeProps>{
     static defaultProps: Readonly<LegionsProEchartsGaugeProps> = new LegionsProEchartsGaugeProps()
 
