@@ -58,6 +58,9 @@ export default class LegionsProEchartsCore<P> extends Component<LegionsProEchart
             }
         }
     }
+    componentWillUnmount() {
+        this.dispose()
+    }
     renderEchartDom = () => {
         /* 获取Echarts实例，没有则初始化 */
         const echartObj = this.echartsLib.getInstanceByDom(this.echartsElement) || this.echartsLib.init(this.echartsElement, this.props.theme, this.props.opts);

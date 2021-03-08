@@ -3,11 +3,14 @@ import  LegionsProEcharts from '../LegionsProEcharts';
 import { echarts, LegionsProEchartsOption, LegionsProEchartsPropsTypes } from '../interface'
 import { merge } from 'lodash';
 import { EffectScatterChart, EffectScatterSeriesOption, LinesChart, LinesSeriesOption, MapChart, MapSeriesOption } from 'echarts/charts';
-echarts.use([MapChart,LinesChart,EffectScatterChart]);
+import { GeoComponentOption, GeoComponent } from 'echarts/components'
+echarts.use([GeoComponent,MapChart,LinesChart,EffectScatterChart]);
 const world = require('../locale/world.json');
 const nameCN = require('../locale/country-name-zh.json')
 
-export class LegionsProEchartsMapProps extends LegionsProEchartsPropsTypes<MapSeriesOption | LinesSeriesOption | EffectScatterSeriesOption>{
+type MapOption = MapSeriesOption | LinesSeriesOption | EffectScatterSeriesOption | GeoComponentOption
+
+export class LegionsProEchartsMapProps extends LegionsProEchartsPropsTypes<MapOption>{
     /** 是否初始化世界地图, 默认true */
     initRegisterWorldMap?: boolean = true
 }
@@ -20,14 +23,13 @@ export default class LegionsProEchartsMap extends React.Component<LegionsProEcha
     componentWillMount() {
         this.props.initRegisterWorldMap && echarts.registerMap('world', LegionsProEchartsMap.worldData)
     }
-    get option(): LegionsProEchartsOption<MapSeriesOption | LinesSeriesOption | EffectScatterSeriesOption> {
+    get option(): LegionsProEchartsOption<MapOption> {
         return {
             tooltip: {
                 trigger: 'item',
             },
             geo: {
                 map: 'world',
-                geoIndex: 0,
                 zoom: 1,
                 roam: false,
                 label: {
@@ -77,6 +79,7 @@ export default class LegionsProEchartsMap extends React.Component<LegionsProEcha
                         scale: 4,
                         brushType: 'fill'
                     },
+                    tooltip: { show: false },
                     label: {
                         formatter: '{b}',
                         position: 'right',
@@ -94,6 +97,7 @@ export default class LegionsProEchartsMap extends React.Component<LegionsProEcha
                 {
                     type: 'lines',
                     zlevel: 2,
+                    coordinateSystem: 'geo',
                     tooltip: { show: false },
                     effect: {
                         show: true,
@@ -115,7 +119,7 @@ export default class LegionsProEchartsMap extends React.Component<LegionsProEcha
     render() {
         const { option } = this.props;
         return (
-            <LegionsProEcharts<MapSeriesOption | LinesSeriesOption | EffectScatterSeriesOption>
+            <LegionsProEcharts<MapOption>
                 {...this.props}
                 option={merge(this.option, option)}
             ></LegionsProEcharts>
