@@ -1,4 +1,3 @@
-import { Col,Progress,Row } from 'antd';
 import LegionsProEchartsList from '../../../components/LegionsProEchartsList';
 import LegionsProEchartsLayout from '../../../components/LegionsProEchartsLayout';
 import React from 'react';
