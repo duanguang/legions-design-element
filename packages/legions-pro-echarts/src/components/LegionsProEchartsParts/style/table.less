@@ -3,6 +3,8 @@
 @tableCls: ~'@{prefixCls}-table';
 @tableFullCls: ~'@{prefixCls}-table-full';
 @tablePaginationCls: ~'@{prefixCls}-table-pagination';
+@tableTooltipCls: ~'@{prefixCls}-table-tooltip';
+@tableAlignCls: ~'@{prefixCls}-table-align';
 
 /* 配置大屏主题，修改antd表格样式 */
 .@{tableCls}.ant-table-wrapper{
@@ -10,6 +12,7 @@
         border-radius: 0;
         table {
             border-radius: 0;
+            border-color: rgba(23,98,121,1);
             table-layout: fixed;
         }
     }
@@ -53,6 +56,13 @@
             color: #fff;
             text-align: center;
             padding: 8px 4px;
+            border-color: #176279;
+            &.@{tableAlignCls}-left {
+                text-align: left;
+            }
+            &.@{tableAlignCls}-right {
+                text-align: right;
+            }
         }
     }
     .ant-table-tbody {
@@ -64,8 +74,8 @@
             position: relative;
             color: #fff;
             background: transparent!important;
-            border-bottom-color: rgba(23,98,121,1);
             padding: 6px 4px;
+            border-color: #176279;
             &:last-child::after {
                 content: '';
                 display: table-cell;
@@ -75,6 +85,12 @@
                 background-color: rgba(0,230,252,1);
                 width: 6px;
                 height: 2px;
+            }
+            &.@{tableAlignCls}-left {
+                text-align: left;
+            }
+            &.@{tableAlignCls}-right {
+                text-align: right;
             }
         }
     }
@@ -129,4 +145,10 @@
     &.@{tablePaginationCls} .ant-table{
         height: calc(100% - 30px);
     }
+}
+/* 单元格超出隐藏 */
+.@{tableTooltipCls} {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

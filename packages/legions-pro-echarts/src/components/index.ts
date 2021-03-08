@@ -10,7 +10,6 @@
 export { default as LegionsProEchartsBox } from './LegionsProEchartsBox'
 export { default as LegionsProEcharts }  from './LegionsProEcharts'
 export { default as LegionsProEchartsCore }  from './LegionsProEchartsCore';
-export { default as LegionsProEchartsList }  from './LegionsProEchartsList';
 export { default as LegionsProEchartsChartBar }  from './LegionsProEchartsChartBar';
 export { default as LegionsProEchartsChartCard }  from './LegionsProEchartsChartCard';
 export { default as LegionsProEchartsChartLine }  from './LegionsProEchartsChartLine';
@@ -21,5 +20,4 @@ export { default as LegionsProEchartsLayout }  from './LegionsProEchartsLayout';
 export { default as LegionsProEchartsLiquidFill }  from './LegionsProEchartsLiquidFill';
 export { default as LegionsProEchartsWordCloud }  from './LegionsProEchartsWordCloud';
 export { default as LegionsProEchartsMap }  from './LegionsProEchartsMap';
-export { default as LegionsProLineOverflow} from './LegionsProLineOverflow'
 export * from './LegionsProEchartsParts';

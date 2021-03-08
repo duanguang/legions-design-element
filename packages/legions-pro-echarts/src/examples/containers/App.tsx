@@ -1,10 +1,8 @@
 import { Route, Switch } from 'legions/router';
 import React from 'react';
-import { LegionsProEchartsBoxDemo } from './pro.echarts.box';
 import { LegionsProEchartsChartPieDemo } from './pro.echarts.chart';
 import { LayoutBaseDemo } from './pro.echarts.layout/base';
 import { LayoutFullDemo } from './pro.echarts.layout/full';
-import { ProPieDemo } from './pro.echart.pie/base';
 import PartsDemo from './pro.echarts.parts';
 import { MapDemo, MapSimpleDemo } from './pro.echarts.chart/charts.map';
 import { LegionsProEchartsLayout } from 'components';
@@ -32,10 +30,6 @@ export default class App extends React.Component {
                 <Route path="/parts" exact component={PartsDemo}></Route>
                 {/* 表格 */}
                 <Route path="/parts/table" component={TableDemo}></Route>
-                {/* 列表模型 */}
-                <Route path="/box" component={LegionsProEchartsBoxDemo}></Route>
-                {/* 饼图 */}
-                <Route path="/pie" component={ProPieDemo}></Route>
             </Switch>
         );
     }

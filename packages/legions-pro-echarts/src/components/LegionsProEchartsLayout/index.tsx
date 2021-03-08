@@ -1,5 +1,7 @@
-import Row, { RowProps } from 'antd/lib/grid/row';
-import Col, { ColProps } from 'antd/lib/grid/col';
+
+import { Col, Row } from 'antd';
+import { RowProps } from 'antd/lib/grid/row';
+import { ColProps } from 'antd/lib/grid/col';
 import React from 'react';
 import './style/index.less';
 import { prefixCls } from '../core';
