@@ -35,6 +35,7 @@ import { ConditionCheckBoxModel,ConditionDateModel,ConditionGroupCheckBoxModel,C
 import { isArray } from 'legions-utils-tool/type.validation';
 import { CheckboxValueType } from 'antd/lib/checkbox/Group';
 import LegionsProDragger from '../LegionsProDragger';
+import { IProDraggerOptions, IProDraggerProps } from '../LegionsProDragger/interface';
 const { RangePicker } = DatePicker;
 const Option = Select.Option;
 const { TextArea } = Input;
@@ -93,6 +94,9 @@ interface IProps {
     uniqueKeys?: string;
     /** 是否拖拽排序 */
     isDragSort?: boolean;
+
+    /** 拖拽移动组件props */
+    draggerProps?:IProDraggerProps
     /** 收起按钮的事件 */
     onCollapse?: (collapsed: boolean,viewEntity?: IViewQueryConditionStore) => void;
 }
@@ -966,11 +970,14 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
         </React.Fragment>
     }
     render() {
+        const { draggerProps = {} as IProDraggerProps } = this.props;
+        const {options={} as IProDraggerOptions,onChange,...prop} = draggerProps
         return (
             <Row className={`${baseCls} ${this.uid}`} gutter={8} type="flex">
                 {this.props.isDragSort?<LegionsProDragger
                       options={{
                         animation: 150,
+                        ...draggerProps.options,
                         group: {
                             name: 'ProConditions',
                             pull: true,
@@ -991,7 +998,11 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
                             this.viewStore._clearQuery();
                             this.viewStore._initQuery(query);
                         }
+                        if (typeof onChange === 'function') {
+                            onChange(items,sort,evt);
+                        }
                     }}
+                    {...prop}
                 >
                      {this.renderContent()}
                 </LegionsProDragger>:this.renderContent()}

@@ -207,7 +207,7 @@ export declare class ProTableView {
      * @readonly
      * @memberof ProTableView
      */
-    get tableXAutoWidth(): import("antd/lib/checkbox/Group").CheckboxValueType;
+    get tableXAutoWidth(): import("react").ReactText;
     get computedTotal(): number;
     /**
      *

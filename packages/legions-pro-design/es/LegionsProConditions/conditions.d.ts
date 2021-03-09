@@ -6,6 +6,7 @@ import { IViewQueryConditionStore, ISelectAutoQuery } from '../LegionsStoreCondi
 import { InstanceQueryConditions } from './interface';
 import { ConditionCheckBoxModel, ConditionDateModel, ConditionGroupCheckBoxModel, ConditionRadioButtonModel, ConditionRangePickerModel, ConditionSearchModel, ConditionSelectModel, ConditionTextAreaModel, ConditionTextModel, ConditionTextNumberModel, IProConditions, ProConditions } from './ProConditionsUtils';
 import { CheckboxValueType } from 'antd/lib/checkbox/Group';
+import { IProDraggerProps } from '../LegionsProDragger/interface';
 interface IProps {
     query: Array<IProConditions['componentModel']>;
     store?: InstanceType<typeof LegionsStoreConditions>;
@@ -50,6 +51,8 @@ interface IProps {
     uniqueKeys?: string;
     /** 是否拖拽排序 */
     isDragSort?: boolean;
+    /** 拖拽移动组件props */
+    draggerProps?: IProDraggerProps;
     /** 收起按钮的事件 */
     onCollapse?: (collapsed: boolean, viewEntity?: IViewQueryConditionStore) => void;
 }

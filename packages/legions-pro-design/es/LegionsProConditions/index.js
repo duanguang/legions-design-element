@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.7-beta.9
+  *  legions-pro-design v0.0.7-beta.10
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -1002,14 +1002,13 @@ var LegionsProConditions = /** @class */ (function (_super) {
     };
     LegionsProConditions.prototype.render = function () {
         var _this = this;
-        return (React.createElement(Row, { className: baseCls + " " + this.uid, gutter: 8, type: "flex" }, this.props.isDragSort ? React.createElement(LegionsProDragger, { options: {
-                animation: 150,
-                group: {
+        var _a = this.props.draggerProps, draggerProps = _a === void 0 ? {} : _a;
+        var _b = draggerProps.options, onChange = draggerProps.onChange, prop = __rest(draggerProps, ["options", "onChange"]);
+        return (React.createElement(Row, { className: baseCls + " " + this.uid, gutter: 8, type: "flex" }, this.props.isDragSort ? React.createElement(LegionsProDragger, __assign({ options: __assign(__assign({ animation: 150 }, draggerProps.options), { group: {
                     name: 'ProConditions',
                     pull: true,
                     put: true,
-                }
-            }, onChange: function (items, sort, evt) {
+                } }), onChange: function (items, sort, evt) {
                 /* const dataId = evt.item.attributes['data-id'];
                 const dataName = evt.item.attributes['data-name']; */
                 var query = [];
@@ -1023,7 +1022,10 @@ var LegionsProConditions = /** @class */ (function (_super) {
                     _this.viewStore._clearQuery();
                     _this.viewStore._initQuery(query);
                 }
-            } }, this.renderContent()) : this.renderContent()));
+                if (typeof onChange === 'function') {
+                    onChange(items, sort, evt);
+                }
+            } }, prop), this.renderContent()) : this.renderContent()));
     };
     /* search =debounce((options,val)=>{
        options&&options.props.onSearch&&options.props.onSearch(val)
