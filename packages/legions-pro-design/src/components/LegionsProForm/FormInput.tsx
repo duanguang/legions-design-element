@@ -11,8 +11,6 @@ import {
 import { IErrorView } from './interface';
 import AbstractForm from './AbstractForm';
 import { getStringLen } from 'legions-utils-tool/format.string'
-/* import { debounce } from 'hoolinks/property' */
-import { debounce } from 'legions-utils-tool/debounce'
 import LegionsProNumericInput from '../LegionsProNumericInput';
 import FormElement from './FormElement';
 import {InstanceFormElement} from './interface/formElement'
@@ -274,7 +272,6 @@ export default class FormInput extends AbstractForm<IFormWithInputProps>{
                                 onIgnoreError={this.props.formStore && this.props.formStore.onIgnoreError}
                                 formUid={this.props.formUid}
                                 FormInputRef={this.FormInputRef}
-                                /* value={form.getFieldValue(iAntdProps.name)} */
                                 maxLength={maxLength.toString()}
                                 valueLen={valueLen}
                                 formItemName={iAntdProps.name}

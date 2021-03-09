@@ -1,5 +1,6 @@
 /// <reference types="react" />
 import { InstanceProForm } from '../LegionsProForm/interface';
+import { IProTabsFormAddTabsMap } from './interface';
 export declare class TabsItemView {
     /** 每个tab拥有的自己独立的from实体 */
     formInstance: InstanceProForm;
@@ -33,28 +34,30 @@ export declare class TabsItemView {
     setDisabled(disabled: boolean): void;
 }
 export declare class TabsFormView {
-    constructor();
+    constructor(uid: string);
+    private _uid;
     /** 当前活跃的tab项 */
     activeTabKey: string;
     /** 内部变量，外部请勿直接调用 */
     private _tabsMap;
-    get computedTabs(): TabsItemView[];
+    /** tabs项数 内部私有变量 */
+    get _computedTabs(): TabsItemView[];
     get size(): number;
     get entries(): IterableIterator<import("mobx").IMapEntry<string, TabsItemView>>;
+    private _geKeys;
     getTabs(key: string): TabsItemView;
     hasTabs(key: string): boolean;
     getTabsKeys(): IterableIterator<string>;
+    clearTabs(): void;
     /**
      * 删除tab
      * @param {string} key map中对应key值
-     * @memberof DeliveryGoodsStore
      */
     delTabsMap(key: string): void;
     /**
-     * 添加tab
-     * @param {boolean} switchTabKey 添加页签后是否立即切换到新增的页签
-     * @param {number} index 下标，用于遍历新增页签时可能会导致uid重复
-     * @param {() => void} callback 创建完成之后等待ui渲染完毕执行事件
+     * 添加tab页签
+     *
+     * 内部私有方法
      */
-    addTabsMap(isSwitchTabKey?: boolean, index?: number, callback?: () => void): string;
+    _addTabsMap(options?: IProTabsFormAddTabsMap['options']): string;
 }

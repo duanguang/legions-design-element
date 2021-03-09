@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-29 10:18:01
- * @LastEditTime: 2021-03-05 16:35:06
+ * @LastEditTime: 2021-03-08 18:50:13
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreForm/proFormStore.ts
@@ -937,7 +937,7 @@ export default class ProFormStore extends LegionsStore.StoreBase {
   }
 
   @action addTabsForm(uid: string) {
-    let formView = new TabsFormView();
+    let formView = new TabsFormView(uid);
     this._TabsFormDataMap.set(
       uid,
       observableViewModel<TabsFormView>(formView)

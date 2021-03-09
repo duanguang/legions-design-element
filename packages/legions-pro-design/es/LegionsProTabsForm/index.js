@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.7-beta.4
+  *  legions-pro-design v0.0.7-beta.6
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -73,6 +73,54 @@ function __values(o) {
     throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
 }
 
+/**
+ * Copyright (c) 2013-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+/**
+ * Use invariant() to assert state which your program assumes to be true.
+ *
+ * Provide sprintf-style format (only %s is supported) and arguments
+ * to provide information about what broke and what you were
+ * expecting.
+ *
+ * The invariant message will be stripped in production, but the invariant
+ * will remain to ensure logic does not differ in production.
+ */
+
+var invariant = function(condition, format, a, b, c, d, e, f) {
+  if (process.env.NODE_ENV !== 'production') {
+    if (format === undefined) {
+      throw new Error('invariant requires an error message argument');
+    }
+  }
+
+  if (!condition) {
+    var error;
+    if (format === undefined) {
+      error = new Error(
+        'Minified exception occurred; use the non-minified dev environment ' +
+        'for the full error message and additional helpful warnings.'
+      );
+    } else {
+      var args = [a, b, c, d, e, f];
+      var argIndex = 0;
+      error = new Error(
+        format.replace(/%s/g, function() { return args[argIndex++]; })
+      );
+      error.name = 'Invariant Violation';
+    }
+
+    error.framesToPop = 1; // we don't care about invariant's own frame
+    throw error;
+  }
+};
+
+var browser = invariant;
+
 /** 动态表单
  * 业务场景主要在页签方式创建多个表单
  */
@@ -123,12 +171,14 @@ var LegionsProTabsForm = /** @class */ (function (_super) {
         /** 增加tab页 */
         _this.handleTabAdd = function () {
             /** 新增页签 */
-            var uid = _this.storeView.addTabsMap();
+            var uid = _this.storeView._addTabsMap();
             var onTabAdd = _this.props.onTabAdd;
             onTabAdd && onTabAdd(uid);
         };
-        if (_this.props['uniqueUid']) {
-            _this.decryptionFreezeUid = "" + _this.props['uniqueUid'] + (_this.props.uniqueKeys || '') + (process.env.environment === 'production' ? 'production' : '');
+        var keys = 'uniqueUid';
+        browser(_this.props[keys], "[LegionsProTabsForm]:props." + keys + " cannot be empty");
+        if (_this.props[keys]) {
+            _this.decryptionFreezeUid = "" + _this.props[keys] + (_this.props.uniqueKeys || '') + (process.env.environment === 'production' ? 'production' : '');
             _this.freezeUid = "tabsform" + shortHash(_this.decryptionFreezeUid);
         }
         else {
@@ -186,8 +236,9 @@ var LegionsProTabsForm = /** @class */ (function (_super) {
                         callback && callback(model_1);
                     }
                 },
-                onTabAdd: function () {
-                    var uid = _this.storeView.addTabsMap();
+                onTabAdd: function (options) {
+                    var uid = _this.storeView._addTabsMap(options);
+                    _this.props.onTabAdd && _this.props.onTabAdd(uid);
                     return uid;
                 },
                 getFormFields: function (key) {
@@ -236,6 +287,9 @@ var LegionsProTabsForm = /** @class */ (function (_super) {
         var _this = this;
         var _a = this.props, controls = _a.controls, InputDataModel = _a.InputDataModel, group = _a.group, size = _a.size, colCount = _a.colCount;
         return React.createElement(LegionsProForm, { size: size, colCount: colCount, InputDataModel: InputDataModel, mapPropsToFields: function (props) {
+                if (tab && tab.formInstance) {
+                    return new InputDataModel(tab.formInstance.viewModel.InputDataModel);
+                }
                 return new InputDataModel(props);
             }, onFieldsChange: function (_, fields) {
                 tab.formInstance.store.updateFormInputData(tab.formInstance.uid, fields);
@@ -246,14 +300,15 @@ var LegionsProTabsForm = /** @class */ (function (_super) {
     LegionsProTabsForm.prototype.render = function () {
         var _this = this;
         var _a = this.props, _b = _a.tabsProps, tabsProps = _b === void 0 ? {} : _b, _c = _a.tabPaneProps, tabPaneProps = _c === void 0 ? {} : _c, onBeforeTabPaneRender = _a.onBeforeTabPaneRender;
+        console.log(this.storeView.activeTabKey, 'this.storeView.activeTabKey');
         return React.createElement(React.Fragment, null,
-            React.createElement(Tabs, __assign({ hideAdd: true, type: "editable-card", animated: true, tabBarExtraContent: React.createElement(Button, { icon: "plus", type: "primary", onClick: this.handleTabAdd }, "\u6DFB\u52A0") }, tabsProps, { onChange: this.handleTabChange, onEdit: this.handleTabDelete, activeKey: this.storeView.activeTabKey }), this.storeView.computedTabs.map(function (item, index, arr) {
+            React.createElement(Tabs, __assign({ hideAdd: true, type: "editable-card", animated: true, tabBarExtraContent: React.createElement(Button, { icon: "plus", type: "primary", onClick: this.handleTabAdd }, "\u6DFB\u52A0") }, tabsProps, { onChange: this.handleTabChange, onEdit: this.handleTabDelete, activeKey: this.storeView.activeTabKey }), this.storeView._computedTabs.map(function (item, index, arr) {
                 var ErrorList = item.formInstance && item.formInstance.viewModel.form.getFieldsError() || [];
                 /** 根据表单中的错误信息动态显示tab标签背景颜色 */
                 var tabHasError = Object.values(ErrorList).some(function (i) { return i; });
                 onBeforeTabPaneRender && onBeforeTabPaneRender(item.keys);
                 return React.createElement(Tabs.TabPane, __assign({}, tabPaneProps, item.computedStyle, item.computedClassName, item.computedClosable, item.computedDisabled, { forceRender: true, tab: React.createElement(React.Fragment, null,
-                        React.createElement(Col, { span: 19 }, tabPaneProps.tab ? tabPaneProps.tab(item.keys, index) : "\u9875\u7B7E" + (index + 1)),
+                        React.createElement(Col, { "data-key": item.keys, span: 19 }, tabPaneProps.tab ? tabPaneProps.tab(item.keys, index) : "\u9875\u7B7E" + (index + 1)),
                         React.createElement(Col, { span: 3 }, tabHasError && React.createElement(Icon, { style: { color: '#ff0000' }, type: "exclamation-circle" })),
                         React.createElement(Col, { span: 2 })), key: item.keys, "data-key": item.keys }), _this.renderForm(item.keys, item));
             })));

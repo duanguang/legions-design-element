@@ -1,4 +1,4 @@
-import { Button,Col,Row } from 'antd';
+import { Button,Col,Input,Row } from 'antd';
 import React from 'react';
 import { bind,observer } from 'legions/store-react';
 import { LegionsProForm,LegionsProPageContainer } from '../../../components';
@@ -12,7 +12,9 @@ interface IProps { }
 interface IState {
     visible: boolean;
     disabled: boolean;
+    xssValue: string;
 }
+
 /* @observer */
 export class ProForm extends React.Component<IProps,IState> {
     formRef: InstanceProForm
@@ -20,7 +22,8 @@ export class ProForm extends React.Component<IProps,IState> {
         super(props)
         this.state = {
             visible: true,
-            disabled: false
+            disabled: false,
+            xssValue:'',
         }
     }
     arr = this.createConfig()
@@ -52,8 +55,12 @@ export class ProForm extends React.Component<IProps,IState> {
                 type: 'text',
                 /* visible:false, */
             /* disabled: true, */
-                onChange: () => {
-                    console.log(this.formRef);
+                onChange: (even) => {
+                    const value = this.formRef.viewModel.InputDataModel as FormFields;
+                    console.log(value,even,'value');
+                    this.setState({
+                        xssValue:value.text.value
+                    })
                 }
             },
             rules: rules.text
@@ -293,7 +300,8 @@ export class ProForm extends React.Component<IProps,IState> {
         ]
     }
     render() {
-        console.log('render parent');
+        console.log('render parent',this.state.xssValue);
+        
         return (<LegionsProPageContainer
             query={null}
             content={

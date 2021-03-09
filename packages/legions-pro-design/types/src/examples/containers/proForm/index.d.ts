@@ -5,6 +5,7 @@ interface IProps {
 interface IState {
     visible: boolean;
     disabled: boolean;
+    xssValue: string;
 }
 export declare class ProForm extends React.Component<IProps, IState> {
     formRef: InstanceProForm;

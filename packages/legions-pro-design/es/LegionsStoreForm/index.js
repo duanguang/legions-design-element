@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.7-beta.2
+  *  legions-pro-design v0.0.7-beta.6
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -212,15 +212,18 @@ var TabsItemView = /** @class */ (function () {
     return TabsItemView;
 }());
 var TabsFormView = /** @class */ (function () {
-    function TabsFormView() {
+    function TabsFormView(uid) {
+        this._uid = '';
         /** 当前活跃的tab项 */
         this.activeTabKey = null;
         /** 内部变量，外部请勿直接调用 */
         this._tabsMap = observable.map();
         this.activeTabKey = "" + shortHash(new Date().getTime()) + 0;
+        this._uid = uid;
         this._tabsMap.set(this.activeTabKey, new TabsItemView(this.activeTabKey));
     }
-    Object.defineProperty(TabsFormView.prototype, "computedTabs", {
+    Object.defineProperty(TabsFormView.prototype, "_computedTabs", {
+        /** tabs项数 内部私有变量 */
         get: function () {
             var e_1, _a;
             var value = [];
@@ -256,43 +259,72 @@ var TabsFormView = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
+    TabsFormView.prototype._geKeys = function (key) {
+        var keys = "" + key + shortHash("" + key + this._uid);
+        return keys;
+    };
     TabsFormView.prototype.getTabs = function (key) {
-        console.log(this._tabsMap);
+        var keys = this._geKeys(key);
+        if (this._tabsMap.has(keys)) {
+            return this._tabsMap.get(keys);
+        }
         return this._tabsMap.get(key);
     };
     TabsFormView.prototype.hasTabs = function (key) {
-        return this._tabsMap.has(key);
+        var keys = this._geKeys(key);
+        if (this._tabsMap.has(keys)) {
+            return true;
+        }
+        if (this._tabsMap.has(key)) {
+            return true;
+        }
+        return false;
     };
     TabsFormView.prototype.getTabsKeys = function () {
         return this._tabsMap.keys();
     };
+    TabsFormView.prototype.clearTabs = function () {
+        this.activeTabKey = '';
+        this._tabsMap.clear();
+    };
     /**
      * 删除tab
      * @param {string} key map中对应key值
-     * @memberof DeliveryGoodsStore
      */
     TabsFormView.prototype.delTabsMap = function (key) {
         this._tabsMap.delete(key);
     };
     /**
-     * 添加tab
-     * @param {boolean} switchTabKey 添加页签后是否立即切换到新增的页签
-     * @param {number} index 下标，用于遍历新增页签时可能会导致uid重复
-     * @param {() => void} callback 创建完成之后等待ui渲染完毕执行事件
+     * 添加tab页签
+     *
+     * 内部私有方法
      */
-    TabsFormView.prototype.addTabsMap = function (isSwitchTabKey, index, callback) {
-        if (isSwitchTabKey === void 0) { isSwitchTabKey = true; }
-        if (index === void 0) { index = 0; }
-        var uid = "" + shortHash(new Date().getTime()) + index;
-        this._tabsMap.set(uid, new TabsItemView("" + uid));
+    TabsFormView.prototype._addTabsMap = function (options) {
+        var uid = '';
+        var option = options || {};
+        var isSwitchTabKey = option.isSwitchTabKey === void 0 ? true : option.isSwitchTabKey;
+        var key = option.key || '';
+        if (key) { // 如果设定了固定key，则生成
+            uid = "TabPane" + key + shortHash("" + key + this._uid);
+        }
+        else { // 随机生成
+            uid = "TabPane" + shortHash(new Date().getTime()) + this._tabsMap.size;
+        }
+        if (!this._tabsMap.has(uid)) {
+            this._tabsMap.set(uid, new TabsItemView("" + uid));
+        }
         isSwitchTabKey && (this.activeTabKey = uid);
         /** 等待ui记载完毕根据托运责任设置订单服务类型 */
         setTimeout(function () {
             /** ui渲染完毕，执行回调 */
-            callback && callback();
+            option.callback && option.callback();
         }, 100);
         return uid;
     };
+    __decorate([
+        observable,
+        __metadata("design:type", Object)
+    ], TabsFormView.prototype, "_uid", void 0);
     __decorate([
         observable,
         __metadata("design:type", String)
@@ -305,7 +337,7 @@ var TabsFormView = /** @class */ (function () {
         computed,
         __metadata("design:type", Array),
         __metadata("design:paramtypes", [])
-    ], TabsFormView.prototype, "computedTabs", null);
+    ], TabsFormView.prototype, "_computedTabs", null);
     __decorate([
         computed,
         __metadata("design:type", Object),
@@ -337,15 +369,21 @@ var TabsFormView = /** @class */ (function () {
     __decorate([
         action,
         __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], TabsFormView.prototype, "clearTabs", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
         __metadata("design:paramtypes", [String]),
         __metadata("design:returntype", void 0)
     ], TabsFormView.prototype, "delTabsMap", null);
     __decorate([
         action,
         __metadata("design:type", Function),
-        __metadata("design:paramtypes", [Boolean, Number, Function]),
+        __metadata("design:paramtypes", [Object]),
         __metadata("design:returntype", void 0)
-    ], TabsFormView.prototype, "addTabsMap", null);
+    ], TabsFormView.prototype, "_addTabsMap", null);
     return TabsFormView;
 }());
 
@@ -1340,7 +1378,7 @@ var ProFormStore = /** @class */ (function (_super) {
         }
     };
     ProFormStore.prototype.addTabsForm = function (uid) {
-        var formView = new TabsFormView();
+        var formView = new TabsFormView(uid);
         this._TabsFormDataMap.set(uid, observableViewModel(formView));
     };
     ProFormStore.prototype.deleteTabsForm = function (uid) {

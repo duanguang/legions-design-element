@@ -211,12 +211,15 @@ export class ProTabsForm extends React.Component<IProps,IState> {
                         tabPaneProps={
                             {
                                 tab: (key,index) => {
+                                    console.log(key);
                                     return <div>销售订单{index+1}</div>
                                 }
                             }
                         }
                         onReady={(formref) => {
                             this.formRef = formref;
+                            this.formRef.viewModel.clearTabs();
+                            this.formRef.methods.onTabAdd();
                         }}
                     ></LegionsProTabsForm>
                     

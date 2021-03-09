@@ -1024,7 +1024,6 @@ export class LegionsProForm<mapProps = {}> extends React.Component<IProFormProps
             this.freezeUid = this.uid;
             this.decryptionFreezeUid = this.uid;
         }
-        console.log(this.uid,'this.uid');
         this.props.store.add(this.uid,{
             InputDataModel: this.props.InputDataModel,
             formRef:this,

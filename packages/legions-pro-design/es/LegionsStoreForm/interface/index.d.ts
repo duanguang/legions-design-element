@@ -225,3 +225,13 @@ export interface IProFormFields {
 export interface IProUpdateFormFields {
     componentModel: LabelWithInputPartialModel | LabelWithInputNumberPartialModel | LabelWithDatePickerPartialModel | LabelWithMonthPickerPartialModel | LabelWithRangePickerPartialModel | LabelWithUploadPartialModel | LabelWithSwitchPartialModel | LabelWithRadioButtonPartialModel | LabelWithTextPartialModel;
 }
+export interface IProTabsFormAddTabsMap {
+    options: {
+        /**添加页签后是否立即切换到新增的页签 */
+        isSwitchTabKey: boolean;
+        /** 唯一值，用于遍历新增页签时可能会导致uid重复 */
+        key?: string;
+        /** 创建完成之后等待ui渲染完毕执行事件 */
+        callback?: () => void;
+    };
+}
