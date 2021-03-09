@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.3
+  *  legions-pro-design v0.0.7-beta.7
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -13,7 +13,7 @@ import { legionsThirdpartyPlugin } from 'legions-thirdparty-plugin';
 import { OpenConfirm } from 'legions-lunar/antd-toolkit';
 import LegionsProTable from '../LegionsProTable';
 import LegionsProUpload from '../LegionsProUpload';
-import styles from './style/index.modules.less';
+import './style/index.less';
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -104,27 +104,28 @@ function __generator(thisArg, body) {
     }
 }
 
+var cls = 'legions-pro-import';
 /** 公共导入组件按钮类型 */
-var HLDataImportBtnEnum;
-(function (HLDataImportBtnEnum) {
+var ProDataImportBtnEnum;
+(function (ProDataImportBtnEnum) {
     /** 下载模板 */
-    HLDataImportBtnEnum[HLDataImportBtnEnum["template"] = 0] = "template";
+    ProDataImportBtnEnum[ProDataImportBtnEnum["template"] = 0] = "template";
     /** 上传文件 */
-    HLDataImportBtnEnum[HLDataImportBtnEnum["upload"] = 1] = "upload";
+    ProDataImportBtnEnum[ProDataImportBtnEnum["upload"] = 1] = "upload";
     /** 覆盖导入 */
-    HLDataImportBtnEnum[HLDataImportBtnEnum["cover"] = 2] = "cover";
+    ProDataImportBtnEnum[ProDataImportBtnEnum["cover"] = 2] = "cover";
     /** 导入数据 */
-    HLDataImportBtnEnum[HLDataImportBtnEnum["submit"] = 3] = "submit";
+    ProDataImportBtnEnum[ProDataImportBtnEnum["submit"] = 3] = "submit";
     /** 删除错误数据 */
-    HLDataImportBtnEnum[HLDataImportBtnEnum["delete"] = 4] = "delete";
+    ProDataImportBtnEnum[ProDataImportBtnEnum["delete"] = 4] = "delete";
     /** 导入错误数据 */
-    HLDataImportBtnEnum[HLDataImportBtnEnum["export"] = 5] = "export";
+    ProDataImportBtnEnum[ProDataImportBtnEnum["export"] = 5] = "export";
     /** 返回按钮 */
-    HLDataImportBtnEnum[HLDataImportBtnEnum["goBack"] = 6] = "goBack";
-})(HLDataImportBtnEnum || (HLDataImportBtnEnum = {}));
+    ProDataImportBtnEnum[ProDataImportBtnEnum["goBack"] = 6] = "goBack";
+})(ProDataImportBtnEnum || (ProDataImportBtnEnum = {}));
 /** 公共导入组件参数 */
-var HLDataImportProps = /** @class */ (function () {
-    function HLDataImportProps() {
+var IProps = /** @class */ (function () {
+    function IProps() {
         /**
          * 表格配置项, 配置项参考是HLTable 不要配置data，表格data已被托管
          * @type {Partial<IHLTableProps<TableRow, Model>>}
@@ -151,7 +152,7 @@ var HLDataImportProps = /** @class */ (function () {
         this.className = '';
         /**
          * 可配置需要隐藏的按钮列表
-         * @type {HLDataImportBtnEnum[]}
+         * @type {ProDataImportBtnEnum[]}
          * @memberof HLDataImportProps
          */
         this.hideBtnList = [];
@@ -179,10 +180,10 @@ var HLDataImportProps = /** @class */ (function () {
          */
         this.onBack = function () { return window.history.back(); };
     }
-    return HLDataImportProps;
+    return IProps;
 }());
-var HLDataImportViewModel = /** @class */ (function () {
-    function HLDataImportViewModel() {
+var IViewModel = /** @class */ (function () {
+    function IViewModel() {
         /** 表格数据 */
         this.list = [];
         /** 当前上传的文件 */
@@ -195,26 +196,26 @@ var HLDataImportViewModel = /** @class */ (function () {
     __decorate([
         observable,
         __metadata("design:type", Array)
-    ], HLDataImportViewModel.prototype, "list", void 0);
+    ], IViewModel.prototype, "list", void 0);
     __decorate([
         observable,
         __metadata("design:type", Object)
-    ], HLDataImportViewModel.prototype, "file", void 0);
+    ], IViewModel.prototype, "file", void 0);
     __decorate([
         observable,
         __metadata("design:type", String)
-    ], HLDataImportViewModel.prototype, "fileStatus", void 0);
+    ], IViewModel.prototype, "fileStatus", void 0);
     __decorate([
         observable,
         __metadata("design:type", Boolean)
-    ], HLDataImportViewModel.prototype, "isCover", void 0);
-    return HLDataImportViewModel;
+    ], IViewModel.prototype, "isCover", void 0);
+    return IViewModel;
 }());
 var LegionsProDataImport = /** @class */ (function (_super) {
     __extends(LegionsProDataImport, _super);
     function LegionsProDataImport() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.viewModel = observableViewModel(new HLDataImportViewModel());
+        _this.viewModel = observableViewModel(new IViewModel());
         /** 返回 */
         _this.handleBack = function () {
             _this.props.onBack && _this.props.onBack();
@@ -244,7 +245,7 @@ var LegionsProDataImport = /** @class */ (function (_super) {
                         return [4 /*yield*/, res];
                     case 1:
                         /** 再赋值新数据 */
-                        _a.list = (_b.sent()).map(function (item) { return (__assign(__assign({}, item), { className: item.isError ? styles.errorRow : item.isWarn ? styles.warnRow : '' })); });
+                        _a.list = (_b.sent()).map(function (item) { return (__assign(__assign({}, item), { className: item.isError ? cls + "-errorRow" : item.isWarn ? cls + "-warnRow" : '' })); });
                         this.viewModel.file = info.file;
                         this.props.uploadProps && this.props.uploadProps.onSuccess && this.props.uploadProps.onSuccess(info, header, data);
                         /** 关闭loading状态 */
@@ -264,7 +265,7 @@ var LegionsProDataImport = /** @class */ (function (_super) {
         /** 删除错误数据 */
         _this.handleDelete = function () {
             var _a = _this.props, hideBtnList = _a.hideBtnList, deleteModalProps = _a.deleteModalProps;
-            var hasCoverBtn = !hideBtnList.includes(HLDataImportBtnEnum.cover);
+            var hasCoverBtn = !hideBtnList.includes(ProDataImportBtnEnum.cover);
             OpenConfirm(__assign({ type: 'info', title: '删除提示', content: React.createElement("div", null,
                     React.createElement("div", null,
                         "\u5176\u4E2D\u5305\u542B",
@@ -281,7 +282,7 @@ var LegionsProDataImport = /** @class */ (function (_super) {
                     }
                 } }, deleteModalProps));
         };
-        /** 导入错误数据 */
+        /** 导出错误数据 */
         _this.handleExport = function () {
             if (!legionsThirdpartyPlugin.plugins.excel) {
                 message.warning('Plugin is not ready to excel, Please install at the entrance(legionsThirdpartyPlugin.use({name:"excel",url:"xxxx"}))');
@@ -343,47 +344,47 @@ var LegionsProDataImport = /** @class */ (function (_super) {
     LegionsProDataImport.prototype.render = function () {
         var _a = this.props, style = _a.style, className = _a.className, tableProps = _a.tableProps, templateUrl = _a.templateUrl, hideBtnList = _a.hideBtnList, uploadProps = _a.uploadProps, customBtn = _a.customBtn, submitBtnLoading = _a.submitBtnLoading;
         var _b = this.viewModel, list = _b.list, file = _b.file, isCover = _b.isCover, fileStatus = _b.fileStatus;
-        return (React.createElement("div", { style: style, className: styles.wrap + " " + className },
-            React.createElement("div", { className: styles.btnWrap },
-                React.createElement("div", { className: styles.btnLeft }, !hideBtnList.includes(HLDataImportBtnEnum.goBack) && React.createElement(Button, { onClick: this.handleBack }, "\u8FD4\u56DE")),
-                React.createElement("div", { className: styles.btnRight },
-                    !hideBtnList.includes(HLDataImportBtnEnum.template) && (React.createElement(Button, { onClick: this.handleTemplate, disabled: !templateUrl, icon: "download" }, "\u4E0B\u8F7D\u6A21\u677F")),
-                    !hideBtnList.includes(HLDataImportBtnEnum.upload) && (React.createElement(LegionsProUpload, __assign({ showUploadList: false, accept: "xlsx,xls", maxFileCount: 1000, onChange: this.handleUploadChange }, uploadProps, { onSuccess: this.handleUpload }),
+        return (React.createElement("div", { style: style, className: "legions-pro-import " + className },
+            React.createElement("div", { className: cls + "-btnWrap" },
+                React.createElement("div", { className: cls + "-btnLeft" }, !hideBtnList.includes(ProDataImportBtnEnum.goBack) && React.createElement(Button, { onClick: this.handleBack }, "\u8FD4\u56DE")),
+                React.createElement("div", { className: cls + "-btnRight" },
+                    !hideBtnList.includes(ProDataImportBtnEnum.template) && (React.createElement(Button, { onClick: this.handleTemplate, disabled: !templateUrl, icon: "download" }, "\u4E0B\u8F7D\u6A21\u677F")),
+                    !hideBtnList.includes(ProDataImportBtnEnum.upload) && (React.createElement(LegionsProUpload, __assign({ showUploadList: false, accept: "xlsx,xls", maxFileCount: 1000, onChange: this.handleUploadChange }, uploadProps, { onSuccess: this.handleUpload }),
                         React.createElement(Button, { icon: "folder-open", disabled: !uploadProps, loading: fileStatus === 'uploading' }, list.length > 0 ? '重新选择' : '选择文件'))),
-                    !hideBtnList.includes(HLDataImportBtnEnum.cover) && (React.createElement(Button, { onClick: this.handleCover, disabled: !(list.length > 0) },
+                    !hideBtnList.includes(ProDataImportBtnEnum.cover) && (React.createElement(Button, { onClick: this.handleCover, disabled: !(list.length > 0) },
                         React.createElement(Icon, { type: "check-circle-o", style: { color: isCover ? '#02A854' : '#ccc', fontWeight: 'bold' } }),
                         "\u652F\u6301\u8986\u76D6\u5BFC\u5165")),
-                    !hideBtnList.includes(HLDataImportBtnEnum.submit) && (React.createElement(Button, { onClick: this.handleSubmit, disabled: !(
+                    !hideBtnList.includes(ProDataImportBtnEnum.submit) && (React.createElement(Button, { onClick: this.handleSubmit, disabled: !(
                         /** 列表有数据并且没有错误信息，或者列表有数据并且支持覆盖 */
                         ((list.length > 0 && this.errorList.length === 0) ||
-                            (list.length > 0 && !hideBtnList.includes(HLDataImportBtnEnum.cover) && isCover))), loading: submitBtnLoading, icon: "upload" }, "\u5BFC\u5165\u6570\u636E")),
-                    !hideBtnList.includes(HLDataImportBtnEnum.delete) && (React.createElement(Button, { onClick: this.handleDelete, disabled: !(this.errorList.length > 0), type: "danger", icon: "delete" }, "\u5220\u9664\u9519\u8BEF\u4FE1\u606F")),
-                    !hideBtnList.includes(HLDataImportBtnEnum.export) && (React.createElement(Button, { onClick: this.handleExport, disabled: !(this.errorList.length > 0), icon: "export" }, "\u5BFC\u51FA\u9519\u8BEF\u6570\u636E")),
+                            (list.length > 0 && !hideBtnList.includes(ProDataImportBtnEnum.cover) && isCover))), loading: submitBtnLoading, icon: "upload" }, "\u5BFC\u5165\u6570\u636E")),
+                    !hideBtnList.includes(ProDataImportBtnEnum.delete) && (React.createElement(Button, { onClick: this.handleDelete, disabled: !(this.errorList.length > 0), type: "danger", icon: "delete" }, "\u5220\u9664\u9519\u8BEF\u4FE1\u606F")),
+                    !hideBtnList.includes(ProDataImportBtnEnum.export) && (React.createElement(Button, { onClick: this.handleExport, disabled: !(this.errorList.length > 0), icon: "export" }, "\u5BFC\u51FA\u9519\u8BEF\u6570\u636E")),
                     customBtn)),
-            React.createElement(Row, { className: styles.tipWrap },
-                React.createElement(Col, { span: 12, className: styles.tipLeft },
+            React.createElement(Row, { className: cls + "-tipWrap" },
+                React.createElement(Col, { span: 12, className: cls + "-tipLeft" },
                     React.createElement("span", null, "\u6821\u9A8C\u6570\u636E"),
-                    file.name && (React.createElement("span", { className: styles.fileName },
+                    file.name && (React.createElement("span", { className: cls + "-fileName" },
                         file.name,
-                        React.createElement(Icon, { className: styles.fileDel, onClick: this.reset, type: "close" })))),
-                list.length > 0 && (React.createElement(Col, { span: 12, className: styles.tipRight },
-                    React.createElement("span", { className: styles.total },
+                        React.createElement(Icon, { className: cls + "-fileDel", onClick: this.reset, type: "close" })))),
+                list.length > 0 && (React.createElement(Col, { span: 12, className: cls + "-tipRight" },
+                    React.createElement("span", { className: cls + "-total" },
                         React.createElement("b", null, list.length),
                         "\u6761\u6570\u636E\uFF1A"),
-                    React.createElement("span", { className: styles.success },
+                    React.createElement("span", { className: cls + "-success" },
                         "\u6821\u9A8C\u901A\u8FC7",
                         React.createElement("b", null, this.successList.length)),
-                    React.createElement("span", { className: styles.error },
+                    React.createElement("span", { className: cls + "-error" },
                         "\u6821\u9A8C\u4E0D\u901A\u8FC7",
                         React.createElement("b", null, this.errorList.length)),
-                    React.createElement("span", { className: styles.warn },
+                    React.createElement("span", { className: cls + "-warn" },
                         "\u8B66\u544A",
                         React.createElement("b", null, this.warnList.length))))),
-            React.createElement("div", { className: styles.tableWrap }, 
-            //@ts-ignore
-            React.createElement(LegionsProTable, __assign({ onPagingQuery: function () { return void 0; }, pageSize: 20, locale: { emptyText: React.createElement("div", { className: styles.emptyText }, "\u65E0\u6570\u636E\uFF0C\u8BF7\u70B9\u51FB\u3010\u9009\u62E9\u6587\u4EF6\u3011\u5BFC\u5165\u6570\u636E") }, columns: [], isOpenRowSelection: false, isOpenRowChange: false }, tableProps, { dataSource: list })))));
+            React.createElement("div", { className: cls + "-tableWrap" }, React.createElement(LegionsProTable, __assign({ onPagingQuery: function () { return void 0; }, pageSize: 20, locale: { emptyText: React.createElement("div", { className: cls + "-emptyText" }, "\u65E0\u6570\u636E\uFF0C\u8BF7\u70B9\u51FB\u3010\u9009\u62E9\u6587\u4EF6\u3011\u5BFC\u5165\u6570\u636E") }, columns: [], isOpenRowSelection: false, isOpenRowChange: false, 
+                // @ts-ignore
+                uniqueUid: this.props['uniqueUid'] }, tableProps, { dataSource: list })))));
     };
-    LegionsProDataImport.defaultProps = new HLDataImportProps;
+    LegionsProDataImport.defaultProps = new IProps();
     LegionsProDataImport = __decorate([
         observer
     ], LegionsProDataImport);
@@ -391,4 +392,4 @@ var LegionsProDataImport = /** @class */ (function (_super) {
 }(React.Component));
 
 export default LegionsProDataImport;
-export { HLDataImportBtnEnum, HLDataImportProps };
+export { ProDataImportBtnEnum };

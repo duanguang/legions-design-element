@@ -39,6 +39,17 @@ module.exports = function (configs) {
             );
           },
         },
+        '/common/excel/import': {
+          target: 'https://uat-scm.hoolinks.com',
+          secure: false,
+          onProxyReq: (proxyReq, req, res) => {
+            proxyReq.setHeader('host', 'uat-scm.hoolinks.com');
+            proxyReq.setHeader(
+              'cookie',
+              'SESSION=5263812c-5586-43dc-97c8-829f00e5fda3'
+            );
+          },
+        },
       },
     }),
     apps: ['examples', 'examples'],
@@ -78,6 +89,7 @@ module.exports = function (configs) {
                   { name: 'LegionsProTabsForm', props: 'uniqueUid' },
                   { name: 'LegionsProTabsForm', props: 'uniqueUid' },
                   { name: 'LegionsProConditions', props: 'uniqueUid' },
+                  { name: 'HLDataImport', props: 'uniqueUid' },
                 ],
               }),
             ],

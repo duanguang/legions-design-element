@@ -5,7 +5,6 @@
  */
 import { Button,Col,Icon,Row,message } from 'antd';
 import { ColumnProps } from 'antd/lib/table/Column';
-/* import download from 'hoolinks/download'; */
 import { download } from 'legions-utils-tool/download'
 import { observer } from 'legions/store-react';
 import { observableViewModel, ViewModel } from 'brain-store-utils';
@@ -18,15 +17,16 @@ import LegionsProTable from '../LegionsProTable';
 import {IProTableProps} from '../LegionsProTable/interface';
 import LegionsProUpload from '../LegionsProUpload';
 import {IProUploadProps} from '../LegionsProUpload/interface'
-import styles from './style/index.modules.less';
-
+import './style/index.less';
 
 type Proxify<T> = {
     [P in keyof T]: T[P]
 };
 
+const cls = 'legions-pro-import';
+
 /** 公共导入组件按钮类型 */
-export enum HLDataImportBtnEnum {
+export enum ProDataImportBtnEnum {
     /** 下载模板 */
     template,
     /** 上传文件 */
@@ -44,7 +44,7 @@ export enum HLDataImportBtnEnum {
 }
 
 /** 公共导入组件数据格式 */
-export interface HLDataImportRow {
+export interface ProDataImportRow {
     /** 标识本条数据是否错误 */
     isError: boolean;
     /** 标识本条数据是否有警告 */
@@ -52,12 +52,12 @@ export interface HLDataImportRow {
 };
 
 /** 公共导入组件数据实体 */
-export interface InstanceHLDataImport<TableRow={}> {
-    viewModel: ViewModel<HLDataImportViewModel<TableRow>> & Proxify<HLDataImportViewModel<TableRow>>;
+export interface InstanceProDataImport<TableRow={}> {
+    viewModel: ViewModel<IViewModel<TableRow>> & Proxify<IViewModel<TableRow>>;
 }
 
 /** 公共导入组件参数 */
-export class HLDataImportProps<TableRow = {},Model = {}> {
+class IProps<TableRow = {},Model = {}> {
     /**
      * 表格配置项, 配置项参考是HLTable 不要配置data，表格data已被托管
      * @type {Partial<IHLTableProps<TableRow, Model>>}
@@ -101,10 +101,10 @@ export class HLDataImportProps<TableRow = {},Model = {}> {
     className?: string = '';
     /**
      * 可配置需要隐藏的按钮列表
-     * @type {HLDataImportBtnEnum[]}
+     * @type {ProDataImportBtnEnum[]}
      * @memberof HLDataImportProps
      */
-    hideBtnList?: HLDataImportBtnEnum[] = [];
+    hideBtnList?: ProDataImportBtnEnum[] = [];
     /**
      * 自定义添加其他按钮，会追加在所有操作按钮的最后面
      * @type {React.ReactNode}
@@ -143,12 +143,12 @@ export class HLDataImportProps<TableRow = {},Model = {}> {
      * 获取组件数据实体
      * @memberof HLDataImportProps
      */
-    onReady?: (instance: InstanceHLDataImport<TableRow>) => void;
+    onReady?: (instance: InstanceProDataImport<TableRow>) => void;
 }
 
-class HLDataImportViewModel<TableRow = {}> {
+class IViewModel<TableRow = {}> {
     /** 表格数据 */
-    @observable list: (HLDataImportRow & TableRow)[] = []
+    @observable list: (ProDataImportRow & TableRow)[] = []
     /** 当前上传的文件 */
     @observable file: Partial<UploadFile> = {};
     /** 文件上传状态 */
@@ -158,9 +158,9 @@ class HLDataImportViewModel<TableRow = {}> {
 }
 
 @observer
-export default class LegionsProDataImport<TableRow = {},Model = {}> extends React.Component<HLDataImportProps<HLDataImportRow & TableRow,Model>> {
-    static defaultProps = new HLDataImportProps as Object;
-    viewModel = observableViewModel<HLDataImportViewModel<HLDataImportRow & TableRow>>(new HLDataImportViewModel());
+export default class LegionsProDataImport<TableRow = {},Model = {}> extends React.Component<IProps<ProDataImportRow & TableRow,Model>> {
+    static defaultProps = new IProps() as Object;
+    viewModel = observableViewModel<IViewModel<ProDataImportRow & TableRow>>(new IViewModel());
     /** 正确数据 */
     get successList() {
         return this.viewModel.list.filter((item) => {
@@ -208,7 +208,7 @@ export default class LegionsProDataImport<TableRow = {},Model = {}> extends Reac
         /** 再赋值新数据 */
         this.viewModel.list = (await res).map((item) => ({
             ...item,
-            className: item.isError ? styles.errorRow : item.isWarn ? styles.warnRow : '',
+            className: item.isError ? `${cls}-errorRow` : item.isWarn ? `${cls}-warnRow` : '',
         }));
         this.viewModel.file = info.file;
         this.props.uploadProps && this.props.uploadProps.onSuccess && this.props.uploadProps.onSuccess(info,header,data);
@@ -226,7 +226,7 @@ export default class LegionsProDataImport<TableRow = {},Model = {}> extends Reac
     /** 删除错误数据 */
     handleDelete = () => {
         const { hideBtnList,deleteModalProps } = this.props;
-        const hasCoverBtn = !hideBtnList.includes(HLDataImportBtnEnum.cover);
+        const hasCoverBtn = !hideBtnList.includes(ProDataImportBtnEnum.cover);
         OpenConfirm({
             type: 'info',
             title: '删除提示',
@@ -254,7 +254,7 @@ export default class LegionsProDataImport<TableRow = {},Model = {}> extends Reac
             ...deleteModalProps,
         })
     }
-    /** 导入错误数据 */
+    /** 导出错误数据 */
     handleExport = () => {
         if (!legionsThirdpartyPlugin.plugins.excel) {
             message.warning('Plugin is not ready to excel, Please install at the entrance(legionsThirdpartyPlugin.use({name:"excel",url:"xxxx"}))');
@@ -282,19 +282,18 @@ export default class LegionsProDataImport<TableRow = {},Model = {}> extends Reac
         const { list,file,isCover,fileStatus } = this.viewModel;
 
         return (
-            <div style={style} className={`${styles.wrap} ${className}`}>
-                <div className={styles.btnWrap}>
-                    {}
-                    <div className={styles.btnLeft}>
-                        {!hideBtnList.includes(HLDataImportBtnEnum.goBack) && <Button onClick={this.handleBack}>返回</Button>}
+            <div style={style} className={`legions-pro-import ${className}`}>
+                <div className={`${cls}-btnWrap`}>
+                    <div className={`${cls}-btnLeft`}>
+                        {!hideBtnList.includes(ProDataImportBtnEnum.goBack) && <Button onClick={this.handleBack}>返回</Button>}
                     </div>
-                    <div className={styles.btnRight}>
-                        {!hideBtnList.includes(HLDataImportBtnEnum.template) && (
+                    <div className={`${cls}-btnRight`}>
+                        {!hideBtnList.includes(ProDataImportBtnEnum.template) && (
                             <Button onClick={this.handleTemplate} disabled={!templateUrl} icon="download">
                                 下载模板
                             </Button>
                         )}
-                        {!hideBtnList.includes(HLDataImportBtnEnum.upload) && (
+                        {!hideBtnList.includes(ProDataImportBtnEnum.upload) && (
                             <LegionsProUpload
                                 showUploadList={false}
                                 accept="xlsx,xls"
@@ -307,13 +306,13 @@ export default class LegionsProDataImport<TableRow = {},Model = {}> extends Reac
                                 </Button>
                             </LegionsProUpload>
                         )}
-                        {!hideBtnList.includes(HLDataImportBtnEnum.cover) && (
+                        {!hideBtnList.includes(ProDataImportBtnEnum.cover) && (
                             <Button onClick={this.handleCover} disabled={!(list.length > 0)}>
                                 <Icon type="check-circle-o" style={{ color: isCover ? '#02A854' : '#ccc',fontWeight: 'bold' }} />
                                 支持覆盖导入
                             </Button>
                         )}
-                        {!hideBtnList.includes(HLDataImportBtnEnum.submit) && (
+                        {!hideBtnList.includes(ProDataImportBtnEnum.submit) && (
                             <Button
                                 onClick={this.handleSubmit}
                                 disabled={
@@ -321,7 +320,7 @@ export default class LegionsProDataImport<TableRow = {},Model = {}> extends Reac
                                         /** 列表有数据并且没有错误信息，或者列表有数据并且支持覆盖 */
                                         (
                                             (list.length > 0 && this.errorList.length === 0) ||
-                                            (list.length > 0 && !hideBtnList.includes(HLDataImportBtnEnum.cover) && isCover)
+                                            (list.length > 0 && !hideBtnList.includes(ProDataImportBtnEnum.cover) && isCover)
                                         )
                                     )
                                 }
@@ -330,12 +329,12 @@ export default class LegionsProDataImport<TableRow = {},Model = {}> extends Reac
                                 导入数据
                             </Button>
                         )}
-                        {!hideBtnList.includes(HLDataImportBtnEnum.delete) && (
+                        {!hideBtnList.includes(ProDataImportBtnEnum.delete) && (
                             <Button onClick={this.handleDelete} disabled={!(this.errorList.length > 0)} type="danger" icon="delete">
                                 删除错误信息
                             </Button>
                         )}
-                        {!hideBtnList.includes(HLDataImportBtnEnum.export) && (
+                        {!hideBtnList.includes(ProDataImportBtnEnum.export) && (
                             <Button onClick={this.handleExport} disabled={!(this.errorList.length > 0)} icon="export">
                                 导出错误数据
                             </Button>
@@ -343,48 +342,49 @@ export default class LegionsProDataImport<TableRow = {},Model = {}> extends Reac
                         {customBtn}
                     </div>
                 </div>
-                <Row className={styles.tipWrap}>
-                    <Col span={12} className={styles.tipLeft}>
+                <Row className={`${cls}-tipWrap`}>
+                    <Col span={12} className={`${cls}-tipLeft`}>
                         <span>校验数据</span>
                         {file.name && (
-                            <span className={styles.fileName}>
+                            <span className={`${cls}-fileName`}>
                                 {file.name}
-                                <Icon className={styles.fileDel} onClick={this.reset} type="close"></Icon>
+                                <Icon className={`${cls}-fileDel`} onClick={this.reset} type="close"></Icon>
                             </span>
                         )}
                     </Col>
                     {list.length > 0 && (
-                        <Col span={12} className={styles.tipRight}>
-                            <span className={styles.total}>
+                        <Col span={12} className={`${cls}-tipRight`}>
+                            <span className={`${cls}-total`}>
                                 <b>{list.length}</b>条数据：
                             </span>
-                            <span className={styles.success}>
+                            <span className={`${cls}-success`}>
                                 校验通过<b>{this.successList.length}</b>
                             </span>
-                            <span className={styles.error}>
+                            <span className={`${cls}-error`}>
                                 校验不通过<b>{this.errorList.length}</b>
                             </span>
-                            <span className={styles.warn}>
+                            <span className={`${cls}-warn`}>
                                 警告<b>{this.warnList.length}</b>
                             </span>
                         </Col>
                     )}
                 </Row>
-                <div className={styles.tableWrap}>
+                <div className={`${cls}-tableWrap`}>
                     {
-                        //@ts-ignore
                         <LegionsProTable
                             onPagingQuery={() => void 0}
                             pageSize={20}
-                            locale={{ emptyText: <div className={styles.emptyText}>无数据，请点击【选择文件】导入数据</div> }}
+                            locale={{ emptyText: <div className={`${cls}-emptyText`}>无数据，请点击【选择文件】导入数据</div> }}
                             columns={[]}
                             isOpenRowSelection={false}
                             isOpenRowChange={false}
+                            // @ts-ignore
+                            uniqueUid={this.props['uniqueUid']}
                             {...tableProps}
                             dataSource={list}
                         ></LegionsProTable>
                     }
-                   
+
                 </div>
             </div>
         );

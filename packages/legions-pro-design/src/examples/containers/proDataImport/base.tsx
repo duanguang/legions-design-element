@@ -1,23 +1,12 @@
----
-order: 0
-title:
-  zh-CN: 后端解析
-  en-US: 后端解析
----
-
-## zh-CN
-
-后端解析数据并抛出错误信息
-
-## en-US
-
-```jsx
-
-import React from 'react';
+/*
+ * @Author: linzeqin
+ * @Date: 2020-02-27 10:40:54
+ * @description: 公共导入组件demo
+ */
 import { Button } from 'antd';
-import { LegionsProDataImport } from 'legions-pro-design';
-import { ITableColumnConfigProps } from 'legions-pro-design/es/LegionsProTable/interface';
-import create from '../../../common/components/render.tsx';
+import { LegionsProDataImport } from 'components';
+import { ITableColumnConfigProps } from 'components/LegionsProTable/interface';
+import React from 'react';
 
 /** 表格列配置 */
 const columns: ITableColumnConfigProps[] = [
@@ -28,11 +17,11 @@ const columns: ITableColumnConfigProps[] = [
     { title: '归并料号', dataIndex: 'baseCommodityItemNo_value'},
     { title: '商品编码', dataIndex: 'commodityCode_value'},
     { title: '货物名称', dataIndex: 'gname_value'},
-    { title: '货物英文', dataIndex: 'gdescEn_value'},
-    { title: '货物规格', dataIndex: 'type'},
+    { title: '货物英文描述', dataIndex: 'gdescEn_value'},
+    { title: '货物规格型号', dataIndex: 'type'},
 ]
 
-export default class DataImportDemo extends React.Component {
+export default class DataImportBaseDemo extends React.Component {
     /** 提交 */
     handleSubmit = (data: object[]) => {
         console.log(data)
@@ -40,6 +29,7 @@ export default class DataImportDemo extends React.Component {
     render() {
         return (
             <div style={{padding: 10}}>
+                <h2>后端解析</h2>
                 <LegionsProDataImport
                     templateUrl="https://uat-scm.hoolinks.com/file/jg/basic/物料信息-导入样例.xlsx"
                     uploadProps={{
@@ -60,7 +50,6 @@ export default class DataImportDemo extends React.Component {
                     }}
                     tableProps={{
                         uniqueKey: 'trId',
-                        uniqueUid: 'test', // 实际使用场景请勿赋值该属性
                         columns,
                         scroll: {y: 300, x: 1000},
                         onReady: (instance) => {
@@ -75,10 +64,3 @@ export default class DataImportDemo extends React.Component {
         )
     }
 }
-
-const root = props => {
-  return <DataImportDemo></DataImportDemo>;
-};
-const app = create();
-ReactDOM.render(React.createElement(app.start(root)), mountNode);
-```

@@ -1,13 +1,13 @@
 ---
 order: 0
 title:
-  zh-CN: 后端解析
-  en-US: 后端解析
+  zh-CN: 本地解析
+  en-US: 本地解析
 ---
 
 ## zh-CN
 
-后端解析数据并抛出错误信息
+本地直接解析导入文件内容
 
 ## en-US
 
@@ -41,35 +41,28 @@ export default class DataImportDemo extends React.Component {
         return (
             <div style={{padding: 10}}>
                 <LegionsProDataImport
-                    templateUrl="https://uat-scm.hoolinks.com/file/jg/basic/物料信息-导入样例.xlsx"
-                    uploadProps={{
-                        name: 'uploadFile',
-                        action: '/common/excel/import/upload.json',
-                        data: {
-                            templateCode: 'itemMasterImport_flex',
-                        },
+                    uploadDataTransform={async (reponse, data) => {
+                        /* 模拟接口等待两秒 */
+                        await new Promise((resolve) => {
+                            setTimeout(resolve, 2 * 1000)
+                        })
+                        return data.map((item, i) => {
+                            return {trId: i.toString(), isError: false}
+                        })
                     }}
-                    uploadDataTransform={(reponse) => {
-                        return reponse && reponse.success ? reponse.data.dataList.map((item, index) => ({
-                            ...item,
-                            /** 标识数据是否错误 */
-                            isError: index === 2,
-                            /** 标识数据是否警告 */
-                            isWarn: index === 1,
-                        })) : []
-                    }}
+                    uploadProps={{accept: 'xlsx,xls'}}
                     tableProps={{
                         uniqueKey: 'trId',
                         uniqueUid: 'test', // 实际使用场景请勿赋值该属性
                         columns,
                         scroll: {y: 300, x: 1000},
+                        tableModulesName: 'b',
                         onReady: (instance) => {
                             instance.viewModel.isAdaptiveHeight = true;
-                            instance.viewModel.bodyExternalContainer.set('other', {height: 200})
+                            instance.viewModel.bodyExternalContainer.set('other', {height: 150})
                         },
                     }}
                     onSubmit={this.handleSubmit}
-                    customBtn={<Button>自定义按钮</Button>}
                 ></LegionsProDataImport>
             </div>
         )

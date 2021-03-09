@@ -1,45 +1,42 @@
-.wrap{
-    .btnWrap{
+@proDataImportCls: 'legions-pro-import';
+
+.legions-pro-import{
+    .legions-pro-import-btnWrap{
         display: flex;
         background-color: #fff;
         padding: 0 20px 16px;
-        :global{
-            .ant-btn {
-                margin-top: 16px;
-                margin-right: 8px;
-                vertical-align: top;
-            }
+        .ant-btn {
+            margin-top: 16px;
+            margin-right: 8px;
+            vertical-align: middle;
         }
-        /* .btnLeft{} */
-        .btnRight{
+        .legions-pro-import-btnRight{
             width: 100%;
             text-align: right;
-            :global{
-                .ant-spin-nested-loading{
-                    display: inline-block;
-                    overflow: hidden;
-                    vertical-align: top;
-                }
+            .ant-spin-nested-loading{
+                display: inline-block;
+                overflow: hidden;
+                vertical-align: middle;
             }
         }
     }
-    .tipWrap{
+    .legions-pro-import-tipWrap{
         display: flex;
         padding: 10px 22px 10px;
         background-color: #fff;
-        .tipLeft{
+        .legions-pro-import-tipLeft{
             font-size: 14px;
             font-weight: 600;
             color: rgba(51,51,51,1);
             line-height: 20px;
-            .fileName{
+            .legions-pro-import-fileName{
                 font-size: 12px;
                 font-weight: 400;
                 color: rgba(41,153,236,1);
                 line-height: 17px;
                 margin-left: 30px;
                 text-decoration: underline;
-                .fileDel{
+                .legions-pro-import-fileDel{
                     display: none;
                     color: #888;
                     margin-left: 5px;
@@ -52,40 +49,40 @@
                 }
             }
         }
-        .tipRight{
+        .legions-pro-import-tipRight{
             text-align: right;
-            .total,
-            .success,
-            .error,
-            .warn{
+            .legions-pro-import-total,
+            .legions-pro-import-success,
+            .legions-pro-import-error,
+            .legions-pro-import-warn{
                 b {
                     margin: 0 10px;
                 }
             }
-            .total b {
+            .legions-pro-import-total b {
                 color: #108EE9;
             }
-            .success b {
+            .legions-pro-import-success b {
                 color: #00C12A;
             }
-            .error b {
+            .legions-pro-import-error b {
                 color: #FF0000;
             }
-            .warn b {
+            .legions-pro-import-warn b {
                 color: #FF9900;
             }
         }
     }
-    .tableWrap{
+    .legions-pro-import-tableWrap{
         background-color: #fff;
         padding: 0 20px 20px;
-        .errorRow{
+        .legions-pro-import-errorRow{
             background-color: #FEF0F0;
         }
-        .warnRow{
+        .legions-pro-import-warnRow{
             background-color: #FFF4D8;
         }
-        .emptyText{
+        .legions-pro-import-emptyText{
             height: 110px;
             padding-top: 90px;
             margin: 30px 0;
