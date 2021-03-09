@@ -5,11 +5,12 @@ import { UploadChangeParam, UploadFile, UploadFileStatus } from '../interface/an
 import { OpenConfirm } from 'legions-lunar/antd-toolkit';
 import { IProTableProps } from '../LegionsProTable/interface';
 import { IProUploadProps } from '../LegionsProUpload/interface';
+import './style/index.less';
 declare type Proxify<T> = {
     [P in keyof T]: T[P];
 };
 /** 公共导入组件按钮类型 */
-export declare enum HLDataImportBtnEnum {
+export declare enum ProDataImportBtnEnum {
     /** 下载模板 */
     template = 0,
     /** 上传文件 */
@@ -26,18 +27,18 @@ export declare enum HLDataImportBtnEnum {
     goBack = 6
 }
 /** 公共导入组件数据格式 */
-export interface HLDataImportRow {
+export interface ProDataImportRow {
     /** 标识本条数据是否错误 */
     isError: boolean;
     /** 标识本条数据是否有警告 */
     isWarn?: boolean;
 }
 /** 公共导入组件数据实体 */
-export interface InstanceHLDataImport<TableRow = {}> {
-    viewModel: ViewModel<HLDataImportViewModel<TableRow>> & Proxify<HLDataImportViewModel<TableRow>>;
+export interface InstanceProDataImport<TableRow = {}> {
+    viewModel: ViewModel<IViewModel<TableRow>> & Proxify<IViewModel<TableRow>>;
 }
 /** 公共导入组件参数 */
-export declare class HLDataImportProps<TableRow = {}, Model = {}> {
+declare class IProps<TableRow = {}, Model = {}> {
     /**
      * 表格配置项, 配置项参考是HLTable 不要配置data，表格data已被托管
      * @type {Partial<IHLTableProps<TableRow, Model>>}
@@ -83,10 +84,10 @@ export declare class HLDataImportProps<TableRow = {}, Model = {}> {
     className?: string;
     /**
      * 可配置需要隐藏的按钮列表
-     * @type {HLDataImportBtnEnum[]}
+     * @type {ProDataImportBtnEnum[]}
      * @memberof HLDataImportProps
      */
-    hideBtnList?: HLDataImportBtnEnum[];
+    hideBtnList?: ProDataImportBtnEnum[];
     /**
      * 自定义添加其他按钮，会追加在所有操作按钮的最后面
      * @type {React.ReactNode}
@@ -125,11 +126,11 @@ export declare class HLDataImportProps<TableRow = {}, Model = {}> {
      * 获取组件数据实体
      * @memberof HLDataImportProps
      */
-    onReady?: (instance: InstanceHLDataImport<TableRow>) => void;
+    onReady?: (instance: InstanceProDataImport<TableRow>) => void;
 }
-declare class HLDataImportViewModel<TableRow = {}> {
+declare class IViewModel<TableRow = {}> {
     /** 表格数据 */
-    list: (HLDataImportRow & TableRow)[];
+    list: (ProDataImportRow & TableRow)[];
     /** 当前上传的文件 */
     file: Partial<UploadFile>;
     /** 文件上传状态 */
@@ -137,15 +138,15 @@ declare class HLDataImportViewModel<TableRow = {}> {
     /** 是否覆盖导入 */
     isCover: boolean;
 }
-export default class LegionsProDataImport<TableRow = {}, Model = {}> extends React.Component<HLDataImportProps<HLDataImportRow & TableRow, Model>> {
+export default class LegionsProDataImport<TableRow = {}, Model = {}> extends React.Component<IProps<ProDataImportRow & TableRow, Model>> {
     static defaultProps: Object;
-    viewModel: ViewModel<HLDataImportViewModel<HLDataImportRow & TableRow>> & import("brain-store-utils").Proxify<HLDataImportViewModel<HLDataImportRow & TableRow>>;
+    viewModel: ViewModel<IViewModel<ProDataImportRow & TableRow>> & import("brain-store-utils").Proxify<IViewModel<ProDataImportRow & TableRow>>;
     /** 正确数据 */
-    get successList(): (HLDataImportRow & TableRow)[];
+    get successList(): (ProDataImportRow & TableRow)[];
     /** 错误数据 */
-    get errorList(): (HLDataImportRow & TableRow)[];
+    get errorList(): (ProDataImportRow & TableRow)[];
     /** 警告数据 */
-    get warnList(): (HLDataImportRow & TableRow)[];
+    get warnList(): (ProDataImportRow & TableRow)[];
     componentWillMount(): void;
     /** 返回 */
     handleBack: () => void;
@@ -161,7 +162,7 @@ export default class LegionsProDataImport<TableRow = {}, Model = {}> extends Rea
     handleSubmit: () => void;
     /** 删除错误数据 */
     handleDelete: () => void;
-    /** 导入错误数据 */
+    /** 导出错误数据 */
     handleExport: () => void;
     /** 清空文件，恢复初始状态 */
     reset: () => void;

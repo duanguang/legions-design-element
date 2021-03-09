@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-08 12:00:22
- * @LastEditTime: 2021-03-05 15:52:49
+ * @LastEditTime: 2021-03-09 17:46:38
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProConditions/interface/index.ts
@@ -52,7 +52,9 @@ interface IMethods {
             pageIndex: number;
             pageSize?: number;
             keyWords?: string;
-        } & Object) => void
+        } & Object) => void;
+    /** 添加新的搜索条件项 */
+    addQuery: (list:Array<IProConditions['componentModel']>) => void;
 }
 
 export interface IFieldsState {

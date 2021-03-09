@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.3
+  *  legions-pro-design v0.0.7-beta.8
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -342,6 +342,11 @@ var LegionsProConditions = /** @class */ (function (_super) {
                 reset: function () {
                     _this.handleReset();
                 },
+                addQuery: function (list) {
+                    _this.initVModel(list);
+                    _this.viewStore._initQuery(list);
+                    _this.dispatchRequest(list);
+                },
                 setFieldsValues: function (name, callback) {
                     _this.setFieldsValues(name, callback);
                 },
@@ -406,9 +411,9 @@ var LegionsProConditions = /** @class */ (function (_super) {
         this.onDidMount();
         this.consoleLog('componentDidUpdate');
     };
-    LegionsProConditions.prototype.dispatchRequest = function () {
+    LegionsProConditions.prototype.dispatchRequest = function (query) {
         var _this = this;
-        var query = this.props.query;
+        if (query === void 0) { query = this.props.query; }
         query.map(function (item) {
             if (item instanceof ConditionSelectModel) {
                 var props = item.conditionsProps;
@@ -436,10 +441,11 @@ var LegionsProConditions = /** @class */ (function (_super) {
             callback(value);
         });
     };
-    LegionsProConditions.prototype.initVModel = function () {
+    LegionsProConditions.prototype.initVModel = function (query) {
+        if (query === void 0) { query = this.props.query; }
         var data = {};
         var prams = {};
-        this.props.query.map(function (item) {
+        query.map(function (item) {
             var name = item.containerProps.name;
             if (!(item instanceof ConditionSearchModel) && item.jsonProperty) {
                 if (isArray(item.conditionsProps.defaultValue)) {

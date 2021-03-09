@@ -32,6 +32,8 @@ interface IMethods {
         pageSize?: number;
         keyWords?: string;
     } & Object) => void;
+    /** 添加新的搜索条件项 */
+    addQuery: (list: Array<IProConditions['componentModel']>) => void;
 }
 export interface IFieldsState {
     /**

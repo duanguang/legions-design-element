@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-10 16:14:09
- * @LastEditTime: 2021-03-09 16:11:35
+ * @LastEditTime: 2021-03-09 17:58:28
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/script/entiy.js
@@ -31,7 +31,9 @@ const array_component = [
 'LegionsProErrorReportShow',
 'LegionsProException',
  'LegionsProIframe', */
- /* 'LegionsProForm', */
+/* 'LegionsProForm', */
+  
+'LegionsProConditions',
 /*  'LegionsProInput',
   'LegionsProLayout',
 'LegionsProLineOverflow',
@@ -46,7 +48,6 @@ const array_component = [
   'LegionsProTable',
  'LegionsProTableCustomColumns',
   'LegionsProTableForm', */
-  'LegionsProTableCustomColumns',
   /* 'LegionsProTabsForm',
 'LegionsProModalForm',
 'LegionsProTextArea',

@@ -175,6 +175,11 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
                 reset: () => {
                     this.handleReset()
                 },
+                addQuery: (list) => {
+                    this.initVModel(list);
+                    this.viewStore._initQuery(list);
+                    this.dispatchRequest(list);
+                },
                 setFieldsValues: (name: string,callback: (value) => void)=>{
                     this.setFieldsValues(name,callback);
                 },
@@ -246,8 +251,7 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
         this.onDidMount()
         this.consoleLog('componentDidUpdate')
     }
-    dispatchRequest() {
-        const { query } = this.props;
+    dispatchRequest(query=this.props.query) {
         query.map((item) => {
             if (item instanceof ConditionSelectModel) {
                 const props = item.conditionsProps as IQuerySelectProps;
@@ -275,10 +279,10 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
             callback(value);
         });
     }
-    initVModel() {
+    initVModel(query=this.props.query) {
         let data = {}
         let prams = {}
-        this.props.query.map((item) => {
+        query.map((item) => {
             const name = item.containerProps.name;
             if (!(item instanceof ConditionSearchModel) && item.jsonProperty) {
                 if (isArray(item.conditionsProps.defaultValue)) {
