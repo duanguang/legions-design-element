@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-08 12:00:22
- * @LastEditTime: 2021-03-09 17:46:38
+ * @LastEditTime: 2021-03-09 22:36:40
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProConditions/interface/index.ts
@@ -54,7 +54,9 @@ interface IMethods {
             keyWords?: string;
         } & Object) => void;
     /** 添加新的搜索条件项 */
-    addQuery: (list:Array<IProConditions['componentModel']>) => void;
+    addQuery: (list: Array<IProConditions['componentModel']>) => void;
+    /** 移除指定搜索条件项 */
+    removeQuery: (uuid: string) => boolean;
 }
 
 export interface IFieldsState {

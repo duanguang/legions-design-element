@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.7-beta.2
+  *  legions-pro-design v0.0.7-beta.9
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -91,7 +91,7 @@ function __values(o) {
 /*
  * @Author: duanguang
  * @Date: 2021-01-07 16:49:31
- * @LastEditTime: 2021-03-05 16:33:06
+ * @LastEditTime: 2021-03-09 22:35:08
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreConditions/conditionView.ts
@@ -318,6 +318,10 @@ var ConditionView = /** @class */ (function () {
             });
         }
     };
+    /** 移除指定搜索条件项  */
+    ConditionView.prototype._removeQuery = function (uuid) {
+        return this.query.delete(uuid);
+    };
     __decorate([
         observable,
         __metadata("design:type", Object)
@@ -418,6 +422,12 @@ var ConditionView = /** @class */ (function () {
         __metadata("design:paramtypes", [String, Object, Object]),
         __metadata("design:returntype", void 0)
     ], ConditionView.prototype, "_dispatchRequest", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [String]),
+        __metadata("design:returntype", void 0)
+    ], ConditionView.prototype, "_removeQuery", null);
     return ConditionView;
 }());
 

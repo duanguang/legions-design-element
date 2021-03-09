@@ -81,4 +81,6 @@ export declare class ConditionView<Query = {}> {
         /** 接口请求完成触发 */
         callback?: (value: any) => void;
     }): void;
+    /** 移除指定搜索条件项  */
+    _removeQuery(uuid: string): boolean;
 }

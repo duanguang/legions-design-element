@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.7-beta.8
+  *  legions-pro-design v0.0.7-beta.9
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -346,6 +346,9 @@ var LegionsProConditions = /** @class */ (function (_super) {
                     _this.initVModel(list);
                     _this.viewStore._initQuery(list);
                     _this.dispatchRequest(list);
+                },
+                removeQuery: function (uuid) {
+                    return _this.viewStore._removeQuery(uuid);
                 },
                 setFieldsValues: function (name, callback) {
                     _this.setFieldsValues(name, callback);

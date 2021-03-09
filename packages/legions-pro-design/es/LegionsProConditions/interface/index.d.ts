@@ -34,6 +34,8 @@ interface IMethods {
     } & Object) => void;
     /** 添加新的搜索条件项 */
     addQuery: (list: Array<IProConditions['componentModel']>) => void;
+    /** 移除指定搜索条件项 */
+    removeQuery: (uuid: string) => boolean;
 }
 export interface IFieldsState {
     /**

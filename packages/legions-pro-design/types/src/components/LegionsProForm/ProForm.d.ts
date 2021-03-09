@@ -136,8 +136,8 @@ export declare class LegionsProForm<mapProps = {}> extends React.Component<IProF
         readonly computedFormFields: (LabelWithInputModel | LabelWithInputNumberModel | LabelWithDatePickerModel | LabelWithMonthPickerModel | LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel | LabelWithRadioButtonModel | LabelWithTextModel | LabelWithSelectModel | LabelWithCheckboxModel)[];
         readonly computedAllFormFields: (LabelWithInputModel | LabelWithInputNumberModel | LabelWithDatePickerModel | LabelWithMonthPickerModel | LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel | LabelWithRadioButtonModel | LabelWithTextModel | LabelWithSelectModel | LabelWithCheckboxModel)[];
         readonly computedErrorListView: IErrorView[];
-        readonly computedFormSize: "small" | "table" | "default";
-        updateFormSize: (size: "small" | "table" | "default") => void;
+        readonly computedFormSize: "small" | "default" | "table";
+        updateFormSize: (size: "small" | "default" | "table") => void;
         collectErrorReactNode: (componentCode: string, errorUid: string) => void;
         setErrorErrorReactNodeList: (componentCode: string, errorListView: IErrorView[]) => void;
         handleIgnore: (componentCode: string, id: number) => void;

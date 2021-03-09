@@ -96,6 +96,7 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
             keyWords?: string;
             callback?: (value: any) => void;
         }) => void;
+        _removeQuery: (uuid: string) => boolean;
     };
     get vmModel(): any;
     static defaultProps: {

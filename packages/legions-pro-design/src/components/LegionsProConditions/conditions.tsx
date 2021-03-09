@@ -180,6 +180,9 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
                     this.viewStore._initQuery(list);
                     this.dispatchRequest(list);
                 },
+                removeQuery: (uuid) => {
+                    return this.viewStore._removeQuery(uuid);
+                },
                 setFieldsValues: (name: string,callback: (value) => void)=>{
                     this.setFieldsValues(name,callback);
                 },
