@@ -96,10 +96,10 @@ export default  class LegionsProEchartsLayout extends React.Component<LayoutProp
                 /** 遇到ProRow元素，设置gutter属性 */
                 if (item.props.className && item.props.className.indexOf(`${prefixCls}-row`) > -1) {
                     newProps = {...newProps, gutter: item.props.gutter || gutter}
-                }
-                /** 深度deep === 1时，设置每一行的上下间距，除最后一行 */
-                if (index !== React.Children.count(children) - 1 && deep === 1) {
-                    newProps = {...newProps, style: {...item.props.style, paddingBottom: gutter}}
+                    /** 深度deep === 1时，设置每一行的上下间距，除最后一行 */
+                    if (deep === 1 && index !== React.Children.count(children) - 1) {
+                        newProps = {...newProps, style: {...item.props.style, paddingBottom: gutter}}
+                    }
                 }
             } catch (error) {
                 console.error(error)
