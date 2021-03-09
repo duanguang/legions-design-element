@@ -20,4 +20,5 @@ export { default as LegionsProEchartsLayout }  from './LegionsProEchartsLayout';
 export { default as LegionsProEchartsLiquidFill }  from './LegionsProEchartsLiquidFill';
 export { default as LegionsProEchartsWordCloud }  from './LegionsProEchartsWordCloud';
 export { default as LegionsProEchartsMap }  from './LegionsProEchartsMap';
+export { default as LegionsProEchartsHeader, LegionsProEchartsHeaderProps }  from './LegionsProEchartsHeader';
 export * from './LegionsProEchartsParts';

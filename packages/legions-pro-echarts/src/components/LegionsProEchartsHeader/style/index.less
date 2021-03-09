@@ -1,0 +1,157 @@
+@import '../../style/index.less';
+
+@headerCls: ~'@{prefixCls}-header';
+
+@header-width: 70%;
+@header-color: #00b8f7;
+@header-text-color: #0ee9f1;
+@icon-color-1: #00e7fb;
+@icon-color-2: #00bacd;
+
+.@{headerCls}{
+    position: relative;
+    color: @header-text-color;
+    display: block;
+    font-size: 22px;
+    text-align: center;
+    padding: 12px 0 8px;
+    width: 100%;
+    .pro-header-content{
+        display: inline-block;
+        overflow: hidden;
+        padding: 0 40px;
+        position: relative;
+        width: @header-width;
+        vertical-align: middle;
+        box-sizing: content-box;
+        white-space: nowrap;
+        .pro-header-icon{
+            content: '';
+            position: absolute;
+            top: -30px;
+            display: inline-block;
+            width: 20px;
+            height: 100px;
+            background: linear-gradient(to bottom, @icon-color-1, @icon-color-2);
+            z-index: 10;
+        }
+        .pro-header-icon:nth-child(1){
+            left: 27px;
+            width: 20px;
+            transform: rotateZ(-45deg);
+        }
+        .pro-header-icon:nth-child(2){
+            right: 27px;
+            width: 20px;
+            transform: rotateZ(45deg);
+        }
+        .pro-header-icon:nth-child(3){
+            left: 64px;
+            width: 10px;
+            transform: rotateZ(-45deg);
+            opacity: 0.95;
+        }
+        .pro-header-icon:nth-child(4){
+            right: 64px;
+            width: 10px;
+            transform: rotateZ(45deg);
+            opacity: 0.95;
+        }
+        .pro-header-icon:nth-child(5){
+            left: 95px;
+            width: 40px;
+            transform: rotateZ(-45deg);
+            opacity: 0.9;
+        }
+        .pro-header-icon:nth-child(6){
+            right: 95px;
+            width: 40px;
+            transform: rotateZ(45deg);
+            opacity: 0.9;
+        }
+        .pro-header-icon:nth-child(7){
+            left: 170px;
+            width: 5px;
+            transform: rotateZ(-45deg);
+            opacity: 0.6;
+        }
+        .pro-header-icon:nth-child(8){
+            right: 170px;
+            width: 5px;
+            transform: rotateZ(45deg);
+            opacity: 0.6;
+        }
+        .pro-header-icon:nth-child(9){
+            left: 185px;
+            width: 5px;
+            transform: rotateZ(-45deg);
+            opacity: 0.5;
+        }
+        .pro-header-icon:nth-child(10){
+            right: 185px;
+            width: 5px;
+            transform: rotateZ(45deg);
+            opacity: 0.5;
+        }
+        .pro-header-icon:nth-child(11){
+            left: 200px;
+            width: 5px;
+            transform: rotateZ(-45deg);
+            opacity: 0.4;
+        }
+        .pro-header-icon:nth-child(12){
+            right: 200px;
+            width: 5px;
+            transform: rotateZ(45deg);
+            opacity: 0.4;
+        }
+        .pro-header-icon:nth-child(13){
+            left: 215px;
+            width: 5px;
+            transform: rotateZ(-45deg);
+            opacity: 0.3;
+        }
+        .pro-header-icon:nth-child(14){
+            right: 215px;
+            width: 5px;
+            transform: rotateZ(45deg);
+            opacity: 0.3;
+        }
+    }
+    .pro-header-top {
+        display: block;
+        position: absolute;
+        top: 6px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: @header-width;
+        padding: 0 40px;
+        background-color: @header-color;
+        height: 1px;
+        box-sizing: content-box;
+        &::after{
+            content: '';
+            display: block;
+            position: absolute;
+            top: -6px;
+            left: 0;
+            width: 100%;
+            padding: 0 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            box-sizing: content-box;
+            background-color: @header-color;
+            height: 2px;
+        }
+    }
+    .pro-header-bottom {
+        display: block;
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: @header-width;
+        background-color: @header-color;
+        height: 2px;
+    }
+}

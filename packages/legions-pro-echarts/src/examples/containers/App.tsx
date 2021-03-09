@@ -12,16 +12,13 @@ export default class App extends React.Component {
     unstable_handleError(e) {
         console.dir(e,'unstable_handleError');
     }
-    constructor() {
-        super()
-    }
     render() {
         return (
             <Switch>
                 {/* 页面容器，容器超出显示滚动条 */}
-                <Route path="/layoutBase" component={LayoutBaseDemo}></Route>
+                <Route path="/layout/base" component={LayoutBaseDemo}></Route>
                 {/* 页面容器，满屏显示，超出隐藏 */}
-                <Route path="/layoutFull" component={LayoutFullDemo}></Route>
+                <Route path="/layout/full" component={LayoutFullDemo}></Route>
                 {/* chart合集 */}
                 <Route path="/chart" exact component={LegionsProEchartsChartPieDemo}></Route>
                 {/* chart.map */}
