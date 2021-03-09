@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-10 16:14:09
- * @LastEditTime: 2021-03-09 10:44:32
+ * @LastEditTime: 2021-03-09 16:11:35
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/script/entiy.js
@@ -46,7 +46,7 @@ const array_component = [
   'LegionsProTable',
  'LegionsProTableCustomColumns',
   'LegionsProTableForm', */
-  'LegionsProTabsForm',
+  'LegionsProTableCustomColumns',
   /* 'LegionsProTabsForm',
 'LegionsProModalForm',
 'LegionsProTextArea',

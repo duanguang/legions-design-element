@@ -111,7 +111,7 @@ export interface IAntdSelectOption extends OptionProps {
      */
     value: string;
     key: string;
-    keyValue?: any;
+    extendedField?: string;
     /**
      * 分组信息
      *

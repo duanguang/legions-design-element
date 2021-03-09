@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { InstanceProModal } from '../LegionsProModal/interface';
 import LegionsStoreTable from '../LegionsStoreTable';
+import './style/index.less';
 interface IProps {
     /**
      * 列配置归属table表
