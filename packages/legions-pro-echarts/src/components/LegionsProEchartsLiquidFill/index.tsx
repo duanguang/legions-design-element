@@ -1,17 +1,16 @@
 /*
- * @Author: duanguang
+ * @Author: linzeqin
  * @Date: 2020-12-14 16:10:47
- * @LastEditTime: 2020-12-18 16:42:03
- * @LastEditors: duanguang
+ * @LastEditTime: 2020-12-18 16:13:20
+ * @LastEditors: linzeqin
  * @Description: 水滴波纹组件
- * @FilePath: /legions-design-element/packages/legions-pro-echarts/src/components/LegionsProEchartsLiquidFill/index.tsx
- * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
 import 'echarts-liquidfill';
 import { merge } from 'lodash';
 import React from 'react';
 import { echarts, LegionsProEchartsPropsTypes } from '../interface';
 import LegionsProEcharts from '../LegionsProEcharts';
+const { LinearGradient } = echarts.graphic;
 
 export class LegionsProEchartsLiquidFillProps extends LegionsProEchartsPropsTypes<any> {
     /** 数据 */
@@ -21,7 +20,7 @@ export default class LegionsProEchartsLiquidFill extends React.Component<Legions
     static defaultProps: Readonly<LegionsProEchartsLiquidFillProps> = new LegionsProEchartsLiquidFillProps()
 
     /** 配置项 */
-    get option() {
+    private get option() {
         return {
             series: [
                 {
@@ -29,7 +28,7 @@ export default class LegionsProEchartsLiquidFill extends React.Component<Legions
                     data: this.props.data || [],
                     radius: '80%',
                     center: ['50%', '50%'],
-                    color: [new echarts.graphic.LinearGradient(0,0,0,1,[{
+                    color: [new LinearGradient(0,0,0,1,[{
                         offset: 1,
                         color: 'rgba(58, 71, 212, 0)'
                     }, {
@@ -50,7 +49,7 @@ export default class LegionsProEchartsLiquidFill extends React.Component<Legions
                         borderDistance: 0,
                         itemStyle: {
                             borderWidth: 8,
-                            borderColor: new echarts.graphic.LinearGradient(0,0,0,1,[{
+                            borderColor: new LinearGradient(0,0,0,1,[{
                                 offset: 0,
                                 color: 'rgba(69, 73, 240, 0)'
                             }, {
@@ -65,7 +64,7 @@ export default class LegionsProEchartsLiquidFill extends React.Component<Legions
                         }
                     },
                     backgroundStyle: {
-                        color: new echarts.graphic.LinearGradient(1,0,0.5,1,[{
+                        color: new LinearGradient(1,0,0.5,1,[{
                             offset: 1,
                             color: 'rgba(68, 145, 253, 0)'
                         }, {

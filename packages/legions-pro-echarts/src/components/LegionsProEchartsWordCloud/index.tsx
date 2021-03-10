@@ -1,14 +1,16 @@
 /*
  * @Author: linzeqin
- * @Date: 2021-01-22 14:23:11
- * @description: 词云
+ * @Date: 2020-12-14 16:10:47
+ * @LastEditTime: 2020-12-18 16:13:20
+ * @LastEditors: linzeqin
+ * @Description: 词云
  */
-import LegionsProEcharts from '../LegionsProEcharts';
 import 'echarts-wordcloud';
 import { merge } from 'lodash';
 import React from 'react';
-import { echarts, LegionsProEchartsOption, LegionsProEchartsPropsTypes } from '../interface';
 import { mainColorList } from '../core';
+import { LegionsProEchartsOption, LegionsProEchartsPropsTypes } from '../interface';
+import LegionsProEcharts from '../LegionsProEcharts';
 
 export class LegionsProEchartsWordCloudProps extends LegionsProEchartsPropsTypes<any> {
     /** 数据 */

@@ -4,8 +4,9 @@
  * @description: 基础表格组件示例
  */
 import { Button, Tag, Tooltip } from 'antd';
-import { LegionsProEchartsBox, LegionsProEchartsButton, LegionsProEchartsLayout, LegionsProEchartsProgress, LegionsProEchartsTable } from 'components';
+import { LegionsProEchartsBox, LegionsProEchartsLayout } from 'components';
 import { mainColorList } from 'components/core';
+import { LegionsProEchartsButton, LegionsProEchartsProgress, LegionsProEchartsTable } from 'components/LegionsProEchartsParts';
 import { randomBytes } from 'crypto';
 import React from 'react';
 const { ProRow, ProCol } = LegionsProEchartsLayout;

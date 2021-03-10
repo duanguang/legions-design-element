@@ -1,3 +1,10 @@
+/*
+ * @Author: linzeqin
+ * @Date: 2020-12-14 16:10:47
+ * @LastEditTime: 2020-12-18 16:13:20
+ * @LastEditors: linzeqin
+ * @Description: 地图组件
+ */
 import React from 'react';
 import  LegionsProEcharts from '../LegionsProEcharts';
 import { echarts, LegionsProEchartsOption, LegionsProEchartsPropsTypes } from '../interface'
@@ -23,7 +30,7 @@ export default class LegionsProEchartsMap extends React.Component<LegionsProEcha
     componentWillMount() {
         this.props.initRegisterWorldMap && echarts.registerMap('world', LegionsProEchartsMap.worldData)
     }
-    get option(): LegionsProEchartsOption<MapOption> {
+    private get option(): LegionsProEchartsOption<MapOption> {
         return {
             tooltip: {
                 trigger: 'item',

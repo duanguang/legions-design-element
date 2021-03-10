@@ -1,19 +1,15 @@
-/// <reference types="echarts" />
+import * as echarts from 'echarts/core';
 import { Component } from 'react';
-import echarts from 'echarts/lib/echarts';
-import { LegionsProEchartsPropsTypes } from '../interface/interface';
-interface ILegionsProEchartsReactCore extends LegionsProEchartsPropsTypes {
-    echarts: typeof echarts;
-}
-export declare class LegionsProEchartsCore<P = {}> extends Component<LegionsProEchartsPropsTypes & P> {
-    static defaultProps: Readonly<LegionsProEchartsPropsTypes>;
+import { LegionsProEchartsPropsTypes } from '../interface';
+export default class LegionsProEchartsCore<P> extends Component<LegionsProEchartsPropsTypes<P>> {
+    static defaultProps: Readonly<LegionsProEchartsPropsTypes<any>>;
     echartsLib: typeof echarts;
-    echartsElement: HTMLDivElement | HTMLCanvasElement;
-    constructor(props: ILegionsProEchartsReactCore & P);
+    echartsElement: HTMLDivElement;
+    echartObj: echarts.ECharts;
+    constructor(props: LegionsProEchartsPropsTypes<P>);
     componentDidMount(): void;
     componentDidUpdate(prevProps: any): void;
-    /** 获取Echarts实例，没有则初始化 */
-    getEchartsInstance: () => echarts.ECharts;
+    componentWillUnmount(): void;
     renderEchartDom: () => echarts.ECharts;
     rerender: () => void;
     bindEvents: (instance: any, events: any) => void;
@@ -21,4 +17,3 @@ export declare class LegionsProEchartsCore<P = {}> extends Component<LegionsProE
     dispose: () => void;
     render(): JSX.Element;
 }
-export {};

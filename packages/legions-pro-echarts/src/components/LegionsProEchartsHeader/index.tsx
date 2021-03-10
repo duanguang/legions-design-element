@@ -1,18 +1,16 @@
 /*
- * @Author: duanguang
+ * @Author: linzeqin
  * @Date: 2020-12-14 16:10:47
- * @LastEditTime: 2020-12-18 16:12:50
- * @LastEditors: duanguang
- * @Description: 饼图组件
- * @FilePath: /legions-design-element/packages/legions-pro-echarts/src/components/LegionsProEchartsChartCard/index.tsx
- * @「扫去窗上的尘埃，才可以看到窗外的美景。」
+ * @LastEditTime: 2020-12-18 16:13:20
+ * @LastEditors: linzeqin
+ * @Description: 头部大标题
  */
 import { prefixCls } from '../core';
 import React from 'react';
 import { bind, clear } from 'size-sensor';
 import './style/index.less';
 
-export class LegionsProEchartsHeaderProps{
+class IProps{
     /** 主题 */
     theme?: 'default' = 'default';
     /** 容器类名 */
@@ -21,8 +19,8 @@ export class LegionsProEchartsHeaderProps{
     style?: React.CSSProperties = {};
 }
 /** 卡片组件 */
-export default class LegionsProEchartsHeader extends React.Component<LegionsProEchartsHeaderProps>{
-    static defaultProps: Readonly<LegionsProEchartsHeaderProps> = new LegionsProEchartsHeaderProps()
+export default class LegionsProEchartsHeader extends React.Component<IProps>{
+    static defaultProps: Readonly<IProps> = new IProps()
     // @ts-ignore
     ele: HTMLDivElement = null;
     state = { scale: 1 }

@@ -1,4 +1,10 @@
-
+/*
+ * @Author: linzeqin
+ * @Date: 2020-12-14 16:10:47
+ * @LastEditTime: 2020-12-18 16:13:20
+ * @LastEditors: linzeqin
+ * @Description: 基础布局组件
+ */
 import { Col, Row } from 'antd';
 import { RowProps } from 'antd/lib/grid/row';
 import { ColProps } from 'antd/lib/grid/col';

@@ -27,6 +27,7 @@ interface IProps<T> extends TableProps<T> {
     isFullScreen?: boolean
 }
 export default class LegionsProEchartsTable<T> extends React.Component<IProps<T>> {
+    ref: any = null;
     /** 列配置劫持处理，添加tooltip和超出隐藏显示省略号功能 */
     private columnsFactory = (columns: LegionsProEchartsTableColumnProps<T>[]) => {
         return columns.map((item) => {
@@ -51,6 +52,7 @@ export default class LegionsProEchartsTable<T> extends React.Component<IProps<T>
         const pagination = props.pagination ? `${prefixCls}-table-pagination` : '';
         return (
             <Table<T>
+                ref={(ref) => {this.ref = ref}}
                 size="middle"
                 {...props}
                 columns={this.columnsFactory(columns)}

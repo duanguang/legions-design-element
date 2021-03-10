@@ -1,16 +1,13 @@
 /**
   *  legions-pro-echarts v0.0.7
-  * (c) 2020 duanguang
+  * (c) 2021 duanguang
   * @license MIT
   */
-import React from 'react';
-import { LegionsProEcharts } from '../LegionsProEcharts';
-import { observablePromise, observableViewModel } from 'brain-store-utils';
-import { observable } from 'mobx';
-import { MORE_IOCN } from '../core';
+import { LineChart } from 'echarts/charts';
 import { merge } from 'lodash';
-import 'echarts/lib/chart/line';
-import 'echarts/lib/component/toolbox';
+import React from 'react';
+import { echarts, LegionsProEchartsPropsTypes } from '../interface';
+import LegionsProEcharts from '../LegionsProEcharts';
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -41,86 +38,30 @@ function __extends(d, b) {
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 }
 
-function __decorate(decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-}
+var __assign = function() {
+    __assign = Object.assign || function __assign(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 
-function __metadata(metadataKey, metadataValue) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(metadataKey, metadataValue);
-}
-
-var theme = require('../locale/theme.json');
-var LegionsProEchartsPropsTypes = /** @class */ (function () {
-    function LegionsProEchartsPropsTypes() {
-        /** 配置项 */
-        this.option = {};
-        this.onEvents = {};
-        /** 是否显示加载状态 */
-        this.loading = false;
-        this.loadingOption = {};
-        /** 初始化附加参数 */
-        this.opts = {};
-        /** 初始化主题 */
-        //@ts-ignore
-        this.theme = theme;
-        /** 容器样式 */
-        this.style = {};
-        /** 容器类名 */
-        this.className = '';
-        /** setOption时的附加配置项 */
-        this.setOptionConfig = {};
-        /** 由上层觉得是否需要setOption, 类似shouldComponentUpdate。默认为 true */
-        this.shouldSetOption = function () { return true; };
-        /** echarts 实例化完成后执行并抛出实例 */
-        this.onChartReady = function () { };
-    }
-    return LegionsProEchartsPropsTypes;
-}());
-
+echarts.use([LineChart]);
 var LegionsProEchartsChartLineProps = /** @class */ (function (_super) {
     __extends(LegionsProEchartsChartLineProps, _super);
     function LegionsProEchartsChartLineProps() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        /** 数据 */
-        _this.data = [{ value: 100, name: 'demo' }];
-        /** 配置项 */
-        _this.option = {};
-        return _this;
+        return _super !== null && _super.apply(this, arguments) || this;
     }
     return LegionsProEchartsChartLineProps;
 }(LegionsProEchartsPropsTypes));
-var ViewModel = /** @class */ (function () {
-    function ViewModel() {
-        /** 请求托管response */
-        this.response = observablePromise();
-    }
-    __decorate([
-        observable,
-        __metadata("design:type", Object)
-    ], ViewModel.prototype, "response", void 0);
-    return ViewModel;
-}());
 var LegionsProEchartsChartLine = /** @class */ (function (_super) {
     __extends(LegionsProEchartsChartLine, _super);
     function LegionsProEchartsChartLine() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.viewModel = observableViewModel(new ViewModel());
-        return _this;
+        return _super !== null && _super.apply(this, arguments) || this;
     }
-    Object.defineProperty(LegionsProEchartsChartLine.prototype, "responseData", {
-        /** 自动接管接口返回数据 */
-        get: function () {
-            if (this.viewModel.response.isResolved && this.props.autoQuery) {
-                return this.props.autoQuery.responseTransform(this.viewModel.response);
-            }
-            return [];
-        },
-        enumerable: false,
-        configurable: true
-    });
     Object.defineProperty(LegionsProEchartsChartLine.prototype, "option", {
         /** 配置项 */
         get: function () {
@@ -137,36 +78,8 @@ var LegionsProEchartsChartLine = /** @class */ (function (_super) {
                     top: '20%',
                     left: '3%',
                     right: '4%',
-                    bottom: '3%',
+                    bottom: '5%',
                     containLabel: true,
-                },
-                toolbox: {
-                    /* show: true, */
-                    feature: {
-                        saveAsImage: { type: 'png', show: true },
-                        magicType: {
-                            type: ["line", "bar", 'stack', 'tiled']
-                        },
-                        myReadMore: {
-                            onclick: function () {
-                                alert('myToolHandler2');
-                            },
-                            title: 'more',
-                            icon: MORE_IOCN
-                        },
-                    },
-                    showTitle: false,
-                    tooltip: {
-                        show: true,
-                        formatter: function (param) {
-                            return '<div>' + param.title + '</div>'; // 自定义的 DOM 结构
-                        },
-                        backgroundColor: '#222',
-                        textStyle: {
-                            fontSize: 12,
-                        },
-                        extraCssText: 'box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);' // 自定义的 CSS 样式
-                    }
                 },
                 xAxis: {
                     type: 'category',
@@ -194,18 +107,23 @@ var LegionsProEchartsChartLine = /** @class */ (function (_super) {
                     },
                     show: true,
                 },
-                series: [],
+                series: [
+                    {
+                        type: 'line',
+                    }
+                ],
             };
         },
         enumerable: false,
         configurable: true
     });
     LegionsProEchartsChartLine.prototype.render = function () {
-        var option = this.props.option;
-        return (React.createElement(LegionsProEcharts, { option: merge(this.option, option) }));
+        var option = merge(this.option, this.props.option);
+        return (React.createElement(LegionsProEcharts, __assign({}, this.props, { option: merge(this.option, option) })));
     };
     LegionsProEchartsChartLine.defaultProps = new LegionsProEchartsChartLineProps();
     return LegionsProEchartsChartLine;
 }(React.Component));
 
-export { LegionsProEchartsChartLine, LegionsProEchartsChartLineProps };
+export default LegionsProEchartsChartLine;
+export { LegionsProEchartsChartLineProps };

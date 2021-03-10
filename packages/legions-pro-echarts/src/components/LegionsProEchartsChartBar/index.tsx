@@ -1,10 +1,11 @@
 /*
  * @Author: linzeqin
- * @Date: 2021-01-22 14:23:11
- * @description: 柱状图
+ * @Date: 2020-12-14 16:10:47
+ * @LastEditTime: 2020-12-18 16:13:20
+ * @LastEditors: linzeqin
+ * @Description: 柱状图
  */
 import { BarChart, BarSeriesOption } from 'echarts/charts';
-import { observer } from 'legions/store-react';
 import { merge } from 'lodash';
 import React from 'react';
 import { echarts, LegionsProEchartsOption, LegionsProEchartsPropsTypes } from '../interface';
@@ -17,7 +18,6 @@ export class LegionsProEchartsChartBarProps extends LegionsProEchartsPropsTypes<
     data?: BarSeriesOption['data'];
 }
 
-@observer
 export default class LegionsProEchartsChartBar extends React.Component<LegionsProEchartsChartBarProps>{
     static defaultProps: Readonly<LegionsProEchartsChartBarProps> = new LegionsProEchartsChartBarProps()
 
