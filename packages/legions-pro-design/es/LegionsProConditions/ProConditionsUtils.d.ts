@@ -1,5 +1,5 @@
 import React from 'react';
-import { IQueryCheckBoxProps, IQueryDateProps, IQueryGroupCheckBoxProps, IQueryRadioButtonProps, IQueryRangePickerProps, IQuerySelectProps, IQueryTextAreaProps, IQueryTextNumberProps, IQueryTextProps } from './interface';
+import { IQueryCheckBoxProps, IQueryDateProps, IQueryGroupCheckBoxProps, IQueryProps, IQueryRadioButtonProps, IQueryRangePickerProps, IQuerySelectProps, IQueryTextAreaProps, IQueryTextNumberProps, IQueryTextProps } from './interface';
 import { ColSize } from 'antd/lib/grid/col';
 import { IViewQueryConditionStore } from '../LegionsStoreConditions/interface';
 interface ColProps {
@@ -25,44 +25,51 @@ interface ColProps {
 interface IContainerProps {
     col: ColProps;
     name: string;
+    /** 单击时触发 */
+    onClick?: (value: {
+        uid: string;
+        compnentName: string;
+    }) => void;
+    style?: React.CSSProperties;
+    className?: string;
     /** 只读 */
     readonly uuid?: string;
 }
 export declare class ConditionSelectModel {
     containerProps: IContainerProps;
-    conditionsProps: IQuerySelectProps;
+    conditionsProps: IQuerySelectProps & IQueryProps;
     jsonProperty: string;
-    constructor(containerProps: IContainerProps, conditionsProps: IQuerySelectProps, jsonProperty: string);
+    constructor(containerProps: IContainerProps, conditionsProps: IQuerySelectProps & IQueryProps, jsonProperty: string);
 }
 export declare class ConditionTextNumberModel {
     containerProps: IContainerProps;
-    conditionsProps: IQueryTextNumberProps;
+    conditionsProps: IQueryTextNumberProps & IQueryProps;
     jsonProperty: string;
-    constructor(containerProps: IContainerProps, conditionsProps: IQueryTextNumberProps, jsonProperty: string);
+    constructor(containerProps: IContainerProps, conditionsProps: IQueryTextNumberProps & IQueryProps, jsonProperty: string);
 }
 export declare class ConditionRadioButtonModel {
     containerProps: IContainerProps;
-    conditionsProps: IQueryRadioButtonProps;
+    conditionsProps: IQueryRadioButtonProps & IQueryProps;
     jsonProperty: string;
-    constructor(containerProps: IContainerProps, conditionsProps: IQueryRadioButtonProps, jsonProperty: string);
+    constructor(containerProps: IContainerProps, conditionsProps: IQueryRadioButtonProps & IQueryProps, jsonProperty: string);
 }
 export declare class ConditionTextAreaModel {
     containerProps: IContainerProps;
-    conditionsProps: IQueryTextAreaProps;
+    conditionsProps: IQueryTextAreaProps & IQueryProps;
     jsonProperty: string;
-    constructor(containerProps: IContainerProps, conditionsProps: IQueryTextAreaProps, jsonProperty: string);
+    constructor(containerProps: IContainerProps, conditionsProps: IQueryTextAreaProps & IQueryProps, jsonProperty: string);
 }
 export declare class ConditionTextModel {
     containerProps: IContainerProps;
-    conditionsProps: IQueryTextProps;
+    conditionsProps: IQueryTextProps & IQueryProps;
     jsonProperty: string;
-    constructor(containerProps: IContainerProps, conditionsProps: IQueryTextProps, jsonProperty: string);
+    constructor(containerProps: IContainerProps, conditionsProps: IQueryTextProps & IQueryProps, jsonProperty: string);
 }
 export declare class ConditionDateModel {
     containerProps: IContainerProps;
-    conditionsProps: IQueryDateProps;
+    conditionsProps: IQueryDateProps & IQueryProps;
     jsonProperty: string;
-    constructor(containerProps: IContainerProps, conditionsProps: IQueryDateProps, jsonProperty: string);
+    constructor(containerProps: IContainerProps, conditionsProps: IQueryDateProps & IQueryProps, jsonProperty: string);
 }
 interface IQuerySearchConfigProps {
     /**查询按钮的文本 */
@@ -83,21 +90,21 @@ export declare class ConditionSearchModel {
 }
 export declare class ConditionRangePickerModel {
     containerProps: IContainerProps;
-    conditionsProps: IQueryRangePickerProps;
+    conditionsProps: IQueryRangePickerProps & IQueryProps;
     jsonProperty: string;
-    constructor(containerProps: IContainerProps, conditionsProps: IQueryRangePickerProps, jsonProperty: string);
+    constructor(containerProps: IContainerProps, conditionsProps: IQueryRangePickerProps & IQueryProps, jsonProperty: string);
 }
 export declare class ConditionCheckBoxModel {
     containerProps: IContainerProps;
-    conditionsProps: IQueryCheckBoxProps;
+    conditionsProps: IQueryCheckBoxProps & IQueryProps;
     jsonProperty: string;
-    constructor(containerProps: IContainerProps, conditionsProps: IQueryCheckBoxProps, jsonProperty: string);
+    constructor(containerProps: IContainerProps, conditionsProps: IQueryCheckBoxProps & IQueryProps, jsonProperty: string);
 }
 export declare class ConditionGroupCheckBoxModel {
     containerProps: IContainerProps;
-    conditionsProps: IQueryGroupCheckBoxProps;
+    conditionsProps: IQueryGroupCheckBoxProps & Omit<IQueryProps, 'label'>;
     jsonProperty: string;
-    constructor(containerProps: IContainerProps, conditionsProps: IQueryGroupCheckBoxProps, jsonProperty: string);
+    constructor(containerProps: IContainerProps, conditionsProps: IQueryGroupCheckBoxProps & Omit<IQueryProps, 'label'>, jsonProperty: string);
 }
 interface IRenderComponentBaseParams<T> {
     /**
