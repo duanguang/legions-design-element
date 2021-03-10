@@ -25,6 +25,13 @@ interface ColProps {
 interface IContainerProps {
     col: ColProps;
     name: string;
+    /** 单击时触发 */
+    onClick?: (value: {
+        uid: string;
+        compnentName: string;
+    }) => void;
+    style?: React.CSSProperties;
+    className?: string;
     /** 只读 */
     readonly uuid?: string;
 }

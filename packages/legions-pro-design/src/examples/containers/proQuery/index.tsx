@@ -41,7 +41,10 @@ export default class QueryDemo extends React.Component<{},Istate>{
                     lg: 4,
                     xl: 4,
                 },
-                name:'vmOrderNo'
+                name: 'vmOrderNo',
+                onClick: (value) => {
+                    console.log(value);
+                }
             },
             conditionsProps: {
                 label: '司机姓名',

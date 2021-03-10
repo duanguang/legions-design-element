@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-08 15:19:23
- * @LastEditTime: 2021-03-03 09:54:52
+ * @LastEditTime: 2021-03-10 11:04:06
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProConditions/ProConditionsUtils.tsx
@@ -44,6 +44,12 @@ interface ColProps {
 interface IContainerProps{
     col: ColProps;
     name: string;
+    /** 单击时触发 */
+    onClick?: (value: {
+        uid: string,compnentName: string;
+    }) => void;
+    style?: React.CSSProperties;
+    className?: string;
     /** 只读 */
     readonly uuid?: string;
 }

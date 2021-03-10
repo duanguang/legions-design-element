@@ -988,7 +988,12 @@ var LegionsProConditions = /** @class */ (function (_super) {
                 colspan['span'] = span.span;
             }
             var uid = item.containerProps.uuid;
-            return React.createElement(Col, __assign({}, col, colspan, { "data-id": uid, "data-name": item.containerProps.name, key: uid, style: { paddingBottom: '10px', paddingLeft: '5px' } }),
+            var _b = item.containerProps, _c = _b.className, className = _c === void 0 ? '' : _c, _d = _b.style, style = _d === void 0 ? {} : _d, onClick = _b.onClick;
+            var click = {};
+            if (onClick) {
+                click['onClick'] = onClick.bind(_this, { uid: uid, componentName: item.containerProps.name });
+            }
+            return React.createElement(Col, __assign({}, col, colspan, click, { className: className, "data-id": uid, "data-name": item.containerProps.name, key: uid, style: __assign({ paddingBottom: '10px', paddingLeft: '5px' }, style) }),
                 _this.renderLabel(item, labelSpan),
                 React.createElement(Col, { style: { lineHeight: '28px' }, span: 24 - labelSpan }, _this.renderComponent(item)));
         });

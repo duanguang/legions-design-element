@@ -950,10 +950,17 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
                 colspan['span'] = span.span;
             }
             const uid = item.containerProps.uuid;
+            const { className = '',style = {},onClick } = item.containerProps;
+            const click = {};
+            if (onClick) {
+                click['onClick'] = onClick.bind(this,{uid:uid,componentName:item.containerProps.name});
+            }
             return <Col {...col} {...colspan}
+                {...click}
+                className={className}
                 data-id={uid}
                 data-name={item.containerProps.name}
-                key={uid} style={{ paddingBottom: '10px',paddingLeft:'5px' }}>
+                key={uid} style={{ paddingBottom: '10px',paddingLeft:'5px',...style }}>
                         {this.renderLabel(item,labelSpan)}
                         <Col style={{ lineHeight: '28px' }}  span={24 - labelSpan}>
                             {this.renderComponent(item)}
