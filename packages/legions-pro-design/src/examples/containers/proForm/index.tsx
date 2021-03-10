@@ -109,7 +109,7 @@ export class ProForm extends React.Component<IProps,IState> {
                     value: '订单',
                     label: '订单1',
                     key: '1',
-                    keyValue: '222',
+                    extendedField: '222',
                     disabled: true,
                 },
                 {
@@ -309,64 +309,65 @@ export class ProForm extends React.Component<IProps,IState> {
                     <Button style={{ marginLeft: '10px' }} type="primary" htmlType="submit" onClick={() => {
                         const item = this.formRef.viewModel.getFormItemField('text');
                         if (item&&item.value) {
-                            let visibleText = item.value.iFormProps.visible;
-                            if (visibleText === void 0) {
-                                visibleText = true;
-                            }
-                            this.setState({
+                            /* this.setState({
                                 visible: !visibleText
-                            })
+                            }) */
                             this.formRef.methods.setFormStates('text',(value) => {
-                                value.iFormProps.visible=!visibleText
+                                value.iFormProps.visible=false
                             })
                         }
                        
-                    }}>{!this.state.visible ? '显示文本框' : '隐藏文本框'}</Button>
+                    }}>{ '隐藏文本框'}</Button>
+
+                    <Button style={{ marginLeft: '10px' }} type="primary" htmlType="submit" onClick={() => {
+                        const item = this.formRef.viewModel.getFormItemField('text');
+                        if (item&&item.value) {
+                            this.formRef.methods.setFormStates('text',(value) => {
+                                value.iFormProps.visible = true;
+                            })
+                        }
+                       
+                    }}>{ '显示文本框'}</Button>
 
                     <Button style={{ marginLeft: '10px' }} type="primary" htmlType="submit" onClick={() => {
                         const item = this.formRef.viewModel.getFormItemField<InstanceType<typeof LegionsProForm.LabelWithInputModel>>('text');
                         if (item) {
-                            const disabled = item.value.iFormProps.disabled
-                            this.setState({
-                                disabled: !disabled
-                            })
                             this.formRef.methods.setFormStates<InstanceType<typeof LegionsProForm.LabelWithInputModel>>('text',(value) => {
-                                value.iFormProps.disabled=!disabled
+                                value.iFormProps.disabled = false;
                             })
                         }
                         
-                    }}>{!this.state.disabled ? '禁用文本框' : '启用文本框'}</Button>
+                    }}>{'启用文本框'}</Button>
+
+                    <Button style={{ marginLeft: '10px' }} type="primary" htmlType="submit" onClick={() => {
+                        const item = this.formRef.viewModel.getFormItemField<InstanceType<typeof LegionsProForm.LabelWithInputModel>>('text');
+                        if (item) {
+                            this.formRef.methods.setFormStates<InstanceType<typeof LegionsProForm.LabelWithInputModel>>('text',(value) => {
+                                value.iFormProps.disabled = true;
+                            })
+                        }
+                        
+                    }}>{'禁用文本框'}</Button>
 
                     
                     <Button style={{ marginLeft: '10px' }} type="primary" htmlType="submit" onClick={() => {
-                        const item = this.formRef.viewModel.getFormItemField('price');
+                        const item = this.formRef.viewModel.getFormItemField('customRender');
+                        
                         if (item&&item.value) {
-                           
-                            let visible = item.value.iFormProps.visible;
-                            if (visible === void 0) {
-                                visible = true;
-                            }
-                            if (!visible) {
-                                this.formRef.methods.setFormStates('price',(value) => {
-                                    value.iFormProps.visible = true;
-                                })
-                            }
+                            
+                            this.formRef.methods.setFormStates('customRender',(value) => {
+                                value.iFormProps.visible = true;
+                            })
                         }
                         
                     }}>显示价格输入框</Button>
 
                     <Button style={{ marginLeft: '10px' }} type="primary" htmlType="submit" onClick={() => {
-                        const item = this.formRef.viewModel.getFormItemField('price');
+                        const item = this.formRef.viewModel.getFormItemField('customRender');
                         if (item && item.value) { 
-                            let visible = item.value.iFormProps.visible;
-                            if (visible === void 0) {
-                                visible = true;
-                            }
-                            if (visible) {
-                                this.formRef.methods.setFormStates('price',(value) => {
-                                    value.iFormProps.visible = false;
-                                })
-                            }
+                            this.formRef.methods.setFormStates('customRender',(value) => {
+                                value.iFormProps.visible = false;
+                            })
                         }
                         
                     }}>隐藏价格输入框</Button>
@@ -374,15 +375,10 @@ export class ProForm extends React.Component<IProps,IState> {
                     <Button style={{ marginLeft: '10px' }} type="primary" htmlType="submit" onClick={() => {
                         const item = this.formRef.viewModel.getFormItemField<InstanceType<typeof LegionsProForm.LabelWithInputModel>>('price');
                         if (item) {
-                            let disabled = item.value.iFormProps.disabled
-                            if (disabled === void 0) {
-                                disabled = false;
-                            }
-                            if (disabled) {
-                                this.formRef.methods.setFormStates<InstanceType<typeof LegionsProForm.LabelWithInputModel>>('price',(value) => {
-                                    value.iFormProps.disabled=false
-                                })
-                            }
+                            this.formRef.methods.setFormStates<InstanceType<typeof LegionsProForm.LabelWithInputModel>>('price',(value) => {
+                                value.iFormProps.disabled = false
+                            })
+                            this.formRef.store.updateFormInputData(this.formRef.uid,{ price: { value: '222' } })
                             this.formRef.methods.setFormStates<InstanceType<typeof LegionsProForm.LabelWithSelectModel>>('selectedItem',(value) => {
                                 value.iFormProps.options.push({
                                     value: '工单2',
@@ -397,16 +393,9 @@ export class ProForm extends React.Component<IProps,IState> {
                     <Button style={{ marginLeft: '10px' }} type="primary" htmlType="submit" onClick={() => {
                         const item = this.formRef.viewModel.getFormItemField<InstanceType<typeof LegionsProForm.LabelWithInputModel>>('price');
                         if (item) {
-                            let disabled = item.value.iFormProps.disabled
-                            if (disabled === void 0) {
-                                disabled = false;
-                            }
-                            if (!disabled) {
-                                this.formRef.methods.setFormStates<InstanceType<typeof LegionsProForm.LabelWithInputModel>>('price',(value) => {
-                                    value.iFormProps.disabled=true
-                                })
-                            }
-                            
+                            this.formRef.methods.setFormStates<InstanceType<typeof LegionsProForm.LabelWithInputModel>>('price',(value) => {
+                                value.iFormProps.disabled = true
+                            })
                         }
                         
                     }}>禁用价格输入框</Button>

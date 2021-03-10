@@ -79,8 +79,8 @@ export declare class TooltipInput extends React.Component<ITooltipInputProps, {}
         readonly computedFormFields: (LabelWithInputModel | import("./FormInputNumber").LabelWithInputNumberModel | import("./FormDatePicker").LabelWithDatePickerModel | import("./FormMonthPicker").LabelWithMonthPickerModel | import("./FormRangePicker").LabelWithRangePickerModel | import("./FormUpload").LabelWithUploadModel | import("./FormSwitch").LabelWithSwitchModel | import("./FormRadioButton").LabelWithRadioButtonModel | import("./FormText").LabelWithTextModel | import("./interface").LabelWithSelectModel | import("./FormCheckbox").LabelWithCheckboxModel)[];
         readonly computedAllFormFields: (LabelWithInputModel | import("./FormInputNumber").LabelWithInputNumberModel | import("./FormDatePicker").LabelWithDatePickerModel | import("./FormMonthPicker").LabelWithMonthPickerModel | import("./FormRangePicker").LabelWithRangePickerModel | import("./FormUpload").LabelWithUploadModel | import("./FormSwitch").LabelWithSwitchModel | import("./FormRadioButton").LabelWithRadioButtonModel | import("./FormText").LabelWithTextModel | import("./interface").LabelWithSelectModel | import("./FormCheckbox").LabelWithCheckboxModel)[];
         readonly computedErrorListView: IErrorView[];
-        readonly computedFormSize: "small" | "table" | "default";
-        updateFormSize: (size: "small" | "table" | "default") => void;
+        readonly computedFormSize: "default" | "small" | "table";
+        updateFormSize: (size: "default" | "small" | "table") => void;
         collectErrorReactNode: (componentCode: string, errorUid: string) => void;
         setErrorErrorReactNodeList: (componentCode: string, errorListView: IErrorView[]) => void;
         handleIgnore: (componentCode: string, id: number) => void;
@@ -115,8 +115,8 @@ export default class FormInput extends AbstractForm<IFormWithInputProps> {
         readonly computedFormFields: (LabelWithInputModel | import("./FormInputNumber").LabelWithInputNumberModel | import("./FormDatePicker").LabelWithDatePickerModel | import("./FormMonthPicker").LabelWithMonthPickerModel | import("./FormRangePicker").LabelWithRangePickerModel | import("./FormUpload").LabelWithUploadModel | import("./FormSwitch").LabelWithSwitchModel | import("./FormRadioButton").LabelWithRadioButtonModel | import("./FormText").LabelWithTextModel | import("./interface").LabelWithSelectModel | import("./FormCheckbox").LabelWithCheckboxModel)[];
         readonly computedAllFormFields: (LabelWithInputModel | import("./FormInputNumber").LabelWithInputNumberModel | import("./FormDatePicker").LabelWithDatePickerModel | import("./FormMonthPicker").LabelWithMonthPickerModel | import("./FormRangePicker").LabelWithRangePickerModel | import("./FormUpload").LabelWithUploadModel | import("./FormSwitch").LabelWithSwitchModel | import("./FormRadioButton").LabelWithRadioButtonModel | import("./FormText").LabelWithTextModel | import("./interface").LabelWithSelectModel | import("./FormCheckbox").LabelWithCheckboxModel)[];
         readonly computedErrorListView: IErrorView[];
-        readonly computedFormSize: "small" | "table" | "default";
-        updateFormSize: (size: "small" | "table" | "default") => void;
+        readonly computedFormSize: "default" | "small" | "table";
+        updateFormSize: (size: "default" | "small" | "table") => void;
         collectErrorReactNode: (componentCode: string, errorUid: string) => void;
         setErrorErrorReactNodeList: (componentCode: string, errorListView: IErrorView[]) => void;
         handleIgnore: (componentCode: string, id: number) => void;

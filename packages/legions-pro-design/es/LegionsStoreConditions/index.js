@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.7-beta.9
+  *  legions-pro-design v0.0.7-beta.10
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -91,7 +91,7 @@ function __values(o) {
 /*
  * @Author: duanguang
  * @Date: 2021-01-07 16:49:31
- * @LastEditTime: 2021-03-09 22:35:08
+ * @LastEditTime: 2021-03-10 16:05:06
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreConditions/conditionView.ts
@@ -273,6 +273,11 @@ var ConditionView = /** @class */ (function () {
         var item = this.computedQuery.find(function (item) { return item.containerProps.name === name; });
         if (item) {
             return this.query.get(item.containerProps.uuid);
+        }
+        else {
+            if (this.query.has(name)) {
+                return this.query.get(name);
+            }
         }
         return null;
     };

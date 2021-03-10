@@ -28,7 +28,8 @@ import { ValidateCallback } from 'antd/lib/form/Form';
 import { LabelWithCheckboxModel } from './FormCheckbox';
 import { BaseFormFields, HlLabeledValue } from 'legions-lunar/model';
 import { legionsPlugins,LegionsPluginsExecute,LoggerManager } from 'legions-lunar/legion.plugin.sdk';
-import { formClasses, ProFormFields,ProFormUtils, size } from './ProFormUtils';
+import { formClasses,ProFormFields,ProFormUtils,size } from './ProFormUtils';
+import { cloneDeep } from 'lodash'
 const baseCls = `legions-pro-form`
 
 export interface IProFormProps<mapProps = {}> {
@@ -281,9 +282,11 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
             const value = this.storeView.getFormItemField(name);
             if (value) {
                 if (value.type === 'normal') {
+                    
                     //@ts-ignore
                     callback && callback(value.value)
-                    insertRenderEle()
+                    insertRenderEle();
+                    this.forceUpdate()
                 }
                 if (value.type === 'custom') {
                      //@ts-ignore

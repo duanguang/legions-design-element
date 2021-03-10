@@ -28,7 +28,7 @@ interface IContainerProps {
     /** 单击时触发 */
     onClick?: (value: {
         uid: string;
-        compnentName: string;
+        name: string;
     }) => void;
     style?: React.CSSProperties;
     className?: string;

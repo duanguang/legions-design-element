@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-08 15:19:23
- * @LastEditTime: 2021-03-10 15:00:57
+ * @LastEditTime: 2021-03-10 15:17:17
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProConditions/ProConditionsUtils.tsx
@@ -46,7 +46,7 @@ interface IContainerProps{
     name: string;
     /** 单击时触发 */
     onClick?: (value: {
-        uid: string,compnentName: string;
+        uid: string,name: string;
     }) => void;
     style?: React.CSSProperties;
     className?: string;
