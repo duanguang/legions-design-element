@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.7-beta.4
+  *  legions-pro-design v0.0.7-beta.10
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -609,9 +609,7 @@ var FormInput = /** @class */ (function (_super) {
                 })(iFormInput.type === 'textarea' ?
                     // @ts-ignore
                     React.createElement(TextArea, __assign({}, props, { key: iAntdProps.name, autosize: iFormInput.autosize === void 0 ? { minRows: 1, maxRows: 2 } : iFormInput.autosize, onPressEnter: this.onPressEnter.bind(this), title: form.getFieldValue(iAntdProps.name), onFocus: this.onFocus.bind(this), maxLength: iFormInput.maxLength ? parseInt(iFormInput.maxLength) : 200, placeholder: iFormInput.disabled ? '' : placeholder })) :
-                    React.createElement(TooltipInput, __assign({}, props, { onIgnoreError: this.props.formStore && this.props.formStore.onIgnoreError, formUid: this.props.formUid, FormInputRef: this.FormInputRef, 
-                        /* value={form.getFieldValue(iAntdProps.name)} */
-                        maxLength: maxLength.toString(), valueLen: valueLen, formItemName: iAntdProps.name, form: form, key: iAntdProps.name, inputType: iFormInput.type, onPressEnter: this.onPressEnter.bind(this), disabled: disabled, placeholder: iFormInput.disabled ? '' : placeholder, onFocus: this.onFocus.bind(this), onChange: this.onChange.bind(this), addonAfter: addonAfter, onBlur: this.onBlur.bind(this), addonBefore: addonBefore }))),
+                    React.createElement(TooltipInput, __assign({}, props, { onIgnoreError: this.props.formStore && this.props.formStore.onIgnoreError, formUid: this.props.formUid, FormInputRef: this.FormInputRef, maxLength: maxLength.toString(), valueLen: valueLen, formItemName: iAntdProps.name, form: form, key: iAntdProps.name, inputType: iFormInput.type, onPressEnter: this.onPressEnter.bind(this), disabled: disabled, placeholder: iFormInput.disabled ? '' : placeholder, onFocus: this.onFocus.bind(this), onChange: this.onChange.bind(this), addonAfter: addonAfter, onBlur: this.onBlur.bind(this), addonBefore: addonBefore }))),
                 children)));
     };
     return FormInput;
@@ -1808,6 +1806,7 @@ var ProForm = /** @class */ (function (_super) {
                     //@ts-ignore
                     callback && callback(value.value);
                     insertRenderEle();
+                    _this.forceUpdate();
                 }
                 if (value.type === 'custom') {
                     //@ts-ignore
@@ -2504,7 +2503,6 @@ var LegionsProForm = /** @class */ (function (_super) {
             _this.freezeUid = _this.uid;
             _this.decryptionFreezeUid = _this.uid;
         }
-        console.log(_this.uid, 'this.uid');
         _this.props.store.add(_this.uid, {
             InputDataModel: _this.props.InputDataModel,
             formRef: _this,

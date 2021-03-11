@@ -953,7 +953,7 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
             const { className = '',style = {},onClick } = item.containerProps;
             const click = {};
             if (onClick) {
-                click['onClick'] = onClick.bind(this,{uid:uid,componentName:item.containerProps.name});
+                click['onClick'] = onClick.bind(this,{uid:uid,name:item.containerProps.name});
             }
             return <Col {...col} {...colspan}
                 {...click}

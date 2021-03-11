@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-07 16:49:31
- * @LastEditTime: 2021-03-09 22:35:08
+ * @LastEditTime: 2021-03-10 16:05:06
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreConditions/conditionView.ts
@@ -181,9 +181,13 @@ export class ConditionView<Query = {}> {
         }
     }
     @action private _getQueryItem(name:string) {
-        const item = this.computedQuery.find((item) => item.containerProps.name === name);
+        let item = this.computedQuery.find((item) => item.containerProps.name === name);
         if (item) {
            return this.query.get(item.containerProps.uuid)
+        } else {
+            if (this.query.has(name)) {
+                return this.query.get(name)
+            }
         }
         return null
     }
