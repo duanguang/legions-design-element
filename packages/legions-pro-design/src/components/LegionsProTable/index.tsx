@@ -57,7 +57,7 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
      */
     freezeuid = ''
     /**
-     * 
+     *
      * 未加密的freezeuid 值
      * @memberof HLForm
      */
@@ -111,14 +111,14 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
         pageSizeOptions: ['5','10','20','40','60','80','100','200','500'],
     }
     /** 开启自定义列数据同步接口信息-全局配置(当全局和局部存在冲突时，优先局部配置数据)
-     * 
+     *
      * 同步数据到服务端所需要的查询和保存接口地址信息 */
     static customColumnsConfig: ICustomColumnsConfig = {
         editApi: '',
         queryApi:'',
     }
     /** 开启自定义列数据同步接口信息-局部配置(当全局和局部存在冲突时，优先局部配置数据)
-     * 
+     *
      * 同步数据到服务端所需要的查询和保存接口地址信息 */
     customColumnsConfig: ICustomColumnsConfig = {
         editApi: '',
@@ -171,7 +171,7 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
                 })
             }
         }
-        
+
         this.initPagination();
         this.initProps();
         this.onReady();
@@ -239,7 +239,7 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
     }) {
         if (this.props.autoQuery && this.getLocalViewStore) {
             let isShowLoading = true;
-            if (options) { 
+            if (options) {
                 if (options.pageIndex) {/** 如果主动设置页码，则以主动设置为准 */
                     this.getViewStore.pageIndex = options.pageIndex;
                 }
@@ -307,7 +307,7 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
         const ele = ReactDOM.findDOMNode(this).getElementsByClassName('ant-table-scroll')[0]
         if (ele && ele.firstElementChild && ele.firstElementChild.firstElementChild) {
             const div = document.createElement('div');
-            div.setAttribute('class','proTable-header-inner');
+            div.setAttribute('class','pro-table-header-inner');
             ele.firstElementChild.insertBefore(div,ele.firstElementChild.firstElementChild)
         }
     }
@@ -395,7 +395,7 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
         })
     }
     componentWillMount() {
-        
+
         if (this.props.autoQuery) {
             this.subscription = this.props.store.schedule([this.log.bind(this,this.freezeuid)])
         }
@@ -430,7 +430,7 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
                         }
                     }
                 }
-            } 
+            }
             this.getViewStore._filterColumns();
         }
     }
@@ -490,7 +490,7 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
                 },
             })
         }
-        
+
         window.addEventListener && window.addEventListener('resize',this.resize.bind(this))
         if (findDOMNode(this).getElementsByClassName('ant-table-body')) {
         }
@@ -834,7 +834,7 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
                 locale: this.renderlocale(),
             }
         }
-        
+
         this.consoleLog('render');
         const rowSelection: TableRowSelection<{}> = (this.getViewStore._isOpenRowSelection) ? {
             ...this.props.rowSelection,
@@ -912,7 +912,7 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
         const bodyStyle = (this.viewModel.isAdaptiveHeight && this.getViewStore._renderData && this.getViewStore._renderData.length > 0) ? { ...this.viewModel.bodyStyle,...this.viewModel.calculateBody } : this.viewModel.bodyStyle
         return <Row className={baseCls}>
             <Col>
-                <div className={`containers ${this.uid} ${this.viewModel.isAdaptiveHeight ? 'adaptiveHeight' : ''}`}>
+                <div className={`pro-table-containers ${this.uid} ${this.viewModel.isAdaptiveHeight ? 'table-adaptive-height' : ''}`}>
                     <Table
                         /* size="small" */
                         {...locale}
@@ -945,7 +945,7 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
                     />
                 </div>
             </Col>
-           
+
             {this.props.isOpenCustomColumns && <LegionsProTableCustomColumns
                 customColumnsConfig={{
                     queryApi: LegionsProTable.customColumnsConfig.queryApi,

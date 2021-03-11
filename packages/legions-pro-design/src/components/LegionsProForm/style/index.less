@@ -18,44 +18,18 @@
         color: #666;
     }
     .toggle{
-        margin-bottom: 15px; 
+        margin-bottom: 15px;
     }
-    .group{
-        width: 100%;
-        /* padding-bottom: 5px; */
-        .title{
-            width: 100%;
-            height: 30px;
-            border: 1px dashed #5bc0de;
-            line-height: 30px;
-            width: 100%;
-        }
-        .span-left{
-            padding-left: 10px;
-            float: left;
-        }
-        .span-right{
-            padding-right: 10px;
-            float: right;
-            cursor: pointer;
-        }
-        .form-content{
-            width: 100%;
-            margin-top: 10px;
-        }
-    }
-    .container{
+    .form-group-wrapper{
         width: 100%;
         height:100%;
         position: relative;
-        .left{
-            border-right: 1px solid #CDCDCE;
-            padding: 0 20px 0 0;
-            float:left;   
+        .form-group{
+            float:left;
         }
-        .right{
-            width: 13%;
-            margin-left: 87%;
+        .form-group-affix{
+            width: 12%;
+            margin-left: 88%;
             ul{
                 width: 100%;
                 position: relative;
@@ -67,6 +41,29 @@
                     cursor: pointer
                 }
             }
+        }
+    }
+    .group-item{
+        width: 100%;
+        .group-item-title{
+            width: 100%;
+            height: 30px;
+            line-height: 30px;
+            width: 100%;
+            background: #e5e9eb;
+        }
+        .group-item-title-left{
+            padding-left: 10px;
+            float: left;
+        }
+        .group-item-title-right{
+            padding-right: 10px;
+            float: right;
+            cursor: pointer;
+        }
+        .group-item-form{
+            width: 100%;
+            margin-top: 10px;
         }
     }
     .hide{
