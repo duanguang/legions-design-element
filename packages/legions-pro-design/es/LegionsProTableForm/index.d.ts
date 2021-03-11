@@ -1,13 +1,15 @@
 import React from 'react';
-import { IAntdRule, TableColumnConfig, WrappedFormUtils } from '../interface/antd';
+import { IAntdRule, WrappedFormUtils } from '../interface/antd';
 import { Weaken } from '../interface';
-import { IProTableProps, ITableColumnConfig } from '../LegionsProTable/interface';
+import { IProTableProps } from '../LegionsProTable/interface';
 import LegionsProForm from '../LegionsProForm';
 import { InstanceProForm } from '../LegionsProForm/interface';
 import { IProFormProps } from '../LegionsProForm/ProForm';
+import './style/index.less';
+import { IProFormFields } from '../LegionsStoreForm/interface';
 /** 分割符，用于给表单字段添加下标时使用 */
-export declare const HLTableFormSeparator = "___";
-interface IHlFormConfig<F> extends Partial<IProFormProps<F>>, Weaken<Partial<IProFormProps<F>>, 'controls' | 'onReady'> {
+export declare const ProTableFormSeparator = "___";
+interface IProTableFormConfig<F> extends Partial<IProFormProps<F>>, Weaken<Partial<IProFormProps<F>>, 'controls' | 'onReady'> {
     /**
     * 获取表单数据模型
     * form  即将废弃，请formRef.viewModel.form 获取
@@ -17,7 +19,7 @@ interface IHlFormConfig<F> extends Partial<IProFormProps<F>>, Weaken<Partial<IPr
     onReady?: (
     /**即将废弃，请formRef.viewModel.form 获取 */
     form: WrappedFormUtils, formRef?: InstanceProForm) => void;
-    controls: any[];
+    controls: Array<IProFormFields['componentModel']>;
     /** 表单验证规则函数类 */
     ruleClassDeclaration?: Function;
     /** 表单实体函数类 */
@@ -25,34 +27,34 @@ interface IHlFormConfig<F> extends Partial<IProFormProps<F>>, Weaken<Partial<IPr
 }
 export declare class ProTableFormProps<T = {}, F = {}> {
     /**
-     * hlForm配置，只需要传入controls，组件会根据表单字段名称自动匹配并生成可编辑表格
+     * proForm配置，只需要传入controls，组件会根据表单字段名称自动匹配并生成可编辑表格
      * 无需配置mapPropsToFields和onFieldsChange，本组件已托管
      * 暂不支持select下拉请求托管
-     * @type {Partial<IHLFormProps<F>>}
-     * @memberof HLTableFormProps
+     * @type {Partial<IProTableFormConfig<F>>}
+     * @memberof ProTableFormProps
      */
-    proFormConfig: IHlFormConfig<F>;
+    proFormConfig: IProTableFormConfig<F>;
     /**
      * hlTable配置
-     * @type {Partial<IHLTableProps<T>>}
-     * @memberof HLTableFormProps
+     * @type {Partial<IProTableProps<T>>}
+     * @memberof ProTableFormProps
      */
     proTableConfig: IProTableProps<T>;
     /**
      * 容器样式
      * @type {React.CSSProperties}
-     * @memberof HLTableFormProps
+     * @memberof ProTableFormProps
      */
     style?: React.CSSProperties;
     /**
      * 容器类名
      * @type {string}
-     * @memberof HLTableFormProps
+     * @memberof ProTableFormProps
      */
     className?: string;
     /**
      * 数据变化监听
-     * @memberof HLTableFormProps
+     * @memberof ProTableFormProps
      */
     onChange?: (dataList: T[]) => void;
 }
@@ -80,8 +82,7 @@ export default class LegionsProTableForm<T = {}, F = {}> extends LegionsProForm.
         isRecordEdit: boolean;
     } & T)[];
     componentWillReceiveProps(nextProps: ProTableFormProps<T, F>): void;
-    renderComponent(column: TableColumnConfig<T> & ITableColumnConfig): void;
-    createControl: (control: any, key: number, formRef: InstanceProForm) => JSX.Element;
+    createControl: (control: IProFormFields['componentModel'], key: number, formRef: InstanceProForm, formUtils: InstanceType<typeof LegionsProForm.ProFormUtils>) => JSX.Element;
     /** 创建行表单 */
     createTable: () => (import("../LegionsProForm/FormInput").LabelWithInputModel | import("../LegionsProForm/FormInputNumber").LabelWithInputNumberModel | import("../LegionsProForm/FormDatePicker").LabelWithDatePickerModel | import("../LegionsProForm/FormMonthPicker").LabelWithMonthPickerModel | import("../LegionsProForm/FormRangePicker").LabelWithRangePickerModel | import("../LegionsProForm/FormUpload").LabelWithUploadModel | import("../LegionsProForm/FormSwitch").LabelWithSwitchModel | import("../LegionsProForm/FormRadioButton").LabelWithRadioButtonModel | import("../LegionsProForm/FormText").LabelWithTextModel | import("../LegionsProForm/interface").LabelWithSelectModel)[];
     /** 数据转化，列表数据转化为表单数据 */

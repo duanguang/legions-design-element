@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.3
+  *  legions-pro-design v0.0.7-beta.10
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -8,7 +8,7 @@ import React from 'react';
 import { BaseFormFields } from 'legions-lunar/model';
 import LegionsProTable from '../LegionsProTable';
 import LegionsProForm from '../LegionsProForm';
-import styles from './style/index.modules.less';
+import './style/index.less';
 import { toJS } from 'mobx';
 import { cloneDeep } from 'lodash';
 import { shortHash } from 'legions-lunar/object-hash';
@@ -80,18 +80,18 @@ function __spread() {
 }
 
 /** 分割符，用于给表单字段添加下标时使用 */
-var HLTableFormSeparator = '___';
+var ProTableFormSeparator = '___';
 var ProTableFormProps = /** @class */ (function () {
     function ProTableFormProps() {
         /**
          * 容器类名
          * @type {string}
-         * @memberof HLTableFormProps
+         * @memberof ProTableFormProps
          */
         this.className = '';
         /**
          * 数据变化监听
-         * @memberof HLTableFormProps
+         * @memberof ProTableFormProps
          */
         this.onChange = function () { return void 0; };
     }
@@ -121,47 +121,14 @@ var LegionsProTableForm = /** @class */ (function (_super) {
                 });
             }
         };
-        _this.createControl = function (control, key, formRef) {
+        _this.createControl = function (control, key, formRef, formUtils) {
             var uid = formRef.uid, form = formRef.viewModel.form;
             /** 给表单字段id，名称，校验规则添加下标 */
-            var newControl = __assign(__assign({}, control), { iAntdProps: __assign(__assign({}, control.iAntdProps), { id: "" + control.iAntdProps.id + HLTableFormSeparator + key, name: "" + control.iAntdProps.name + HLTableFormSeparator + key }) });
-            /* const component= new LegionsProForm.CreateForm() */
-            if (control instanceof LegionsProForm.LabelWithInputModel) {
-                return _super.prototype.createFormInput.call(_this, key, newControl, form, uid, formRef);
-            }
-            else if (control instanceof LegionsProForm.LabelWithInputNumberModel) {
-                return _super.prototype.createFormInputNumber.call(_this, key, newControl, form, uid, formRef);
-            }
-            else if (control instanceof LegionsProForm.LabelWithSelectModel) {
-                return _super.prototype.createFormSelect.call(_this, key, newControl, form, uid, formRef);
-            }
-            else if (control instanceof LegionsProForm.LabelWithRenderModel) {
-                return _super.prototype.createFormRender.call(_this, key, newControl, form, formRef);
-            }
-            else if (control instanceof LegionsProForm.LabelWithDatePickerModel) {
-                return _super.prototype.createFormDatePicker.call(_this, key, newControl, form, uid, formRef);
-            }
-            else if (control instanceof LegionsProForm.LabelWithMonthPickerModel) {
-                return _super.prototype.createFormMonthPicker.call(_this, key, newControl, form, uid, formRef);
-            }
-            else if (control instanceof LegionsProForm.LabelWithRangePickerModel) {
-                return _super.prototype.createFormRangePicker.call(_this, key, newControl, form, uid, formRef);
-            }
-            else if (control instanceof LegionsProForm.LabelWithUploadModel) {
-                return _super.prototype.createFormUpload.call(_this, key, newControl, form, uid, formRef);
-            }
-            else if (control instanceof LegionsProForm.LabelWithSwitchModel) {
-                return _super.prototype.createFormSwitch.call(_this, key, newControl, form, uid, formRef);
-            }
-            else if (control instanceof LegionsProForm.LabelWithRadioButtonModel) {
-                return _super.prototype.createFormRadioButton.call(_this, key, newControl, form, uid, formRef);
-            }
-            else if (control instanceof LegionsProForm.LabelWithTextModel) {
-                return _super.prototype.createFormText.call(_this, key, newControl, form, uid, formRef);
-            }
-            else {
-                throw new Error("ComponentClass: Unknown control. control = " + JSON.stringify(control));
-            }
+            var keys = "" + control.iAntdProps.id + ProTableFormSeparator + key;
+            var newControl = cloneDeep(control);
+            newControl.iAntdProps.id = keys;
+            newControl.iAntdProps.name = "" + control.iAntdProps.name + ProTableFormSeparator + key;
+            return formUtils.createFormComponent(newControl, formRef.viewModel.form, formRef.uid, formRef, key);
         };
         /** 创建行表单 */
         _this.createTable = function () {
@@ -182,7 +149,7 @@ var LegionsProTableForm = /** @class */ (function (_super) {
                         var newItem = _this.state.data.find(function (item) { return item[_this.uniqueKey] === record[_this.uniqueKey]; });
                         var formRecord = _this.recordCache.get(key)
                             ? _this.recordCache.get(key)
-                            : _this.createControl(control, record[_this.uniqueKey], formRef);
+                            : _this.createControl(control, record[_this.uniqueKey], formRef, formUtils);
                         _this.recordCache.set(key, formRecord);
                         return (newItem && newItem['isRecordEdit']) ? formRecord : item.render ? item.render(text, newItem || record, index) : text;
                     } }) : __assign(__assign({}, item), itemRender);
@@ -192,12 +159,12 @@ var LegionsProTableForm = /** @class */ (function (_super) {
                 iFormProps: {
                     render: function (form, iAntdProps, rules, formRef) {
                         var data = _this.state.data;
-                        return formRef && React.createElement(LegionsProTable, __assign({}, proTableConfig, { dataSource: data, onPagingQuery: function (page, pageSize, isChangePageSize) {
+                        return formRef && React.createElement(LegionsProTable, __assign({ isOpenCustomColumns: false, visibleExportLoacl: false, isOpenRowChange: false }, proTableConfig, { dataSource: __spread(data), onPagingQuery: function (page, pageSize, isChangePageSize) {
                                 var proTableConfig = _this.props.proTableConfig;
                                 /** 触发表单的setFields，实现table分页切换时，表单数据不异常 */
                                 _this.formRef.viewModel.form.setFields({});
                                 proTableConfig.onPagingQuery && proTableConfig.onPagingQuery(page, pageSize, isChangePageSize);
-                            }, isOpenRowChange: true, columns: newColumns(formRef) }));
+                            }, columns: newColumns(formRef) }));
                     }
                 }
             });
@@ -213,7 +180,7 @@ var LegionsProTableForm = /** @class */ (function (_super) {
             data.forEach(function (item) {
                 var obj = {};
                 Object.keys(item).forEach(function (key) {
-                    var separator = "" + key + HLTableFormSeparator + item[_this.uniqueKey];
+                    var separator = "" + key + ProTableFormSeparator + item[_this.uniqueKey];
                     obj[separator] = __assign(__assign({}, _this.fieldsOtherCache.get(separator)), { value: item[key] });
                 });
                 newModel = __assign(__assign({}, newModel), obj);
@@ -225,7 +192,7 @@ var LegionsProTableForm = /** @class */ (function (_super) {
             var newData = __spread(data);
             Object.keys(fields).forEach(function (key) {
                 var _a;
-                var separator = key.split(HLTableFormSeparator);
+                var separator = key.split(ProTableFormSeparator);
                 var name = separator[0];
                 var rowIndex = data.findIndex(function (item) { return "" + item[_this.uniqueKey] === separator[1]; });
                 if (name && rowIndex >= 0 && fields && fields[key]) {
@@ -235,11 +202,6 @@ var LegionsProTableForm = /** @class */ (function (_super) {
             });
             return newData;
         };
-        /* const {ruleClassDeclaration,formFieldsClassDeclaration} = this.props.hlFormConfig;
-        invariant((ruleClassDeclaration.prototype instanceof formFieldsClassDeclaration), `规则实体类验证: 验证规则函数类原型没有继承表单实体函数类,请检查参数props.ruleClassDeclaration及props.formFieldsClassDeclaration`);
-        invariant((formFieldsClassDeclaration.prototype instanceof BaseFormFields), `表单实体函数类验证: 表单实体函数类原型没有继承BaseFormFields函数类,请检查参数props.formFieldsClassDeclaration`);
-        // @ts-ignore
-        this.rules = ruleClassDeclaration['createFormRules']<ruleClassDeclaration>(ruleClassDeclaration); */
         _this.state = {
             data: _this.tranformData(cloneDeep(toJS(_this.props.proTableConfig.dataSource))),
             recordEditData: new Map(),
@@ -251,7 +213,7 @@ var LegionsProTableForm = /** @class */ (function (_super) {
         get: function () {
             /*  const { proTableConfig: { uniqueKey } = {} } = this.props;
              return uniqueKey; */
-            return 'hlTableFormItemKey';
+            return 'legionsTableFormItemKey';
         },
         enumerable: false,
         configurable: true
@@ -280,32 +242,22 @@ var LegionsProTableForm = /** @class */ (function (_super) {
             });
         }
     };
-    LegionsProTableForm.prototype.renderComponent = function (column) {
-        /*  if (column.formItemType === 'input') {
-            return formUtils.renderInputConfig({
-                 iAntdProps: formUtils.createAntdProps(column.dataIndex, 1),
-                 iFormProps: {
-                     label: '',
-                 },
-                 rules: this.rules[column.dataIndex],
-             });
-         } */
-    };
     LegionsProTableForm.prototype.render = function () {
         var _this = this;
         var _a = this.props, style = _a.style, className = _a.className, proFormConfig = _a.proFormConfig;
         var data = this.state.data;
-        return (React.createElement("div", { style: style, className: "ProTableForm " + styles.wrap + " " + className },
-            React.createElement(LegionsProForm, __assign({ key: data.length }, this.listToFormData(data), proFormConfig, { 
+        return (React.createElement("div", { style: style, className: "ProTableForm  legions-pro-tableForm " + className },
+            React.createElement(LegionsProForm, __assign({}, proFormConfig, { 
                 //@ts-ignore
-                uniqueUid: this.props['uniqueUid'], onGetForm: function (form, formRef) {
+                uniqueUid: this.props['uniqueUid'] + "/proTableForm", onReady: function (form, formRef) {
                     _this.formRef = formRef;
                     proFormConfig.onReady && proFormConfig.onReady(form, __assign(__assign({}, formRef), { methods: {
                             updateRecordEditData: _this.updateRecordEditData
                         } }));
                 }, mapPropsToFields: function (props) {
-                    return new BaseFormFields.initMapPropsToFields(props);
+                    return new BaseFormFields.initMapPropsToFields(__assign(__assign({}, props), _this.listToFormData(data)));
                 }, onFieldsChange: debounce(function (props, fields) {
+                    _this.formRef.store.updateFormInputData(_this.formRef.uid, fields);
                     _this.props.onChange(_this.formDataToList(data, fields));
                     proFormConfig.onFieldsChange && proFormConfig.onFieldsChange(props, fields);
                 }, 10), controls: this.createTable() }))));
@@ -315,4 +267,4 @@ var LegionsProTableForm = /** @class */ (function (_super) {
 }(LegionsProForm.CreateForm));
 
 export default LegionsProTableForm;
-export { HLTableFormSeparator, ProTableFormProps };
+export { ProTableFormProps, ProTableFormSeparator };

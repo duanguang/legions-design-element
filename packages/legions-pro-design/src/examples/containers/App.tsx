@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-03-02 14:19:18
- * @LastEditTime: 2021-03-04 14:07:04
+ * @LastEditTime: 2021-03-11 09:55:52
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/examples/containers/App.tsx
@@ -24,6 +24,7 @@ import { LegionsProEchartsLayoutDemo } from './pro.echarts.layout'; */
 import { LegionsProEchartsChartPieDemo } from './pro.echarts.chart';
 import { LegionsProEchartsMapDemo } from './pro.echarts.map'; */
 import { ProTable } from './proTable';
+import { ProTableForm } from './proTableForm';
 import ZoomableDemo from './react-zoomable/demo';
 import { ProTabsForm } from './tabsForm';
 
@@ -38,6 +39,7 @@ export default class App extends React.Component {
                 <React.Fragment>
 
                 <Route path="/table" component={ProTable}></Route>
+                <Route path="/table-form" component={ProTableForm}></Route>
                 <Route path="/form" component={ProForm}></Route>
                 <Route path="/tform" component={ProTabsForm}></Route>
                 <Route path="/modal" component={ProModal}></Route>

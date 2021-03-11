@@ -317,7 +317,7 @@ var FormElement = /** @class */ (function (_super) {
     FormElement.prototype.componentWillUnmount = function () {
         var formStore = this.props.store.get(this.props.formUid);
         if (formStore) {
-            formStore.elementList.delete(this.uid);
+            formStore._elementList.delete(this.uid);
         }
         var selectSelectionDom = this.querySelectDom();
         if (selectSelectionDom) {
@@ -402,8 +402,8 @@ var FormElement = /** @class */ (function (_super) {
     FormElement.prototype.addElement = function () {
         var formStore = this.props.store.get(this.props.formUid);
         if (formStore) {
-            formStore.addAllElementKeys(this.props.elementKey);
-            if (!formStore.elementList.has(this.uid)) {
+            formStore._addAllElementKeys(this.props.elementKey);
+            if (!formStore._elementList.has(this.uid)) {
                 var el = document.querySelector("." + this.uid);
                 if (el && this.props.elType) {
                     var elChildren = el.getElementsByTagName(this.props.elType);
@@ -417,7 +417,7 @@ var FormElement = /** @class */ (function (_super) {
                     }
                     // @ts-ignore
                     if (elChildren && el && elChildren instanceof HTMLCollection && elChildren.length && !elChildren[0].disabled) {
-                        formStore.elementList.set(this.uid, {
+                        formStore._elementList.set(this.uid, {
                             elementKey: this.props.elementKey,
                             elementTabindex: elementTabindex,
                             element: elChildren,
@@ -501,7 +501,7 @@ var TooltipInput = /** @class */ (function (_super) {
             var viewStore = FormInputRef.store.get(this.props.formUid);
             if (viewStore.computedErrorReactNodeList.has(this.props.formItemName)) {
                 var uid = viewStore.computedErrorReactNodeList.get(this.props.formItemName).uid;
-                isShowErrorView = viewStore.errorListView.has(uid);
+                isShowErrorView = viewStore._errorListView.has(uid);
             }
         }
         var getFieldDecorator = form.getFieldDecorator, getFieldsError = form.getFieldsError, setFieldsValue = form.setFieldsValue;
@@ -589,13 +589,13 @@ var FormInput = /** @class */ (function (_super) {
         var disabled = iFormInput && iFormInput.disabled;
         var addonAfter = iFormInput && iFormInput.addonAfter;
         var addonBefore = iFormInput && iFormInput.addonBefore;
-        var label = iFormInput.label, labelCol = iFormInput.labelCol, wrapperCol = iFormInput.wrapperCol, visible = iFormInput.visible, display = iFormInput.display, render = iFormInput.render, props = __rest(iFormInput, ["label", "labelCol", "wrapperCol", "visible", "display", "render"]);
+        var label = iFormInput.label, labelCol = iFormInput.labelCol, wrapperCol = iFormInput.wrapperCol, visible = iFormInput.visible, display = iFormInput.display, render = iFormInput.render, colon = iFormInput.colon, props = __rest(iFormInput, ["label", "labelCol", "wrapperCol", "visible", "display", "render", "colon"]);
         var valueLen = getStringLen(form.getFieldValue(iAntdProps.name));
         var maxLength = iFormInput.maxLength ? parseInt(iFormInput.maxLength) : 50;
         var placeholder = iAntdProps.placeholder || '';
         var formItemProps = {};
-        if ('colon' in props) {
-            formItemProps['colon'] = props.colon;
+        if (colon) {
+            formItemProps['colon'] = colon;
         }
         return (React.createElement(FormElement, { form: form, onReady: function (value) {
                 _this.FormInputRef = value;
@@ -870,7 +870,7 @@ var HLSelectWrapError = /** @class */ (function (_super) {
             var viewStore = formHLSelectRef.store.get(this.props.formUid);
             if (viewStore.computedErrorReactNodeList.has(this.props.formItemName)) {
                 var uid = viewStore.computedErrorReactNodeList.get(this.props.formItemName).uid;
-                isShowErrorView = viewStore.errorListView.has(uid);
+                isShowErrorView = viewStore._errorListView.has(uid);
             }
         }
         return (React.createElement(LegionsProErrorReportShow, { formUid: this.props.formUid, code: this.props.formItemName, errorClassName: 'tip-icon', onIgnoreError: this.props.onIgnoreError, className: isShowErrorView ? 'errorView' : '' },
@@ -1240,10 +1240,9 @@ var TooltipText = /** @class */ (function (_super) {
             var viewStore = FormTextRef.store.get(this.props.formUid);
             if (viewStore.computedErrorReactNodeList.has(this.props.formItemName)) {
                 var uid = viewStore.computedErrorReactNodeList.get(this.props.formItemName).uid;
-                viewStore.errorListView.has(uid);
+                viewStore._errorListView.has(uid);
             }
         }
-        var getFieldDecorator = form.getFieldDecorator, getFieldsError = form.getFieldsError, setFieldsValue = form.setFieldsValue;
         return (React.createElement(LegionsProErrorReportShow, { code: this.props.formItemName, formUid: this.props.formUid, errorClassName: classNames((_a = {},
                 _a["tip-icon-input"] = true,
                 _a["tip-icon-right-0"] = (this.props.value) ? true : false,
@@ -1272,10 +1271,10 @@ var FormText = /** @class */ (function (_super) {
         var _this = this;
         var _a = this.props, form = _a.form, iAntdProps = _a.iAntdProps, iFormText = _a.iFormText, children = _a.children, rules = _a.rules;
         var getFieldDecorator = form.getFieldDecorator, getFieldsError = form.getFieldsError, setFieldsValue = form.setFieldsValue;
-        var label = iFormText.label, labelCol = iFormText.labelCol, wrapperCol = iFormText.wrapperCol, props = __rest(iFormText, ["label", "labelCol", "wrapperCol"]);
+        var label = iFormText.label, labelCol = iFormText.labelCol, wrapperCol = iFormText.wrapperCol, visible = iFormText.visible, display = iFormText.display, colon = iFormText.colon, props = __rest(iFormText, ["label", "labelCol", "wrapperCol", "visible", "display", "colon"]);
         var formItemProps = {};
-        if ('colon' in props) {
-            formItemProps['colon'] = props.colon;
+        if (colon) {
+            formItemProps['colon'] = colon;
         }
         return (React.createElement(FormElement, { form: form, onReady: function (value) {
                 _this.FormTextRef = value;
@@ -1286,7 +1285,9 @@ var FormText = /** @class */ (function (_super) {
                     normalize: function (value, prevValue, allValues) {
                         return value && value.toString();
                     },
-                })(React.createElement(TooltipText, __assign({}, props, { formUid: this.props.formUid, FormTextRef: this.FormTextRef, value: form.getFieldValue(iAntdProps.name), formItemName: iAntdProps.name, form: form, inputType: 'span' }))),
+                })(
+                //@ts-ignore
+                React.createElement(TooltipText, __assign({}, props, { formUid: this.props.formUid, FormTextRef: this.FormTextRef, formItemName: iAntdProps.name, form: form, inputType: 'span' }))),
                 children)));
     };
     return FormText;
@@ -1975,11 +1976,11 @@ var ProForm = /** @class */ (function (_super) {
     ProForm.prototype.queryElementItem = function (ElementKey) {
         var _this = this;
         if (this.storeView) {
-            var keys = this.storeView.elementList.keys();
+            var keys = this.storeView._elementList.keys();
             var entitys_1 = null;
             //@ts-ignore
             keys.map(function (item) {
-                var entity = _this.storeView.elementList.get(item);
+                var entity = _this.storeView._elementList.get(item);
                 if (entity && entity.elementKey === ElementKey) {
                     entitys_1 = __assign(__assign({}, entity), { keys: item });
                 }
@@ -2001,7 +2002,7 @@ var ProForm = /** @class */ (function (_super) {
         if (viewStore) {
             var keys = [];
             try {
-                for (var _b = __values(viewStore.elementList.keys()), _c = _b.next(); !_c.done; _c = _b.next()) {
+                for (var _b = __values(viewStore._elementList.keys()), _c = _b.next(); !_c.done; _c = _b.next()) {
                     var item = _c.value;
                     keys.push(item);
                 }
@@ -2015,7 +2016,7 @@ var ProForm = /** @class */ (function (_super) {
             }
             var entitys_2 = null;
             keys.map(function (item) {
-                var entity = viewStore.elementList.get(item);
+                var entity = viewStore._elementList.get(item);
                 if (entity && entity.elementKey === elementItem.nextElementKey) {
                     entitys_2 = __assign(__assign({}, entity), { keys: item, viewStore: viewStore });
                 }
@@ -2031,7 +2032,7 @@ var ProForm = /** @class */ (function (_super) {
         var keyCode = e.keyCode;
         if (formStore && formStore.enableEnterSwitch) {
             /* e.stopPropagation() */
-            var keysNext = formStore.elementList.keys();
+            var keysNext = formStore._elementList.keys();
             var keys = [];
             try {
                 for (var keysNext_1 = __values(keysNext), keysNext_1_1 = keysNext_1.next(); !keysNext_1_1.done; keysNext_1_1 = keysNext_1.next()) {
@@ -2058,7 +2059,7 @@ var ProForm = /** @class */ (function (_super) {
                         var currUid = keys[index];
                         var nextIndex = index + 1;
                         var nextUid = keys[nextIndex];
-                        var currElement = formStore.elementList.get(currUid);
+                        var currElement = formStore._elementList.get(currUid);
                         if (currElement.nextElementKey) {
                             if (typeof currElement.nextElementKey === 'string') {
                                 var nextElementItem = this_1.queryElementItem(currElement.nextElementKey);
@@ -2081,7 +2082,7 @@ var ProForm = /** @class */ (function (_super) {
                                 nextUid = keys[nextIndex];
                             }
                         }
-                        var el_1 = formStore.elementList.get(nextUid);
+                        var el_1 = formStore._elementList.get(nextUid);
                         if (el_1) {
                             var result = el_1.element instanceof HTMLCollection;
                             if (result && el_1.element.length) {
@@ -2133,7 +2134,7 @@ var ProForm = /** @class */ (function (_super) {
                             preIndex = keys.length - 1;
                             nextUid = keys[preIndex];
                         }
-                        var el_2 = formStore.elementList.get(nextUid);
+                        var el_2 = formStore._elementList.get(nextUid);
                         if (el_2) {
                             var result = el_2.element instanceof HTMLCollection;
                             if (result && el_2.element.length) {
@@ -2387,7 +2388,7 @@ var ProForm = /** @class */ (function (_super) {
             }, style: { width: '100%', display: 'contents' }, onChange: function (items, sort, evt) {
                 console.log(items);
                 _this.storeLocalView.updateControlsSort(items);
-                _this.storeView.elementList.clear();
+                _this.storeView._elementList.clear();
                 _this.storeView.computedAllFormFields.map(function (w) {
                     var name = w.iAntdProps.name;
                     _this.storeView.renderNodeQueue.set(name, name);

@@ -466,11 +466,11 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
     
     queryElementItem(ElementKey: string): IElementList & { keys: string } {
         if (this.storeView) {
-            const keys = this.storeView.elementList.keys()
+            const keys = this.storeView._elementList.keys()
             let entitys: IElementList & { keys: string } = null
              //@ts-ignore
             keys.map((item) => {
-                const entity = this.storeView.elementList.get(item)
+                const entity = this.storeView._elementList.get(item)
                 if (entity && entity.elementKey === ElementKey) {
                     entitys = { ...entity,keys: item }
                 }
@@ -491,12 +491,12 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
         const viewStore = this.props.store.HLFormContainer.get(elementItem.formUid)
         if (viewStore) {
             const keys: string[] = []
-            for (let item of viewStore.elementList.keys()) {
+            for (let item of viewStore._elementList.keys()) {
                 keys.push(item);
             }
             let entitys: IElementList & { keys: string,viewStore: IViewModelHlFormStore } = null
             keys.map((item) => {
-                const entity = viewStore.elementList.get(item)
+                const entity = viewStore._elementList.get(item)
                 if (entity && entity.elementKey === elementItem.nextElementKey) {
                     entitys = { ...entity,keys: item,viewStore }
                 }
@@ -511,7 +511,7 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
         const { keyCode } = e;
         if (formStore && formStore.enableEnterSwitch) {
             /* e.stopPropagation() */
-            const keysNext = formStore.elementList.keys()
+            const keysNext = formStore._elementList.keys()
             const keys = [];
             for (let key of keysNext) {
                keys.push(key)
@@ -530,7 +530,7 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
                        
                         let nextIndex = index + 1
                         let nextUid = keys[nextIndex]
-                        const currElement = formStore.elementList.get(currUid)
+                        const currElement = formStore._elementList.get(currUid)
                         if (currElement.nextElementKey) {
                             if (typeof currElement.nextElementKey === 'string') {
                                 const nextElementItem = this.queryElementItem(currElement.nextElementKey)
@@ -555,7 +555,7 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
                             }
                         }
 
-                        let el = formStore.elementList.get(nextUid)
+                        let el = formStore._elementList.get(nextUid)
                         if (el) {
                             const result = el.element instanceof HTMLCollection
                             if (result && el.element.length) {
@@ -603,7 +603,7 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
                             preIndex = keys.length - 1
                             nextUid = keys[preIndex]
                         }
-                        let el = formStore.elementList.get(nextUid)
+                        let el = formStore._elementList.get(nextUid)
                         if (el) {
                             const result = el.element instanceof HTMLCollection
                             if (result && el.element.length) {
@@ -862,7 +862,7 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
             onChange={(items: string[],sort,evt) => {
                 console.log(items);
                 this.storeLocalView.updateControlsSort(items);
-                this.storeView.elementList.clear();
+                this.storeView._elementList.clear();
                 this.storeView.computedAllFormFields.map((w) => {
                     const name= w.iAntdProps.name
                     this.storeView.renderNodeQueue.set(name,name);

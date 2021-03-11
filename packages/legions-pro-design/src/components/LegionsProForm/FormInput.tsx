@@ -119,7 +119,7 @@ export class TooltipInput extends React.Component<ITooltipInputProps,{}>{
             const viewStore = FormInputRef.store.get(this.props.formUid)
             if (viewStore.computedErrorReactNodeList.has(this.props.formItemName)) {
                 const uid = viewStore.computedErrorReactNodeList.get(this.props.formItemName).uid
-                isShowErrorView = viewStore.errorListView.has(uid)
+                isShowErrorView = viewStore._errorListView.has(uid)
             }
         }
         const { getFieldDecorator,getFieldsError,setFieldsValue } = form;
@@ -224,13 +224,13 @@ export default class FormInput extends AbstractForm<IFormWithInputProps>{
         let disabled = iFormInput && iFormInput.disabled;
         let addonAfter = iFormInput && iFormInput.addonAfter;
         let addonBefore = iFormInput && iFormInput.addonBefore;
-        const { label,labelCol,wrapperCol,visible,display,render,...props } = iFormInput
+        const { label,labelCol,wrapperCol,visible,display,render,colon,...props } = iFormInput
         const valueLen = getStringLen(form.getFieldValue(iAntdProps.name))
         const maxLength = iFormInput.maxLength ? parseInt(iFormInput.maxLength) : 50
         const placeholder = iAntdProps.placeholder || ''
         let formItemProps = {};
-        if ('colon' in props) {
-            formItemProps['colon'] = props.colon;
+        if (colon) {
+            formItemProps['colon'] = colon;
         }
         return (
             <FormElement form={form}

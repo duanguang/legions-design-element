@@ -16,7 +16,7 @@ export declare class HlFormView {
      *
      * @memberof HlFormView
      */
-    elementList: IObservableMap<string, IElementList>;
+    _elementList: IObservableMap<string, IElementList>;
     /**
      * 用来存放下一个应该聚焦的组件元素uid值
      *
@@ -32,7 +32,7 @@ export declare class HlFormView {
     private size;
     private formfields;
     /** 自定义表单元素配置项 */
-    private customFormFields;
+    private _customFormFields;
     /** 待执行渲染的组件元素队列
      *
      * 执行完后移出队列
@@ -44,26 +44,26 @@ export declare class HlFormView {
      * @private
      * @memberof HlFormView
      */
-    private allElementList;
+    private _allElementList;
     /**
      *
      * 错误信息组件节点集合
      * @memberof HlFormView
      */
-    errorReactNodeList: IObservableMap<string, ViewModel<ErrorViewModel> & Proxify<ErrorViewModel>>;
+    _errorReactNodeList: IObservableMap<string, ViewModel<ErrorViewModel> & Proxify<ErrorViewModel>>;
     /**
      *
      * 所有组件错误信息
      * @memberof HlFormView
      */
-    errorListView: IObservableMap<string, IErrorView[]>;
+    _errorListView: IObservableMap<string, IErrorView[]>;
     /**
      * 错误信息组件节点集合 只读
      *
      * @returns
      * @memberof HlFormView
      */
-    get computedErrorReactNodeList(): HlFormView['errorReactNodeList'];
+    get computedErrorReactNodeList(): HlFormView['_errorReactNodeList'];
     get computedAllElementList(): string[];
     /** 表单元素配置项
      * 渲染formItem
@@ -86,7 +86,7 @@ export declare class HlFormView {
      * @readonly
      * @memberof HlFormView
      */
-    get computedFormSize(): "small" | "table" | "default";
+    get computedFormSize(): "small" | "default" | "table";
     /** 修改表单尺寸 */
     updateFormSize(size: 'default' | 'small' | 'table'): void;
     /**
@@ -96,7 +96,7 @@ export declare class HlFormView {
      * @param {string} errorUid // 错误信息组件生成的唯一uid
      * @memberof HlFormView
      */
-    collectErrorReactNode(componentCode: string, errorUid: string): void;
+    _collectErrorReactNode(componentCode: string, errorUid: string): void;
     /**
      * 设置错误信息，通过错误信息组件UID作为数据的主键
      *
@@ -119,7 +119,7 @@ export declare class HlFormView {
      * @param {string} keys
      * @memberof HlFormView
      */
-    addAllElementKeys(keys: string): void;
+    _addAllElementKeys(keys: string): void;
     /** 查询表单元素字段配置信息 */
     getFormItemField<T extends IProFormFields['componentModel']>(key: string): {
         value: T;

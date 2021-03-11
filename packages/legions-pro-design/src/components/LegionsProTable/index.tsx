@@ -660,6 +660,7 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
             this.viewModel.bodyStyle = nextProps.bodyStyle
         }
         if (nextProps.dataSource !== this.props.dataSource && nextProps.dataSource && !this.props.autoQuery) {
+            
             /**  主要解决当渲染数据和传入数据不一致时，无需通过传入数据值来刷新渲染数据 */
             if (this.props.displayType === 'smallData') {
                 this.getViewStore._renderData = [...this.props.autoQuery ? [] : nextProps.dataSource]

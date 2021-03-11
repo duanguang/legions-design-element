@@ -149,7 +149,7 @@ export default class FormElement extends React.Component<IFormElementProps,{}>{
     componentWillUnmount(){
         const formStore= this.props.store.get(this.props.formUid)
         if(formStore){
-            formStore.elementList.delete(this.uid)
+            formStore._elementList.delete(this.uid)
         }
         const selectSelectionDom = this.querySelectDom()
         if (selectSelectionDom) {
@@ -235,8 +235,8 @@ export default class FormElement extends React.Component<IFormElementProps,{}>{
     addElement(){
         const formStore = this.props.store.get(this.props.formUid)
         if(formStore){
-            formStore.addAllElementKeys(this.props.elementKey)
-            if (!formStore.elementList.has(this.uid)) {
+            formStore._addAllElementKeys(this.props.elementKey)
+            if (!formStore._elementList.has(this.uid)) {
                 const el = document.querySelector(`.${this.uid}`);
                 if (el&&this.props.elType) {
                     const elChildren = el.getElementsByTagName(this.props.elType)
@@ -250,7 +250,7 @@ export default class FormElement extends React.Component<IFormElementProps,{}>{
                     }
                     // @ts-ignore
                     if(elChildren&&el&&elChildren instanceof HTMLCollection&&elChildren.length&&!elChildren[0].disabled){
-                        formStore.elementList.set(this.uid,{
+                        formStore._elementList.set(this.uid,{
                             elementKey: this.props.elementKey,
                             elementTabindex:elementTabindex,
                             element: elChildren,

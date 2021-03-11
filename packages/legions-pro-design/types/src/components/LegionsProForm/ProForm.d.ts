@@ -119,15 +119,15 @@ export declare class LegionsProForm<mapProps = {}> extends React.Component<IProF
     decryptionFreezeUid: string;
     constructor(props: any);
     get storeView(): import("brain-store-utils").ViewModel<import("../LegionsStoreForm/proFormStore").HlFormView> & {
-        elementList: import("../LegionsStoreForm/interface").IObservableMap<string, IElementList>;
+        _elementList: import("../LegionsStoreForm/interface").IObservableMap<string, IElementList>;
         focusUid: string;
         enableEnterSwitch: boolean;
         renderNodeQueue: import("../LegionsStoreForm/interface").IObservableMap<string, string>;
-        errorReactNodeList: import("../LegionsStoreForm/interface").IObservableMap<string, import("brain-store-utils").ViewModel<import("../LegionsStoreForm/proFormStore").ErrorViewModel> & {
+        _errorReactNodeList: import("../LegionsStoreForm/interface").IObservableMap<string, import("brain-store-utils").ViewModel<import("../LegionsStoreForm/proFormStore").ErrorViewModel> & {
             uid: string;
             validateStatus: "" | "error";
         }>;
-        errorListView: import("../LegionsStoreForm/interface").IObservableMap<string, IErrorView[]>;
+        _errorListView: import("../LegionsStoreForm/interface").IObservableMap<string, IErrorView[]>;
         readonly computedErrorReactNodeList: import("../LegionsStoreForm/interface").IObservableMap<string, import("brain-store-utils").ViewModel<import("../LegionsStoreForm/proFormStore").ErrorViewModel> & {
             uid: string;
             validateStatus: "" | "error";
@@ -136,12 +136,12 @@ export declare class LegionsProForm<mapProps = {}> extends React.Component<IProF
         readonly computedFormFields: (LabelWithInputModel | LabelWithInputNumberModel | LabelWithDatePickerModel | LabelWithMonthPickerModel | LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel | LabelWithRadioButtonModel | LabelWithTextModel | LabelWithSelectModel | LabelWithCheckboxModel)[];
         readonly computedAllFormFields: (LabelWithInputModel | LabelWithInputNumberModel | LabelWithDatePickerModel | LabelWithMonthPickerModel | LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel | LabelWithRadioButtonModel | LabelWithTextModel | LabelWithSelectModel | LabelWithCheckboxModel)[];
         readonly computedErrorListView: IErrorView[];
-        readonly computedFormSize: "default" | "small" | "table";
-        updateFormSize: (size: "default" | "small" | "table") => void;
-        collectErrorReactNode: (componentCode: string, errorUid: string) => void;
+        readonly computedFormSize: "small" | "table" | "default";
+        updateFormSize: (size: "small" | "table" | "default") => void;
+        _collectErrorReactNode: (componentCode: string, errorUid: string) => void;
         setErrorErrorReactNodeList: (componentCode: string, errorListView: IErrorView[]) => void;
         handleIgnore: (componentCode: string, id: number) => void;
-        addAllElementKeys: (keys: string) => void;
+        _addAllElementKeys: (keys: string) => void;
         getFormItemField: <T extends LabelWithInputModel | LabelWithInputNumberModel | LabelWithDatePickerModel | LabelWithMonthPickerModel | LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel | LabelWithRadioButtonModel | LabelWithTextModel | LabelWithSelectModel | LabelWithCheckboxModel>(key: string) => {
             value: T;
             type: "normal" | "custom";
