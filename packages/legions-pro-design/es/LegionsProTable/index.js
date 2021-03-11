@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.5
+  *  legions-pro-design v0.0.7-beta.10
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -645,7 +645,7 @@ var LegionsProTable = /** @class */ (function (_super) {
         var ele = ReactDOM.findDOMNode(this).getElementsByClassName('ant-table-scroll')[0];
         if (ele && ele.firstElementChild && ele.firstElementChild.firstElementChild) {
             var div = document.createElement('div');
-            div.setAttribute('class', 'proTable-header-inner');
+            div.setAttribute('class', 'pro-table-header-inner');
             ele.firstElementChild.insertBefore(div, ele.firstElementChild.firstElementChild);
         }
     };
@@ -1233,7 +1233,7 @@ var LegionsProTable = /** @class */ (function (_super) {
         var bodyStyle = (this.viewModel.isAdaptiveHeight && this.getViewStore._renderData && this.getViewStore._renderData.length > 0) ? __assign(__assign({}, this.viewModel.bodyStyle), this.viewModel.calculateBody) : this.viewModel.bodyStyle;
         return React.createElement(Row, { className: baseCls },
             React.createElement(Col, null,
-                React.createElement("div", { className: "containers " + this.uid + " " + (this.viewModel.isAdaptiveHeight ? 'adaptiveHeight' : '') },
+                React.createElement("div", { className: "pro-table-containers " + this.uid + " " + (this.viewModel.isAdaptiveHeight ? 'table-adaptive-height' : '') },
                     React.createElement(Table
                     /* size="small" */
                     , __assign({}, locale, this.props, { scroll: __assign({

@@ -2406,10 +2406,10 @@ var ProForm = /** @class */ (function (_super) {
             var groupFormItem = controls.filter(function (entity) { return entity.iAntdProps.groupId === item.id; });
             if (groupFormItem && groupFormItem.length) {
                 var entity = _this.state.groupEntity.find(function (entity) { return entity.name === item.name; });
-                return (React.createElement(Row, { className: !entity.isFolding ? "group toggle" : "group", key: index },
-                    React.createElement("div", { className: "title " + (item.className || ''), "data-id": "form-floor", "data-tab": item.name },
-                        React.createElement("span", { className: "span-left" }, item.name),
-                        React.createElement("span", { className: "span-right" },
+                return (React.createElement(Row, { className: !entity.isFolding ? "group-item toggle" : "group-item", key: index },
+                    React.createElement("div", { className: "group-item-title " + (item.className || ''), "data-id": "form-floor", "data-tab": item.name },
+                        React.createElement("span", { className: "group-item-title-left" }, item.name),
+                        React.createElement("span", { className: "group-item-title-right" },
                             entity.isShowSizeIcon && React.createElement(Dropdown, { overlay: (React.createElement(Menu, { selectedKeys: [_this.storeView.computedFormSize], onClick: function (item) {
                                         var size = item.key;
                                         _this.storeView.updateFormSize(size);
@@ -2423,13 +2423,13 @@ var ProForm = /** @class */ (function (_super) {
                                         React.createElement("span", null, "\u7D27\u51D1\u578B")))), placement: "bottomCenter" },
                                 React.createElement(Icon, { style: { fontSize: '16px' }, type: "bars" })),
                             !entity.isFolding ? React.createElement(Icon, { type: "plus", style: { fontSize: '16px' }, onClick: _this.handleToggle.bind(_this, item.name) }) : React.createElement(Icon, { type: "minus", style: { fontSize: '17px' }, onClick: _this.handleToggle.bind(_this, item.name) }))),
-                    React.createElement("div", { className: !entity.isFolding ? "form-content hide" : "form-content" },
+                    React.createElement("div", { className: !entity.isFolding ? "group-item-form hide" : "group-item-form" },
                         React.createElement(Row, { type: "flex" }, _this.renderControls(groupFormItem)))));
             }
         });
-        return (React.createElement(Row, { className: "container" },
-            React.createElement("div", { className: "left", style: { width: (this.state.groupEntity.length > 5 ? 87 : 100) + "%" } }, groupComponent),
-            this.state.groupEntity.length > 6 && React.createElement("div", { className: "right" },
+        return (React.createElement(Row, { className: "form-group-wrapper" },
+            React.createElement("div", { className: "form-group", style: { width: (this.state.groupEntity.length > 5 ? 87 : 100) + "%" } }, groupComponent),
+            this.state.groupEntity.length > 5 && React.createElement("div", { className: "form-group-affix" },
                 React.createElement(Affix, null,
                     React.createElement("ul", null, this.state.groupEntity.map(function (entity, index) {
                         if (entity.active) {
