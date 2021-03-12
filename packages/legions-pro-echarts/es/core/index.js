@@ -1,6 +1,6 @@
 /**
   *  legions-pro-echarts v0.0.7
-  * (c) 2020 duanguang
+  * (c) 2021 duanguang
   * @license MIT
   */
 import { get, post } from 'legions/fetch';
@@ -18,6 +18,30 @@ import { get, post } from 'legions/fetch';
  * icon
  *  更多 */
 var MORE_IOCN = 'path://M298.666667 586.666667a74.666667 74.666667 0 1 1 0-149.333334 74.666667 74.666667 0 0 1 0 149.333334z m213.333333 0a74.666667 74.666667 0 1 1 0-149.333334 74.666667 74.666667 0 0 1 0 149.333334z m213.333333 0a74.666667 74.666667 0 1 1 0-149.333334 74.666667 74.666667 0 0 1 0 149.333334z';
+
+/*
+ * @Author: linzeqin
+ * @Date: 2019-11-07 08:36:35
+ * @description: 公共常量
+ */
+/** 样式名称前缀 */
+var prefixCls = 'legions-pro-echarts';
+
+/*
+ * @Author: linzeqin
+ * @Date: 2019-11-07 08:36:35
+ * @description: 颜色
+ */
+/** 主题颜色 */
+var mainColorList = [
+    "#407fcc",
+    "#56bbe2",
+    "#db8848",
+    "#88bf80",
+    "#6471d1",
+    "#d66763",
+    "#8c6bd2",
+];
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -90,4 +114,4 @@ var LegionsFetch = /** @class */ (function () {
     return LegionsFetch;
 }());
 
-export { LegionsFetch, MORE_IOCN };
+export { LegionsFetch, MORE_IOCN, mainColorList, prefixCls };

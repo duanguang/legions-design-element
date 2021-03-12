@@ -19,6 +19,7 @@ ReactDOM.render(
             <LegionsProEchartsTable
                 style={{padding: 10}}
                 scroll={{x: 500, y: 200}}
+                rowKey="a"
                 columns={[
                     {title: '排名',width: 100,dataIndex: 'a', sorter: true},
                     {title: '订单数',width: 100,dataIndex: 'b', sorter: true},

@@ -1,10 +1,9 @@
 /**
   *  legions-pro-echarts v0.0.7
-  * (c) 2020 duanguang
+  * (c) 2021 duanguang
   * @license MIT
   */
 import React from 'react';
-import 'echarts/lib/chart/pie';
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -35,49 +34,14 @@ function __extends(d, b) {
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 }
 
-var theme = require('../locale/theme.json');
-var LegionsProEchartsPropsTypes = /** @class */ (function () {
-    function LegionsProEchartsPropsTypes() {
-        /** 配置项 */
-        this.option = {};
-        this.onEvents = {};
-        /** 是否显示加载状态 */
-        this.loading = false;
-        this.loadingOption = {};
-        /** 初始化附加参数 */
-        this.opts = {};
-        /** 初始化主题 */
-        //@ts-ignore
-        this.theme = theme;
-        /** 容器样式 */
-        this.style = {};
-        /** 容器类名 */
-        this.className = '';
-        /** setOption时的附加配置项 */
-        this.setOptionConfig = {};
-        /** 由上层觉得是否需要setOption, 类似shouldComponentUpdate。默认为 true */
-        this.shouldSetOption = function () { return true; };
-        /** echarts 实例化完成后执行并抛出实例 */
-        this.onChartReady = function () { };
-    }
-    return LegionsProEchartsPropsTypes;
-}());
-
-var LegionsProEchartsCardProps = /** @class */ (function (_super) {
-    __extends(LegionsProEchartsCardProps, _super);
+var LegionsProEchartsCardProps = /** @class */ (function () {
     function LegionsProEchartsCardProps() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        /** 数据 */
-        _this.data = [{ value: 100, name: 'demo' }];
-        /** 配置项 */
-        _this.option = {};
-        _this.title = '';
-        _this.total = 0;
-        return _this;
+        this.title = '';
+        this.total = 0;
     }
     return LegionsProEchartsCardProps;
-}(LegionsProEchartsPropsTypes));
-/** 饼图组件 */
+}());
+/** 卡片组件 */
 var LegionsProEchartsChartCard = /** @class */ (function (_super) {
     __extends(LegionsProEchartsChartCard, _super);
     function LegionsProEchartsChartCard() {
@@ -86,7 +50,7 @@ var LegionsProEchartsChartCard = /** @class */ (function (_super) {
     LegionsProEchartsChartCard.prototype.componentDidMount = function () {
     };
     LegionsProEchartsChartCard.prototype.render = function () {
-        var _a = this.props, option = _a.option, title = _a.title, total = _a.total;
+        var _a = this.props, title = _a.title, total = _a.total;
         return (React.createElement("div", { style: {
                 height: '100%',
                 display: 'flex',
@@ -115,4 +79,5 @@ var LegionsProEchartsChartCard = /** @class */ (function (_super) {
     return LegionsProEchartsChartCard;
 }(React.Component));
 
-export { LegionsProEchartsCardProps, LegionsProEchartsChartCard };
+export default LegionsProEchartsChartCard;
+export { LegionsProEchartsCardProps };

@@ -3,12 +3,15 @@
  * @Date: 2021-01-22 14:23:11
  * @description: 基础布局，超过滚动条
  */
-import { LegionsProEchartsBox, LegionsProEchartsLayout } from 'components';
+import { LegionsProEchartsBox, LegionsProEchartsHeader, LegionsProEchartsLayout } from 'components';
 import React from 'react';
 const { ProRow, ProCol } = LegionsProEchartsLayout;
 export class LayoutBaseDemo extends React.Component{
     render() {
         return <LegionsProEchartsLayout gutter={6}>
+            <ProRow>
+                <LegionsProEchartsHeader>当年出口国家报关单量世界地图</LegionsProEchartsHeader>
+            </ProRow>
             <ProRow>
                 <ProCol span={12}>
                     <ProRow>

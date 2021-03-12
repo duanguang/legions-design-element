@@ -4,8 +4,6 @@
  * @description: 折线图
  */
 import { LineChart, LineSeriesOption } from 'echarts/charts';
-import 'echarts/lib/chart/line';
-import 'echarts/lib/component/toolbox';
 import { merge } from 'lodash';
 import React from 'react';
 import { echarts, LegionsProEchartsOption, LegionsProEchartsPropsTypes } from '../interface';

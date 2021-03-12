@@ -1,136 +1,134 @@
-import 'echarts/lib/chart/map';
-import echarts from 'echarts/lib/echarts';
+/*
+ * @Author: linzeqin
+ * @Date: 2020-12-14 16:10:47
+ * @LastEditTime: 2020-12-18 16:13:20
+ * @LastEditors: linzeqin
+ * @Description: 地图组件
+ */
 import React from 'react';
 import  LegionsProEcharts from '../LegionsProEcharts';
-import { LegionsProEchartsPropsTypes } from '../interface'
+import { echarts, LegionsProEchartsOption, LegionsProEchartsPropsTypes } from '../interface'
 import { merge } from 'lodash';
-const world = require('./world.json');
+import { EffectScatterChart, EffectScatterSeriesOption, LinesChart, LinesSeriesOption, MapChart, MapSeriesOption } from 'echarts/charts';
+import { GeoComponentOption, GeoComponent } from 'echarts/components'
+echarts.use([GeoComponent,MapChart,LinesChart,EffectScatterChart]);
+const world = require('../locale/world.json');
 const nameCN = require('../locale/country-name-zh.json')
-import 'echarts-gl';
-export class LegionsProEchartsMapProps extends LegionsProEchartsPropsTypes{
-    /** 数据 */
-    data?: echarts.EChartOption.SeriesMap.DataObject[] = [
-        //@ts-ignore
-        ...Object.values(nameCN).map((name: string) => {
-            return { name, value: Math.ceil((Math.random() * 10000000)) }
-        }),
-    ];
-    /** 配置项 */
-    option?: echarts.EChartOption = {};
+
+type MapOption = MapSeriesOption | LinesSeriesOption | EffectScatterSeriesOption | GeoComponentOption
+
+export class LegionsProEchartsMapProps extends LegionsProEchartsPropsTypes<MapOption>{
+    /** 是否初始化世界地图, 默认true */
+    initRegisterWorldMap?: boolean = true
 }
-interface IState{
-    data?:echarts.EChartOption.SeriesMap.DataObject[]
-}
-export default class LegionsProEchartsMap extends React.Component<LegionsProEchartsMapProps,IState>{
-    static readonly initData = [
-        //@ts-ignore
-        ...Object.values(nameCN).map((name: string) => {
-            return { name, value: Math.ceil((Math.random() * 10000000)) }
-        }),
-    ] as echarts.EChartOption.SeriesMap.DataObject[];
-    static countryNameZh = nameCN;
-    timeAction: boolean = true;
-    state = {
-        data: LegionsProEchartsMap.initData
-    }
-    timeId: NodeJS.Timeout|null = null;
-    //@ts-ignore
-    chartsRef: echarts.ECharts = null;
+
+export default class LegionsProEchartsMap extends React.Component<LegionsProEchartsMapProps>{
     static defaultProps: Readonly<LegionsProEchartsMapProps> = new LegionsProEchartsMapProps()
-    get option(): echarts.EChartOption {
+    static countryNameZh = nameCN;
+    static worldData = world;
+
+    componentWillMount() {
+        this.props.initRegisterWorldMap && echarts.registerMap('world', LegionsProEchartsMap.worldData)
+    }
+    private get option(): LegionsProEchartsOption<MapOption> {
         return {
             tooltip: {
                 trigger: 'item',
             },
+            geo: {
+                map: 'world',
+                zoom: 1,
+                roam: false,
+                label: {
+                    color: '#fff',
+                },
+                itemStyle: {
+                    borderColor: 'rgba(147, 235, 248, 1)',
+                    borderWidth: 1,
+                    areaColor: new echarts.graphic.LinearGradient(0,0,1,1,[{
+                        offset: 0,
+                        color: 'rgba(147, 235, 248, 0)'
+                    }, {
+                        offset: 1,
+                        color: 'rgba(147, 235, 248, .2)'
+                    }]),
+                },
+                emphasis: {
+                    label: {
+                        color: '#fff',
+                    },
+                    itemStyle: {
+                        areaColor: new echarts.graphic.LinearGradient(0,0,1,1,[{
+                            offset: 0,
+                            color: 'rgba(147, 235, 248, 0)'
+                        }, {
+                            offset: 1,
+                            color: 'rgba(147, 235, 248, 0.8)'
+                        }])
+                    }
+                },
+                nameMap: this.props.initRegisterWorldMap && LegionsProEchartsMap.countryNameZh,
+            },
             series: [
                 {
-                    name: '出口报关单单量',
-                    type: 'map3D',
+                    geoIndex: 0,
+                    type: 'map',
                     map: 'world',
-                    data:this.state.data,
-                    itemStyle: {
-                        color: '#0f2a37',
-                        borderColor: '#00e7fb',
-                        borderWidth: 1,
-                    },
-                    emphasis: {
-                        label: {
-                           show:false,
-                        },
-                        itemStyle: {
-                            color: '#e1874d',
-                        },
-                    },
-                    //@ts-ignore
-                    groundPlane: {
-                        show: true ,
-                        color: 'rgba(0, 54, 81, 0.3)',
-                    },
-                    viewControl: {
-                        projection: 'orthographic',
-                        alpha: 30,
-                        orthographicSize: 50
-                    },
-                    nameMap:LegionsProEchartsMap.countryNameZh,
+                    nameMap: this.props.initRegisterWorldMap && LegionsProEchartsMap.countryNameZh,
                 },
-            ],
-        } as echarts.EChartOption;
-    }
-    componentWillMount() {
-        echarts.registerMap('world', world)
-        this.timeId= setInterval(() => {
-            this.timeAction && this.highlightSelect();
-        },2000)
-
-    }
-    componentWillReceiveProps(nextProps: LegionsProEchartsMapProps) {
-        if (this.props.data !== nextProps.data) {
-            this.setState({
-                data:this.props.data
-            })
-        }
-    }
-    componentDidMount() {
-        /** 点击对应状态跳转到对应模块 */
-        this.chartsRef.on('globalout',(e: echarts.EChartOption.Tooltip.Format) => {
-            this.timeAction = true;
-        })
-        this.chartsRef.on('mouseover', (e: echarts.EChartOption.Tooltip.Format) => {
-            this.timeAction = false;
-            this.highlightSelect(e.dataIndex)
-        })
-    }
-    componentWillUnmount() {
-        clearInterval(this.timeId as NodeJS.Timeout)
-    }
-    highlightSelect(dataIndex?: number) {
-        const timeIndex = dataIndex || Math.ceil(Math.random() * Object.values(nameCN).length)
-        this.setState({
-            //@ts-ignore
-            data: [...LegionsProEchartsMap.initData.map((item, index) => {
-                if (timeIndex === index) {
-                    return {...item, height: 6, itemStyle: {color: '#e1874d'}, label: {
-                        show: dataIndex ? false : true,
-                        distance: 10000,
-                        formatter: '{b}:{c}',
-                        textStyle: {
-                            fontSize: 12,
-                        }
-                    }}
+                {
+                    type: 'effectScatter',
+                    coordinateSystem: 'geo',
+                    showEffectOn: 'render',
+                    zlevel:1,
+                    rippleEffect: {
+                        period: 15,
+                        scale: 4,
+                        brushType: 'fill'
+                    },
+                    tooltip: { show: false },
+                    label: {
+                        formatter: '{b}',
+                        position: 'right',
+                        offset: [15, 0],
+                        color: '#1DE9B6',
+                        show: true
+                    },
+                    itemStyle: {
+                        color:'#1DE9B6',
+                        shadowBlur: 10,
+                        shadowColor: '#333'
+                    },
+                    symbolSize: 10,
+                },
+                {
+                    type: 'lines',
+                    zlevel: 2,
+                    coordinateSystem: 'geo',
+                    tooltip: { show: false },
+                    effect: {
+                        show: true,
+                        period: 4, //箭头指向速度，值越小速度越快
+                        trailLength: 0.4, //特效尾迹长度[0,1]值越大，尾迹越长重
+                        symbol: 'circle', //箭头图标
+                        symbolSize: 7, //图标大小
+                    },
+                    lineStyle: {
+                        color:'#1DE9B6',
+                        width: 1, //线条宽度
+                        opacity: 0.1, //尾迹线条透明度
+                        curveness: .3 //尾迹线条曲直度
+                    },
                 }
-                return item
-            })]
-        })
+            ],
+        };
     }
     render() {
         const { option } = this.props;
         return (
-            <LegionsProEcharts
+            <LegionsProEcharts<MapOption>
                 {...this.props}
                 option={merge(this.option, option)}
-                onChartReady={(ref) => {
-                    this.chartsRef = ref;
-                }}
             ></LegionsProEcharts>
         )
     }

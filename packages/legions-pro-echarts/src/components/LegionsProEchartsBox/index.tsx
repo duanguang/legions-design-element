@@ -21,6 +21,7 @@ class IProps {
     style?: React.CSSProperties = {};
     /** 内层conent样式 */
     contentStyle?: React.CSSProperties = {};
+    /** 外层容器类名 */
     className?: string = '';
 }
 /** 可视化界面容器盒子占位块 */

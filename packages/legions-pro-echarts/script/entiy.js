@@ -3,7 +3,7 @@
  * @Date: 2020-12-10 16:14:09
  * @LastEditTime: 2020-12-18 16:59:58
  * @LastEditors: duanguang
- * @Description: 
+ * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-echarts/script/entiy.js
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
@@ -11,10 +11,25 @@
 const path = require('path');
 const resolves = _path => path.join(process.cwd(),_path);
 const array_components = [
-  'LegionsProEcharts','LegionsProEchartsBox','LegionsProEchartsBoxList','LegionsProEchartsChartBar',
-'LegionsProEchartsChartCard','LegionsProEchartsChartLine','LegionsProEchartsChartPie','LegionsProEchartsCol',
-/* 'LegionsProEchartsCore','LegionsProEchartsLayout','LegionsProEchartsLiquidFill','LegionsProEchartsMap','LegionsProLineOverflow','LegionsProEchartsRow' */,
-  'index',/* 'core' */]
+    // 'LegionsProEcharts',
+    // 'LegionsProEchartsBox',
+    // 'LegionsProEchartsChartBar',
+    // 'LegionsProEchartsChartCard',
+    // 'LegionsProEchartsChartGauge',
+    // 'LegionsProEchartsChartLine',
+    // 'LegionsProEchartsChartPie',
+    // 'LegionsProEchartsChartRadar',
+    // 'LegionsProEchartsCore',
+    // 'LegionsProEchartsHeader',
+    // 'LegionsProEchartsLayout',
+    // 'LegionsProEchartsLiquidFill',
+    // 'LegionsProEchartsMap',
+    // 'LegionsProEchartsWordCloud',
+    'LegionsProEchartsParts',
+    // 'core',
+    'index',
+    // 'interface',
+]
 const browser = [
   {
     name: 'iifeprod',
@@ -49,6 +64,10 @@ const es = [
     else if (item==='core') {
       input = resolves(`src/components/core/index.ts`);
       file = resolves('es/core/index.js');
+    }
+    else if (item==='interface') {
+      input = resolves(`src/components/interface/index.ts`);
+      file = resolves('es/interface/index.js');
     }
     else {
       input = resolves(`src/components/${item}/index.tsx`);

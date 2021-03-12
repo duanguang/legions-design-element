@@ -1,4 +1,4 @@
-import { LegionsProEchartsBox, LegionsProEchartsLayout, LegionsProEchartsProgress } from 'components';
+import { LegionsProEchartsBox, LegionsProEchartsLayout } from 'components';
 import LegionsProEchartsDatePicker from 'components/LegionsProEchartsParts/date-picker';
 import LegionsProEchartsInput from 'components/LegionsProEchartsParts/input';
 import LegionsProEchartsRadio from 'components/LegionsProEchartsParts/radio';
@@ -6,6 +6,7 @@ import LegionsProEchartsSelect from 'components/LegionsProEchartsParts/select';
 import React from 'react';
 import moment from 'moment';
 import LegionsProEchartsButton from 'components/LegionsProEchartsParts/button';
+import { LegionsProEchartsProgress } from 'components/LegionsProEchartsParts';
 const { ProRow, ProCol } = LegionsProEchartsLayout;
 
 export default class PartsDemo extends React.Component {

@@ -1,35 +1,18 @@
-/// <reference types="echarts" />
-/// <reference types="node" />
-import 'echarts/lib/chart/map';
-import echarts from 'echarts/lib/echarts';
 import React from 'react';
-import { LegionsProEchartsPropsTypes } from '../interface/interface';
-import 'echarts-gl';
-export declare class LegionsProEchartsMapProps extends LegionsProEchartsPropsTypes {
-    /** 数据 */
-    data?: echarts.EChartOption.SeriesMap.DataObject[];
-    /** 配置项 */
-    option?: echarts.EChartOption;
+import { LegionsProEchartsPropsTypes } from '../interface';
+import { EffectScatterSeriesOption, LinesSeriesOption, MapSeriesOption } from 'echarts/charts';
+import { GeoComponentOption } from 'echarts/components';
+declare type MapOption = MapSeriesOption | LinesSeriesOption | EffectScatterSeriesOption | GeoComponentOption;
+export declare class LegionsProEchartsMapProps extends LegionsProEchartsPropsTypes<MapOption> {
+    /** 是否初始化世界地图, 默认true */
+    initRegisterWorldMap?: boolean;
 }
-interface IState {
-    data?: echarts.EChartOption.SeriesMap.DataObject[];
-}
-export declare class LegionsProEchartsMap extends React.Component<LegionsProEchartsMapProps, IState> {
-    static readonly initData: echarts.EChartOption.SeriesMap.DataObject[];
-    static countryNameZh: any;
-    timeAction: boolean;
-    state: {
-        data: echarts.EChartOption.SeriesMap.DataObject[];
-    };
-    timeId: NodeJS.Timeout | null;
-    chartsRef: echarts.ECharts;
+export default class LegionsProEchartsMap extends React.Component<LegionsProEchartsMapProps> {
     static defaultProps: Readonly<LegionsProEchartsMapProps>;
-    get option(): echarts.EChartOption;
+    static countryNameZh: any;
+    static worldData: any;
     componentWillMount(): void;
-    componentWillReceiveProps(nextProps: LegionsProEchartsMapProps): void;
-    componentDidMount(): void;
-    componentWillUnmount(): void;
-    highlightSelect(dataIndex?: number): void;
+    private get option();
     render(): JSX.Element;
 }
 export {};

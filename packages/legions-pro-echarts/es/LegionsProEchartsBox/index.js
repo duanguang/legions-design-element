@@ -1,8 +1,9 @@
 /**
   *  legions-pro-echarts v0.0.7
-  * (c) 2020 duanguang
+  * (c) 2021 duanguang
   * @license MIT
   */
+import { prefixCls } from '../core';
 import React from 'react';
 import './style/index.less';
 
@@ -48,13 +49,21 @@ var __assign = function() {
 
 var IProps = /** @class */ (function () {
     function IProps() {
+        /** 标题 */
+        this.title = void 0;
+        /** 高度 */
+        this.height = '100%';
+        /** 宽度 */
+        this.width = 'auto';
+        /** 外层样式 */
         this.style = {};
+        /** 内层conent样式 */
+        this.contentStyle = {};
+        /** 外层容器类名 */
         this.className = '';
-        this.title = null;
     }
     return IProps;
 }());
-var proLayoutPrefix = 'legions-pro-echarts';
 /** 可视化界面容器盒子占位块 */
 var LegionsProEchartsBox = /** @class */ (function (_super) {
     __extends(LegionsProEchartsBox, _super);
@@ -62,19 +71,21 @@ var LegionsProEchartsBox = /** @class */ (function (_super) {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     LegionsProEchartsBox.prototype.render = function () {
-        var _a = this.props, style = _a.style, className = _a.className, title = _a.title;
-        var mStyle = __assign({ height: '100%' }, style);
-        return (React.createElement("div", { style: mStyle, className: className },
-            React.createElement("div", { style: { height: '100%', paddingTop: title ? '36px' : void 0 }, className: proLayoutPrefix + "-box" },
-                title && React.createElement("div", { className: 'pro-box-title' }, title),
-                React.createElement("div", { className: 'boxTopLeft' }),
-                React.createElement("div", { className: 'boxTopRight' }),
-                React.createElement("div", { className: 'boxBotLeft' }),
-                React.createElement("div", { className: 'boxBotRight' }),
-                this.props.children)));
+        var _a = this.props, style = _a.style, className = _a.className, title = _a.title, height = _a.height, width = _a.width, contentStyle = _a.contentStyle;
+        var mStyle = __assign({ height: height,
+            width: width }, style);
+        return (React.createElement("div", { style: mStyle, className: prefixCls + "-box-wrap " + className },
+            React.createElement("div", { className: prefixCls + "-box", style: { height: '100%', paddingTop: title ? '36px' : void 0 } },
+                title && React.createElement("div", { className: "pro-box-title" },
+                    React.createElement("span", null, title)),
+                React.createElement("div", { className: "pro-box-topLeft" }),
+                React.createElement("div", { className: "pro-box-topRight" }),
+                React.createElement("div", { className: "pro-box-botLeft" }),
+                React.createElement("div", { className: "pro-box-botRight" }),
+                React.createElement("div", { className: "pro-box-content", style: contentStyle }, this.props.children))));
     };
     LegionsProEchartsBox.defaultProps = new IProps();
     return LegionsProEchartsBox;
 }(React.Component));
 
-export { LegionsProEchartsBox };
+export default LegionsProEchartsBox;

@@ -3,13 +3,16 @@
  * @Date: 2021-01-22 14:23:11
  * @description: 全屏布局，只显示一屏，超出隐藏
  */
-import { LegionsProEchartsBox, LegionsProEchartsLayout } from 'components';
+import { LegionsProEchartsBox, LegionsProEchartsHeader, LegionsProEchartsLayout } from 'components';
 import React from 'react';
 const { ProRow, ProCol } = LegionsProEchartsLayout;
 export class LayoutFullDemo extends React.Component{
     render() {
         return <LegionsProEchartsLayout isFullScreen gutter={6}>
-            <ProRow ySpan={17}>
+            <ProRow ySpan={2} style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                <LegionsProEchartsHeader>当年出口国家报关单量世界地图</LegionsProEchartsHeader>
+            </ProRow>
+            <ProRow ySpan={16}>
                 <ProCol ySpan={24} span={12}>
                     <ProRow ySpan={24}>
                         <ProCol span={12} ySpan={8}>
@@ -37,7 +40,7 @@ export class LayoutFullDemo extends React.Component{
                     </ProRow>
                 </ProCol>
             </ProRow>
-            <ProRow ySpan={7}>
+            <ProRow ySpan={6}>
                 <ProCol ySpan={24} span={8}>
                     <LegionsProEchartsBox title="title"></LegionsProEchartsBox>
                 </ProCol>

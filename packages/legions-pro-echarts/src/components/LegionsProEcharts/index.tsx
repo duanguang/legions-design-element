@@ -8,7 +8,7 @@ import {
     LegendComponent,
 } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
-import theme from '../locale/theme.json';
+const theme = require('../locale/theme.json');
 
 /** 预设组件，也是注册必须的组件 */
 echarts.use(
