@@ -196,6 +196,8 @@ export default class LegionsProTableForm<T = {},F = {}> extends LegionsProForm.C
                 render: (form,iAntdProps,rules,formRef: InstanceProForm) => {
                     const { data } = this.state
                     return formRef && <LegionsProTable<T>
+                        //@ts-ignore
+                        uniqueUid={`${this.props['uniqueUid']}/proTable`}
                         isOpenCustomColumns={false}
                         visibleExportLoacl={false}
                         isOpenRowChange={false}

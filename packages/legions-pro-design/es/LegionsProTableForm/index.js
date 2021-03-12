@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.7-beta.10
+  *  legions-pro-design v0.0.7-beta.11
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -159,7 +159,9 @@ var LegionsProTableForm = /** @class */ (function (_super) {
                 iFormProps: {
                     render: function (form, iAntdProps, rules, formRef) {
                         var data = _this.state.data;
-                        return formRef && React.createElement(LegionsProTable, __assign({ isOpenCustomColumns: false, visibleExportLoacl: false, isOpenRowChange: false }, proTableConfig, { dataSource: __spread(data), onPagingQuery: function (page, pageSize, isChangePageSize) {
+                        return formRef && React.createElement(LegionsProTable, __assign({ 
+                            //@ts-ignore
+                            uniqueUid: _this.props['uniqueUid'] + "/proTable", isOpenCustomColumns: false, visibleExportLoacl: false, isOpenRowChange: false }, proTableConfig, { dataSource: __spread(data), onPagingQuery: function (page, pageSize, isChangePageSize) {
                                 var proTableConfig = _this.props.proTableConfig;
                                 /** 触发表单的setFields，实现table分页切换时，表单数据不异常 */
                                 _this.formRef.viewModel.form.setFields({});
