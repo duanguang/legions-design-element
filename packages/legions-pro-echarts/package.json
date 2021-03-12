@@ -14,12 +14,7 @@
   "typings": "es/index.d.ts",
   "peerDependencies": {},
   "dependencies": {
-    "legions-utils-tool": "^0.0.10",
-    "legions": "^1.0.9-rc.2",
-    "legions-thirdparty-plugin": "^0.0.8",
-    "legions-lunar": "^0.0.5-rc.1",
-    "legions-decorator": "^0.0.4",
-    "legions-control-container": "^0.0.5",
+    "antd": "^2.7.4",
     "size-sensor": "^1.0.0",
     "echarts": "^5.0.0",
     "echarts-gl": "^2.0.0",
@@ -33,9 +28,15 @@
     "@types/node": "^10.0.0",
     "@types/react": "^16.9.35",
     "@types/react-dom": "^0.14.22",
-    "antd": "^2.7.4",
     "brain-cli": "^1.0.8-alpha.5",
     "bezier-easing": "^2.0.3",
+
+    "legions-utils-tool": "^0.0.10",
+    "legions": "^1.0.9-rc.2",
+    "legions-thirdparty-plugin": "^0.0.8",
+    "legions-lunar": "^0.0.5-rc.1",
+    "legions-decorator": "^0.0.4",
+    "legions-control-container": "^0.0.5",
 
     "bisheng": "^1.2.3",
     "bisheng-plugin-antd": "^1.0.1",
@@ -76,8 +77,7 @@
     "test": "__tests__"
   },
   "files": [
-    "dist",
-    "types"
+    "es"
   ],
   "browserslist": [
     "> 1%",
