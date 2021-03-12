@@ -1,11 +1,10 @@
 /**
-  *  legions-pro-echarts v0.0.7
+  *  legions-pro-echarts v0.0.8
   * (c) 2021 duanguang
   * @license MIT
   */
 import { Button, DatePicker, Input, Progress, Radio, Select, Table, Tooltip } from 'antd';
 import React, { Component } from 'react';
-import 'legions/fetch';
 import './style/button.less';
 import './style/date-picker.less';
 import './style/input.less';

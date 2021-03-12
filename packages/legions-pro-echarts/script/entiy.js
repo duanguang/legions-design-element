@@ -25,8 +25,8 @@ const array_components = [
     // 'LegionsProEchartsLiquidFill',
     // 'LegionsProEchartsMap',
     // 'LegionsProEchartsWordCloud',
-    // 'LegionsProEchartsParts',
-    'core',
+    'LegionsProEchartsParts',
+    // 'core',
     // 'index',
     // 'interface',
 ]
