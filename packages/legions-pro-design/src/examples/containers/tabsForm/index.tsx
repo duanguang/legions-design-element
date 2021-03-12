@@ -5,7 +5,7 @@ import { LegionsProForm,LegionsProPageContainer } from '../../../components';
 import { observablePromise } from 'legions/store-utils';
 import { observable } from 'legions/store';
 import { HttpConfig } from '../../constants/httpConfig';
-import { InstanceForm } from '../../../components/LegionsProForm/interface'
+import { InstanceProForm } from '../../../components/LegionsProForm/interface'
 import { FormFields } from '../proForm/model';
 import { ClassOf } from 'legions-lunar/types/api/typescript';
 import LegionsProTabsForm from 'components/LegionsProTabsForm';
@@ -91,7 +91,7 @@ export class ProTabsForm extends React.Component<IProps,IState> {
                     value: '订单',
                     label: '订单1',
                     key: '1',
-                    keyValue: '222',
+                    extendedField: '222',
                     disabled: true,
                 },
                 {
@@ -193,9 +193,9 @@ export class ProTabsForm extends React.Component<IProps,IState> {
                         console.log(this.formRef.methods.validateFields());
                        
                     }}>检验</Button>
-                    <Button style={{ marginLeft: '10px' }} type="primary" htmlType="submit" onClick={() => {
+                    <Button style={{ marginLeft: '10px' }} type="primary"  onClick={() => {
                         this.formRef.methods.submit((values) => {
-                            console.log(values);
+                            console.log(values,'value');
                         })
                        
                     }}>提交</Button>
@@ -211,12 +211,15 @@ export class ProTabsForm extends React.Component<IProps,IState> {
                         tabPaneProps={
                             {
                                 tab: (key,index) => {
+                                    console.log(key);
                                     return <div>销售订单{index+1}</div>
                                 }
                             }
                         }
                         onReady={(formref) => {
                             this.formRef = formref;
+                            this.formRef.viewModel.clearTabs();
+                            this.formRef.methods.onTabAdd();
                         }}
                     ></LegionsProTabsForm>
                     

@@ -68,7 +68,7 @@ export interface ITableAutoQuery<Model = {}> {
      * @type {string}
      * @memberof IAutoQuery
      */
-    token: string;
+    token?: string;
     /**
      * 表格绑定数据前转换符合表格数据结构的数据
      *

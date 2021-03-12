@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-10 16:14:09
- * @LastEditTime: 2020-12-18 16:59:58
+ * @LastEditTime: 2021-03-10 10:31:51
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-echarts/script/entiy.js

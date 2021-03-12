@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-26 17:07:34
- * @LastEditTime: 2021-03-02 19:07:57
+ * @LastEditTime: 2021-03-04 10:10:37
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProTable/interface.ts
@@ -181,6 +181,7 @@ IE9暂时只支持英文，中文会显示为乱码。
      * @type {number}
      */
     pageIndex?: number;
+    isShowLoading?: boolean;
   }) => void;
   /**
    *

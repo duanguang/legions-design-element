@@ -10,7 +10,7 @@ import { IElementList, IProFormFields } from '../LegionsStoreForm/interface';
 import { LabelWithSwitchModel } from './FormSwitch';
 import { LabelWithRadioButtonModel } from './FormRadioButton';
 import { LabelWithTextModel } from './FormText';
-import { InstanceForm } from './interface/form';
+import { InstanceProForm } from './interface/form';
 import { LabelWithCheckboxModel } from './FormCheckbox';
 import { BaseFormFields } from 'legions-lunar/model';
 import { ProFormFields, ProFormUtils } from './ProFormUtils';
@@ -62,7 +62,7 @@ export interface IProFormProps<mapProps = {}> {
      */
     onReady: (
     /**即将废弃，请formRef.viewModel.form 获取 */
-    form: WrappedFormUtils, formRef?: InstanceForm) => void;
+    form: WrappedFormUtils, formRef?: InstanceProForm) => void;
     size?: 'default' | 'small' | 'table';
     /**
      *
@@ -119,15 +119,15 @@ export declare class LegionsProForm<mapProps = {}> extends React.Component<IProF
     decryptionFreezeUid: string;
     constructor(props: any);
     get storeView(): import("brain-store-utils").ViewModel<import("../LegionsStoreForm/proFormStore").HlFormView> & {
-        elementList: import("../LegionsStoreForm/interface").IObservableMap<string, IElementList>;
+        _elementList: import("../LegionsStoreForm/interface").IObservableMap<string, IElementList>;
         focusUid: string;
         enableEnterSwitch: boolean;
         renderNodeQueue: import("../LegionsStoreForm/interface").IObservableMap<string, string>;
-        errorReactNodeList: import("../LegionsStoreForm/interface").IObservableMap<string, import("brain-store-utils").ViewModel<import("../LegionsStoreForm/proFormStore").ErrorViewModel> & {
+        _errorReactNodeList: import("../LegionsStoreForm/interface").IObservableMap<string, import("brain-store-utils").ViewModel<import("../LegionsStoreForm/proFormStore").ErrorViewModel> & {
             uid: string;
             validateStatus: "" | "error";
         }>;
-        errorListView: import("../LegionsStoreForm/interface").IObservableMap<string, IErrorView[]>;
+        _errorListView: import("../LegionsStoreForm/interface").IObservableMap<string, IErrorView[]>;
         readonly computedErrorReactNodeList: import("../LegionsStoreForm/interface").IObservableMap<string, import("brain-store-utils").ViewModel<import("../LegionsStoreForm/proFormStore").ErrorViewModel> & {
             uid: string;
             validateStatus: "" | "error";
@@ -138,12 +138,12 @@ export declare class LegionsProForm<mapProps = {}> extends React.Component<IProF
         readonly computedErrorListView: IErrorView[];
         readonly computedFormSize: "small" | "table" | "default";
         updateFormSize: (size: "small" | "table" | "default") => void;
-        collectErrorReactNode: (componentCode: string, errorUid: string) => void;
+        _collectErrorReactNode: (componentCode: string, errorUid: string) => void;
         setErrorErrorReactNodeList: (componentCode: string, errorListView: IErrorView[]) => void;
         handleIgnore: (componentCode: string, id: number) => void;
-        addAllElementKeys: (keys: string) => void;
-        getFormItemField: (key: string) => {
-            value: LabelWithInputModel | LabelWithInputNumberModel | LabelWithDatePickerModel | LabelWithMonthPickerModel | LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel | LabelWithRadioButtonModel | LabelWithTextModel | LabelWithSelectModel | LabelWithCheckboxModel;
+        _addAllElementKeys: (keys: string) => void;
+        getFormItemField: <T extends LabelWithInputModel | LabelWithInputNumberModel | LabelWithDatePickerModel | LabelWithMonthPickerModel | LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel | LabelWithRadioButtonModel | LabelWithTextModel | LabelWithSelectModel | LabelWithCheckboxModel>(key: string) => {
+            value: T;
             type: "normal" | "custom";
         };
         _initFormItemField: (key: string, value: LabelWithInputModel | LabelWithInputNumberModel | LabelWithDatePickerModel | LabelWithMonthPickerModel | LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel | LabelWithRadioButtonModel | LabelWithTextModel | LabelWithSelectModel | LabelWithCheckboxModel, type?: "normal" | "custom") => void;

@@ -30,15 +30,15 @@ interface IProps{
 /**  常规区块组件*/
 const LegionsProPageContainer = (props:IProps) => {
     return(
-        <div className={`legions-pro-pagecontainer legions-pro-pagecontainer-pageWrap`}>
+        <div className={`legions-pro-pagecontainer`}>
             <div>
-                {props.query&&<div className={'ListPageQuery'}>
+                {props.query&&<div className={'page-query'}>
                     {props.query}
                 </div>}
-                {props.operation&&<div className={`ListPageOperation`} style={{margin: '0 13px'}}>
+                {props.operation&&<div className={`page-operation`}>
                     {props.operation}
                 </div>}
-                <div className={`ListPageContent`}>
+                <div className={`page-content`}>
                     {props.content}
                 </div>
             </div>

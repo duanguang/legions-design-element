@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.3
+  *  legions-pro-design v0.0.7-beta.2
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -9,6 +9,7 @@ import { observablePromise, observableViewModel } from 'legions/store-utils';
 import { shortHash } from 'legions-lunar/object-hash';
 import { isObservableArray, computed, runInAction, useStrict, configure } from 'mobx';
 import LegionsModels from '../LegionsModels';
+import { editTableColumns, queryTableColumns } from '../services';
 import LegionsCore from '../LegionsCore';
 import { cloneDeep } from 'lodash';
 import LegionsProTable from '../LegionsProTable';
@@ -100,52 +101,6 @@ function __generator(thisArg, body) {
         } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
-}
-
-/*
- * @Author: duanguang
- * @Date: 2020-12-26 11:55:33
- * @LastEditTime: 2021-03-02 17:53:40
- * @LastEditors: duanguang
- * @Description:
- * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/services/index.ts
- * @「扫去窗上的尘埃，才可以看到窗外的美景。」
- */
-/**
- *
- * 编辑自定义table列信息
- * @export
- * @returns
- */
-function editTableColumns(modulesUid, customColumns, url) {
-    return __awaiter(this, void 0, void 0, function () {
-        var httpClient;
-        return __generator(this, function (_a) {
-            httpClient = new LegionsCore.LegionsFetch();
-            return [2 /*return*/, httpClient.post({
-                    url: url,
-                    parameter: { modulesUid: modulesUid, customColumns: customColumns },
-                    model: LegionsModels.TableColumnsContainerEntity,
-                }).then(function (result) {
-                    return result;
-                })];
-        });
-    });
-}
-function queryTableColumns(modulesUid, url) {
-    return __awaiter(this, void 0, void 0, function () {
-        var httpClient;
-        return __generator(this, function (_a) {
-            httpClient = new LegionsCore.LegionsFetch();
-            return [2 /*return*/, httpClient.get({
-                    url: url,
-                    parameter: { modulesUid: modulesUid },
-                    model: LegionsModels.TableColumnsContainerEntity
-                }).then(function (result) {
-                    return result;
-                })];
-        });
-    });
 }
 
 var ProTableView = /** @class */ (function () {
@@ -1007,8 +962,39 @@ var ProTableLocalView = /** @class */ (function () {
          * @memberof HLTableLocalView
          */
         this.obState = observablePromise();
-        this.loading = false;
+        this._obStateMap = observable.map();
+        /** 查询数据状态
+         *
+         * 在loading动画展示时使用
+         */
+        this._loading = false;
+        /** http 请求状态 */
+        this._request = 'none';
     }
+    Object.defineProperty(ProTableLocalView.prototype, "computedLoading", {
+        /** 数据请求状态 */
+        get: function () {
+            return this._loading;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(ProTableLocalView.prototype, "computedRequest", {
+        /** http 请求状态 */
+        get: function () {
+            return this._request;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    /** 更新动画状态,组件内部私有方法 */
+    ProTableLocalView.prototype._setLoadingState = function (_loading) {
+        this._loading = _loading;
+    };
+    /** 更新http请求接口状态,组件内部私有方法  */
+    ProTableLocalView.prototype._setRequestState = function (request) {
+        this._request = request;
+    };
     ProTableLocalView.prototype.dispatchRequest = function (autoQuery, options) {
         if (autoQuery) {
             var server_1 = new LegionsCore.LegionsFetch();
@@ -1029,15 +1015,24 @@ var ProTableLocalView = /** @class */ (function () {
                         }
                     };
                 }
+                var headers = {};
+                if (autoQuery.token) {
+                    headers = { 'api-cookie': autoQuery.token };
+                }
                 if (autoQuery.method === 'post') {
-                    return server_1.post(__assign({ url: autoQuery.ApiUrl, parameter: params, headers: __assign(__assign({}, autoQuery.options), { 'api-cookie': autoQuery.token }) }, model));
+                    return server_1.post(__assign({ url: autoQuery.ApiUrl, parameter: params, headers: __assign(__assign({}, autoQuery.options), headers) }, model));
                 }
                 else if (autoQuery.method === 'get') {
-                    return server_1.get(__assign({ url: autoQuery.ApiUrl, parameter: params, headers: __assign(__assign({}, autoQuery.options), { 'api-cookie': autoQuery.token }) }, model));
+                    return server_1.get(__assign({ url: autoQuery.ApiUrl, parameter: params, headers: __assign(__assign({}, autoQuery.options), headers) }, model));
                 }
             };
+            if (options.isShowLoading) {
+                this._setLoadingState(true);
+            }
+            this._request = 'none';
             // @ts-ignore
             this.obState = observablePromise(apiServer());
+            this._request = 'pending';
         }
     };
     __decorate([
@@ -1047,7 +1042,37 @@ var ProTableLocalView = /** @class */ (function () {
     __decorate([
         observable,
         __metadata("design:type", Object)
-    ], ProTableLocalView.prototype, "loading", void 0);
+    ], ProTableLocalView.prototype, "_obStateMap", void 0);
+    __decorate([
+        observable,
+        __metadata("design:type", Object)
+    ], ProTableLocalView.prototype, "_loading", void 0);
+    __decorate([
+        observable,
+        __metadata("design:type", String)
+    ], ProTableLocalView.prototype, "_request", void 0);
+    __decorate([
+        computed,
+        __metadata("design:type", Object),
+        __metadata("design:paramtypes", [])
+    ], ProTableLocalView.prototype, "computedLoading", null);
+    __decorate([
+        computed,
+        __metadata("design:type", Object),
+        __metadata("design:paramtypes", [])
+    ], ProTableLocalView.prototype, "computedRequest", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [Boolean]),
+        __metadata("design:returntype", void 0)
+    ], ProTableLocalView.prototype, "_setLoadingState", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [String]),
+        __metadata("design:returntype", void 0)
+    ], ProTableLocalView.prototype, "_setRequestState", null);
     __decorate([
         action,
         __metadata("design:type", Function),

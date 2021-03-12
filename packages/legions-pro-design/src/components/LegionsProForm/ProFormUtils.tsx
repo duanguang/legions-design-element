@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-08 15:19:23
- * @LastEditTime: 2021-02-23 16:46:29
+ * @LastEditTime: 2021-03-05 15:47:20
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProForm/ProFormUtils.tsx
@@ -15,7 +15,7 @@ import {
     WrappedFormUtils,
     ColProps
 } from '../interface/antd';
-import { IFormCheckboxProps, IFormDatePickerProps, IFormInputNumberProps, IFormInputProps, IFormMonthPickerProps, IFormRadioButtonProps, IFormRangePickerProps, IFormRenderProps, IFormSelectProps, IFormState, IFormSwitchProps, IFormTextProps, IFormUploadProps, InstanceForm, LabelWithCheckboxModel, LabelWithDatePickerModel, LabelWithSelectModel, LabelWithInputModel, LabelWithInputNumberModel, LabelWithMonthPickerModel, LabelWithRadioButtonModel, LabelWithRangePickerModel, LabelWithRenderModel, LabelWithSwitchModel, LabelWithTextModel, LabelWithUploadModel } from './interface';
+import { IFormCheckboxProps, IFormDatePickerProps, IFormInputNumberProps, IFormInputProps, IFormMonthPickerProps, IFormRadioButtonProps, IFormRangePickerProps, IFormRenderProps, IFormSelectProps, IFormState, IFormSwitchProps, IFormTextProps, IFormUploadProps, InstanceProForm, LabelWithCheckboxModel, LabelWithDatePickerModel, LabelWithSelectModel, LabelWithInputModel, LabelWithInputNumberModel, LabelWithMonthPickerModel, LabelWithRadioButtonModel, LabelWithRangePickerModel, LabelWithRenderModel, LabelWithSwitchModel, LabelWithTextModel, LabelWithUploadModel } from './interface';
 import FormInput from './FormInput';
 import FormInputNumber from './FormInputNumber';
 import FormSelect from './FormSelect';
@@ -58,7 +58,7 @@ interface IRenderComponentParams<T> {
      * 
      * 可选参数，在自定义表单组件时，需要传入此数据，用于初始化表单组件项数据
      */
-    formRef?: InstanceForm;
+    formRef?: InstanceProForm;
 }
 interface IProFormUtils {
     componentModel: LabelWithInputModel | LabelWithInputNumberModel | LabelWithDatePickerModel | LabelWithMonthPickerModel |
@@ -153,7 +153,7 @@ export class ProFormUtils<Store,global = {}>{
             //console.warn(`【${key}】:Configuration information, will be covered`)
         }
     }
-    private initFromState(key: string,formRef: InstanceForm,iFormItemProps:IProFormUtils['componentModel']) {
+    private initFromState(key: string,formRef: InstanceProForm,iFormItemProps:IProFormUtils['componentModel']) {
         if (formRef && key) {
             const storeView = formRef.store.get(formRef.uid);
             storeView._initFormItemField(key,iFormItemProps,'custom')
@@ -231,7 +231,7 @@ export class ProFormUtils<Store,global = {}>{
      * @returns
      * @memberof HLFormUtils
      */
-    createFormComponent(controls: IProFormUtils['componentModel'],form: WrappedFormUtils,formUid: string,formRef: InstanceForm,key?: string | number) {
+    createFormComponent(controls: IProFormUtils['componentModel'],form: WrappedFormUtils,formUid: string,formRef: InstanceProForm,key?: string | number) {
         let control = controls;
         if (key === void 0) {
             key = control.iAntdProps.id

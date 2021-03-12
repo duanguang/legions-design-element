@@ -1,111 +1,83 @@
 ---
 order: 0
 title:
-  zh-CN: 简单列表
-  en-US: 简单列表
+  zh-CN: 后端解析
+  en-US: 后端解析
 ---
 
 ## zh-CN
 
-一个简单列表绑定数据使用
+后端解析数据并抛出错误信息
 
 ## en-US
 
 ```jsx
-import create from '../../../common/components/render.tsx';
-import { JsonProperty } from 'json-mapper-object';
-import { Button, Row } from 'antd';
+
 import React from 'react';
-import { bind, observer } from 'legions/store-react';
-import { LegionsProTable, LegionsProPageContainer } from 'legions-pro-design';
+import { Button } from 'antd';
+import { LegionsProDataImport } from 'legions-pro-design';
+import { ITableColumnConfigProps } from 'legions-pro-design/es/LegionsProTable/interface';
+import create from '../../../common/components/render.tsx';
 
+/** 表格列配置 */
+const columns: ITableColumnConfigProps[] = [
+    { title: '序号', dataIndex: 'trId'},
+    { title: '错误信息', dataIndex: 'errorInfo', width: 300, isExport: false, tooltip: true},
+    { title: '类别', dataIndex: 'typeName_value'},
+    { title: '料号', dataIndex: 'itemNo'},
+    { title: '归并料号', dataIndex: 'baseCommodityItemNo_value'},
+    { title: '商品编码', dataIndex: 'commodityCode_value'},
+    { title: '货物名称', dataIndex: 'gname_value'},
+    { title: '货物英文', dataIndex: 'gdescEn_value'},
+    { title: '货物规格', dataIndex: 'type'},
+]
 
-
- class ResponseVModelNameDataEntity {
-  @JsonProperty('key')
-  key = void 0;
-  @JsonProperty('name')
-  name = void 0;
-  @JsonProperty('age')
-  age = void 0;
-  @JsonProperty('address')
-  address = void 0;
+export default class DataImportDemo extends React.Component {
+    /** 提交 */
+    handleSubmit = (data: object[]) => {
+        console.log(data)
+    }
+    render() {
+        return (
+            <div style={{padding: 10}}>
+                <LegionsProDataImport
+                    templateUrl="https://uat-scm.hoolinks.com/file/jg/basic/物料信息-导入样例.xlsx"
+                    uploadProps={{
+                        name: 'uploadFile',
+                        action: '/common/excel/import/upload.json',
+                        data: {
+                            templateCode: 'itemMasterImport_flex',
+                        },
+                    }}
+                    uploadDataTransform={(reponse) => {
+                        return reponse && reponse.success ? reponse.data.dataList.map((item, index) => ({
+                            ...item,
+                            /** 标识数据是否错误 */
+                            isError: index === 2,
+                            /** 标识数据是否警告 */
+                            isWarn: index === 1,
+                        })) : []
+                    }}
+                    tableProps={{
+                        uniqueKey: 'trId',
+                        uniqueUid: 'test', // 实际使用场景请勿赋值该属性
+                        columns,
+                        scroll: {y: 300, x: 1000},
+                        onReady: (instance) => {
+                            instance.viewModel.isAdaptiveHeight = true;
+                            instance.viewModel.bodyExternalContainer.set('other', {height: 200})
+                        },
+                    }}
+                    onSubmit={this.handleSubmit}
+                    customBtn={<Button>自定义按钮</Button>}
+                ></LegionsProDataImport>
+            </div>
+        )
+    }
 }
-interface IProps {}
-class ProTableDemo extends LegionsProTable.ProTableBaseClass<IProps,{},{},{}> {
-  constructor(props: IProps) {
-    super(props);
-    this.pushColumns('name', {
-      title: '姓名',
-      width: '100px',
-      sorter: true,
-    });
-    this.pushColumns('age', {
-      title: '年龄',
-      width: '100px',
-      sorter: true,
-    });
-    this.pushColumns('address', {
-      title: '住址',
-      width: '100px',
-      sorter: true,
-    });
-  }
-  render() {
-    return (
-      <LegionsProTable
-      <{},ResponseVModelNameDataEntity>
-        onReady={value => {
-          this.tableRef = value;
-          this.tableRef.viewModel.isAdaptiveHeight = false;
 
-          this.tableRef.viewModel.bodyExternalContainer.set('ButtonAction', {
-            height: 48,
-          });
-
-          this.tableRef.viewModel.bodyExternalContainer.set('other', {
-            height: 70,
-          });
-        }}
-        autoQuery={{
-            params: (pageIndex,pageSize) => {
-              return {
-                size: pageSize,
-                current: pageIndex,
-                ...this.queryPrams,
-              };
-            },
-            transform: (value) => {
-              if (value && !value.isPending && value.value) {
-                const { result,current,pageSize,total } = value.value;
-                return {
-                  data: result.map((item,index) => {
-                    item['key'] = index + 1 + (current - 1) * pageSize;
-                    return item;
-                  }),
-                  total: total,
-                };
-              }
-              return {
-                total: 0,
-                data: [],
-              };
-            },
-            method: 'get',
-            ApiUrl: 'http://192.168.200.171:3001/mock/115/getUsers',
-            mappingEntity: (that,res) => {
-                that.result = that.transformRows(res['data'],ResponseVModelNameDataEntity)
-            }
-        }}
-        columns={this.columnsData}
-        uniqueUid="mock/115/getUsers"
-        uniqueKey="name"
-        isOpenRowChange={false}></LegionsProTable>
-    );
-  }
-}
 const root = props => {
-  return <ProTableDemo></ProTableDemo>;
+  return <DataImportDemo></DataImportDemo>;
 };
 const app = create();
 ReactDOM.render(React.createElement(app.start(root)), mountNode);

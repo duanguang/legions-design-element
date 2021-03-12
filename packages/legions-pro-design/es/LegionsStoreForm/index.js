@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.3
+  *  legions-pro-design v0.0.7-beta.10
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -212,15 +212,18 @@ var TabsItemView = /** @class */ (function () {
     return TabsItemView;
 }());
 var TabsFormView = /** @class */ (function () {
-    function TabsFormView() {
+    function TabsFormView(uid) {
+        this._uid = '';
         /** 当前活跃的tab项 */
         this.activeTabKey = null;
         /** 内部变量，外部请勿直接调用 */
         this._tabsMap = observable.map();
         this.activeTabKey = "" + shortHash(new Date().getTime()) + 0;
+        this._uid = uid;
         this._tabsMap.set(this.activeTabKey, new TabsItemView(this.activeTabKey));
     }
-    Object.defineProperty(TabsFormView.prototype, "computedTabs", {
+    Object.defineProperty(TabsFormView.prototype, "_computedTabs", {
+        /** tabs项数 内部私有变量 */
         get: function () {
             var e_1, _a;
             var value = [];
@@ -256,43 +259,72 @@ var TabsFormView = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
+    TabsFormView.prototype._geKeys = function (key) {
+        var keys = "" + key + shortHash("" + key + this._uid);
+        return keys;
+    };
     TabsFormView.prototype.getTabs = function (key) {
-        console.log(this._tabsMap);
+        var keys = this._geKeys(key);
+        if (this._tabsMap.has(keys)) {
+            return this._tabsMap.get(keys);
+        }
         return this._tabsMap.get(key);
     };
     TabsFormView.prototype.hasTabs = function (key) {
-        return this._tabsMap.has(key);
+        var keys = this._geKeys(key);
+        if (this._tabsMap.has(keys)) {
+            return true;
+        }
+        if (this._tabsMap.has(key)) {
+            return true;
+        }
+        return false;
     };
     TabsFormView.prototype.getTabsKeys = function () {
         return this._tabsMap.keys();
     };
+    TabsFormView.prototype.clearTabs = function () {
+        this.activeTabKey = '';
+        this._tabsMap.clear();
+    };
     /**
      * 删除tab
      * @param {string} key map中对应key值
-     * @memberof DeliveryGoodsStore
      */
     TabsFormView.prototype.delTabsMap = function (key) {
         this._tabsMap.delete(key);
     };
     /**
-     * 添加tab
-     * @param {boolean} switchTabKey 添加页签后是否立即切换到新增的页签
-     * @param {number} index 下标，用于遍历新增页签时可能会导致uid重复
-     * @param {() => void} callback 创建完成之后等待ui渲染完毕执行事件
+     * 添加tab页签
+     *
+     * 内部私有方法
      */
-    TabsFormView.prototype.addTabsMap = function (isSwitchTabKey, index, callback) {
-        if (isSwitchTabKey === void 0) { isSwitchTabKey = true; }
-        if (index === void 0) { index = 0; }
-        var uid = "" + shortHash(new Date().getTime()) + index;
-        this._tabsMap.set(uid, new TabsItemView("" + uid));
+    TabsFormView.prototype._addTabsMap = function (options) {
+        var uid = '';
+        var option = options || {};
+        var isSwitchTabKey = option.isSwitchTabKey === void 0 ? true : option.isSwitchTabKey;
+        var key = option.key || '';
+        if (key) { // 如果设定了固定key，则生成
+            uid = "TabPane" + key + shortHash("" + key + this._uid);
+        }
+        else { // 随机生成
+            uid = "TabPane" + shortHash(new Date().getTime()) + this._tabsMap.size;
+        }
+        if (!this._tabsMap.has(uid)) {
+            this._tabsMap.set(uid, new TabsItemView("" + uid));
+        }
         isSwitchTabKey && (this.activeTabKey = uid);
         /** 等待ui记载完毕根据托运责任设置订单服务类型 */
         setTimeout(function () {
             /** ui渲染完毕，执行回调 */
-            callback && callback();
+            option.callback && option.callback();
         }, 100);
         return uid;
     };
+    __decorate([
+        observable,
+        __metadata("design:type", Object)
+    ], TabsFormView.prototype, "_uid", void 0);
     __decorate([
         observable,
         __metadata("design:type", String)
@@ -305,7 +337,7 @@ var TabsFormView = /** @class */ (function () {
         computed,
         __metadata("design:type", Array),
         __metadata("design:paramtypes", [])
-    ], TabsFormView.prototype, "computedTabs", null);
+    ], TabsFormView.prototype, "_computedTabs", null);
     __decorate([
         computed,
         __metadata("design:type", Object),
@@ -337,15 +369,21 @@ var TabsFormView = /** @class */ (function () {
     __decorate([
         action,
         __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], TabsFormView.prototype, "clearTabs", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
         __metadata("design:paramtypes", [String]),
         __metadata("design:returntype", void 0)
     ], TabsFormView.prototype, "delTabsMap", null);
     __decorate([
         action,
         __metadata("design:type", Function),
-        __metadata("design:paramtypes", [Boolean, Number, Function]),
+        __metadata("design:paramtypes", [Object]),
         __metadata("design:returntype", void 0)
-    ], TabsFormView.prototype, "addTabsMap", null);
+    ], TabsFormView.prototype, "_addTabsMap", null);
     return TabsFormView;
 }());
 
@@ -356,7 +394,7 @@ var HlFormView = /** @class */ (function () {
          *
          * @memberof HlFormView
          */
-        this.elementList = observable$1.map();
+        this._elementList = observable$1.map();
         /* @observable addEventListener=false */
         /**
          * 用来存放下一个应该聚焦的组件元素uid值
@@ -373,7 +411,7 @@ var HlFormView = /** @class */ (function () {
         this.size = 'default';
         this.formfields = observable$1.map();
         /** 自定义表单元素配置项 */
-        this.customFormFields = observable$1.map();
+        this._customFormFields = observable$1.map();
         /** 待执行渲染的组件元素队列
          *
          * 执行完后移出队列
@@ -385,19 +423,19 @@ var HlFormView = /** @class */ (function () {
          * @private
          * @memberof HlFormView
          */
-        this.allElementList = [];
+        this._allElementList = [];
         /**
          *
          * 错误信息组件节点集合
          * @memberof HlFormView
          */
-        this.errorReactNodeList = observable$1.map();
+        this._errorReactNodeList = observable$1.map();
         /**
          *
          * 所有组件错误信息
          * @memberof HlFormView
          */
-        this.errorListView = observable$1.map();
+        this._errorListView = observable$1.map();
         this.formfields.observe(function (chan) {
         });
     }
@@ -409,14 +447,14 @@ var HlFormView = /** @class */ (function () {
          * @memberof HlFormView
          */
         get: function () {
-            return this.errorReactNodeList;
+            return this._errorReactNodeList;
         },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(HlFormView.prototype, "computedAllElementList", {
         get: function () {
-            return this.allElementList;
+            return this._allElementList;
         },
         enumerable: false,
         configurable: true
@@ -467,7 +505,7 @@ var HlFormView = /** @class */ (function () {
                 finally { if (e_2) throw e_2.error; }
             }
             try {
-                for (var _e = __values(this.customFormFields.values()), _f = _e.next(); !_f.done; _f = _e.next()) {
+                for (var _e = __values(this._customFormFields.values()), _f = _e.next(); !_f.done; _f = _e.next()) {
                     var item = _f.value;
                     value.push(item);
                 }
@@ -493,12 +531,12 @@ var HlFormView = /** @class */ (function () {
          */
         get: function () {
             var e_4, _a;
-            var keys = this.errorListView.keys();
+            var keys = this._errorListView.keys();
             var data = [];
             try {
                 for (var keys_1 = __values(keys), keys_1_1 = keys_1.next(); !keys_1_1.done; keys_1_1 = keys_1.next()) {
                     var item = keys_1_1.value;
-                    this.errorListView.get(item).map(function (entity) {
+                    this._errorListView.get(item).map(function (entity) {
                         data.push(entity);
                     });
                 }
@@ -546,10 +584,10 @@ var HlFormView = /** @class */ (function () {
      * @param {string} errorUid // 错误信息组件生成的唯一uid
      * @memberof HlFormView
      */
-    HlFormView.prototype.collectErrorReactNode = function (componentCode, errorUid) {
+    HlFormView.prototype._collectErrorReactNode = function (componentCode, errorUid) {
         var errorViewModel = new ErrorViewModel();
         errorViewModel.uid = errorUid;
-        this.errorReactNodeList.set(componentCode, observableViewModel(errorViewModel));
+        this._errorReactNodeList.set(componentCode, observableViewModel(errorViewModel));
     };
     /**
      * 设置错误信息，通过错误信息组件UID作为数据的主键
@@ -572,7 +610,7 @@ var HlFormView = /** @class */ (function () {
                         'error';
                 }
             });
-            this.errorListView.set(this.computedErrorReactNodeList.get(componentCode).uid, errorListView);
+            this._errorListView.set(this.computedErrorReactNodeList.get(componentCode).uid, errorListView);
         }
     };
     /**
@@ -583,20 +621,20 @@ var HlFormView = /** @class */ (function () {
      * @memberof HlFormView
      */
     HlFormView.prototype.handleIgnore = function (componentCode, id) {
-        if (this.errorReactNodeList.get(componentCode)) {
-            var uid = this.errorReactNodeList.get(componentCode).uid;
-            if (this.errorListView.get(uid)) {
-                var canBeSubmit = this.errorListView
+        if (this._errorReactNodeList.get(componentCode)) {
+            var uid = this._errorReactNodeList.get(componentCode).uid;
+            if (this._errorListView.get(uid)) {
+                var canBeSubmit = this._errorListView
                     .get(uid)
                     .filter(function (item) { return item.type === 'canBeSubmit' && item.key === id; });
-                var AllcanBeSubmit = this.errorListView
+                var AllcanBeSubmit = this._errorListView
                     .get(uid)
                     .every(function (item) { return item.type === 'canBeSubmit'; });
                 var entity = canBeSubmit.find(function (items) { return items.componentCode === componentCode; });
                 var view = this.computedErrorReactNodeList.get(componentCode);
                 if (entity && entity.status === 2) {
                     entity.status = 1;
-                    var has = this.errorListView
+                    var has = this._errorListView
                         .get(uid)
                         .every(function (item) { return item.status === 1; });
                     if (AllcanBeSubmit && has) {
@@ -615,24 +653,26 @@ var HlFormView = /** @class */ (function () {
      * @param {string} keys
      * @memberof HlFormView
      */
-    HlFormView.prototype.addAllElementKeys = function (keys) {
-        var index = this.allElementList.findIndex(function (item) { return item === keys; });
+    HlFormView.prototype._addAllElementKeys = function (keys) {
+        var index = this._allElementList.findIndex(function (item) { return item === keys; });
         if (index < 0) {
-            this.allElementList.push(keys);
-            this.allElementList = this.allElementList.slice();
+            this._allElementList.push(keys);
+            this._allElementList = this._allElementList.slice();
         }
     };
     /** 查询表单元素字段配置信息 */
     HlFormView.prototype.getFormItemField = function (key) {
         if (this.formfields.has(key)) {
             return {
+                //@ts-ignore
                 value: this.formfields.get(key),
                 type: 'normal',
             };
         }
-        else if (this.customFormFields.has(key)) {
+        else if (this._customFormFields.has(key)) {
             return {
-                value: this.customFormFields.get(key),
+                //@ts-ignore
+                value: this._customFormFields.get(key),
                 type: 'custom',
             };
         }
@@ -647,15 +687,15 @@ var HlFormView = /** @class */ (function () {
             }
         }
         else if (type === 'custom') {
-            if (!this.customFormFields.has(key)) {
-                this.customFormFields.set(key, value);
+            if (!this._customFormFields.has(key)) {
+                this._customFormFields.set(key, value);
             }
         }
     };
     __decorate([
         observable$1,
         __metadata("design:type", Object)
-    ], HlFormView.prototype, "elementList", void 0);
+    ], HlFormView.prototype, "_elementList", void 0);
     __decorate([
         observable$1,
         __metadata("design:type", Object)
@@ -675,7 +715,7 @@ var HlFormView = /** @class */ (function () {
     __decorate([
         observable$1,
         __metadata("design:type", Object)
-    ], HlFormView.prototype, "customFormFields", void 0);
+    ], HlFormView.prototype, "_customFormFields", void 0);
     __decorate([
         observable$1,
         __metadata("design:type", Object)
@@ -683,15 +723,15 @@ var HlFormView = /** @class */ (function () {
     __decorate([
         observable$1,
         __metadata("design:type", Object)
-    ], HlFormView.prototype, "allElementList", void 0);
+    ], HlFormView.prototype, "_allElementList", void 0);
     __decorate([
         observable$1,
         __metadata("design:type", Object)
-    ], HlFormView.prototype, "errorReactNodeList", void 0);
+    ], HlFormView.prototype, "_errorReactNodeList", void 0);
     __decorate([
         observable$1,
         __metadata("design:type", Object)
-    ], HlFormView.prototype, "errorListView", void 0);
+    ], HlFormView.prototype, "_errorListView", void 0);
     __decorate([
         computed,
         __metadata("design:type", Object),
@@ -733,7 +773,7 @@ var HlFormView = /** @class */ (function () {
         __metadata("design:type", Function),
         __metadata("design:paramtypes", [String, String]),
         __metadata("design:returntype", void 0)
-    ], HlFormView.prototype, "collectErrorReactNode", null);
+    ], HlFormView.prototype, "_collectErrorReactNode", null);
     __decorate([
         action$1,
         __metadata("design:type", Function),
@@ -751,7 +791,7 @@ var HlFormView = /** @class */ (function () {
         __metadata("design:type", Function),
         __metadata("design:paramtypes", [String]),
         __metadata("design:returntype", void 0)
-    ], HlFormView.prototype, "addAllElementKeys", null);
+    ], HlFormView.prototype, "_addAllElementKeys", null);
     __decorate([
         action$1,
         __metadata("design:type", Function),
@@ -982,11 +1022,15 @@ var HLFormLocalView = /** @class */ (function () {
                         };
                     },
                 };
+                var headers = {};
+                if (autoQuery.token) {
+                    headers = { 'api-cookie': autoQuery.token };
+                }
                 if (autoQuery.method === 'post') {
-                    return server_1.post(__assign({ url: autoQuery.ApiUrl, parameter: params, headers: __assign(__assign({}, autoQuery.options), { 'api-cookie': autoQuery.token }), model: LegionsModels.SelectKeyValue }, model));
+                    return server_1.post(__assign({ url: autoQuery.ApiUrl, parameter: params, headers: __assign(__assign({}, autoQuery.options), headers), model: LegionsModels.SelectKeyValue }, model));
                 }
                 else if (autoQuery.method === 'get') {
-                    return server_1.get(__assign({ url: autoQuery.ApiUrl, parameter: params, headers: __assign(__assign({}, autoQuery.options), { 'api-cookie': autoQuery.token }), model: LegionsModels.SelectKeyValue }, model));
+                    return server_1.get(__assign({ url: autoQuery.ApiUrl, parameter: params, headers: __assign(__assign({}, autoQuery.options), headers), model: LegionsModels.SelectKeyValue }, model));
                 }
             };
             var data = this.selectOptions.get(name); // 查询指定下拉组件数据
@@ -1244,7 +1288,7 @@ var ProFormStore = /** @class */ (function (_super) {
      * @memberof HLFormStore
      */
     ProFormStore.prototype.clearAllElement = function (uid) {
-        this.HLFormContainer.get(uid).elementList.clear();
+        this.HLFormContainer.get(uid)._elementList.clear();
     };
     /**
      *
@@ -1261,7 +1305,7 @@ var ProFormStore = /** @class */ (function (_super) {
             /*  const elementListKeys = store.elementList.keys() */
             var elementListKeys_1 = [];
             try {
-                for (var _b = __values(store.elementList.keys()), _c = _b.next(); !_c.done; _c = _b.next()) {
+                for (var _b = __values(store._elementList.keys()), _c = _b.next(); !_c.done; _c = _b.next()) {
                     var item = _c.value;
                     elementListKeys_1.push(item);
                 }
@@ -1284,7 +1328,7 @@ var ProFormStore = /** @class */ (function (_super) {
                             nextUid = 0;
                         }
                         var nextElementKey = elementListKeys_1[nextUid];
-                        var nextElement = store.elementList.get(nextElementKey);
+                        var nextElement = store._elementList.get(nextElementKey);
                         var result = nextElement.element instanceof HTMLCollection;
                         if (nextElement && result && nextElement.element.length) {
                             if (nextElement.elementTabindex &&
@@ -1301,7 +1345,7 @@ var ProFormStore = /** @class */ (function (_super) {
                     }
                 }
                 else {
-                    var el = store.elementList.get(item);
+                    var el = store._elementList.get(item);
                     if (el && el.elementKey === nextElementName) {
                         var result = el.element instanceof HTMLCollection;
                         if (result && el.element.length) {
@@ -1323,9 +1367,14 @@ var ProFormStore = /** @class */ (function (_super) {
      */
     ProFormStore.prototype.updateFormInputData = function (formUid, formFields) {
         var view = this.HLFormContainer.get(formUid);
-        if (view && typeof view.InputDataModelClass === 'function') {
-            // @ts-ignore
-            view.InputDataModel = new view.InputDataModelClass(__assign(__assign({}, view.InputDataModel), formFields));
+        if (view) {
+            if (typeof view.InputDataModelClass === 'function') {
+                // @ts-ignore
+                view.InputDataModel = new view.InputDataModelClass(__assign(__assign({}, view.InputDataModel), formFields));
+            }
+            else {
+                view.InputDataModel = __assign(__assign({}, view.InputDataModel), formFields);
+            }
             Object.keys(formFields).map(function (key) {
                 if (!view.renderNodeQueue.has(key)) {
                     view.renderNodeQueue.set(key, key);
@@ -1334,7 +1383,7 @@ var ProFormStore = /** @class */ (function (_super) {
         }
     };
     ProFormStore.prototype.addTabsForm = function (uid) {
-        var formView = new TabsFormView();
+        var formView = new TabsFormView(uid);
         this._TabsFormDataMap.set(uid, observableViewModel(formView));
     };
     ProFormStore.prototype.deleteTabsForm = function (uid) {

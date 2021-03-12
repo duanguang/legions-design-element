@@ -23,4 +23,4 @@ export type { IFormRenderProps } from '../FormRender';
 export { LabelWithRenderModel, LabelWithRenderPartialModel } from '../FormRender';
 export type { IFormCheckboxProps } from '../FormCheckbox';
 export { LabelWithCheckboxModel, LabelWithCheckboxPartialModel } from '../FormCheckbox';
-export { InstanceForm } from './form';
+export { InstanceProForm } from './form';

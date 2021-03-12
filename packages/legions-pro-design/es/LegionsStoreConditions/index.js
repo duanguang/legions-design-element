@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.3
+  *  legions-pro-design v0.0.7-beta.10
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -91,7 +91,7 @@ function __values(o) {
 /*
  * @Author: duanguang
  * @Date: 2021-01-07 16:49:31
- * @LastEditTime: 2021-03-02 18:47:07
+ * @LastEditTime: 2021-03-10 16:05:06
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreConditions/conditionView.ts
@@ -262,6 +262,7 @@ var ConditionView = /** @class */ (function () {
     ConditionView.prototype._setQueryState = function (name, callback) {
         var item = this._getQueryItem(name);
         if (item) {
+            //@ts-ignore
             callback && callback(item);
             if (this.query.has(item.containerProps.uuid)) {
                 this.query.set(item.containerProps.uuid, cloneDeep(item));
@@ -272,6 +273,11 @@ var ConditionView = /** @class */ (function () {
         var item = this.computedQuery.find(function (item) { return item.containerProps.name === name; });
         if (item) {
             return this.query.get(item.containerProps.uuid);
+        }
+        else {
+            if (this.query.has(name)) {
+                return this.query.get(name);
+            }
         }
         return null;
     };
@@ -289,6 +295,10 @@ var ConditionView = /** @class */ (function () {
                 delete params.pageIndex;
                 delete params.pageSize;
                 delete params.defaultKeyWords;
+                var headers = {};
+                if (autoQuery.token) {
+                    headers = { 'api-cookie': autoQuery.token };
+                }
                 if (autoQuery.requestBeforeTransformParams) {
                     params = autoQuery.requestBeforeTransformParams(__assign(__assign({}, params), { pageIndex: options.pageIndex, pageSize: options.pageSize }));
                 }
@@ -302,16 +312,20 @@ var ConditionView = /** @class */ (function () {
                     },
                 };
                 if (autoQuery.method === 'post') {
-                    return server_1.post(__assign({ url: autoQuery.ApiUrl, parameter: params, headers: __assign(__assign({}, autoQuery.options), { 'api-cookie': autoQuery.token }), model: LegionsModels.SelectKeyValue }, model));
+                    return server_1.post(__assign({ url: autoQuery.ApiUrl, parameter: params, headers: __assign(__assign({}, autoQuery.options), headers), model: LegionsModels.SelectKeyValue }, model));
                 }
                 else if (autoQuery.method === 'get') {
-                    return server_1.get(__assign({ url: autoQuery.ApiUrl, parameter: params, headers: __assign(__assign({}, autoQuery.options), { 'api-cookie': autoQuery.token }), model: LegionsModels.SelectKeyValue }, model));
+                    return server_1.get(__assign({ url: autoQuery.ApiUrl, parameter: params, headers: __assign(__assign({}, autoQuery.options), headers), model: LegionsModels.SelectKeyValue }, model));
                 }
             };
             this.selectOptions.set(name, {
                 obData: observablePromise(apiServer()),
             });
         }
+    };
+    /** 移除指定搜索条件项  */
+    ConditionView.prototype._removeQuery = function (uuid) {
+        return this.query.delete(uuid);
     };
     __decorate([
         observable,
@@ -413,6 +427,12 @@ var ConditionView = /** @class */ (function () {
         __metadata("design:paramtypes", [String, Object, Object]),
         __metadata("design:returntype", void 0)
     ], ConditionView.prototype, "_dispatchRequest", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [String]),
+        __metadata("design:returntype", void 0)
+    ], ConditionView.prototype, "_removeQuery", null);
     return ConditionView;
 }());
 

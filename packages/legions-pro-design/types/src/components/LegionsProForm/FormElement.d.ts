@@ -59,15 +59,15 @@ export default class FormElement extends React.Component<IFormElementProps, {}> 
     onkeyDownProxy: () => () => void;
     componentWillMount(): void;
     get formStore(): import("brain-store-utils").ViewModel<import("../LegionsStoreForm/proFormStore").HlFormView> & {
-        elementList: import("../LegionsStoreForm/interface").IObservableMap<string, import("../LegionsStoreForm/interface").IElementList>;
+        _elementList: import("../LegionsStoreForm/interface").IObservableMap<string, import("../LegionsStoreForm/interface").IElementList>;
         focusUid: string;
         enableEnterSwitch: boolean;
         renderNodeQueue: import("../LegionsStoreForm/interface").IObservableMap<string, string>;
-        errorReactNodeList: import("../LegionsStoreForm/interface").IObservableMap<string, import("brain-store-utils").ViewModel<import("../LegionsStoreForm/proFormStore").ErrorViewModel> & {
+        _errorReactNodeList: import("../LegionsStoreForm/interface").IObservableMap<string, import("brain-store-utils").ViewModel<import("../LegionsStoreForm/proFormStore").ErrorViewModel> & {
             uid: string;
             validateStatus: "" | "error";
         }>;
-        errorListView: import("../LegionsStoreForm/interface").IObservableMap<string, import("./interface").IErrorView[]>;
+        _errorListView: import("../LegionsStoreForm/interface").IObservableMap<string, import("./interface").IErrorView[]>;
         readonly computedErrorReactNodeList: import("../LegionsStoreForm/interface").IObservableMap<string, import("brain-store-utils").ViewModel<import("../LegionsStoreForm/proFormStore").ErrorViewModel> & {
             uid: string;
             validateStatus: "" | "error";
@@ -78,12 +78,12 @@ export default class FormElement extends React.Component<IFormElementProps, {}> 
         readonly computedErrorListView: import("./interface").IErrorView[];
         readonly computedFormSize: "small" | "table" | "default";
         updateFormSize: (size: "small" | "table" | "default") => void;
-        collectErrorReactNode: (componentCode: string, errorUid: string) => void;
+        _collectErrorReactNode: (componentCode: string, errorUid: string) => void;
         setErrorErrorReactNodeList: (componentCode: string, errorListView: import("./interface").IErrorView[]) => void;
         handleIgnore: (componentCode: string, id: number) => void;
-        addAllElementKeys: (keys: string) => void;
-        getFormItemField: (key: string) => {
-            value: import("./FormInput").LabelWithInputModel | import("./FormInputNumber").LabelWithInputNumberModel | import("./FormDatePicker").LabelWithDatePickerModel | import("./FormMonthPicker").LabelWithMonthPickerModel | import("./FormRangePicker").LabelWithRangePickerModel | import("./FormUpload").LabelWithUploadModel | import("./FormSwitch").LabelWithSwitchModel | import("./FormRadioButton").LabelWithRadioButtonModel | import("./FormText").LabelWithTextModel | LabelWithSelectModel | import("./FormCheckbox").LabelWithCheckboxModel;
+        _addAllElementKeys: (keys: string) => void;
+        getFormItemField: <T extends import("./FormInput").LabelWithInputModel | import("./FormInputNumber").LabelWithInputNumberModel | import("./FormDatePicker").LabelWithDatePickerModel | import("./FormMonthPicker").LabelWithMonthPickerModel | import("./FormRangePicker").LabelWithRangePickerModel | import("./FormUpload").LabelWithUploadModel | import("./FormSwitch").LabelWithSwitchModel | import("./FormRadioButton").LabelWithRadioButtonModel | import("./FormText").LabelWithTextModel | LabelWithSelectModel | import("./FormCheckbox").LabelWithCheckboxModel>(key: string) => {
+            value: T;
             type: "normal" | "custom";
         };
         _initFormItemField: (key: string, value: import("./FormInput").LabelWithInputModel | import("./FormInputNumber").LabelWithInputNumberModel | import("./FormDatePicker").LabelWithDatePickerModel | import("./FormMonthPicker").LabelWithMonthPickerModel | import("./FormRangePicker").LabelWithRangePickerModel | import("./FormUpload").LabelWithUploadModel | import("./FormSwitch").LabelWithSwitchModel | import("./FormRadioButton").LabelWithRadioButtonModel | import("./FormText").LabelWithTextModel | LabelWithSelectModel | import("./FormCheckbox").LabelWithCheckboxModel, type?: "normal" | "custom") => void;

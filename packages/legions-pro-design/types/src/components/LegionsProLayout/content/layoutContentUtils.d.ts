@@ -2,9 +2,9 @@ import { IPanes } from '../../LegionsStoreLayout/interface';
 import ContentPart from '.';
 import React from 'react';
 import LegionsStoreLayout from '../../LegionsStoreLayout';
-import LegionsCore from '../../LegionsCore';
+import LegionsCrossModule from '../../LegionsCrossModule';
 export declare class LayoutContentUtils {
-    static masterGlobalStateStore: InstanceType<typeof LegionsCore.MasterGlobalStateStore>;
+    static masterGlobalStateStore: InstanceType<typeof LegionsCrossModule.MasterGlobalStateStore>;
     /** 将对象转换为字符串拼接至url */
     static transHttpUrlByObj(url: string, object: object): string;
     /** 在传入的url 信息加生成的时间戳，主要用于清除iframe 加载页面缓存，无法拉取到更新后的JS，CSS资源 */

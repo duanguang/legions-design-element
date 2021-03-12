@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import { Button, Row, Col, Card, Tooltip, message, Icon } from 'antd';
 import LegionsProModal from  '../LegionsProModal';
-import { InstanceLegionsProModal} from '../LegionsProModal/interface'
+import { InstanceProModal} from '../LegionsProModal/interface'
 import LegionsStoreTable from '../LegionsStoreTable';
 import { observer, bind } from 'legions/store-react'
 import LegionsProDragger from '../LegionsProDragger';
-import styles from './style/index.modules.less';
+import './style/index.less';
 interface IProps {
 
     /**
@@ -21,7 +21,7 @@ interface IProps {
      *
      * @memberof IHLTableProps
      */
-    onReady?: (instance: InstanceLegionsProModal) => void;
+    onReady?: (instance: InstanceProModal) => void;
     /** 本地数据同步到服务端的接口 */
     
     customColumnsConfig: {
@@ -37,7 +37,7 @@ interface IState {
 @bind({ store: LegionsStoreTable })
 @observer
 export default class LegionsProTableCustomColumns extends Component<IProps, IState> {
-    modalRef: InstanceLegionsProModal = null
+    modalRef: InstanceProModal = null
     constructor(props) {
         super(props)
         this.state = {
@@ -54,7 +54,7 @@ export default class LegionsProTableCustomColumns extends Component<IProps, ISta
     }
     render() {
         return (
-            <div style={{ display: 'block' }}>
+            <div style={{ display: 'block' }} >
                 <LegionsProModal
                     footer={null}
                     onReady={(value) => {
@@ -62,7 +62,7 @@ export default class LegionsProTableCustomColumns extends Component<IProps, ISta
                         this.modalRef.viewModel.width = 960
                         this.props.onReady&&this.props.onReady(value)
                     }}>
-                    <Row>
+                    <Row className="legions-pro-table-custom">
                         <Col span={11}>
                             <Card style={{
                                 width: '100%',
@@ -126,7 +126,7 @@ export default class LegionsProTableCustomColumns extends Component<IProps, ISta
                                                 </span>
                                             </Button> */}
 
-                                            <div className={`${styles.hlTableColumnsCol} ${index > -1 ? `${styles.hlTableColumnsColColor} ${styles.hlTableColumnsColCursor1}`:styles.hlTableColumnsColColorBlue}`}>
+                                            <div className={`table-columns-col ${index > -1 ? `col-white-color cursor-not-allowed`:'col-color-blue'}`}>
                                                 <span style={{ display: 'inline-block', whiteSpace: 'normal',verticalAlign:'middle',lineHeight:'15px' }}>
                                                     {item.title}
                                                 </span>
@@ -246,7 +246,7 @@ export default class LegionsProTableCustomColumns extends Component<IProps, ISta
                                          /* const className = `disabled` */
                                          
                                         return <Col span={8} style={{ marginBottom: '15px',display:'table' }}  data-id={item.dataIndex} key={item.dataIndex}>
-                                            <div className={`${styles.hlTableColumnsCol}  ${styles.hlTableColumnsColCursor2}`} style={{ backgroundColor: '#108ee9',color:'#fff'}}>
+                                            <div className={`table-columns-col  cursor-move`} style={{ backgroundColor: '#108ee9',color:'#fff'}}>
                                                 <span style={{ display: 'inline-block', whiteSpace: 'normal',verticalAlign:'middle',lineHeight:'15px' }}>
                                                     {item.title}
                                                 </span>

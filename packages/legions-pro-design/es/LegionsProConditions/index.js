@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.3
+  *  legions-pro-design v0.0.7-beta.10
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -342,6 +342,14 @@ var LegionsProConditions = /** @class */ (function (_super) {
                 reset: function () {
                     _this.handleReset();
                 },
+                addQuery: function (list) {
+                    _this.initVModel(list);
+                    _this.viewStore._initQuery(list);
+                    _this.dispatchRequest(list);
+                },
+                removeQuery: function (uuid) {
+                    return _this.viewStore._removeQuery(uuid);
+                },
                 setFieldsValues: function (name, callback) {
                     _this.setFieldsValues(name, callback);
                 },
@@ -406,9 +414,9 @@ var LegionsProConditions = /** @class */ (function (_super) {
         this.onDidMount();
         this.consoleLog('componentDidUpdate');
     };
-    LegionsProConditions.prototype.dispatchRequest = function () {
+    LegionsProConditions.prototype.dispatchRequest = function (query) {
         var _this = this;
-        var query = this.props.query;
+        if (query === void 0) { query = this.props.query; }
         query.map(function (item) {
             if (item instanceof ConditionSelectModel) {
                 var props = item.conditionsProps;
@@ -436,10 +444,11 @@ var LegionsProConditions = /** @class */ (function (_super) {
             callback(value);
         });
     };
-    LegionsProConditions.prototype.initVModel = function () {
+    LegionsProConditions.prototype.initVModel = function (query) {
+        if (query === void 0) { query = this.props.query; }
         var data = {};
         var prams = {};
-        this.props.query.map(function (item) {
+        query.map(function (item) {
             var name = item.containerProps.name;
             if (!(item instanceof ConditionSearchModel) && item.jsonProperty) {
                 if (isArray(item.conditionsProps.defaultValue)) {
@@ -979,7 +988,12 @@ var LegionsProConditions = /** @class */ (function (_super) {
                 colspan['span'] = span.span;
             }
             var uid = item.containerProps.uuid;
-            return React.createElement(Col, __assign({}, col, colspan, { "data-id": uid, "data-name": item.containerProps.name, key: uid, style: { paddingBottom: '10px', paddingLeft: '5px' } }),
+            var _b = item.containerProps, _c = _b.className, className = _c === void 0 ? '' : _c, _d = _b.style, style = _d === void 0 ? {} : _d, onClick = _b.onClick;
+            var click = {};
+            if (onClick) {
+                click['onClick'] = onClick.bind(_this, { uid: uid, name: item.containerProps.name });
+            }
+            return React.createElement(Col, __assign({}, col, colspan, click, { className: className, "data-id": uid, "data-name": item.containerProps.name, key: uid, style: __assign({ paddingBottom: '10px', paddingLeft: '5px' }, style) }),
                 _this.renderLabel(item, labelSpan),
                 React.createElement(Col, { style: { lineHeight: '28px' }, span: 24 - labelSpan }, _this.renderComponent(item)));
         });
@@ -993,14 +1007,13 @@ var LegionsProConditions = /** @class */ (function (_super) {
     };
     LegionsProConditions.prototype.render = function () {
         var _this = this;
-        return (React.createElement(Row, { className: baseCls + " " + this.uid, gutter: 8, type: "flex" }, this.props.isDragSort ? React.createElement(LegionsProDragger, { options: {
-                animation: 150,
-                group: {
+        var _a = this.props.draggerProps, draggerProps = _a === void 0 ? {} : _a;
+        var _b = draggerProps.options, onChange = draggerProps.onChange, prop = __rest(draggerProps, ["options", "onChange"]);
+        return (React.createElement(Row, { className: baseCls + " " + this.uid, gutter: 8, type: "flex" }, this.props.isDragSort ? React.createElement(LegionsProDragger, __assign({ options: __assign(__assign({ animation: 150 }, draggerProps.options), { group: {
                     name: 'ProConditions',
                     pull: true,
                     put: true,
-                }
-            }, onChange: function (items, sort, evt) {
+                } }), onChange: function (items, sort, evt) {
                 /* const dataId = evt.item.attributes['data-id'];
                 const dataName = evt.item.attributes['data-name']; */
                 var query = [];
@@ -1014,7 +1027,10 @@ var LegionsProConditions = /** @class */ (function (_super) {
                     _this.viewStore._clearQuery();
                     _this.viewStore._initQuery(query);
                 }
-            } }, this.renderContent()) : this.renderContent()));
+                if (typeof onChange === 'function') {
+                    onChange(items, sort, evt);
+                }
+            } }, prop), this.renderContent()) : this.renderContent()));
     };
     /* search =debounce((options,val)=>{
        options&&options.props.onSearch&&options.props.onSearch(val)

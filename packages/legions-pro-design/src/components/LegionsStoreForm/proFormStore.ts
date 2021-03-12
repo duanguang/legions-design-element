@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-29 10:18:01
- * @LastEditTime: 2021-03-02 18:40:42
+ * @LastEditTime: 2021-03-11 16:32:51
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreForm/proFormStore.ts
@@ -47,7 +47,7 @@ export class HlFormView {
    *
    * @memberof HlFormView
    */
-  @observable elementList: IObservableMap<
+  @observable _elementList: IObservableMap<
     string,
     IElementList
   > = observable.map();
@@ -74,7 +74,7 @@ export class HlFormView {
   IProFormFields['componentModel']
     > = observable.map();
   /** 自定义表单元素配置项 */
-  @observable private customFormFields: IObservableMap<
+  @observable private _customFormFields: IObservableMap<
   string,
   IProFormFields['componentModel']
 > = observable.map();
@@ -93,13 +93,13 @@ export class HlFormView {
    * @private
    * @memberof HlFormView
    */
-  @observable private allElementList = [];
+  @observable private _allElementList = [];
   /**
    *
    * 错误信息组件节点集合
    * @memberof HlFormView
    */
-  @observable errorReactNodeList: IObservableMap<
+  @observable _errorReactNodeList: IObservableMap<
     string,
     ViewModel<ErrorViewModel> & Proxify<ErrorViewModel>
   > = observable.map();
@@ -109,7 +109,7 @@ export class HlFormView {
    * 所有组件错误信息
    * @memberof HlFormView
    */
-  @observable errorListView: IObservableMap<
+  @observable _errorListView: IObservableMap<
     string,
     IErrorView[]
   > = observable.map();
@@ -120,12 +120,12 @@ export class HlFormView {
    * @returns
    * @memberof HlFormView
    */
-  @computed get computedErrorReactNodeList(): HlFormView['errorReactNodeList'] {
-    return this.errorReactNodeList;
+  @computed get computedErrorReactNodeList(): HlFormView['_errorReactNodeList'] {
+    return this._errorReactNodeList;
   }
 
   @computed get computedAllElementList(): string[] {
-    return this.allElementList;
+    return this._allElementList;
   }
 
   /** 表单元素配置项
@@ -146,7 +146,7 @@ export class HlFormView {
       for (let item of this.formfields.values()) {
         value.push(item);
       }
-      for (let item of this.customFormFields.values()) {
+      for (let item of this._customFormFields.values()) {
         value.push(item);
       }
       return value
@@ -158,10 +158,10 @@ export class HlFormView {
    * @memberof HlFormView
    */
   @computed get computedErrorListView() {
-    const keys = this.errorListView.keys();
+    const keys = this._errorListView.keys();
     const data: Array<IErrorView> = [];
     for (let item of keys) {
-      this.errorListView.get(item).map(entity => {
+      this._errorListView.get(item).map(entity => {
         data.push(entity);
       });
     }
@@ -196,10 +196,10 @@ export class HlFormView {
    * @param {string} errorUid // 错误信息组件生成的唯一uid
    * @memberof HlFormView
    */
-  @action collectErrorReactNode(componentCode: string, errorUid: string) {
+  @action _collectErrorReactNode(componentCode: string, errorUid: string) {
     let errorViewModel = new ErrorViewModel();
     errorViewModel.uid = errorUid;
-    this.errorReactNodeList.set(
+    this._errorReactNodeList.set(
       componentCode,
       observableViewModel<ErrorViewModel>(errorViewModel)
     );
@@ -227,7 +227,7 @@ export class HlFormView {
             'error';
         }
       });
-      this.errorListView.set(
+      this._errorListView.set(
         this.computedErrorReactNodeList.get(componentCode).uid,
         errorListView
       );
@@ -242,13 +242,13 @@ export class HlFormView {
    * @memberof HlFormView
    */
   @action handleIgnore(componentCode: string, id: number) {
-    if (this.errorReactNodeList.get(componentCode)) {
-      const uid = this.errorReactNodeList.get(componentCode).uid;
-      if (this.errorListView.get(uid)) {
-        const canBeSubmit = this.errorListView
+    if (this._errorReactNodeList.get(componentCode)) {
+      const uid = this._errorReactNodeList.get(componentCode).uid;
+      if (this._errorListView.get(uid)) {
+        const canBeSubmit = this._errorListView
           .get(uid)
           .filter(item => item.type === 'canBeSubmit' && item.key === id);
-        const AllcanBeSubmit = this.errorListView
+        const AllcanBeSubmit = this._errorListView
           .get(uid)
           .every(item => item.type === 'canBeSubmit');
         const entity = canBeSubmit.find(
@@ -258,7 +258,7 @@ export class HlFormView {
 
         if (entity && entity.status === 2) {
           entity.status = 1;
-          const has = this.errorListView
+          const has = this._errorListView
             .get(uid)
             .every(item => item.status === 1);
           if (AllcanBeSubmit && has) {
@@ -276,24 +276,26 @@ export class HlFormView {
    * @param {string} keys
    * @memberof HlFormView
    */
-  @action addAllElementKeys(keys: string) {
-    const index = this.allElementList.findIndex(item => item === keys);
+  @action _addAllElementKeys(keys: string) {
+    const index = this._allElementList.findIndex(item => item === keys);
     if (index < 0) {
-      this.allElementList.push(keys);
-      this.allElementList = this.allElementList.slice();
+      this._allElementList.push(keys);
+      this._allElementList = this._allElementList.slice();
     }
   }
   /** 查询表单元素字段配置信息 */
-  @action getFormItemField(key: string):{value:IProFormFields['componentModel'],type:'normal' | 'custom'} {
+  @action getFormItemField<T extends IProFormFields['componentModel']>(key: string):{value:T,type:'normal' | 'custom'} {
     if (this.formfields.has(key)) {
       return {
+        //@ts-ignore
         value: this.formfields.get(key),
         type:'normal',
       };   
     }
-    else if (this.customFormFields.has(key)) {
+    else if (this._customFormFields.has(key)) {
       return {
-        value: this.customFormFields.get(key),
+        //@ts-ignore
+        value: this._customFormFields.get(key),
         type:'custom',
       };
     }
@@ -307,8 +309,8 @@ export class HlFormView {
       }
     }
     else if (type === 'custom') {
-      if (!this.customFormFields.has(key)) {
-        this.customFormFields.set(key,value);
+      if (!this._customFormFields.has(key)) {
+        this._customFormFields.set(key,value);
       }
     }
   }
@@ -581,12 +583,15 @@ export class HLFormLocalView {
             }
           },
         }
-        
+        let headers = {};
+        if (autoQuery.token) {
+            headers={'api-cookie': autoQuery.token}
+        }
         if (autoQuery.method === 'post') {
           return server.post<any, any>({
             url: autoQuery.ApiUrl,
             parameter: params,
-            headers: { ...autoQuery.options,'api-cookie': autoQuery.token },
+            headers: { ...autoQuery.options,...headers },
             model:LegionsModels.SelectKeyValue,
               ...model,
           });
@@ -594,7 +599,7 @@ export class HLFormLocalView {
           return server.get<any, any>({
             url: autoQuery.ApiUrl,
             parameter: params,
-            headers: { ...autoQuery.options,'api-cookie': autoQuery.token },
+            headers: { ...autoQuery.options,...headers },
             model:LegionsModels.SelectKeyValue,
             ...model,
           });
@@ -838,7 +843,7 @@ export default class ProFormStore extends LegionsStore.StoreBase {
    * @memberof HLFormStore
    */
   @action clearAllElement(uid: string) {
-    this.HLFormContainer.get(uid).elementList.clear();
+    this.HLFormContainer.get(uid)._elementList.clear();
   }
   /**
    *
@@ -857,7 +862,7 @@ export default class ProFormStore extends LegionsStore.StoreBase {
     if (store && store.enableEnterSwitch) {
       /*  const elementListKeys = store.elementList.keys() */
       const elementListKeys: string[] = [];
-      for (let item of store.elementList.keys()) {
+      for (let item of store._elementList.keys()) {
         elementListKeys.push(item);
       }
       /**  解决日期组件回车被阻止冒泡，导致回车键没法切换到下一个元素*/
@@ -873,7 +878,7 @@ export default class ProFormStore extends LegionsStore.StoreBase {
             }
 
             const nextElementKey = elementListKeys[nextUid];
-            const nextElement = store.elementList.get(nextElementKey);
+            const nextElement = store._elementList.get(nextElementKey);
             const result = nextElement.element instanceof HTMLCollection;
             if (nextElement && result && nextElement.element.length) {
               if (
@@ -891,7 +896,7 @@ export default class ProFormStore extends LegionsStore.StoreBase {
             }
           }
         } else {
-          const el = store.elementList.get(item);
+          const el = store._elementList.get(item);
           if (el && el.elementKey === nextElementName) {
             const result = el.element instanceof HTMLCollection;
             if (result && el.element.length) {
@@ -917,12 +922,19 @@ export default class ProFormStore extends LegionsStore.StoreBase {
     formFields: object,
   ) {
     const view = this.HLFormContainer.get(formUid);
-    if (view && typeof view.InputDataModelClass === 'function') {
-      // @ts-ignore
-      view.InputDataModel = new view.InputDataModelClass({
-        ...view.InputDataModel,
-        ...formFields,
-      });
+    if (view) {
+      if (typeof view.InputDataModelClass === 'function') {
+        // @ts-ignore
+        view.InputDataModel = new view.InputDataModelClass({
+          ...view.InputDataModel,
+          ...formFields,
+        });
+      } else {
+        view.InputDataModel = {
+          ...view.InputDataModel,
+          ...formFields,
+        }
+      }
       Object.keys(formFields).map((key) => {
         if (!view.renderNodeQueue.has(key)) {
           view.renderNodeQueue.set(key,key)
@@ -932,7 +944,7 @@ export default class ProFormStore extends LegionsStore.StoreBase {
   }
 
   @action addTabsForm(uid: string) {
-    let formView = new TabsFormView();
+    let formView = new TabsFormView(uid);
     this._TabsFormDataMap.set(
       uid,
       observableViewModel<TabsFormView>(formView)

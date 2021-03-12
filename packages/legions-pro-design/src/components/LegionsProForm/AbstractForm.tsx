@@ -25,9 +25,6 @@ export default abstract class  AbstractForm<P,S={}> extends Component<P,S> {
         if (formref) {
             const viewStore = formref.store.get(uid)
             if (viewStore.renderNodeQueue.has(eleId)) {
-                if (eleId === 'text') {
-                    console.log(viewStore.renderNodeQueue,viewStore.renderNodeQueue.has(eleId),eleId);
-                }
                 viewStore.renderNodeQueue.delete(eleId)
                 return true
             }

@@ -1,10 +1,10 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-14 16:26:10
- * @LastEditTime: 2021-03-01 11:00:33
+ * @LastEditTime: 2021-03-04 14:27:30
  * @LastEditors: duanguang
  * @Description: 
- * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/core/legionsFetch.ts
+ * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsCore/legionsFetch.ts
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
 import { ClassOf } from 'legions-lunar/types/api/typescript';
@@ -15,7 +15,6 @@ legionFetchInstance.register({
     request: (configs) => { 
         /* const credential:'same-origin'|'include'|'omit'='include' */
         const { credentials,...props } = configs;
-        console.log(credentials,'credentials');
         return { ...props, /* ...{ mode: 'no-cors' } */};
     }
 })

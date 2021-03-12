@@ -1,8 +1,8 @@
-import { InstanceForm } from '../../LegionsProForm/interface';
-import { InstanceLegionsProModal } from '../../LegionsProModal/interface';
+import { InstanceProForm } from '../../LegionsProForm/interface';
+import { InstanceProModal } from '../../LegionsProModal/interface';
 export interface InstanceLegionsModalForm<Model> {
-    formInstance: InstanceForm;
-    modalInstance: InstanceLegionsProModal;
+    formInstance: InstanceProForm;
+    modalInstance: InstanceProModal;
     /**
      * 暴露一些组件操作方法
      *

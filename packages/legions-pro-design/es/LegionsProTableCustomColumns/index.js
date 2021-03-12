@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.3
+  *  legions-pro-design v0.0.7-beta.7
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -9,7 +9,7 @@ import LegionsProModal from '../LegionsProModal';
 import LegionsStoreTable from '../LegionsStoreTable';
 import { bind, observer } from 'legions/store-react';
 import LegionsProDragger from '../LegionsProDragger';
-import styles from './style/index.modules.less';
+import './style/index.less';
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -80,7 +80,7 @@ var LegionsProTableCustomColumns = /** @class */ (function (_super) {
                     _this.modalRef.viewModel.width = 960;
                     _this.props.onReady && _this.props.onReady(value);
                 } },
-                React.createElement(Row, null,
+                React.createElement(Row, { className: "legions-pro-table-custom" },
                     React.createElement(Col, { span: 11 },
                         React.createElement(Card, { style: {
                                 width: '100%',
@@ -128,7 +128,7 @@ var LegionsProTableCustomColumns = /** @class */ (function (_super) {
                             /* const className = `${this.viewStore.computedStorageShowColumnsKeys}disabled` */
                             var className = "disabled";
                             return React.createElement(Col, { style: { marginBottom: '15px' }, className: index > -1 ? className : '', span: 8, "data-id": item.dataIndex, key: item.dataIndex },
-                                React.createElement("div", { className: styles.hlTableColumnsCol + " " + (index > -1 ? styles.hlTableColumnsColColor + " " + styles.hlTableColumnsColCursor1 : styles.hlTableColumnsColColorBlue) },
+                                React.createElement("div", { className: "table-columns-col " + (index > -1 ? "col-white-color cursor-not-allowed" : 'col-color-blue') },
                                     React.createElement("span", { style: { display: 'inline-block', whiteSpace: 'normal', verticalAlign: 'middle', lineHeight: '15px' } }, item.title)));
                         })))),
                     React.createElement(Col, { span: 12, style: { marginLeft: '15px' } },
@@ -232,7 +232,7 @@ var LegionsProTableCustomColumns = /** @class */ (function (_super) {
                             /* const className = `${this.viewStore.computedStorageShowColumnsKeys}disabled` */
                             /* const className = `disabled` */
                             return React.createElement(Col, { span: 8, style: { marginBottom: '15px', display: 'table' }, "data-id": item.dataIndex, key: item.dataIndex },
-                                React.createElement("div", { className: styles.hlTableColumnsCol + "  " + styles.hlTableColumnsColCursor2, style: { backgroundColor: '#108ee9', color: '#fff' } },
+                                React.createElement("div", { className: "table-columns-col  cursor-move", style: { backgroundColor: '#108ee9', color: '#fff' } },
                                     React.createElement("span", { style: { display: 'inline-block', whiteSpace: 'normal', verticalAlign: 'middle', lineHeight: '15px' } }, item.title)));
                         }))))))));
     };

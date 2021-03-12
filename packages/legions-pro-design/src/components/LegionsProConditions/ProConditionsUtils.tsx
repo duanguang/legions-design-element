@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-08 15:19:23
- * @LastEditTime: 2021-03-03 09:54:52
+ * @LastEditTime: 2021-03-10 15:17:17
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProConditions/ProConditionsUtils.tsx
@@ -17,7 +17,7 @@ import {
 import { BaseFormFields } from 'legions-lunar/model';
 import { ClassOf } from 'legions-lunar/types/api/typescript';
 import { createFormRule } from 'legions-decorator/async.validator'; 
-import { IQueryCheckBoxProps, IQueryDateProps, IQueryGroupCheckBoxProps, IQueryRadioButtonProps, IQueryRangePickerProps, IQuerySelectProps, IQueryTextAreaProps, IQueryTextNumberProps, IQueryTextProps } from './interface';
+import { IQueryCheckBoxProps, IQueryDateProps, IQueryGroupCheckBoxProps, IQueryProps, IQueryRadioButtonProps, IQueryRangePickerProps, IQuerySelectProps, IQueryTextAreaProps, IQueryTextNumberProps, IQueryTextProps } from './interface';
 import { ColSize } from 'antd/lib/grid/col';
 import { IViewQueryConditionStore } from '../LegionsStoreConditions/interface';
 import { shortHash } from 'legions-lunar/object-hash';
@@ -44,44 +44,50 @@ interface ColProps {
 interface IContainerProps{
     col: ColProps;
     name: string;
+    /** 单击时触发 */
+    onClick?: (value: {
+        uid: string,name: string;
+    }) => void;
+    style?: React.CSSProperties;
+    className?: string;
     /** 只读 */
     readonly uuid?: string;
 }
 
 export class ConditionSelectModel {
     constructor(public containerProps: IContainerProps,
-        public conditionsProps: IQuerySelectProps,
+        public conditionsProps: IQuerySelectProps&IQueryProps,
         public jsonProperty: string) {
 
     }
 }
 export class ConditionTextNumberModel{
     constructor(public containerProps: IContainerProps,
-        public conditionsProps: IQueryTextNumberProps,
+        public conditionsProps: IQueryTextNumberProps&IQueryProps,
         public jsonProperty: string) {
     }
 }
 export class ConditionRadioButtonModel{
     constructor(public containerProps: IContainerProps,
-        public conditionsProps: IQueryRadioButtonProps,
+        public conditionsProps: IQueryRadioButtonProps&IQueryProps,
         public jsonProperty: string) {
     }
 }
 export class ConditionTextAreaModel{
     constructor(public containerProps: IContainerProps,
-        public conditionsProps: IQueryTextAreaProps,
+        public conditionsProps: IQueryTextAreaProps&IQueryProps,
         public jsonProperty: string) {
     }
 }
 export class ConditionTextModel{
     constructor(public containerProps: IContainerProps,
-        public conditionsProps: IQueryTextProps,
+        public conditionsProps: IQueryTextProps&IQueryProps,
         public jsonProperty: string) {
     }
 }
 export class ConditionDateModel{
     constructor(public containerProps: IContainerProps,
-        public conditionsProps: IQueryDateProps,
+        public conditionsProps: IQueryDateProps&IQueryProps,
         public jsonProperty: string) {
     }
 }
@@ -107,19 +113,19 @@ export class ConditionSearchModel{
 }
 export class ConditionRangePickerModel{
     constructor(public containerProps: IContainerProps,
-        public conditionsProps: IQueryRangePickerProps,
+        public conditionsProps: IQueryRangePickerProps&IQueryProps,
         public jsonProperty: string) {
     }
 }
 export class ConditionCheckBoxModel{
     constructor(public containerProps: IContainerProps,
-        public conditionsProps: IQueryCheckBoxProps,
+        public conditionsProps: IQueryCheckBoxProps&IQueryProps,
         public jsonProperty: string) {
     }
 }
 export class ConditionGroupCheckBoxModel{
     constructor(public containerProps: IContainerProps,
-        public conditionsProps: IQueryGroupCheckBoxProps,
+        public conditionsProps: IQueryGroupCheckBoxProps&Omit<IQueryProps,'label'>,
         public jsonProperty: string) {
     }
 }

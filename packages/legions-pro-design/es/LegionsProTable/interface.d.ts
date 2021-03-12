@@ -152,6 +152,7 @@ interface IMethods {
          * @type {number}
          */
         pageIndex?: number;
+        isShowLoading?: boolean;
     }) => void;
     /**
      *

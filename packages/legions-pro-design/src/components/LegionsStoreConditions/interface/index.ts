@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-07 16:49:15
- * @LastEditTime: 2021-03-02 18:47:23
+ * @LastEditTime: 2021-03-05 16:40:37
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreConditions/interface/index.ts
@@ -104,7 +104,7 @@ export interface ISelectAutoQuery<Model={}>{
      * @type {string}
      * @memberof ISelectAutoQuery
      */
-    token: string;
+    token?: string;
      /**
      * 在下拉组件装载时是否默认自动发送请求
      *

@@ -19,7 +19,7 @@ import React from 'react';
 import { bind, observer } from 'legions/store-react';
 import { LegionsProTable, LegionsProPageContainer } from 'legions-pro-design';
 
-
+console.log(LegionsProTable,'LegionsProTable');
 
  class ResponseVModelNameDataEntity {
   @JsonProperty('key')

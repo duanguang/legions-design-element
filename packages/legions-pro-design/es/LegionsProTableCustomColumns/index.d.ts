@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { InstanceLegionsProModal } from '../LegionsProModal/interface';
+import { InstanceProModal } from '../LegionsProModal/interface';
 import LegionsStoreTable from '../LegionsStoreTable';
+import './style/index.less';
 interface IProps {
     /**
      * 列配置归属table表
@@ -15,7 +16,7 @@ interface IProps {
     *
     * @memberof IHLTableProps
     */
-    onReady?: (instance: InstanceLegionsProModal) => void;
+    onReady?: (instance: InstanceProModal) => void;
     /** 本地数据同步到服务端的接口 */
     customColumnsConfig: {
         /** 编辑自定义信息同步到服务端接口地址 */
@@ -31,12 +32,12 @@ interface IState {
     }[];
 }
 export default class LegionsProTableCustomColumns extends Component<IProps, IState> {
-    modalRef: InstanceLegionsProModal;
+    modalRef: InstanceProModal;
     constructor(props: any);
     componentDidMount(): void;
     get viewStore(): import("brain-store-utils").ViewModel<import("../LegionsStoreTable/ProTableView").ProTableView> & {
         userInfo: {
-            userName: string; /** 从服务端查询自定义列信息接口地址 */
+            userName: string;
             userUid: string;
             companyName?: string;
             companyUid?: string;

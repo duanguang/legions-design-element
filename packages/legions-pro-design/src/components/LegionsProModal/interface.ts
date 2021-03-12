@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-26 17:57:29
- * @LastEditTime: 2021-03-02 19:04:00
+ * @LastEditTime: 2021-03-05 15:54:17
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProModal/interface.ts
@@ -11,7 +11,7 @@
 import { IViewModelModalStore } from '../LegionsStoreModal/interface';
 import LegionsStoreModal from '../LegionsStoreModal';
 import { ModalProps,WrappedFormUtils } from '../interface/antd';
-export interface InstanceLegionsProModal {
+export interface InstanceProModal {
     store: InstanceType<typeof LegionsStoreModal>;
     uid: string;
     viewModel: IViewModelModalStore
@@ -23,7 +23,7 @@ interface IdraggableOptions {
 }
 export interface ILegionsProModalProps extends ModalProps{
     store?: InstanceType<typeof LegionsStoreModal>,
-    onReady?: (instance: InstanceLegionsProModal) => void
+    onReady?: (instance: InstanceProModal) => void
 
     /**
      * 组件类型，默认modal，也可以设置Drawer 抽屉形式

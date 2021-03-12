@@ -8,12 +8,12 @@ import pathToRegexp from 'path-to-regexp'
 import LegionsStoreLayout from '../../LegionsStoreLayout';
 import cloneDeep from 'lodash/cloneDeep';
 import { getMicroAppStateActions } from 'legions-micro-service'
-import LegionsCore from '../../LegionsCore';
+import LegionsCrossModule from '../../LegionsCrossModule';
 import { inject } from 'legions/store';
 
 export class LayoutContentUtils {
-  @inject(LegionsCore.MasterGlobalStateStore)
-  static masterGlobalStateStore: InstanceType<typeof LegionsCore.MasterGlobalStateStore>
+  @inject(LegionsCrossModule.MasterGlobalStateStore)
+  static masterGlobalStateStore: InstanceType<typeof LegionsCrossModule.MasterGlobalStateStore>
   /** 将对象转换为字符串拼接至url */
   static transHttpUrlByObj(url: string,object: object) {
     let arr = url.split('?');

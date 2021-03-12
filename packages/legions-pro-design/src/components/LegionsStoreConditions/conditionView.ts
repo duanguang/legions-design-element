@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-07 16:49:31
- * @LastEditTime: 2021-03-02 18:47:07
+ * @LastEditTime: 2021-03-10 16:05:06
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreConditions/conditionView.ts
@@ -170,9 +170,10 @@ export class ConditionView<Query = {}> {
         }
     }
     /** 改变搜索条件配置数据 */
-    @action _setQueryState(name:string,callback: (value: IProConditions['componentModel']) => void) {
+    @action _setQueryState<T extends IProConditions['componentModel']>(name:string,callback: (value: T) => void) {
         const item = this._getQueryItem(name);
         if (item) {
+            //@ts-ignore
             callback && callback(item)
             if (this.query.has(item.containerProps.uuid)) {
                 this.query.set(item.containerProps.uuid,cloneDeep(item))
@@ -180,9 +181,13 @@ export class ConditionView<Query = {}> {
         }
     }
     @action private _getQueryItem(name:string) {
-        const item = this.computedQuery.find((item) => item.containerProps.name === name);
+        let item = this.computedQuery.find((item) => item.containerProps.name === name);
         if (item) {
            return this.query.get(item.containerProps.uuid)
+        } else {
+            if (this.query.has(name)) {
+                return this.query.get(name)
+            }
         }
         return null
     }
@@ -205,6 +210,10 @@ export class ConditionView<Query = {}> {
                 delete params.pageIndex;
                 delete params.pageSize
                 delete params.defaultKeyWords;
+                let headers = {};
+                if (autoQuery.token) {
+                    headers={'api-cookie': autoQuery.token}
+                }
                 if (autoQuery.requestBeforeTransformParams) {
                     params = autoQuery.requestBeforeTransformParams({...params,pageIndex:options.pageIndex,pageSize:options.pageSize})
                 }
@@ -221,7 +230,7 @@ export class ConditionView<Query = {}> {
                     return server.post<any,any>({
                         url: autoQuery.ApiUrl,
                         parameter: params,
-                        headers: { ...autoQuery.options,'api-cookie': autoQuery.token },
+                        headers: { ...autoQuery.options,...headers },
                         model: LegionsModels.SelectKeyValue,
                         ...model,
                     })
@@ -230,7 +239,7 @@ export class ConditionView<Query = {}> {
                     return server.get<any,any>({
                         url: autoQuery.ApiUrl,
                         parameter: params,
-                        headers: { ...autoQuery.options,'api-cookie': autoQuery.token },
+                        headers: { ...autoQuery.options,...headers },
                         model:LegionsModels.SelectKeyValue,
                         ...model,
                     })
@@ -240,5 +249,9 @@ export class ConditionView<Query = {}> {
                 obData:observablePromise<{}>(apiServer()),
             })
         }
+    }
+    /** 移除指定搜索条件项  */
+    @action _removeQuery(uuid:string) {
+       return this.query.delete(uuid);
     }
 }

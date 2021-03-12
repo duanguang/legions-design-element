@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-28 15:58:15
- * @LastEditTime: 2021-03-02 19:19:40
+ * @LastEditTime: 2021-03-09 10:33:48
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProTabsForm/index.tsx
@@ -13,14 +13,15 @@ import { bind,observer } from 'legions/store-react';
 import React from 'react';
 import { shortHash } from 'legions-lunar/object-hash';
 import LegionsProForm from '../LegionsProForm';
-import { IProFormFields, ITabsFormItem } from '../LegionsStoreForm/interface';
+import { IProFormFields, IProTabsFormAddTabsMap, ITabsFormItem } from '../LegionsStoreForm/interface';
 import { ClassOf } from 'legions-lunar/types/api/typescript';
-import { IGroup,InstanceForm } from '../LegionsProForm/interface';
+import { IGroup,InstanceProForm } from '../LegionsProForm/interface';
 import { TabPaneProps, TabsProps } from 'antd/lib/tabs';
 import { Weaken } from '../interface';
 import { InstanceTabsForm } from './interface';
 import { ValidateCallback } from 'antd/lib/form/Form';
-
+import { TabsItemView } from '../LegionsStoreForm/tabsView';
+import invariant from 'invariant';
 interface IProps<Model> {
     store?: InstanceType<typeof LegionsStoreForm>;
     /**
@@ -79,8 +80,10 @@ export default class LegionsProTabsForm<Model> extends React.Component<IProps<Mo
     timeId = new Date().getTime()
     constructor(props) {
         super(props);
-        if (this.props['uniqueUid']) {
-            this.decryptionFreezeUid = `${this.props['uniqueUid']}${this.props.uniqueKeys || ''}${process.env.environment === 'production' ? 'production' : ''}`;
+        const keys = 'uniqueUid';
+        invariant(this.props[keys],`[LegionsProTabsForm]:props.${keys} cannot be empty`);
+        if (this.props[keys]) {
+            this.decryptionFreezeUid = `${this.props[keys]}${this.props.uniqueKeys || ''}${process.env.environment === 'production' ? 'production' : ''}`;
             this.freezeUid = `tabsform${shortHash(this.decryptionFreezeUid)}`;
         }
         else {
@@ -107,7 +110,7 @@ export default class LegionsProTabsForm<Model> extends React.Component<IProps<Mo
                     return this.validateFields();
                 },
                 submit: (callback?) => {
-                    if (this.validateFields()) {
+                    if (!this.validateFields()) {
                         const values:Array<ITabsFormItem> =[]
                         for (let item of this.storeView.entries) {
                             const key = item[0]
@@ -123,8 +126,9 @@ export default class LegionsProTabsForm<Model> extends React.Component<IProps<Mo
                         callback&&callback(model);
                     }
                 },
-                onTabAdd: () => {
-                    const uid = this.storeView.addTabsMap();
+                onTabAdd: (options?:IProTabsFormAddTabsMap['options']) => {
+                    const uid = this.storeView._addTabsMap(options);
+                    this.props.onTabAdd && this.props.onTabAdd(uid);
                     return uid;
                 },
                 getFormFields: (key: string) => {
@@ -137,6 +141,10 @@ export default class LegionsProTabsForm<Model> extends React.Component<IProps<Mo
             }
         })
     }
+    /** 验证表单
+     * 
+     * 如果有错误信息则返回true,否则返回false
+     */
     validateFields() {
         const values:Array<ITabsFormItem> =[]
         for (let item of this.storeView.entries) {
@@ -154,19 +162,23 @@ export default class LegionsProTabsForm<Model> extends React.Component<IProps<Mo
         this.forceUpdate();
         return tabsHasError;
     }
-    renderForm(key: string,tab) {
+    renderForm(key: string,tab:TabsItemView) {
         const { controls,InputDataModel,group,size,colCount } = this.props;
         return <LegionsProForm
             size={size}
             colCount={colCount}
             InputDataModel={InputDataModel}
             mapPropsToFields={(props: Model) => {
+                if (tab && tab.formInstance) {
+                    return new InputDataModel(tab.formInstance.viewModel.InputDataModel) 
+                }
                 return new InputDataModel(props)
             }}
             onFieldsChange={(_,fields: Partial<Model>) => {
                 tab.formInstance.store.updateFormInputData(tab.formInstance.uid,fields)
+                
             }}
-            onReady={(_,formInstance?: InstanceForm) => {
+            onReady={(_,formInstance?: InstanceProForm) => {
                 tab.formInstance = { ...formInstance,that: this };
             }}
             uniqueKeys={key}
@@ -201,12 +213,13 @@ export default class LegionsProTabsForm<Model> extends React.Component<IProps<Mo
     /** 增加tab页 */
     handleTabAdd = () => {
         /** 新增页签 */
-        const uid = this.storeView.addTabsMap();
+        const uid = this.storeView._addTabsMap();
         const { onTabAdd } = this.props;
         onTabAdd && onTabAdd(uid);
     }
     render() {
-        const { tabsProps = {},tabPaneProps={} as ITabPaneProps,onBeforeTabPaneRender} = this.props;
+        const { tabsProps = {},tabPaneProps = {} as ITabPaneProps,onBeforeTabPaneRender } = this.props;
+        console.log(this.storeView.activeTabKey,'this.storeView.activeTabKey');
         return <React.Fragment>
             <Tabs
                 hideAdd
@@ -225,7 +238,7 @@ export default class LegionsProTabsForm<Model> extends React.Component<IProps<Mo
                 activeKey={this.storeView.activeTabKey}
             >
                 {
-                    this.storeView.computedTabs.map((item,index,arr) => {
+                    this.storeView._computedTabs.map((item,index,arr) => {
                         const ErrorList = item.formInstance && item.formInstance.viewModel.form.getFieldsError() || []
                         /** 根据表单中的错误信息动态显示tab标签背景颜色 */
                         const tabHasError = Object.values(ErrorList).some((i) => i);
@@ -237,8 +250,8 @@ export default class LegionsProTabsForm<Model> extends React.Component<IProps<Mo
                             {...item.computedClosable}
                             {...item.computedDisabled}
                             forceRender
-                            tab={<React.Fragment>
-                                <Col span={19}>{tabPaneProps.tab?tabPaneProps.tab(item.keys,index):`页签${index+1}`}</Col>
+                            tab={<React.Fragment >
+                                <Col data-key={item.keys} span={19}>{tabPaneProps.tab?tabPaneProps.tab(item.keys,index):`页签${index+1}`}</Col>
                                 <Col span={3}>{tabHasError && <Icon style={{ color: '#ff0000' }} type="exclamation-circle" />}</Col>
                                 <Col span={2}></Col>
                             </React.Fragment>

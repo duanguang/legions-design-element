@@ -42,7 +42,7 @@ export default class LegionsProErrorReportShow extends Component<IProps,IState> 
         super(props)
         this.uid = `error${this.props.code}${shortHash(this.timeId)}`
         if (this.props.formUid && this.viewForm) {
-            this.viewForm.collectErrorReactNode(this.props.code,this.uid)
+            this.viewForm._collectErrorReactNode(this.props.code,this.uid)
         }
         //this.props.store.addErrorListViewKeyValues(this.props.code,this.uid)
     }
@@ -53,8 +53,8 @@ export default class LegionsProErrorReportShow extends Component<IProps,IState> 
         if (item.status === 2) {
             runInAction(() => {
                 item.status = 1;
-                const canBeSubmit = this.viewForm && this.viewForm.errorListView.get(this.uid).every((item) => item.type === 'canBeSubmit' && item.status === 1)
-                const has = this.viewForm.errorListView.get(this.uid).every((item) => item.status === 1)
+                const canBeSubmit = this.viewForm && this.viewForm._errorListView.get(this.uid).every((item) => item.type === 'canBeSubmit' && item.status === 1)
+                const has = this.viewForm._errorListView.get(this.uid).every((item) => item.status === 1)
                 const view = this.viewForm.computedErrorReactNodeList.get(this.props.code)
                 if (canBeSubmit && has) {
                     view.validateStatus = ''
@@ -66,7 +66,7 @@ export default class LegionsProErrorReportShow extends Component<IProps,IState> 
         this.props.onIgnoreError && this.props.onIgnoreError(item)
     }
     renderContent() {
-        const data = this.viewForm && this.viewForm.errorListView.get(this.uid)
+        const data = this.viewForm && this.viewForm._errorListView.get(this.uid)
         const canBeSubmit = data.filter((item) => item.type === 'canBeSubmit')
         const doNotSubmit = data.filter((item) => item.type === 'doNotSubmit')
         return (
@@ -97,7 +97,7 @@ export default class LegionsProErrorReportShow extends Component<IProps,IState> 
         )
     }
     render() {
-        const isShowErrorView = this.viewForm && this.viewForm.errorListView.has(this.uid)
+        const isShowErrorView = this.viewForm && this.viewForm._errorListView.has(this.uid)
         const view = this.viewForm && this.viewForm.computedErrorReactNodeList.get(this.props.code);
 
         return (

@@ -6,6 +6,7 @@ import { IGroup } from '../LegionsProForm/interface';
 import { TabPaneProps, TabsProps } from 'antd/lib/tabs';
 import { Weaken } from '../interface';
 import { InstanceTabsForm } from './interface';
+import { TabsItemView } from '../LegionsStoreForm/tabsView';
 interface IProps<Model> {
     store?: InstanceType<typeof LegionsStoreForm>;
     /**
@@ -61,18 +62,27 @@ export default class LegionsProTabsForm<Model> extends React.Component<IProps<Mo
     constructor(props: any);
     get storeView(): import("brain-store-utils").ViewModel<import("../LegionsStoreForm/tabsView").TabsFormView> & {
         activeTabKey: string;
-        readonly computedTabs: import("../LegionsStoreForm/tabsView").TabsItemView[];
+        readonly _computedTabs: TabsItemView[];
         readonly size: number;
-        readonly entries: IterableIterator<import("mobx").IMapEntry<string, import("../LegionsStoreForm/tabsView").TabsItemView>>;
-        getTabs: (key: string) => import("../LegionsStoreForm/tabsView").TabsItemView;
+        readonly entries: IterableIterator<import("mobx").IMapEntry<string, TabsItemView>>;
+        getTabs: (key: string) => TabsItemView;
         hasTabs: (key: string) => boolean;
         getTabsKeys: () => IterableIterator<string>;
+        clearTabs: () => void;
         delTabsMap: (key: string) => void;
-        addTabsMap: (isSwitchTabKey?: boolean, index?: number, callback?: () => void) => string;
+        _addTabsMap: (options?: {
+            isSwitchTabKey: boolean;
+            key?: string;
+            callback?: () => void;
+        }) => string;
     };
     componentWillMount(): void;
+    /** 验证表单
+     *
+     * 如果有错误信息则返回true,否则返回false
+     */
     validateFields(): boolean;
-    renderForm(key: string, tab: any): JSX.Element;
+    renderForm(key: string, tab: TabsItemView): JSX.Element;
     handleTabChange: (activeKey: string) => void;
     /** 删除tab页 */
     handleTabDelete: (targetKey: string, action: any) => void;

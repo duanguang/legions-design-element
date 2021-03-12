@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-07 17:21:19
- * @LastEditTime: 2021-03-02 18:48:07
+ * @LastEditTime: 2021-03-05 16:36:10
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreTable/ProTableLocalView.ts
@@ -14,7 +14,9 @@ import { observableViewModel, observablePromise } from 'legions/store-utils';
 import { ITableAutoQuery } from './interface';
 import  LegionsProTable  from '../LegionsProTable';
 import { PageListEntity } from '../LegionsProTable/pageListEntity';
-
+import {
+  computed,
+} from 'mobx';
 export class ProTableLocalView {
   /**
    *
@@ -23,12 +25,44 @@ export class ProTableLocalView {
    */
   @observable obState = observablePromise<PageListEntity<any>>();
 
-  @observable loading = false;
+  @observable _obStateMap= observable.map<string,
+    {
+      data: any[];
+      total: number;
+    }
+  >()
+
+  /** 查询数据状态
+   * 
+   * 在loading动画展示时使用
+   */
+  @observable private _loading = false;
+
+  /** http 请求状态 */
+  @observable private _request: 'none' | 'pending' | 'complete' = 'none';
+
+  /** 数据请求状态 */
+  @computed get computedLoading() {
+    return this._loading;
+  }
+  /** http 请求状态 */
+  @computed get computedRequest() {
+    return this._request;
+  }
+  /** 更新动画状态,组件内部私有方法 */
+  @action _setLoadingState(_loading: boolean) {
+    this._loading = _loading;
+  }
+  /** 更新http请求接口状态,组件内部私有方法  */
+  @action _setRequestState(request: 'none' | 'pending' | 'complete') {
+    this._request = request;
+  }
   @action dispatchRequest(
     autoQuery: ITableAutoQuery,
     options: {
       pageIndex: number;
       pageSize: number;
+      isShowLoading: boolean;
     }
   ) {
     if (autoQuery) {
@@ -52,11 +86,15 @@ export class ProTableLocalView {
             }
           }
         }
+        let headers = {};
+        if (autoQuery.token) {
+            headers={'api-cookie': autoQuery.token}
+        }
         if (autoQuery.method === 'post') {
           return server.post<PageListEntity<any>, any>({
             url: autoQuery.ApiUrl,
             parameter: params,
-            headers: { ...autoQuery.options, 'api-cookie': autoQuery.token },
+            headers: { ...autoQuery.options, ...headers },
             ...model,
           });
         } else if (autoQuery.method === 'get') {
@@ -65,15 +103,19 @@ export class ProTableLocalView {
             parameter: params,
             headers: {
               ...autoQuery.options,
-              'api-cookie': autoQuery.token,
+              ...headers
             },
             ...model,
           });
         }
       };
+      if (options.isShowLoading) {
+        this._setLoadingState(true);
+      }
+      this._request = 'none';
       // @ts-ignore
       this.obState = observablePromise<{}>(apiServer());
-      
+      this._request = 'pending';
     }
   }
 }

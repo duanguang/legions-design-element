@@ -23,6 +23,7 @@ export declare class ProTable extends LegionsProTable.ProTableBaseClass<IProps, 
         color: string;
     };
     constructor(props: IProps);
+    componentDidMount(): void;
     componentWillUnmount(): void;
     handleSizeChange: (e: any) => void;
     render(): JSX.Element;

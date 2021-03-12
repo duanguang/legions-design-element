@@ -23,7 +23,7 @@ import moment from 'moment';
 import LegionsProTableCustomColumns from '../LegionsProTableCustomColumns';
 import LegionsProLineOverflow from '../LegionsProLineOverflow';
 import throttle from 'lodash.throttle';
-import { InstanceLegionsProModal } from '../LegionsProModal/interface';
+import { InstanceProModal } from '../LegionsProModal/interface';
 import { observable,runInAction,toJS,isObservable } from 'mobx'
 import { observableViewModel } from 'legions/store-utils'
 import { legionsThirdpartyPlugin } from 'legions-thirdparty-plugin';
@@ -57,7 +57,7 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
      */
     freezeuid = ''
     /**
-     * 
+     *
      * 未加密的freezeuid 值
      * @memberof HLForm
      */
@@ -65,24 +65,26 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
     viewModel: IViewModelProTableStore = null;
     tableThead = `table-thead${this.uid}`;
     clientHeight = document.body.clientHeight;
-    modalRef: InstanceLegionsProModal = null;
-    customColumnsModalRef: InstanceLegionsProModal = null;
+    modalRef: InstanceProModal = null;
+    customColumnsModalRef: InstanceProModal = null;
     selections: SelectionDecorator[] = [];
     /** 全链路监控跟踪id */
     traceId: string = '';
     log = (uid) => {
-        if (this.getLocalViewStore && this.props.autoQuery && this.getLocalViewStore.obState.isPending) {
-            this.getLocalViewStore.loading = true;
-        }
-        if (this.getLocalViewStore && !this.getLocalViewStore.obState.isPending && this.props.autoQuery && this.getLocalViewStore.loading) {
+        if (this.getLocalViewStore && !this.getLocalViewStore.obState.isPending && this.props.autoQuery&&this.getLocalViewStore.computedRequest==='pending') {
             runInAction(() => {
+                this.getLocalViewStore._setLoadingState(false);
+                this.getLocalViewStore._setRequestState('complete');
                 const data = this.props.autoQuery.transform(this.getLocalViewStore.obState);
                 if (data) {
-                    this.props.store.HlTableContainer.get(uid)._renderData = data.data.slice();
+                    const newData = data.data.slice();
+                    this.getLocalViewStore._obStateMap.set(this.getViewStore.pageIndex.toString(),{
+                        data: newData,
+                        total:data.total,
+                    });
+                    this.props.store.HlTableContainer.get(uid)._renderData = newData;
                     this.props.store.HlTableContainer.get(uid).setTotal(data.total)
-                    /* this.forceUpdate&&this.forceUpdate() */
                 }
-                this.getLocalViewStore.loading = false;
             })
             this.consoleLog('watchData',{ uid });
             this.logger('watchData',{
@@ -109,14 +111,14 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
         pageSizeOptions: ['5','10','20','40','60','80','100','200','500'],
     }
     /** 开启自定义列数据同步接口信息-全局配置(当全局和局部存在冲突时，优先局部配置数据)
-     * 
+     *
      * 同步数据到服务端所需要的查询和保存接口地址信息 */
     static customColumnsConfig: ICustomColumnsConfig = {
         editApi: '',
         queryApi:'',
     }
     /** 开启自定义列数据同步接口信息-局部配置(当全局和局部存在冲突时，优先局部配置数据)
-     * 
+     *
      * 同步数据到服务端所需要的查询和保存接口地址信息 */
     customColumnsConfig: ICustomColumnsConfig = {
         editApi: '',
@@ -154,16 +156,22 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
             if (!this.props.store.HlTableLocalStateContainer.has(this.freezeuid)) {
                 this.props.store._addLocalState(this.freezeuid)
             }
-            if (this.props.autoQuery && this.getLocalViewStore && (this.props.autoQuery.isDefaultLoad === void 0 || this.props.autoQuery.isDefaultLoad)) {
+            if (!this.props.store.HlTableContainer.has(this.freezeuid)) {
+                this.props.store.add(this.freezeuid,this.props.tableModulesName,this.uid)
+            }
+            let isShowLoading = false;
+            if (this.getLocalViewStore && this.getLocalViewStore.obState && this.getLocalViewStore.obState.state === 'none') {
+                isShowLoading = true;
+            }
+            if (this.props.autoQuery &&this.getLocalViewStore && (this.props.autoQuery.isDefaultLoad === void 0 || this.props.autoQuery.isDefaultLoad)) {
                 this.getLocalViewStore.dispatchRequest(this.props.autoQuery,{
                     pageIndex: this.getViewStore.pageIndex,
                     pageSize: this.getViewStore.pageSize,
+                    isShowLoading,
                 })
             }
         }
-        if (!this.props.store.HlTableContainer.has(this.freezeuid)) {
-            this.props.store.add(this.freezeuid,this.props.tableModulesName,this.uid)
-        }
+
         this.initPagination();
         this.initProps();
         this.onReady();
@@ -227,10 +235,17 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
     }
     search(options?: {
         pageIndex?: number;
+        isShowLoading?: boolean;
     }) {
         if (this.props.autoQuery && this.getLocalViewStore) {
-            if (options && options.pageIndex) { /** 如果主动设置页码，则以主动设置为准 */
-                this.getViewStore.pageIndex = options.pageIndex;
+            let isShowLoading = true;
+            if (options) {
+                if (options.pageIndex) {/** 如果主动设置页码，则以主动设置为准 */
+                    this.getViewStore.pageIndex = options.pageIndex;
+                }
+                if (typeof options.isShowLoading === 'boolean') {
+                    isShowLoading = options.isShowLoading;
+                }
             } else {
                 this.getViewStore.pageIndex = 1;
             }
@@ -238,6 +253,7 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
             this.getLocalViewStore.dispatchRequest(this.props.autoQuery,Object.assign({
                 pageIndex: this.getViewStore.pageIndex,
                 pageSize: this.getViewStore.pageSize,
+                isShowLoading,
             },options))
         }
     }
@@ -291,7 +307,7 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
         const ele = ReactDOM.findDOMNode(this).getElementsByClassName('ant-table-scroll')[0]
         if (ele && ele.firstElementChild && ele.firstElementChild.firstElementChild) {
             const div = document.createElement('div');
-            div.setAttribute('class','proTable-header-inner');
+            div.setAttribute('class','pro-table-header-inner');
             ele.firstElementChild.insertBefore(div,ele.firstElementChild.firstElementChild)
         }
     }
@@ -358,10 +374,9 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
                 exportCsv: (prams: Partial<IExportCsv>) => {
                     this.exportCsv(prams)
                 },
-                //@ts-ignore
                 onSearch: (options?: {
                     pageIndex: number;
-                    pageSize: number;
+                    isShowLoading?: boolean;
                 }) => {
                     this.search(options)
                 },
@@ -380,7 +395,7 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
         })
     }
     componentWillMount() {
-        
+
         if (this.props.autoQuery) {
             this.subscription = this.props.store.schedule([this.log.bind(this,this.freezeuid)])
         }
@@ -415,13 +430,19 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
                         }
                     }
                 }
-            } 
+            }
             this.getViewStore._filterColumns();
         }
     }
     /** 是否设置自定义列服务端同步接口配置信息 */
     private isSettingColumnApiConfig() {
         if (this.customColumnsConfig.editApi && this.customColumnsConfig.queryApi) {
+            return true;
+        }
+        return false;
+    }
+    private isSmallData() {
+        if (this.props.displayType === 'smallData') {
             return true;
         }
         return false;
@@ -469,21 +490,31 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
                 },
             })
         }
-        
+
         window.addEventListener && window.addEventListener('resize',this.resize.bind(this))
         if (findDOMNode(this).getElementsByClassName('ant-table-body')) {
         }
         this.setTableContainerWidth();
         const data = this.props.dataSource;
         if (this.props.autoQuery) {
-            // @ts-ignore
-            data = this.getLocalViewStore.obData;
+            if (this.getLocalViewStore && this.getViewStore) {
+                const keys = this.getViewStore.pageIndex.toString();
+                if (this.getLocalViewStore._obStateMap.has(keys)) {
+                    const result = this.getLocalViewStore._obStateMap.get(keys)
+                    //@ts-ignore
+                    data = result.data;
+                    this.getViewStore.setTotal(result.total);
+                }
+            }
+        }
+        else {
+            if (this.isSmallData()) {
+                this.getViewStore.setTotal(this.props.total || 0)
+            }
         }
         if (data) {
-            if (this.props.displayType === 'smallData') {
-                /* this.getViewStore._renderData = [...this.props.data] */
+            if (this.isSmallData()) {
                 this.getViewStore._renderData = [...data]
-                this.getViewStore.setTotal(this.props.total || 0)
             }
             if (this.getViewStore._renderData.length) {
                 const UniqueKey = this.isHasUniqueKeyData()
@@ -629,6 +660,7 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
             this.viewModel.bodyStyle = nextProps.bodyStyle
         }
         if (nextProps.dataSource !== this.props.dataSource && nextProps.dataSource && !this.props.autoQuery) {
+            
             /**  主要解决当渲染数据和传入数据不一致时，无需通过传入数据值来刷新渲染数据 */
             if (this.props.displayType === 'smallData') {
                 this.getViewStore._renderData = [...this.props.autoQuery ? [] : nextProps.dataSource]
@@ -803,7 +835,7 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
                 locale: this.renderlocale(),
             }
         }
-        
+
         this.consoleLog('render');
         const rowSelection: TableRowSelection<{}> = (this.getViewStore._isOpenRowSelection) ? {
             ...this.props.rowSelection,
@@ -848,9 +880,17 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
                 this.props.store.get(this.freezeuid).pageSize = pageSize
                 this.props.onPagingQuery && this.props.onPagingQuery(pageIndex,pageSize,false)
                 if (this.props.autoQuery && this.getLocalViewStore) {
+                    let isShowLoading = true;
+                    const result = this.getLocalViewStore._obStateMap.get(this.getViewStore.pageIndex.toString())
+                    if (result) {
+                        isShowLoading = false;
+                        this.getViewStore._renderData = [...result.data];
+                        this.getViewStore.setTotal(result.total);
+                    }
                     this.getLocalViewStore.dispatchRequest(this.props.autoQuery,{
                         pageIndex,
                         pageSize,
+                        isShowLoading,
                     })
                 }
             },
@@ -863,6 +903,7 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
                     this.getLocalViewStore.dispatchRequest(this.props.autoQuery,{
                         pageIndex: current,
                         pageSize,
+                        isShowLoading:true,
                     })
                 }
             },
@@ -872,7 +913,7 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
         const bodyStyle = (this.viewModel.isAdaptiveHeight && this.getViewStore._renderData && this.getViewStore._renderData.length > 0) ? { ...this.viewModel.bodyStyle,...this.viewModel.calculateBody } : this.viewModel.bodyStyle
         return <Row className={baseCls}>
             <Col>
-                <div className={`containers ${this.uid} ${this.viewModel.isAdaptiveHeight ? 'adaptiveHeight' : ''}`}>
+                <div className={`pro-table-containers ${this.uid} ${this.viewModel.isAdaptiveHeight ? 'table-adaptive-height' : ''}`}>
                     <Table
                         /* size="small" */
                         {...locale}
@@ -886,7 +927,7 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
                         bodyStyle={bodyStyle}
                         rowClassName={this.onRowClassName.bind(this)}
                         pagination={(this.getViewStore._pagination) ? pagination : false}
-                        loading={{ tip: 'loading',spinning: this.props.autoQuery ? this.getLocalViewStore.loading : this.props.loading }}
+                        loading={{ tip: 'loading',spinning: this.props.autoQuery ? this.getLocalViewStore.computedLoading : this.props.loading }}
                         rowKey={this.props.uniqueKey}
                         // locale={{emptyText:<span>2222</span>}}
                         onRowClick={this.onRowClick.bind(this)}
@@ -905,7 +946,7 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
                     />
                 </div>
             </Col>
-           
+
             {this.props.isOpenCustomColumns && <LegionsProTableCustomColumns
                 customColumnsConfig={{
                     queryApi: LegionsProTable.customColumnsConfig.queryApi,

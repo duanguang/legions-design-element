@@ -59,10 +59,9 @@ export class TooltipText extends React.Component<TooltipProps & IForm>{
             const viewStore = FormTextRef.store.get(this.props.formUid)
             if (viewStore.computedErrorReactNodeList.has(this.props.formItemName)) {
                 const uid = viewStore.computedErrorReactNodeList.get(this.props.formItemName).uid
-                isShowErrorView = viewStore.errorListView.has(uid)
+                isShowErrorView = viewStore._errorListView.has(uid)
             }
         }
-        const { getFieldDecorator,getFieldsError,setFieldsValue } = form;
         let iconStyle = {}
         isShowErrorView && (iconStyle = { marginRight: '18px' })
         return (
@@ -102,10 +101,10 @@ export default class FormText extends AbstractForm<IFormWithTextProps>{
     render() {
         const { form,iAntdProps,iFormText,children,rules } = this.props;
         const { getFieldDecorator,getFieldsError,setFieldsValue } = form;
-        const { label,labelCol,wrapperCol,...props } = iFormText
+        const { label,labelCol,wrapperCol,visible,display,colon,...props } = iFormText;
         let formItemProps = {};
-        if ('colon' in props) {
-            formItemProps['colon'] = props.colon;
+        if (colon) {
+            formItemProps['colon'] = colon;
         }
         return (
             <FormElement form={form} 
@@ -129,11 +128,11 @@ export default class FormText extends AbstractForm<IFormWithTextProps>{
                         return value && value.toString()
                     },
                 })(
+                    //@ts-ignore
                     <TooltipText
                         {...props}
                         formUid={this.props.formUid}
                         FormTextRef={this.FormTextRef}
-                        value={form.getFieldValue(iAntdProps.name)}
                         formItemName={iAntdProps.name}
                         form={form}
                         inputType={'span'}>

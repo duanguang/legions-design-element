@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.3
+  *  legions-pro-design v0.0.7-beta.10
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -61,7 +61,7 @@ var LegionsProErrorReportShow = /** @class */ (function (_super) {
         _this.enumList = { 1: '已忽略', 2: '忽略' };
         _this.uid = "error" + _this.props.code + shortHash(_this.timeId);
         if (_this.props.formUid && _this.viewForm) {
-            _this.viewForm.collectErrorReactNode(_this.props.code, _this.uid);
+            _this.viewForm._collectErrorReactNode(_this.props.code, _this.uid);
         }
         return _this;
         //this.props.store.addErrorListViewKeyValues(this.props.code,this.uid)
@@ -78,8 +78,8 @@ var LegionsProErrorReportShow = /** @class */ (function (_super) {
         if (item.status === 2) {
             runInAction(function () {
                 item.status = 1;
-                var canBeSubmit = _this.viewForm && _this.viewForm.errorListView.get(_this.uid).every(function (item) { return item.type === 'canBeSubmit' && item.status === 1; });
-                var has = _this.viewForm.errorListView.get(_this.uid).every(function (item) { return item.status === 1; });
+                var canBeSubmit = _this.viewForm && _this.viewForm._errorListView.get(_this.uid).every(function (item) { return item.type === 'canBeSubmit' && item.status === 1; });
+                var has = _this.viewForm._errorListView.get(_this.uid).every(function (item) { return item.status === 1; });
                 var view = _this.viewForm.computedErrorReactNodeList.get(_this.props.code);
                 if (canBeSubmit && has) {
                     view.validateStatus = '';
@@ -93,7 +93,7 @@ var LegionsProErrorReportShow = /** @class */ (function (_super) {
     };
     LegionsProErrorReportShow.prototype.renderContent = function () {
         var _this = this;
-        var data = this.viewForm && this.viewForm.errorListView.get(this.uid);
+        var data = this.viewForm && this.viewForm._errorListView.get(this.uid);
         var canBeSubmit = data.filter(function (item) { return item.type === 'canBeSubmit'; });
         var doNotSubmit = data.filter(function (item) { return item.type === 'doNotSubmit'; });
         return (React.createElement("div", { className: styles['tip-alert-panel'] },
@@ -112,7 +112,7 @@ var LegionsProErrorReportShow = /** @class */ (function (_super) {
                 })))));
     };
     LegionsProErrorReportShow.prototype.render = function () {
-        var isShowErrorView = this.viewForm && this.viewForm.errorListView.has(this.uid);
+        var isShowErrorView = this.viewForm && this.viewForm._errorListView.has(this.uid);
         var view = this.viewForm && this.viewForm.computedErrorReactNodeList.get(this.props.code);
         return (React.createElement("div", { className: (this.props.className || '') + " " + (isShowErrorView && view.validateStatus === 'error' ? 'has-error' : '') },
             isShowErrorView && React.createElement("div", { className: (this.props.errorClassName || '') + " " + ((view && view.validateStatus) === '' && styles.tipIconAllow) },

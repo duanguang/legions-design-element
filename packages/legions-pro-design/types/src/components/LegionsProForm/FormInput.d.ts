@@ -4,7 +4,7 @@ import { IErrorView } from './interface';
 import AbstractForm from './AbstractForm';
 import { InstanceFormElement } from './interface/formElement';
 import { TooltipProps } from 'antd/lib/tooltip';
-import { InstanceForm } from './interface/form';
+import { InstanceProForm } from './interface/form';
 export declare class LabelWithInputModel {
     iAntdProps: IAntdProps;
     iFormProps: IFormInputProps;
@@ -23,7 +23,7 @@ export interface IFormInputProps extends Omit<InputProps, 'onChange'>, TextAreaP
      *
      * @memberof IFormRenderProps
      */
-    formRef?: InstanceForm) => JSX.Element;
+    formRef?: InstanceProForm) => JSX.Element;
     type?: 'textarea' | 'text' | 'number' | 'password';
     onChange?: (value: string) => void;
 }
@@ -45,7 +45,7 @@ interface IFormWithInputProps {
      * @type {string}
      * @memberof IFormWithInputProps
      */
-    formStore?: InstanceForm;
+    formStore?: InstanceProForm;
 }
 interface IForm {
     form: WrappedFormUtils;
@@ -62,15 +62,15 @@ interface ITooltipInputProps extends InputProps, TextAreaProps, TooltipProps, IF
 export declare class TooltipInput extends React.Component<ITooltipInputProps, {}> {
     constructor(props: any);
     get store(): import("brain-store-utils").ViewModel<import("../LegionsStoreForm/proFormStore").HlFormView> & {
-        elementList: import("../LegionsStoreForm/interface").IObservableMap<string, import("../LegionsStoreForm/interface").IElementList>;
+        _elementList: import("../LegionsStoreForm/interface").IObservableMap<string, import("../LegionsStoreForm/interface").IElementList>;
         focusUid: string;
         enableEnterSwitch: boolean;
         renderNodeQueue: import("../LegionsStoreForm/interface").IObservableMap<string, string>;
-        errorReactNodeList: import("../LegionsStoreForm/interface").IObservableMap<string, import("brain-store-utils").ViewModel<import("../LegionsStoreForm/proFormStore").ErrorViewModel> & {
+        _errorReactNodeList: import("../LegionsStoreForm/interface").IObservableMap<string, import("brain-store-utils").ViewModel<import("../LegionsStoreForm/proFormStore").ErrorViewModel> & {
             uid: string;
             validateStatus: "" | "error";
         }>;
-        errorListView: import("../LegionsStoreForm/interface").IObservableMap<string, IErrorView[]>;
+        _errorListView: import("../LegionsStoreForm/interface").IObservableMap<string, IErrorView[]>;
         readonly computedErrorReactNodeList: import("../LegionsStoreForm/interface").IObservableMap<string, import("brain-store-utils").ViewModel<import("../LegionsStoreForm/proFormStore").ErrorViewModel> & {
             uid: string;
             validateStatus: "" | "error";
@@ -81,12 +81,12 @@ export declare class TooltipInput extends React.Component<ITooltipInputProps, {}
         readonly computedErrorListView: IErrorView[];
         readonly computedFormSize: "small" | "table" | "default";
         updateFormSize: (size: "small" | "table" | "default") => void;
-        collectErrorReactNode: (componentCode: string, errorUid: string) => void;
+        _collectErrorReactNode: (componentCode: string, errorUid: string) => void;
         setErrorErrorReactNodeList: (componentCode: string, errorListView: IErrorView[]) => void;
         handleIgnore: (componentCode: string, id: number) => void;
-        addAllElementKeys: (keys: string) => void;
-        getFormItemField: (key: string) => {
-            value: LabelWithInputModel | import("./FormInputNumber").LabelWithInputNumberModel | import("./FormDatePicker").LabelWithDatePickerModel | import("./FormMonthPicker").LabelWithMonthPickerModel | import("./FormRangePicker").LabelWithRangePickerModel | import("./FormUpload").LabelWithUploadModel | import("./FormSwitch").LabelWithSwitchModel | import("./FormRadioButton").LabelWithRadioButtonModel | import("./FormText").LabelWithTextModel | import("./interface").LabelWithSelectModel | import("./FormCheckbox").LabelWithCheckboxModel;
+        _addAllElementKeys: (keys: string) => void;
+        getFormItemField: <T extends LabelWithInputModel | import("./FormInputNumber").LabelWithInputNumberModel | import("./FormDatePicker").LabelWithDatePickerModel | import("./FormMonthPicker").LabelWithMonthPickerModel | import("./FormRangePicker").LabelWithRangePickerModel | import("./FormUpload").LabelWithUploadModel | import("./FormSwitch").LabelWithSwitchModel | import("./FormRadioButton").LabelWithRadioButtonModel | import("./FormText").LabelWithTextModel | import("./interface").LabelWithSelectModel | import("./FormCheckbox").LabelWithCheckboxModel>(key: string) => {
+            value: T;
             type: "normal" | "custom";
         };
         _initFormItemField: (key: string, value: LabelWithInputModel | import("./FormInputNumber").LabelWithInputNumberModel | import("./FormDatePicker").LabelWithDatePickerModel | import("./FormMonthPicker").LabelWithMonthPickerModel | import("./FormRangePicker").LabelWithRangePickerModel | import("./FormUpload").LabelWithUploadModel | import("./FormSwitch").LabelWithSwitchModel | import("./FormRadioButton").LabelWithRadioButtonModel | import("./FormText").LabelWithTextModel | import("./interface").LabelWithSelectModel | import("./FormCheckbox").LabelWithCheckboxModel, type?: "normal" | "custom") => void;
@@ -98,15 +98,15 @@ export default class FormInput extends AbstractForm<IFormWithInputProps> {
     FormInputRef: InstanceFormElement;
     constructor(props: any);
     get store(): import("brain-store-utils").ViewModel<import("../LegionsStoreForm/proFormStore").HlFormView> & {
-        elementList: import("../LegionsStoreForm/interface").IObservableMap<string, import("../LegionsStoreForm/interface").IElementList>;
+        _elementList: import("../LegionsStoreForm/interface").IObservableMap<string, import("../LegionsStoreForm/interface").IElementList>;
         focusUid: string;
         enableEnterSwitch: boolean;
         renderNodeQueue: import("../LegionsStoreForm/interface").IObservableMap<string, string>;
-        errorReactNodeList: import("../LegionsStoreForm/interface").IObservableMap<string, import("brain-store-utils").ViewModel<import("../LegionsStoreForm/proFormStore").ErrorViewModel> & {
+        _errorReactNodeList: import("../LegionsStoreForm/interface").IObservableMap<string, import("brain-store-utils").ViewModel<import("../LegionsStoreForm/proFormStore").ErrorViewModel> & {
             uid: string;
             validateStatus: "" | "error";
         }>;
-        errorListView: import("../LegionsStoreForm/interface").IObservableMap<string, IErrorView[]>;
+        _errorListView: import("../LegionsStoreForm/interface").IObservableMap<string, IErrorView[]>;
         readonly computedErrorReactNodeList: import("../LegionsStoreForm/interface").IObservableMap<string, import("brain-store-utils").ViewModel<import("../LegionsStoreForm/proFormStore").ErrorViewModel> & {
             uid: string;
             validateStatus: "" | "error";
@@ -117,12 +117,12 @@ export default class FormInput extends AbstractForm<IFormWithInputProps> {
         readonly computedErrorListView: IErrorView[];
         readonly computedFormSize: "small" | "table" | "default";
         updateFormSize: (size: "small" | "table" | "default") => void;
-        collectErrorReactNode: (componentCode: string, errorUid: string) => void;
+        _collectErrorReactNode: (componentCode: string, errorUid: string) => void;
         setErrorErrorReactNodeList: (componentCode: string, errorListView: IErrorView[]) => void;
         handleIgnore: (componentCode: string, id: number) => void;
-        addAllElementKeys: (keys: string) => void;
-        getFormItemField: (key: string) => {
-            value: LabelWithInputModel | import("./FormInputNumber").LabelWithInputNumberModel | import("./FormDatePicker").LabelWithDatePickerModel | import("./FormMonthPicker").LabelWithMonthPickerModel | import("./FormRangePicker").LabelWithRangePickerModel | import("./FormUpload").LabelWithUploadModel | import("./FormSwitch").LabelWithSwitchModel | import("./FormRadioButton").LabelWithRadioButtonModel | import("./FormText").LabelWithTextModel | import("./interface").LabelWithSelectModel | import("./FormCheckbox").LabelWithCheckboxModel;
+        _addAllElementKeys: (keys: string) => void;
+        getFormItemField: <T extends LabelWithInputModel | import("./FormInputNumber").LabelWithInputNumberModel | import("./FormDatePicker").LabelWithDatePickerModel | import("./FormMonthPicker").LabelWithMonthPickerModel | import("./FormRangePicker").LabelWithRangePickerModel | import("./FormUpload").LabelWithUploadModel | import("./FormSwitch").LabelWithSwitchModel | import("./FormRadioButton").LabelWithRadioButtonModel | import("./FormText").LabelWithTextModel | import("./interface").LabelWithSelectModel | import("./FormCheckbox").LabelWithCheckboxModel>(key: string) => {
+            value: T;
             type: "normal" | "custom";
         };
         _initFormItemField: (key: string, value: LabelWithInputModel | import("./FormInputNumber").LabelWithInputNumberModel | import("./FormDatePicker").LabelWithDatePickerModel | import("./FormMonthPicker").LabelWithMonthPickerModel | import("./FormRangePicker").LabelWithRangePickerModel | import("./FormUpload").LabelWithUploadModel | import("./FormSwitch").LabelWithSwitchModel | import("./FormRadioButton").LabelWithRadioButtonModel | import("./FormText").LabelWithTextModel | import("./interface").LabelWithSelectModel | import("./FormCheckbox").LabelWithCheckboxModel, type?: "normal" | "custom") => void;

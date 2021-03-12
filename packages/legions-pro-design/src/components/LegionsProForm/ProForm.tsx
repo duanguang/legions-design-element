@@ -20,7 +20,7 @@ import { LabelWithSwitchModel } from './FormSwitch';
 import { LabelWithRadioButtonModel } from './FormRadioButton';
 import { debounce } from 'legions-utils-tool/debounce'
 import { LabelWithTextModel } from './FormText';
-import { InstanceForm } from './interface/form';
+import { InstanceProForm } from './interface/form';
 import { computed,observable,runInAction,toJS } from 'mobx';
 import LegionsProDragger from '../LegionsProDragger';
 import get from 'lodash/get'
@@ -28,7 +28,8 @@ import { ValidateCallback } from 'antd/lib/form/Form';
 import { LabelWithCheckboxModel } from './FormCheckbox';
 import { BaseFormFields, HlLabeledValue } from 'legions-lunar/model';
 import { legionsPlugins,LegionsPluginsExecute,LoggerManager } from 'legions-lunar/legion.plugin.sdk';
-import { formClasses, ProFormFields,ProFormUtils, size } from './ProFormUtils';
+import { formClasses,ProFormFields,ProFormUtils,size } from './ProFormUtils';
+import { cloneDeep } from 'lodash'
 const baseCls = `legions-pro-form`
 
 export interface IProFormProps<mapProps = {}> {
@@ -79,14 +80,14 @@ export interface IProFormProps<mapProps = {}> {
 
     /**
      * 获取表单数据模型
-     * form  即将废弃，请formRef.viewModel.form 获取 
+     * form  即将废弃，请formRef.viewModel.form 获取
      *
      * @memberof IHLFormProps
      */
     onReady: (
         /**即将废弃，请formRef.viewModel.form 获取 */
         form: WrappedFormUtils,
-        formRef?: InstanceForm) => void;
+        formRef?: InstanceProForm) => void;
     size?: 'default' | 'small' | 'table';
 
 
@@ -246,7 +247,6 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
     }
     /** 重写表单验证提交方法 */
     validateFields(...options) {
-        console.log(options);
         let callback: ValidateCallback = null;
         const newCallback = (callbacks: ValidateCallback) => (error,values) => {
             this.logger('hlFormContainer-validateFields',{ error,values,traceId: this.traceId })
@@ -272,7 +272,7 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
         // @ts-ignore
         this.props.form.validateFields(...options)
     }
-    setFormStates(name: string,callback: (state: IProFormFields['componentModel']) => void) {
+    setFormStates<T extends IProFormFields['componentModel']>(name: string,callback: (state: T) => void) {
         this.storeLocalView.dispatchAction(() => {
             const insertRenderEle = () => {
                 if (!this.storeView.renderNodeQueue.has(name)) {
@@ -282,10 +282,14 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
             const value = this.storeView.getFormItemField(name);
             if (value) {
                 if (value.type === 'normal') {
+                    
+                    //@ts-ignore
                     callback && callback(value.value)
-                    insertRenderEle()
+                    insertRenderEle();
+                    this.forceUpdate()
                 }
                 if (value.type === 'custom') {
+                     //@ts-ignore
                     callback && callback(value.value)
                     insertRenderEle();
                     this.forceUpdate()
@@ -436,7 +440,7 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
                                             }
                                         }
                                     });
-                                    
+
                                 }
                             }
                         }
@@ -459,14 +463,14 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
             });
         }
     }
-    
+
     queryElementItem(ElementKey: string): IElementList & { keys: string } {
         if (this.storeView) {
-            const keys = this.storeView.elementList.keys()
+            const keys = this.storeView._elementList.keys()
             let entitys: IElementList & { keys: string } = null
              //@ts-ignore
             keys.map((item) => {
-                const entity = this.storeView.elementList.get(item)
+                const entity = this.storeView._elementList.get(item)
                 if (entity && entity.elementKey === ElementKey) {
                     entitys = { ...entity,keys: item }
                 }
@@ -487,12 +491,12 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
         const viewStore = this.props.store.HLFormContainer.get(elementItem.formUid)
         if (viewStore) {
             const keys: string[] = []
-            for (let item of viewStore.elementList.keys()) {
+            for (let item of viewStore._elementList.keys()) {
                 keys.push(item);
             }
             let entitys: IElementList & { keys: string,viewStore: IViewModelHlFormStore } = null
             keys.map((item) => {
-                const entity = viewStore.elementList.get(item)
+                const entity = viewStore._elementList.get(item)
                 if (entity && entity.elementKey === elementItem.nextElementKey) {
                     entitys = { ...entity,keys: item,viewStore }
                 }
@@ -507,7 +511,7 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
         const { keyCode } = e;
         if (formStore && formStore.enableEnterSwitch) {
             /* e.stopPropagation() */
-            const keysNext = formStore.elementList.keys()
+            const keysNext = formStore._elementList.keys()
             const keys = [];
             for (let key of keysNext) {
                keys.push(key)
@@ -523,10 +527,10 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
                     let index = keys.findIndex((item) => item === formStore.focusUid)
                     if (index > -1) {
                         let currUid = keys[index]
-                       
+
                         let nextIndex = index + 1
                         let nextUid = keys[nextIndex]
-                        const currElement = formStore.elementList.get(currUid)
+                        const currElement = formStore._elementList.get(currUid)
                         if (currElement.nextElementKey) {
                             if (typeof currElement.nextElementKey === 'string') {
                                 const nextElementItem = this.queryElementItem(currElement.nextElementKey)
@@ -551,7 +555,7 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
                             }
                         }
 
-                        let el = formStore.elementList.get(nextUid)
+                        let el = formStore._elementList.get(nextUid)
                         if (el) {
                             const result = el.element instanceof HTMLCollection
                             if (result && el.element.length) {
@@ -599,7 +603,7 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
                             preIndex = keys.length - 1
                             nextUid = keys[preIndex]
                         }
-                        let el = formStore.elementList.get(nextUid)
+                        let el = formStore._elementList.get(nextUid)
                         if (el) {
                             const result = el.element instanceof HTMLCollection
                             if (result && el.element.length) {
@@ -656,7 +660,7 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
     componentDidUpdate() {
         const el = document.querySelector(`.${this.uid}`);
         if (el && this.props.controls.length !== this.controlsLen) {
-            /** 主要解决当key值发生变化时，导致组件卸载掉回车事件，重新绑定，否则回车会出现失效 
+            /** 主要解决当key值发生变化时，导致组件卸载掉回车事件，重新绑定，否则回车会出现失效
              * 如果在上层组件设置key 值，则需要重新设置回车值
             */
             this.controlsLen = this.props.controls.length
@@ -738,7 +742,7 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
         }
         const view = this.props.store.HLFormContainer.get(this.uid)
         const localview = this.props.store.HLFormLocalDataContainer.get(this.freezeUid)
-        let viewModel: InstanceForm = {
+        let viewModel: InstanceProForm = {
             store: this.props.store,
             uid: this.uid,
             viewModel: view,
@@ -858,11 +862,11 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
             onChange={(items: string[],sort,evt) => {
                 console.log(items);
                 this.storeLocalView.updateControlsSort(items);
-                this.storeView.elementList.clear();
+                this.storeView._elementList.clear();
                 this.storeView.computedAllFormFields.map((w) => {
                     const name= w.iAntdProps.name
                     this.storeView.renderNodeQueue.set(name,name);
-                    
+
                 })
                 this.forceUpdate()
             }}
@@ -881,11 +885,11 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
             let groupFormItem = controls.filter((entity) => entity.iAntdProps.groupId === item.id);
             if (groupFormItem && groupFormItem.length) {
                 let entity = this.state.groupEntity.find((entity) => entity.name === item.name)
-                return (<Row className={!entity.isFolding ? "group toggle" : "group"}
+                return (<Row className={!entity.isFolding ? `group-item toggle` : `group-item`}
                     key={index}>
-                    <div className={`title ${item.className || ''}`} data-id="form-floor" data-tab={item.name}>
-                        <span className="span-left" >{item.name}</span>
-                        <span className="span-right" >
+                    <div className={`group-item-title ${item.className || ''}`} data-id="form-floor" data-tab={item.name}>
+                        <span className="group-item-title-left" >{item.name}</span>
+                        <span className="group-item-title-right" >
                             {entity.isShowSizeIcon && <Dropdown overlay={(
                                 <Menu selectedKeys={[this.storeView.computedFormSize]} onClick={(item) => {
                                     const size = item.key as IProFormProps['size']
@@ -908,22 +912,21 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
                             {!entity.isFolding ? <Icon type="plus" style={{ fontSize: '16px' }} onClick={this.handleToggle.bind(this,item.name)} /> : <Icon type="minus" style={{ fontSize: '17px' }} onClick={this.handleToggle.bind(this,item.name)} />}
                         </span>
                     </div>
-                    <div className={!entity.isFolding ? "form-content hide" : "form-content"}>
+                    <div className={!entity.isFolding ? "group-item-form hide" : "group-item-form"}>
                         <Row type="flex"  >{this.renderControls(groupFormItem)}</Row>
                     </div>
                 </Row>)
             }
         })
         return (
-            <Row className="container">
-                <div className="left" style={{ width: `${this.state.groupEntity.length > 5 ? 87 : 100}%` }}>
+            <Row className="form-group-wrapper">
+                <div className="form-group" style={{ width: `${this.state.groupEntity.length > 5 ? 87 : 100}%` }}>
                     {groupComponent}
                 </div>
-                {this.state.groupEntity.length > 6 && <div className="right">
+                {this.state.groupEntity.length > 5 && <div className="form-group-affix">
                     <Affix>
                         <ul>
                             {
-
                                 this.state.groupEntity.map((entity,index) => {
                                     if (entity.active) {
                                         return <li key={index}>{entity.active && <img src={'https://gitee.com/duanguang/figure-bed/raw/master/oss/u586.png'} />}
@@ -1023,12 +1026,11 @@ export class LegionsProForm<mapProps = {}> extends React.Component<IProFormProps
             this.freezeUid = this.uid;
             this.decryptionFreezeUid = this.uid;
         }
-        console.log(this.uid,'this.uid');
         this.props.store.add(this.uid,{
             InputDataModel: this.props.InputDataModel,
             formRef:this,
         })
-        
+
     }
     get storeView() {
         return this.props.store.HLFormContainer.get(this.uid)

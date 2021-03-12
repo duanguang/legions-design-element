@@ -18,7 +18,7 @@ interface IMethods {
      * @memberof IMethods
      */
     reset: () => void;
-    setFieldsValues?: (name: string, callback: (value: IProConditions['componentModel']) => void) => void;
+    setFieldsValues?: <T extends IProConditions['componentModel']>(name: string, callback: (value: T) => void) => void;
     /** 查询指定下拉组件数据项 */
     getQuerySelectOption: (/** 下拉组件name值 */ name: string, /** 下拉选项key值*/ optionKey: string) => {
         readonly item: HlLabeledValue;
@@ -32,6 +32,10 @@ interface IMethods {
         pageSize?: number;
         keyWords?: string;
     } & Object) => void;
+    /** 添加新的搜索条件项 */
+    addQuery: (list: Array<IProConditions['componentModel']>) => void;
+    /** 移除指定搜索条件项 */
+    removeQuery: (uuid: string) => boolean;
 }
 export interface IFieldsState {
     /**
@@ -45,7 +49,7 @@ export interface IFieldsState {
     /**组件是否可见，一般用来控制组件显隐，默认值true 可见，false不可见   */
     visable?: boolean;
 }
-export interface IQueryConditionsInstance<Query = {}> {
+export interface InstanceQueryConditions<Query = {}> {
     store: InstanceType<typeof LegionsStoreConditions>;
     /** 只读 */
     readonly uid: string;

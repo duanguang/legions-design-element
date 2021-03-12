@@ -1,11 +1,11 @@
 import React from 'react';
-import { IQueryConditionsInstance } from 'components/LegionsProConditions/interface';
+import { InstanceQueryConditions } from 'components/LegionsProConditions/interface';
 import { ObservableMap } from 'mobx';
 interface Istate {
     visable: boolean;
 }
 export default class QueryDemo extends React.Component<{}, Istate> {
-    queryRef: IQueryConditionsInstance;
+    queryRef: InstanceQueryConditions;
     smp: ObservableMap<string, {
         a: {
             b: number;

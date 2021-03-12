@@ -1,1 +1,0 @@
-(window.webpackJsonp=window.webpackJsonp||[]).push([[26],{1268:function(e,t){e.exports={content:["article"],meta:{order:3,link:"https://github.com/duanguang/legions-design-element/tree/master/packages/legions-pro-echarts",title:"GitHub",filename:"docs/resource/github.md"},toc:["ul"]}}}]);

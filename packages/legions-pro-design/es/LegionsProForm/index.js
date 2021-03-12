@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.3
+  *  legions-pro-design v0.0.7-beta.10
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -151,9 +151,6 @@ var AbstractForm = /** @class */ (function (_super) {
         if (formref) {
             var viewStore = formref.store.get(uid);
             if (viewStore.renderNodeQueue.has(eleId)) {
-                if (eleId === 'text') {
-                    console.log(viewStore.renderNodeQueue, viewStore.renderNodeQueue.has(eleId), eleId);
-                }
                 viewStore.renderNodeQueue.delete(eleId);
                 return true;
             }
@@ -320,7 +317,7 @@ var FormElement = /** @class */ (function (_super) {
     FormElement.prototype.componentWillUnmount = function () {
         var formStore = this.props.store.get(this.props.formUid);
         if (formStore) {
-            formStore.elementList.delete(this.uid);
+            formStore._elementList.delete(this.uid);
         }
         var selectSelectionDom = this.querySelectDom();
         if (selectSelectionDom) {
@@ -405,8 +402,8 @@ var FormElement = /** @class */ (function (_super) {
     FormElement.prototype.addElement = function () {
         var formStore = this.props.store.get(this.props.formUid);
         if (formStore) {
-            formStore.addAllElementKeys(this.props.elementKey);
-            if (!formStore.elementList.has(this.uid)) {
+            formStore._addAllElementKeys(this.props.elementKey);
+            if (!formStore._elementList.has(this.uid)) {
                 var el = document.querySelector("." + this.uid);
                 if (el && this.props.elType) {
                     var elChildren = el.getElementsByTagName(this.props.elType);
@@ -420,7 +417,7 @@ var FormElement = /** @class */ (function (_super) {
                     }
                     // @ts-ignore
                     if (elChildren && el && elChildren instanceof HTMLCollection && elChildren.length && !elChildren[0].disabled) {
-                        formStore.elementList.set(this.uid, {
+                        formStore._elementList.set(this.uid, {
                             elementKey: this.props.elementKey,
                             elementTabindex: elementTabindex,
                             element: elChildren,
@@ -504,7 +501,7 @@ var TooltipInput = /** @class */ (function (_super) {
             var viewStore = FormInputRef.store.get(this.props.formUid);
             if (viewStore.computedErrorReactNodeList.has(this.props.formItemName)) {
                 var uid = viewStore.computedErrorReactNodeList.get(this.props.formItemName).uid;
-                isShowErrorView = viewStore.errorListView.has(uid);
+                isShowErrorView = viewStore._errorListView.has(uid);
             }
         }
         var getFieldDecorator = form.getFieldDecorator, getFieldsError = form.getFieldsError, setFieldsValue = form.setFieldsValue;
@@ -592,13 +589,13 @@ var FormInput = /** @class */ (function (_super) {
         var disabled = iFormInput && iFormInput.disabled;
         var addonAfter = iFormInput && iFormInput.addonAfter;
         var addonBefore = iFormInput && iFormInput.addonBefore;
-        var label = iFormInput.label, labelCol = iFormInput.labelCol, wrapperCol = iFormInput.wrapperCol, visible = iFormInput.visible, display = iFormInput.display, render = iFormInput.render, props = __rest(iFormInput, ["label", "labelCol", "wrapperCol", "visible", "display", "render"]);
+        var label = iFormInput.label, labelCol = iFormInput.labelCol, wrapperCol = iFormInput.wrapperCol, visible = iFormInput.visible, display = iFormInput.display, render = iFormInput.render, colon = iFormInput.colon, props = __rest(iFormInput, ["label", "labelCol", "wrapperCol", "visible", "display", "render", "colon"]);
         var valueLen = getStringLen(form.getFieldValue(iAntdProps.name));
         var maxLength = iFormInput.maxLength ? parseInt(iFormInput.maxLength) : 50;
         var placeholder = iAntdProps.placeholder || '';
         var formItemProps = {};
-        if ('colon' in props) {
-            formItemProps['colon'] = props.colon;
+        if (colon) {
+            formItemProps['colon'] = colon;
         }
         return (React.createElement(FormElement, { form: form, onReady: function (value) {
                 _this.FormInputRef = value;
@@ -612,9 +609,7 @@ var FormInput = /** @class */ (function (_super) {
                 })(iFormInput.type === 'textarea' ?
                     // @ts-ignore
                     React.createElement(TextArea, __assign({}, props, { key: iAntdProps.name, autosize: iFormInput.autosize === void 0 ? { minRows: 1, maxRows: 2 } : iFormInput.autosize, onPressEnter: this.onPressEnter.bind(this), title: form.getFieldValue(iAntdProps.name), onFocus: this.onFocus.bind(this), maxLength: iFormInput.maxLength ? parseInt(iFormInput.maxLength) : 200, placeholder: iFormInput.disabled ? '' : placeholder })) :
-                    React.createElement(TooltipInput, __assign({}, props, { onIgnoreError: this.props.formStore && this.props.formStore.onIgnoreError, formUid: this.props.formUid, FormInputRef: this.FormInputRef, 
-                        /* value={form.getFieldValue(iAntdProps.name)} */
-                        maxLength: maxLength.toString(), valueLen: valueLen, formItemName: iAntdProps.name, form: form, key: iAntdProps.name, inputType: iFormInput.type, onPressEnter: this.onPressEnter.bind(this), disabled: disabled, placeholder: iFormInput.disabled ? '' : placeholder, onFocus: this.onFocus.bind(this), onChange: this.onChange.bind(this), addonAfter: addonAfter, onBlur: this.onBlur.bind(this), addonBefore: addonBefore }))),
+                    React.createElement(TooltipInput, __assign({}, props, { onIgnoreError: this.props.formStore && this.props.formStore.onIgnoreError, formUid: this.props.formUid, FormInputRef: this.FormInputRef, maxLength: maxLength.toString(), valueLen: valueLen, formItemName: iAntdProps.name, form: form, key: iAntdProps.name, inputType: iFormInput.type, onPressEnter: this.onPressEnter.bind(this), disabled: disabled, placeholder: iFormInput.disabled ? '' : placeholder, onFocus: this.onFocus.bind(this), onChange: this.onChange.bind(this), addonAfter: addonAfter, onBlur: this.onBlur.bind(this), addonBefore: addonBefore }))),
                 children)));
     };
     return FormInput;
@@ -875,7 +870,7 @@ var HLSelectWrapError = /** @class */ (function (_super) {
             var viewStore = formHLSelectRef.store.get(this.props.formUid);
             if (viewStore.computedErrorReactNodeList.has(this.props.formItemName)) {
                 var uid = viewStore.computedErrorReactNodeList.get(this.props.formItemName).uid;
-                isShowErrorView = viewStore.errorListView.has(uid);
+                isShowErrorView = viewStore._errorListView.has(uid);
             }
         }
         return (React.createElement(LegionsProErrorReportShow, { formUid: this.props.formUid, code: this.props.formItemName, errorClassName: 'tip-icon', onIgnoreError: this.props.onIgnoreError, className: isShowErrorView ? 'errorView' : '' },
@@ -1245,10 +1240,9 @@ var TooltipText = /** @class */ (function (_super) {
             var viewStore = FormTextRef.store.get(this.props.formUid);
             if (viewStore.computedErrorReactNodeList.has(this.props.formItemName)) {
                 var uid = viewStore.computedErrorReactNodeList.get(this.props.formItemName).uid;
-                viewStore.errorListView.has(uid);
+                viewStore._errorListView.has(uid);
             }
         }
-        var getFieldDecorator = form.getFieldDecorator, getFieldsError = form.getFieldsError, setFieldsValue = form.setFieldsValue;
         return (React.createElement(LegionsProErrorReportShow, { code: this.props.formItemName, formUid: this.props.formUid, errorClassName: classNames((_a = {},
                 _a["tip-icon-input"] = true,
                 _a["tip-icon-right-0"] = (this.props.value) ? true : false,
@@ -1277,10 +1271,10 @@ var FormText = /** @class */ (function (_super) {
         var _this = this;
         var _a = this.props, form = _a.form, iAntdProps = _a.iAntdProps, iFormText = _a.iFormText, children = _a.children, rules = _a.rules;
         var getFieldDecorator = form.getFieldDecorator, getFieldsError = form.getFieldsError, setFieldsValue = form.setFieldsValue;
-        var label = iFormText.label, labelCol = iFormText.labelCol, wrapperCol = iFormText.wrapperCol, props = __rest(iFormText, ["label", "labelCol", "wrapperCol"]);
+        var label = iFormText.label, labelCol = iFormText.labelCol, wrapperCol = iFormText.wrapperCol, visible = iFormText.visible, display = iFormText.display, colon = iFormText.colon, props = __rest(iFormText, ["label", "labelCol", "wrapperCol", "visible", "display", "colon"]);
         var formItemProps = {};
-        if ('colon' in props) {
-            formItemProps['colon'] = props.colon;
+        if (colon) {
+            formItemProps['colon'] = colon;
         }
         return (React.createElement(FormElement, { form: form, onReady: function (value) {
                 _this.FormTextRef = value;
@@ -1291,7 +1285,9 @@ var FormText = /** @class */ (function (_super) {
                     normalize: function (value, prevValue, allValues) {
                         return value && value.toString();
                     },
-                })(React.createElement(TooltipText, __assign({}, props, { formUid: this.props.formUid, FormTextRef: this.FormTextRef, value: form.getFieldValue(iAntdProps.name), formItemName: iAntdProps.name, form: form, inputType: 'span' }))),
+                })(
+                //@ts-ignore
+                React.createElement(TooltipText, __assign({}, props, { formUid: this.props.formUid, FormTextRef: this.FormTextRef, formItemName: iAntdProps.name, form: form, inputType: 'span' }))),
                 children)));
     };
     return FormText;
@@ -1773,7 +1769,6 @@ var ProForm = /** @class */ (function (_super) {
         for (var _i = 0; _i < arguments.length; _i++) {
             options[_i] = arguments[_i];
         }
-        console.log(options);
         var callback = null;
         var newCallback = function (callbacks) { return function (error, values) {
             _this.logger('hlFormContainer-validateFields', { error: error, values: values, traceId: _this.traceId });
@@ -1809,10 +1804,13 @@ var ProForm = /** @class */ (function (_super) {
             var value = _this.storeView.getFormItemField(name);
             if (value) {
                 if (value.type === 'normal') {
+                    //@ts-ignore
                     callback && callback(value.value);
                     insertRenderEle();
+                    _this.forceUpdate();
                 }
                 if (value.type === 'custom') {
+                    //@ts-ignore
                     callback && callback(value.value);
                     insertRenderEle();
                     _this.forceUpdate();
@@ -1978,11 +1976,11 @@ var ProForm = /** @class */ (function (_super) {
     ProForm.prototype.queryElementItem = function (ElementKey) {
         var _this = this;
         if (this.storeView) {
-            var keys = this.storeView.elementList.keys();
+            var keys = this.storeView._elementList.keys();
             var entitys_1 = null;
             //@ts-ignore
             keys.map(function (item) {
-                var entity = _this.storeView.elementList.get(item);
+                var entity = _this.storeView._elementList.get(item);
                 if (entity && entity.elementKey === ElementKey) {
                     entitys_1 = __assign(__assign({}, entity), { keys: item });
                 }
@@ -2004,7 +2002,7 @@ var ProForm = /** @class */ (function (_super) {
         if (viewStore) {
             var keys = [];
             try {
-                for (var _b = __values(viewStore.elementList.keys()), _c = _b.next(); !_c.done; _c = _b.next()) {
+                for (var _b = __values(viewStore._elementList.keys()), _c = _b.next(); !_c.done; _c = _b.next()) {
                     var item = _c.value;
                     keys.push(item);
                 }
@@ -2018,7 +2016,7 @@ var ProForm = /** @class */ (function (_super) {
             }
             var entitys_2 = null;
             keys.map(function (item) {
-                var entity = viewStore.elementList.get(item);
+                var entity = viewStore._elementList.get(item);
                 if (entity && entity.elementKey === elementItem.nextElementKey) {
                     entitys_2 = __assign(__assign({}, entity), { keys: item, viewStore: viewStore });
                 }
@@ -2034,7 +2032,7 @@ var ProForm = /** @class */ (function (_super) {
         var keyCode = e.keyCode;
         if (formStore && formStore.enableEnterSwitch) {
             /* e.stopPropagation() */
-            var keysNext = formStore.elementList.keys();
+            var keysNext = formStore._elementList.keys();
             var keys = [];
             try {
                 for (var keysNext_1 = __values(keysNext), keysNext_1_1 = keysNext_1.next(); !keysNext_1_1.done; keysNext_1_1 = keysNext_1.next()) {
@@ -2061,7 +2059,7 @@ var ProForm = /** @class */ (function (_super) {
                         var currUid = keys[index];
                         var nextIndex = index + 1;
                         var nextUid = keys[nextIndex];
-                        var currElement = formStore.elementList.get(currUid);
+                        var currElement = formStore._elementList.get(currUid);
                         if (currElement.nextElementKey) {
                             if (typeof currElement.nextElementKey === 'string') {
                                 var nextElementItem = this_1.queryElementItem(currElement.nextElementKey);
@@ -2084,7 +2082,7 @@ var ProForm = /** @class */ (function (_super) {
                                 nextUid = keys[nextIndex];
                             }
                         }
-                        var el_1 = formStore.elementList.get(nextUid);
+                        var el_1 = formStore._elementList.get(nextUid);
                         if (el_1) {
                             var result = el_1.element instanceof HTMLCollection;
                             if (result && el_1.element.length) {
@@ -2136,7 +2134,7 @@ var ProForm = /** @class */ (function (_super) {
                             preIndex = keys.length - 1;
                             nextUid = keys[preIndex];
                         }
-                        var el_2 = formStore.elementList.get(nextUid);
+                        var el_2 = formStore._elementList.get(nextUid);
                         if (el_2) {
                             var result = el_2.element instanceof HTMLCollection;
                             if (result && el_2.element.length) {
@@ -2390,7 +2388,7 @@ var ProForm = /** @class */ (function (_super) {
             }, style: { width: '100%', display: 'contents' }, onChange: function (items, sort, evt) {
                 console.log(items);
                 _this.storeLocalView.updateControlsSort(items);
-                _this.storeView.elementList.clear();
+                _this.storeView._elementList.clear();
                 _this.storeView.computedAllFormFields.map(function (w) {
                     var name = w.iAntdProps.name;
                     _this.storeView.renderNodeQueue.set(name, name);
@@ -2408,10 +2406,10 @@ var ProForm = /** @class */ (function (_super) {
             var groupFormItem = controls.filter(function (entity) { return entity.iAntdProps.groupId === item.id; });
             if (groupFormItem && groupFormItem.length) {
                 var entity = _this.state.groupEntity.find(function (entity) { return entity.name === item.name; });
-                return (React.createElement(Row, { className: !entity.isFolding ? "group toggle" : "group", key: index },
-                    React.createElement("div", { className: "title " + (item.className || ''), "data-id": "form-floor", "data-tab": item.name },
-                        React.createElement("span", { className: "span-left" }, item.name),
-                        React.createElement("span", { className: "span-right" },
+                return (React.createElement(Row, { className: !entity.isFolding ? "group-item toggle" : "group-item", key: index },
+                    React.createElement("div", { className: "group-item-title " + (item.className || ''), "data-id": "form-floor", "data-tab": item.name },
+                        React.createElement("span", { className: "group-item-title-left" }, item.name),
+                        React.createElement("span", { className: "group-item-title-right" },
                             entity.isShowSizeIcon && React.createElement(Dropdown, { overlay: (React.createElement(Menu, { selectedKeys: [_this.storeView.computedFormSize], onClick: function (item) {
                                         var size = item.key;
                                         _this.storeView.updateFormSize(size);
@@ -2425,13 +2423,13 @@ var ProForm = /** @class */ (function (_super) {
                                         React.createElement("span", null, "\u7D27\u51D1\u578B")))), placement: "bottomCenter" },
                                 React.createElement(Icon, { style: { fontSize: '16px' }, type: "bars" })),
                             !entity.isFolding ? React.createElement(Icon, { type: "plus", style: { fontSize: '16px' }, onClick: _this.handleToggle.bind(_this, item.name) }) : React.createElement(Icon, { type: "minus", style: { fontSize: '17px' }, onClick: _this.handleToggle.bind(_this, item.name) }))),
-                    React.createElement("div", { className: !entity.isFolding ? "form-content hide" : "form-content" },
+                    React.createElement("div", { className: !entity.isFolding ? "group-item-form hide" : "group-item-form" },
                         React.createElement(Row, { type: "flex" }, _this.renderControls(groupFormItem)))));
             }
         });
-        return (React.createElement(Row, { className: "container" },
-            React.createElement("div", { className: "left", style: { width: (this.state.groupEntity.length > 5 ? 87 : 100) + "%" } }, groupComponent),
-            this.state.groupEntity.length > 6 && React.createElement("div", { className: "right" },
+        return (React.createElement(Row, { className: "form-group-wrapper" },
+            React.createElement("div", { className: "form-group", style: { width: (this.state.groupEntity.length > 5 ? 87 : 100) + "%" } }, groupComponent),
+            this.state.groupEntity.length > 5 && React.createElement("div", { className: "form-group-affix" },
                 React.createElement(Affix, null,
                     React.createElement("ul", null, this.state.groupEntity.map(function (entity, index) {
                         if (entity.active) {
@@ -2506,7 +2504,6 @@ var LegionsProForm = /** @class */ (function (_super) {
             _this.freezeUid = _this.uid;
             _this.decryptionFreezeUid = _this.uid;
         }
-        console.log(_this.uid, 'this.uid');
         _this.props.store.add(_this.uid, {
             InputDataModel: _this.props.InputDataModel,
             formRef: _this,

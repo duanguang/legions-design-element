@@ -30,11 +30,12 @@ import ReactDOM,{ findDOMNode } from "react-dom";
 import { debounce } from 'legions-utils-tool/debounce'
 import { cloneDeep } from 'lodash'
 import { HlLabeledValue } from 'legions-lunar/model';
-import { IFieldsState,IQueryConditionsInstance,IQueryDateProps,IQueryProps,IQueryRangePickerProps,IQuerySelectProps,IQueryTextAreaProps,IQueryTextProps,ISelectProps } from './interface';
+import { IFieldsState,InstanceQueryConditions,IQueryDateProps,IQueryProps,IQueryRangePickerProps,IQuerySelectProps,IQueryTextAreaProps,IQueryTextProps,ISelectProps } from './interface';
 import { ConditionCheckBoxModel,ConditionDateModel,ConditionGroupCheckBoxModel,ConditionRadioButtonModel,ConditionRangePickerModel,ConditionSearchModel,ConditionSelectModel,ConditionTextAreaModel,ConditionTextModel,ConditionTextNumberModel,IProConditions,ProConditions } from './ProConditionsUtils';
 import { isArray } from 'legions-utils-tool/type.validation';
 import { CheckboxValueType } from 'antd/lib/checkbox/Group';
 import LegionsProDragger from '../LegionsProDragger';
+import { IProDraggerOptions, IProDraggerProps } from '../LegionsProDragger/interface';
 const { RangePicker } = DatePicker;
 const Option = Select.Option;
 const { TextArea } = Input;
@@ -72,7 +73,7 @@ interface IProps {
     /**
       *  组件componentWillMount 执行
       */
-    onReady?: (instance: IQueryConditionsInstance) => void;
+    onReady?: (instance: InstanceQueryConditions) => void;
 
     size?: 'default' | 'small';
 
@@ -93,6 +94,9 @@ interface IProps {
     uniqueKeys?: string;
     /** 是否拖拽排序 */
     isDragSort?: boolean;
+
+    /** 拖拽移动组件props */
+    draggerProps?:IProDraggerProps
     /** 收起按钮的事件 */
     onCollapse?: (collapsed: boolean,viewEntity?: IViewQueryConditionStore) => void;
 }
@@ -175,7 +179,15 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
                 reset: () => {
                     this.handleReset()
                 },
-                setFieldsValues: (name: string,callback: (value: IProConditions['componentModel']) => void)=>{
+                addQuery: (list) => {
+                    this.initVModel(list);
+                    this.viewStore._initQuery(list);
+                    this.dispatchRequest(list);
+                },
+                removeQuery: (uuid) => {
+                    return this.viewStore._removeQuery(uuid);
+                },
+                setFieldsValues: (name: string,callback: (value) => void)=>{
                     this.setFieldsValues(name,callback);
                 },
                 getQuerySelectOption: (name: string,optionKey: string) => {
@@ -246,8 +258,7 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
         this.onDidMount()
         this.consoleLog('componentDidUpdate')
     }
-    dispatchRequest() {
-        const { query } = this.props;
+    dispatchRequest(query=this.props.query) {
         query.map((item) => {
             if (item instanceof ConditionSelectModel) {
                 const props = item.conditionsProps as IQuerySelectProps;
@@ -270,15 +281,15 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
             }
         }
     }
-    setFieldsValues(name: string,callback: (value: IProConditions['componentModel']) => void) {
-        this.viewStore._setQueryState(name,(value) => {
+    setFieldsValues<T extends IProConditions['componentModel']>(name: string,callback: (value:T) => void) {
+        this.viewStore._setQueryState<T>(name,(value) => {
             callback(value);
         });
     }
-    initVModel() {
+    initVModel(query=this.props.query) {
         let data = {}
         let prams = {}
-        this.props.query.map((item) => {
+        query.map((item) => {
             const name = item.containerProps.name;
             if (!(item instanceof ConditionSearchModel) && item.jsonProperty) {
                 if (isArray(item.conditionsProps.defaultValue)) {
@@ -939,10 +950,17 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
                 colspan['span'] = span.span;
             }
             const uid = item.containerProps.uuid;
+            const { className = '',style = {},onClick } = item.containerProps;
+            const click = {};
+            if (onClick) {
+                click['onClick'] = onClick.bind(this,{uid:uid,name:item.containerProps.name});
+            }
             return <Col {...col} {...colspan}
+                {...click}
+                className={className}
                 data-id={uid}
                 data-name={item.containerProps.name}
-                key={uid} style={{ paddingBottom: '10px',paddingLeft:'5px' }}>
+                key={uid} style={{ paddingBottom: '10px',paddingLeft:'5px',...style }}>
                         {this.renderLabel(item,labelSpan)}
                         <Col style={{ lineHeight: '28px' }}  span={24 - labelSpan}>
                             {this.renderComponent(item)}
@@ -959,11 +977,14 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
         </React.Fragment>
     }
     render() {
+        const { draggerProps = {} as IProDraggerProps } = this.props;
+        const {options={} as IProDraggerOptions,onChange,...prop} = draggerProps
         return (
             <Row className={`${baseCls} ${this.uid}`} gutter={8} type="flex">
                 {this.props.isDragSort?<LegionsProDragger
                       options={{
                         animation: 150,
+                        ...draggerProps.options,
                         group: {
                             name: 'ProConditions',
                             pull: true,
@@ -984,7 +1005,11 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
                             this.viewStore._clearQuery();
                             this.viewStore._initQuery(query);
                         }
+                        if (typeof onChange === 'function') {
+                            onChange(items,sort,evt);
+                        }
                     }}
+                    {...prop}
                 >
                      {this.renderContent()}
                 </LegionsProDragger>:this.renderContent()}

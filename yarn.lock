@@ -2808,14 +2808,6 @@
     csstype "^3.0.2"
 
 "@types/react@^16.9.35":
-  version "16.14.2"
-  resolved "https://registry.npm.taobao.org/@types/react/download/@types/react-16.14.2.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Freact%2Fdownload%2F%40types%2Freact-16.14.2.tgz#85dcc0947d0645349923c04ccef6018a1ab7538c"
-  integrity sha1-hdzAlH0GRTSZI8BMzvYBihq3U4w=
-  dependencies:
-    "@types/prop-types" "*"
-    csstype "^3.0.2"
-
-"@types/react@^16.9.35":
   version "16.14.4"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-16.14.4.tgz#365f6a1e117d1eec960ba792c7e1e91ecad38e6f"
   integrity sha512-ETj7GbkPGjca/A4trkVeGvoIakmLV6ZtX3J8dcmOpzKzWVybbrOxanwaIPG71GZwImoMDY6Fq4wIe34lEqZ0FQ==
@@ -10815,10 +10807,10 @@ legions-control-container@^0.0.5:
   dependencies:
     reflect-metadata "^0.1.13"
 
-legions-decorator@0.0.5:
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/legions-decorator/-/legions-decorator-0.0.5.tgz#192f1b2debad0da5fe4f30353b810a7d546a6306"
-  integrity sha512-Ckbe8hotdlfalvdW1KCBcErRSpetWQH7+/zM/zFFMYgvA8OFCs5pgeCWlKpaBasll41KNJj1DLB+5XDoaqy/rw==
+legions-decorator@0.0.6-beta.1:
+  version "0.0.6-beta.1"
+  resolved "https://registry.yarnpkg.com/legions-decorator/-/legions-decorator-0.0.6-beta.1.tgz#2b4f3b9b04c63c075b8a79fbe382a44590f3a14b"
+  integrity sha512-7lsi6mdckeYB9Wk7YU9a+ll5JfVzKi98FnT8yPgzrDMbijmRegWPYLkzNuoZPokD5nsLG5wmD/K6E9ueOAZ5bQ==
   dependencies:
     legions-utils-tool "^0.0.8"
     reflect-metadata "^0.1.13"
@@ -10856,10 +10848,10 @@ legions-lunar@^0.0.5-rc.1:
     legions-thirdparty-plugin "^0.0.8"
     warning "^3.0.0"
 
-legions-micro-service@^0.0.9:
-  version "0.0.9"
-  resolved "http://192.168.200.99:4873/legions-micro-service/-/legions-micro-service-0.0.9.tgz#4bea4db9f43f302c4b1acb94bd4db2efc83911ea"
-  integrity sha512-K44pQ1mqIiJHRxFlfiq5tZNu34AnZz9yxJlAeCvbU8xs0/hIIasCSVUp/xVO7wjwQ2O3WZVTrdWTiTDb85XkGA==
+legions-micro-service@^0.1.0:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/legions-micro-service/-/legions-micro-service-0.1.1.tgz#ff5a32cb60071bf41264ff410c77ab6e79c6bb6a"
+  integrity sha512-OZFOpA1vKXHN7zm32A8gPNu8gfQHBR76IVEytvM9Qy3PYsrPoiX3wg/X843ZMfguoGIZCBOC8O6bQPz0u/6ndw==
   dependencies:
     legions-import-html-entry "^0.0.5"
     legions-utils-tool "^0.0.9-rc.1"

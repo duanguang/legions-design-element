@@ -11,8 +11,6 @@ import {
 import { IErrorView } from './interface';
 import AbstractForm from './AbstractForm';
 import { getStringLen } from 'legions-utils-tool/format.string'
-/* import { debounce } from 'hoolinks/property' */
-import { debounce } from 'legions-utils-tool/debounce'
 import LegionsProNumericInput from '../LegionsProNumericInput';
 import FormElement from './FormElement';
 import {InstanceFormElement} from './interface/formElement'
@@ -22,7 +20,7 @@ const { TextArea } = Input;
 import classNames from 'classnames';
 import { TooltipProps } from 'antd/lib/tooltip'
 /* import { debounce as debounces } from 'lodash' */
-import { InstanceForm } from './interface/form';
+import { InstanceProForm } from './interface/form';
 export class LabelWithInputModel {
     constructor(public iAntdProps: IAntdProps,
         public iFormProps: IFormInputProps,
@@ -44,7 +42,7 @@ export interface IFormInputProps extends Omit<InputProps,'onChange'>,TextAreaPro
          *
          * @memberof IFormRenderProps
          */
-        formRef?: InstanceForm) => JSX.Element,
+        formRef?: InstanceProForm) => JSX.Element,
     type?: 'textarea' | 'text' | 'number' | 'password',
     onChange?: (value: string) => void;
 }
@@ -67,7 +65,7 @@ interface IFormWithInputProps {
      * @type {string}
      * @memberof IFormWithInputProps
      */
-    formStore?: InstanceForm;
+    formStore?: InstanceProForm;
     // children?: React.ReactNode;
 }
 interface IForm {
@@ -121,7 +119,7 @@ export class TooltipInput extends React.Component<ITooltipInputProps,{}>{
             const viewStore = FormInputRef.store.get(this.props.formUid)
             if (viewStore.computedErrorReactNodeList.has(this.props.formItemName)) {
                 const uid = viewStore.computedErrorReactNodeList.get(this.props.formItemName).uid
-                isShowErrorView = viewStore.errorListView.has(uid)
+                isShowErrorView = viewStore._errorListView.has(uid)
             }
         }
         const { getFieldDecorator,getFieldsError,setFieldsValue } = form;
@@ -226,13 +224,13 @@ export default class FormInput extends AbstractForm<IFormWithInputProps>{
         let disabled = iFormInput && iFormInput.disabled;
         let addonAfter = iFormInput && iFormInput.addonAfter;
         let addonBefore = iFormInput && iFormInput.addonBefore;
-        const { label,labelCol,wrapperCol,visible,display,render,...props } = iFormInput
+        const { label,labelCol,wrapperCol,visible,display,render,colon,...props } = iFormInput
         const valueLen = getStringLen(form.getFieldValue(iAntdProps.name))
         const maxLength = iFormInput.maxLength ? parseInt(iFormInput.maxLength) : 50
         const placeholder = iAntdProps.placeholder || ''
         let formItemProps = {};
-        if ('colon' in props) {
-            formItemProps['colon'] = props.colon;
+        if (colon) {
+            formItemProps['colon'] = colon;
         }
         return (
             <FormElement form={form}
@@ -274,7 +272,6 @@ export default class FormInput extends AbstractForm<IFormWithInputProps>{
                                 onIgnoreError={this.props.formStore && this.props.formStore.onIgnoreError}
                                 formUid={this.props.formUid}
                                 FormInputRef={this.FormInputRef}
-                                /* value={form.getFieldValue(iAntdProps.name)} */
                                 maxLength={maxLength.toString()}
                                 valueLen={valueLen}
                                 formItemName={iAntdProps.name}

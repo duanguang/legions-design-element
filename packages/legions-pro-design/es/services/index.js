@@ -1,10 +1,10 @@
 /**
-  *  legions-pro-design v0.0.7
+  *  legions-pro-design v0.0.6-beta.1
   * (c) 2021 duanguang
   * @license MIT
   */
-import { TableColumnsContainerEntity } from '../models';
-import { LegionsFetch } from '../core';
+import LegionsModels from '../LegionsModels';
+import LegionsCore from '../LegionsCore';
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -62,7 +62,7 @@ function __generator(thisArg, body) {
 /*
  * @Author: duanguang
  * @Date: 2020-12-26 11:55:33
- * @LastEditTime: 2021-01-06 17:21:44
+ * @LastEditTime: 2021-03-02 17:53:40
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/services/index.ts
@@ -78,11 +78,11 @@ function editTableColumns(modulesUid, customColumns, url) {
     return __awaiter(this, void 0, void 0, function () {
         var httpClient;
         return __generator(this, function (_a) {
-            httpClient = new LegionsFetch();
+            httpClient = new LegionsCore.LegionsFetch();
             return [2 /*return*/, httpClient.post({
                     url: url,
                     parameter: { modulesUid: modulesUid, customColumns: customColumns },
-                    model: TableColumnsContainerEntity,
+                    model: LegionsModels.TableColumnsContainerEntity,
                 }).then(function (result) {
                     return result;
                 })];
@@ -93,11 +93,11 @@ function queryTableColumns(modulesUid, url) {
     return __awaiter(this, void 0, void 0, function () {
         var httpClient;
         return __generator(this, function (_a) {
-            httpClient = new LegionsFetch();
+            httpClient = new LegionsCore.LegionsFetch();
             return [2 /*return*/, httpClient.get({
                     url: url,
                     parameter: { modulesUid: modulesUid },
-                    model: TableColumnsContainerEntity
+                    model: LegionsModels.TableColumnsContainerEntity
                 }).then(function (result) {
                     return result;
                 })];

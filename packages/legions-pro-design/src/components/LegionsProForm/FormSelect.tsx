@@ -29,7 +29,7 @@ export class HLSelectWrapError extends React.Component<IFormSelectProps & IProSe
             const viewStore = formHLSelectRef.store.get(this.props.formUid)
             if (viewStore.computedErrorReactNodeList.has(this.props.formItemName)) {
                 const uid = viewStore.computedErrorReactNodeList.get(this.props.formItemName).uid
-                isShowErrorView = viewStore.errorListView.has(uid)
+                isShowErrorView = viewStore._errorListView.has(uid)
             }
         }
         return (

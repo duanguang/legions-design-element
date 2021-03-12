@@ -3,7 +3,7 @@ import { bind,observer } from 'legions/store-react'
 import { Button, Row } from 'antd';
 import { LegionsProConditions, LegionsProModalForm,LegionsProPageContainer } from '../../../components';
 import { observablePromise } from 'legions/store-utils';
-import {  IQueryConditionsInstance } from 'components/LegionsProConditions/interface';
+import {  InstanceQueryConditions } from 'components/LegionsProConditions/interface';
 import moment from 'moment';
 import { observable } from 'legions/store';
 import { ObservableMap,runInAction } from 'mobx';
@@ -11,9 +11,10 @@ import { SearchEntity } from './searchEntity';
 interface Istate{
     visable:boolean
 }
+
 @observer
 export default class QueryDemo extends React.Component<{},Istate>{
-    queryRef: IQueryConditionsInstance = null
+    queryRef: InstanceQueryConditions = null
     @observable smp:ObservableMap<string,{a:{b:number}}>=observable.map()
     constructor(props:{}) {
         super(props)
@@ -40,7 +41,10 @@ export default class QueryDemo extends React.Component<{},Istate>{
                     lg: 4,
                     xl: 4,
                 },
-                name:'vmOrderNo'
+                name: 'vmOrderNo',
+                onClick: (value) => {
+                    console.log(value);
+                }
             },
             conditionsProps: {
                 label: '司机姓名',
@@ -318,11 +322,9 @@ export default class QueryDemo extends React.Component<{},Istate>{
                         fieldName: 'vmOrderNo6',
                         value:2,
                     }]) */
-                    this.queryRef.methods.setFieldsValues('vmOrderNo',(value) => {
-                        if (value instanceof LegionsProConditions.ConditionTextModel) {
+                    this.queryRef.methods.setFieldsValues<InstanceType<typeof LegionsProConditions.ConditionTextModel>>('vmOrderNo',(value) => {
                             value.conditionsProps.label = 'sss';
                             value.conditionsProps.value = '222';
-                        }
                     })
                 
                 }}> 设置指定数据值{this.smp.get('ss').a.b}</Button>
@@ -338,14 +340,11 @@ export default class QueryDemo extends React.Component<{},Istate>{
                 }}> 获取车牌数据指定项数据</Button>
                 <Button onClick={() => {
                     this.setState({visable:!this.state.visable})
-                    this.queryRef.methods.setFieldsValues('vmOrderNo7',(value) => {
-                        if (value instanceof LegionsProConditions.ConditionRadioButtonModel) {
-                            if(value.conditionsProps.visable ===void 0){
-                                value.conditionsProps.visable =true
-                            }
-                            value.conditionsProps.visable = !value.conditionsProps.visable;
-            
+                    this.queryRef.methods.setFieldsValues<InstanceType<typeof LegionsProConditions.ConditionRadioButtonModel>>('vmOrderNo7',(value) => {
+                        if(value.conditionsProps.visable ===void 0){
+                            value.conditionsProps.visable =true
                         }
+                        value.conditionsProps.visable = !value.conditionsProps.visable;
                     })
                 }}>设置指定元素隐藏/隐藏</Button>
                 <Row style={{ marginTop: '10px' }}><LegionsProConditions

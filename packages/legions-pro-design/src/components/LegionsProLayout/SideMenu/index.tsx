@@ -10,7 +10,7 @@ import '../style/memu.less';
 import { autorun,isObservableArray } from 'mobx';
 import { RegExChk,validatorType } from 'legions-utils-tool/regex';
 import { page } from 'legions-lunar/mobx-decorator';
-import LegionsCore from '../../LegionsCore';
+import LegionsCrossModule from '../../LegionsCrossModule';
 import { inject } from 'legions/store';
 import { IPanes } from '../../LegionsStoreLayout/interface';
 import { IRouter } from '../../interface/router';
@@ -51,8 +51,8 @@ interface IProps extends IUserInfo,MenuProps {
 })
 @observer
 export default class MenuParts extends React.Component<IProps>{
-  @inject(LegionsCore.MasterGlobalStateStore)
-  masterGlobalStateStore: InstanceType<typeof LegionsCore.MasterGlobalStateStore>
+  @inject(LegionsCrossModule.MasterGlobalStateStore)
+  masterGlobalStateStore: InstanceType<typeof LegionsCrossModule.MasterGlobalStateStore>
   constructor(props) {
     super(props)
     this.onSelect = this.onSelect.bind(this);

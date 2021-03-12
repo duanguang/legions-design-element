@@ -344,16 +344,14 @@ class ProFormDemo extends React.Component<IProps,IState> {
                     })
                 }}>提交</Button>
           <Button style={{marginLeft:'10px'}} type="primary" htmlType="submit" onClick={()=>{
-                    const item = this.formRef.viewModel.getFormItemField('text');
-                    if (item&&item.value instanceof LegionsProForm.LabelWithInputModel) {
+                    const item = this.formRef.viewModel.getFormItemField<InstanceType<typeof LegionsProForm.LabelWithInputModel>>('text');
+                    if (item) {
                         const disabled = item.value.iFormProps.disabled
                         this.setState({
                             disabledText: !disabled
                         })
-                        this.formRef.methods.setFormStates('text',(value) => {
-                            if (value instanceof LegionsProForm.LabelWithInputModel) {
-                                value.iFormProps.disabled=!disabled
-                            }
+                        this.formRef.methods.setFormStates<InstanceType<typeof LegionsProForm.LabelWithInputModel>>('text',(value) => {
+                            value.iFormProps.disabled=!disabled
                         })
                     }
                 }}>{!this.state.disabledText?'禁用文本框输入':'启用文本框输入'}</Button>

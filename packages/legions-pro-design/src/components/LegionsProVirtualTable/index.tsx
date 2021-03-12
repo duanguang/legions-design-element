@@ -356,6 +356,7 @@ export default class LegionsProVirtualTable extends Component<IProTableProps,ISt
                 value.localViewModel.dispatchRequest(this.props.autoQuery,Object.assign({
                     pageIndex: value.viewModel.pageIndex,
                     pageSize: value.viewModel.pageSize,
+                    isShowLoading:true,
                 },options))
             }
         }

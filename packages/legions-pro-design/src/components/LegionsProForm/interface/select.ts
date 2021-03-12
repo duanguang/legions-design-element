@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-29 10:09:16
- * @LastEditTime: 2021-03-02 18:03:29
+ * @LastEditTime: 2021-03-05 15:46:25
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProForm/interface/select.ts
@@ -19,7 +19,7 @@ import {
     IAntdSelectOption
 } from '../../interface/antd';
 import { InstanceFormElement } from './formElement';
-import { IErrorView,InstanceForm } from './form';
+import { IErrorView,InstanceProForm } from './form';
 import LegionsModels from '../../LegionsModels'
 import { request } from 'legions/request';
 type HeadersPrams = {
@@ -149,7 +149,7 @@ export interface IFormWithSelectProps {
      * @memberof IFormWithInputProps
      */
     formUid: string;
-    formStore?: InstanceForm;
+    formStore?: InstanceProForm;
 }
 
 export interface IFormSelectWrapError {

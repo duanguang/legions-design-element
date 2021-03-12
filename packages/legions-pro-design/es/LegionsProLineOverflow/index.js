@@ -1,10 +1,10 @@
 /**
-  *  legions-pro-design v0.0.3
+  *  legions-pro-design v0.0.7-beta.3
   * (c) 2021 duanguang
   * @license MIT
   */
 import React, { Component } from 'react';
-import styles from './style/index.modules.less';
+import './style/index.less';
 import { Tooltip } from 'antd';
 
 /*! *****************************************************************************
@@ -36,6 +36,7 @@ function __extends(d, b) {
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 }
 
+var baseCls = 'legions-pro-lineoverflow';
 var LegionsProLineOverflow = /** @class */ (function (_super) {
     __extends(LegionsProLineOverflow, _super);
     function LegionsProLineOverflow() {
@@ -43,9 +44,9 @@ var LegionsProLineOverflow = /** @class */ (function (_super) {
     }
     LegionsProLineOverflow.prototype.render = function () {
         return (React.createElement(Tooltip, { placement: "leftTop", title: this.props.text ? this.props.text : '' },
-            React.createElement("div", { className: styles.hlTableCell },
-                React.createElement("div", { className: styles.hlTableTooltipRel },
-                    React.createElement("span", { className: styles.hlTableCellTooltipContent }, this.props.text)))));
+            React.createElement("div", { className: baseCls },
+                React.createElement("div", { className: "tooltip-rel" },
+                    React.createElement("span", { className: "tooltip-content" }, this.props.text)))));
     };
     LegionsProLineOverflow.defaultProps = {
         text: '',
