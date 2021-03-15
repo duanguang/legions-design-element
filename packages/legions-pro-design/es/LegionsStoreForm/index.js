@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.7-beta.10
+  *  legions-pro-design v0.0.7-beta.11
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -828,8 +828,8 @@ var ErrorViewModel = /** @class */ (function () {
 }());
 var HLFormLocalView = /** @class */ (function () {
     function HLFormLocalView() {
-        this.selectOptions = observable$1.map();
-        this.selectView = observable$1.map();
+        this._selectOptions = observable$1.map();
+        this._selectView = observable$1.map();
         /**
          * 是否开启拖拽排序
          *
@@ -858,14 +858,23 @@ var HLFormLocalView = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
-    HLFormLocalView.prototype.updateControlsSort = function (sorts) {
+    HLFormLocalView.prototype._initControlsSort = function (sorts) {
+        var _this = this;
+        sorts.map(function (value) {
+            var _index = _this._controlsSort.findIndex(function (item) { return item === value; });
+            if (_index < 0) {
+                _this._controlsSort.push(value);
+            }
+        });
+    };
+    HLFormLocalView.prototype._updateControlsSort = function (sorts) {
         this._controlsSort = sorts;
     };
     HLFormLocalView.prototype.setDragSort = function (sort) {
         this._isDragSort = sort;
     };
-    HLFormLocalView.prototype.initSelectOptions = function (keys, autoQuery) {
-        this.selectOptions.set(keys, [
+    HLFormLocalView.prototype._initSelectOptions = function (keys, autoQuery) {
+        this._selectOptions.set(keys, [
             {
                 keywords: '',
                 // @ts-ignore
@@ -873,8 +882,8 @@ var HLFormLocalView = /** @class */ (function () {
             },
         ]);
     };
-    HLFormLocalView.prototype.initSelectView = function (keys, autoQuery, options) {
-        this.selectView.set(keys, {
+    HLFormLocalView.prototype._initSelectView = function (keys, autoQuery, options) {
+        this._selectView.set(keys, {
             paging: options.paging,
             remote: options.remote,
             autoQuery: autoQuery,
@@ -1033,8 +1042,8 @@ var HLFormLocalView = /** @class */ (function () {
                     return server_1.get(__assign({ url: autoQuery.ApiUrl, parameter: params, headers: __assign(__assign({}, autoQuery.options), headers), model: LegionsModels.SelectKeyValue }, model));
                 }
             };
-            var data = this.selectOptions.get(name); // 查询指定下拉组件数据
-            var currValue_1 = this.selectView.get(name);
+            var data = this._selectOptions.get(name); // 查询指定下拉组件数据
+            var currValue_1 = this._selectView.get(name);
             if (data) {
                 // 如果数据存在
                 var item_1 = data.find(function (entity) { return entity.keywords === keyWords_1; }); // 查询指定下拉组件指定关键词数据
@@ -1045,7 +1054,7 @@ var HLFormLocalView = /** @class */ (function () {
                         // @ts-ignore
                         obData: observable$1.map(),
                     });
-                    this.selectOptions.set(name, data);
+                    this._selectOptions.set(name, data);
                     item_1 = data.find(function (entity) { return entity.keywords === keyWords_1; });
                 }
                 if (item_1) {
@@ -1078,7 +1087,7 @@ var HLFormLocalView = /** @class */ (function () {
                                         var dbData_1 = _this.tranSelectOptionsFromDd(value);
                                         if (dbData_1) {
                                             runInAction(function () {
-                                                var newCurrValue = _this.selectView.get(name);
+                                                var newCurrValue = _this._selectView.get(name);
                                                 for (var i = 1; i <= dbData_1.data.size; i++) {
                                                     //@ts-ignore
                                                     if (!newCurrValue.currValue.data.has(i.toString())) {
@@ -1156,11 +1165,11 @@ var HLFormLocalView = /** @class */ (function () {
     __decorate([
         observable$1,
         __metadata("design:type", Object)
-    ], HLFormLocalView.prototype, "selectOptions", void 0);
+    ], HLFormLocalView.prototype, "_selectOptions", void 0);
     __decorate([
         observable$1,
         __metadata("design:type", Object)
-    ], HLFormLocalView.prototype, "selectView", void 0);
+    ], HLFormLocalView.prototype, "_selectView", void 0);
     __decorate([
         observable$1,
         __metadata("design:type", Object)
@@ -1184,7 +1193,13 @@ var HLFormLocalView = /** @class */ (function () {
         __metadata("design:type", Function),
         __metadata("design:paramtypes", [Array]),
         __metadata("design:returntype", void 0)
-    ], HLFormLocalView.prototype, "updateControlsSort", null);
+    ], HLFormLocalView.prototype, "_initControlsSort", null);
+    __decorate([
+        action$1,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [Array]),
+        __metadata("design:returntype", void 0)
+    ], HLFormLocalView.prototype, "_updateControlsSort", null);
     __decorate([
         action$1,
         __metadata("design:type", Function),
@@ -1196,13 +1211,13 @@ var HLFormLocalView = /** @class */ (function () {
         __metadata("design:type", Function),
         __metadata("design:paramtypes", [String, Object]),
         __metadata("design:returntype", void 0)
-    ], HLFormLocalView.prototype, "initSelectOptions", null);
+    ], HLFormLocalView.prototype, "_initSelectOptions", null);
     __decorate([
         action$1,
         __metadata("design:type", Function),
         __metadata("design:paramtypes", [String, Object, Object]),
         __metadata("design:returntype", void 0)
-    ], HLFormLocalView.prototype, "initSelectView", null);
+    ], HLFormLocalView.prototype, "_initSelectView", null);
     __decorate([
         action$1,
         __metadata("design:type", Function),

@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-29 10:26:57
- * @LastEditTime: 2021-03-05 16:14:36
+ * @LastEditTime: 2021-03-15 09:27:30
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProForm/interface/form.ts
@@ -110,7 +110,10 @@ interface IMethods {
     /** 下拉选项key值*/ optionKey: string
   ) => { readonly option: HlLabeledValue };
 
-  setFormStates: <T extends IProFormFields['componentModel']>(name: string,callback: (state: T) => void) => void
+  setFormStates: <T extends IProFormFields['componentModel']>(name: string,callback: (state: T) => void) => void;
+
+  /** 添加新的表单项 */
+  addFormItem: (list: Array<IProFormFields['componentModel']>) => void;
 }
 export interface IFormState {
   /**

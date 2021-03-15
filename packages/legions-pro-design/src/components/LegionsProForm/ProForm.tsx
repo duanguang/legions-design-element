@@ -180,7 +180,7 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
             }
             this.storeLocalView.setDragSort(this.props.isDragSort);
             if (this.storeLocalView.dragSortState) {
-                this.storeLocalView.updateControlsSort(this.props.controls.map(item => item.iAntdProps.name));
+                this.storeLocalView._initControlsSort(this.props.controls.map(item => item.iAntdProps.name));
             }
         }
         this.storeView.updateFormSize(this.props.size);
@@ -321,7 +321,7 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
                     this.onSelectSearch(name,options);
                 },
                 getQuerySelectOption: (name: string,optionKey: string) => {
-                    const selectView = this.storeLocalView.selectView.get(name)
+                    const selectView = this.storeLocalView._selectView.get(name)
                     let optionItem = new HlLabeledValue();
                     if (selectView && selectView.currValue) {
                         for (let i = 1; i <= selectView.currValue.data.size; i++) {
@@ -342,6 +342,13 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
                 },
                 setFormStates: (name: string,callback: (state) => void) => {
                     this.setFormStates(name,callback)
+                },
+                addFormItem: (controls: Array<IProFormFields['componentModel']>) => {
+                    this.initFromState(controls);
+                    this.initSelectView(true,controls);
+                    if (this.storeLocalView.dragSortState) {
+                        this.storeLocalView._initControlsSort(controls.map(item => item.iAntdProps.name));
+                    }
                 }
             },
             validateFields: (callback: ValidateCallback) => {
@@ -360,14 +367,6 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
         this.consoleLog('hlFormContainer-componentDidMount');
     }
     componentWillReceiveProps(nextProps: IProFormProps) {
-        if (this.props.controls !== nextProps.controls) {
-           /*  this.setFormItemStateDisabled({
-                props: this.props,nextProps
-            }) */
-            if (this.storeLocalView.dragSortState) {
-                this.storeLocalView.updateControlsSort(nextProps.controls.map(item => item.iAntdProps.name));
-            }
-        }
         if (nextProps.size !== this.props.size) {
             this.storeView.updateFormSize(nextProps.size);
         }
@@ -388,9 +387,9 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
         /* document.removeEventListener('keydown',this.handleKeyDown.bind(this)) */
     }
 
-    initFromState() {
-        if (this.props.controls && Array.isArray(this.props.controls)) {
-            this.props.controls.map((item) => {
+    initFromState(controls:Array<IProFormFields['componentModel']>=this.props.controls) {
+        if ( controls&& Array.isArray(controls)) {
+            controls.map((item) => {
                 const name = item['iAntdProps'].name
                 this.storeView._initFormItemField(name,item)
                 if (!this.storeView.renderNodeQueue.has(name)) {
@@ -415,8 +414,8 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
                         if (this.storeLocalView && item.iAntdProps) {
                             const pageSize = item.iFormProps.pageSize || 30;
                             const keywords = item.iFormProps.autoQuery.params(1,pageSize,'').defaultKeyWords;
-                            if (!this.storeLocalView.selectView.has(item.iAntdProps.name)) {
-                                this.storeLocalView.initSelectView(item.iAntdProps.name,item.iFormProps.autoQuery,{
+                            if (!this.storeLocalView._selectView.has(item.iAntdProps.name)) {
+                                this.storeLocalView._initSelectView(item.iAntdProps.name,item.iFormProps.autoQuery,{
                                     paging: item.iFormProps.paging === void 0 ? false : item.iFormProps.paging,
                                     remote: item.iFormProps.remote === void 0 ? false : item.iFormProps.remote,
                                     pageSize: pageSize,
@@ -425,8 +424,8 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
                                 })
                             }
                             if (item.iFormProps.autoQuery) {
-                                if (!this.storeLocalView.selectOptions.has(item.iAntdProps.name)) {
-                                    this.storeLocalView.initSelectOptions(item.iAntdProps.name,item.iFormProps.autoQuery);
+                                if (!this.storeLocalView._selectOptions.has(item.iAntdProps.name)) {
+                                    this.storeLocalView._initSelectOptions(item.iAntdProps.name,item.iFormProps.autoQuery);
                                 }
                                 if (isDispatch) {
                                     const name=item.iAntdProps.name
@@ -453,8 +452,8 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
         pageSize?: number;
         keywords?: string;
     } & Object) {
-        if (this.storeLocalView && this.storeLocalView.selectView.has(name)) {
-            const item = this.storeLocalView.selectView.get(name)
+        if (this.storeLocalView && this.storeLocalView._selectView.has(name)) {
+            const item = this.storeLocalView._selectView.get(name)
             this.storeLocalView.dispatchRequest(name,item.autoQuery,{
                 pageIndex: options.pageIndex,
                 pageSize: item.pageSize,
@@ -769,7 +768,7 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
         }
         else if (control instanceof LabelWithSelectModel) {
             if (control instanceof LabelWithSelectModel && control.iFormProps.autoQuery) {
-                const view = localview.selectView.get(control.iAntdProps.name)
+                const view = localview._selectView.get(control.iAntdProps.name)
                 if (view && view.currValue) {
                     let options = []
                     let total = 0;
@@ -820,7 +819,6 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
     }
     renderControls(controls: Array<IProFormFields['componentModel']>) {
         let colCount = this.props.colCount || 2;
-        const form = this.props.form;
         let newcontrols = controls;
         if (this.storeLocalView.computedControlsSort.length) {
             newcontrols = [];
@@ -860,8 +858,7 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
             }}
             style={{ width: '100%',display: 'contents' }}
             onChange={(items: string[],sort,evt) => {
-                console.log(items);
-                this.storeLocalView.updateControlsSort(items);
+                this.storeLocalView._updateControlsSort(items);
                 this.storeView._elementList.clear();
                 this.storeView.computedAllFormFields.map((w) => {
                     const name= w.iAntdProps.name

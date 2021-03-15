@@ -89,6 +89,8 @@ interface IMethods {
         readonly option: HlLabeledValue;
     };
     setFormStates: <T extends IProFormFields['componentModel']>(name: string, callback: (state: T) => void) => void;
+    /** 添加新的表单项 */
+    addFormItem: (list: Array<IProFormFields['componentModel']>) => void;
 }
 export interface IFormState {
     /**

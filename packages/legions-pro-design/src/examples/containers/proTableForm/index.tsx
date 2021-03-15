@@ -198,7 +198,7 @@ export class ProTableForm extends React.Component<IProps,IState> {
                         columns: tableColumns(this.viewModel,this),
                         dataSource: this.viewModel.list,
                         uniqueKey: 'index',
-                        pageSize: 2,
+                        
                     }}
                     onChange={(dataList) => {
                         this.viewModel.list = dataList;

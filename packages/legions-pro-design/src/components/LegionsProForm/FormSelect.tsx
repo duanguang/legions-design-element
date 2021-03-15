@@ -164,7 +164,7 @@ export default class FormSelect extends AbstractForm<IFormWithSelectProps,IState
         }
         /** 启用了远程搜索才会在搜索输入触发时调用 */
         if (this.props.formStore && this.props.formStore.localViewModel && this.props.iFormWithSelect.remote) {
-            const view = this.props.formStore.localViewModel.selectView.get(this.props.iAntdProps.name)
+            const view = this.props.formStore.localViewModel._selectView.get(this.props.iAntdProps.name)
             if (view && view.autoQuery) {
                 this.props.formStore.localViewModel.dispatchRequest(this.props.iAntdProps.name,view.autoQuery,{
                     pageIndex: 1,
@@ -181,7 +181,7 @@ export default class FormSelect extends AbstractForm<IFormWithSelectProps,IState
     onClear = () => {
         /** 启用了远程搜索才会在清除输入触发时调用搜索接口 */
         if (this.props.formStore && this.props.formStore.localViewModel && this.props.iFormWithSelect.remote) {
-            const view = this.props.formStore.localViewModel.selectView.get(this.props.iAntdProps.name)
+            const view = this.props.formStore.localViewModel._selectView.get(this.props.iAntdProps.name)
             if (view && view.autoQuery) {
                 this.props.formStore.localViewModel.dispatchRequest(this.props.iAntdProps.name,view.autoQuery,{
                     pageIndex: 1,
@@ -207,7 +207,7 @@ export default class FormSelect extends AbstractForm<IFormWithSelectProps,IState
     }
     onPagingQuery = (pageIndex: number,pageSize: number,value?: string | string[] | number[] | LabeledValue | LabeledValue[]) => {
         if (this.props.formStore && this.props.formStore.localViewModel) {
-            const view = this.props.formStore.localViewModel.selectView.get(this.props.iAntdProps.name)
+            const view = this.props.formStore.localViewModel._selectView.get(this.props.iAntdProps.name)
             if (view && view.autoQuery) {
                 this.props.formStore.localViewModel.dispatchRequest(this.props.iAntdProps.name,view.autoQuery,{
                     pageIndex: pageIndex,

@@ -47,7 +47,7 @@ export default class LegionsProTableCustomColumns extends Component<IProps, ISta
         pageSize: number;
         selectedRowKeys: string[] | number[];
         _expandRow?: string;
-        _type?: "checkbox" | "radio";
+        _type?: "radio" | "checkbox";
         _rowSelectionClickType?: "radio" | "check";
         columns?: (import("antd/lib/table/Table").TableColumnConfig<{}> & import("../LegionsStoreTable/interface").ITableColumnConfig)[];
         _obTableListCustom: import("../LegionsModels/pro.table.model").TableColumnsContainerEntity;
@@ -73,7 +73,7 @@ export default class LegionsProTableCustomColumns extends Component<IProps, ISta
         readonly computedUnShowColumns: import("../LegionsStoreTable/interface").IShowColumns[];
         readonly computedStorageShowColumnsKeys: string;
         readonly computedRenderColumns: (import("antd/lib/table/Table").TableColumnConfig<{}> & import("../LegionsStoreTable/interface").ITableColumnConfig)[];
-        readonly tableXAutoWidth: string | number;
+        readonly tableXAutoWidth: React.ReactText;
         readonly computedTotal: number;
         _filterColumns: () => void;
         _moveRightShowColumns: (Columns: string[]) => void;

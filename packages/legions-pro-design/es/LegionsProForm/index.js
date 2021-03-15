@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.7-beta.10
+  *  legions-pro-design v0.0.7-beta.11
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -886,7 +886,7 @@ var FormSelect = /** @class */ (function (_super) {
         _this.onClear = function () {
             /** 启用了远程搜索才会在清除输入触发时调用搜索接口 */
             if (_this.props.formStore && _this.props.formStore.localViewModel && _this.props.iFormWithSelect.remote) {
-                var view = _this.props.formStore.localViewModel.selectView.get(_this.props.iAntdProps.name);
+                var view = _this.props.formStore.localViewModel._selectView.get(_this.props.iAntdProps.name);
                 if (view && view.autoQuery) {
                     _this.props.formStore.localViewModel.dispatchRequest(_this.props.iAntdProps.name, view.autoQuery, {
                         pageIndex: 1,
@@ -899,7 +899,7 @@ var FormSelect = /** @class */ (function (_super) {
         };
         _this.onPagingQuery = function (pageIndex, pageSize, value) {
             if (_this.props.formStore && _this.props.formStore.localViewModel) {
-                var view = _this.props.formStore.localViewModel.selectView.get(_this.props.iAntdProps.name);
+                var view = _this.props.formStore.localViewModel._selectView.get(_this.props.iAntdProps.name);
                 if (view && view.autoQuery) {
                     _this.props.formStore.localViewModel.dispatchRequest(_this.props.iAntdProps.name, view.autoQuery, {
                         pageIndex: pageIndex,
@@ -1008,7 +1008,7 @@ var FormSelect = /** @class */ (function (_super) {
         }
         /** 启用了远程搜索才会在搜索输入触发时调用 */
         if (this.props.formStore && this.props.formStore.localViewModel && this.props.iFormWithSelect.remote) {
-            var view = this.props.formStore.localViewModel.selectView.get(this.props.iAntdProps.name);
+            var view = this.props.formStore.localViewModel._selectView.get(this.props.iAntdProps.name);
             if (view && view.autoQuery) {
                 this.props.formStore.localViewModel.dispatchRequest(this.props.iAntdProps.name, view.autoQuery, {
                     pageIndex: 1,
@@ -1702,7 +1702,7 @@ var ProForm = /** @class */ (function (_super) {
             }
             _this.storeLocalView.setDragSort(_this.props.isDragSort);
             if (_this.storeLocalView.dragSortState) {
-                _this.storeLocalView.updateControlsSort(_this.props.controls.map(function (item) { return item.iAntdProps.name; }));
+                _this.storeLocalView._initControlsSort(_this.props.controls.map(function (item) { return item.iAntdProps.name; }));
             }
         }
         _this.storeView.updateFormSize(_this.props.size);
@@ -1842,7 +1842,7 @@ var ProForm = /** @class */ (function (_super) {
                     _this.onSelectSearch(name, options);
                 },
                 getQuerySelectOption: function (name, optionKey) {
-                    var selectView = _this.storeLocalView.selectView.get(name);
+                    var selectView = _this.storeLocalView._selectView.get(name);
                     var optionItem = new HlLabeledValue();
                     if (selectView && selectView.currValue) {
                         for (var i = 1; i <= selectView.currValue.data.size; i++) {
@@ -1860,6 +1860,13 @@ var ProForm = /** @class */ (function (_super) {
                 },
                 setFormStates: function (name, callback) {
                     _this.setFormStates(name, callback);
+                },
+                addFormItem: function (controls) {
+                    _this.initFromState(controls);
+                    _this.initSelectView(true, controls);
+                    if (_this.storeLocalView.dragSortState) {
+                        _this.storeLocalView._initControlsSort(controls.map(function (item) { return item.iAntdProps.name; }));
+                    }
                 }
             },
             validateFields: function (callback) {
@@ -1878,14 +1885,6 @@ var ProForm = /** @class */ (function (_super) {
         this.consoleLog('hlFormContainer-componentDidMount');
     };
     ProForm.prototype.componentWillReceiveProps = function (nextProps) {
-        if (this.props.controls !== nextProps.controls) {
-            /*  this.setFormItemStateDisabled({
-                 props: this.props,nextProps
-             }) */
-            if (this.storeLocalView.dragSortState) {
-                this.storeLocalView.updateControlsSort(nextProps.controls.map(function (item) { return item.iAntdProps.name; }));
-            }
-        }
         if (nextProps.size !== this.props.size) {
             this.storeView.updateFormSize(nextProps.size);
         }
@@ -1905,10 +1904,11 @@ var ProForm = /** @class */ (function (_super) {
         this.consoleLog('hlFormContainer-componentWillUnmount');
         /* document.removeEventListener('keydown',this.handleKeyDown.bind(this)) */
     };
-    ProForm.prototype.initFromState = function () {
+    ProForm.prototype.initFromState = function (controls) {
         var _this = this;
-        if (this.props.controls && Array.isArray(this.props.controls)) {
-            this.props.controls.map(function (item) {
+        if (controls === void 0) { controls = this.props.controls; }
+        if (controls && Array.isArray(controls)) {
+            controls.map(function (item) {
                 var name = item['iAntdProps'].name;
                 _this.storeView._initFormItemField(name, item);
                 if (!_this.storeView.renderNodeQueue.has(name)) {
@@ -1935,8 +1935,8 @@ var ProForm = /** @class */ (function (_super) {
                         if (_this.storeLocalView && item.iAntdProps) {
                             var pageSize = item.iFormProps.pageSize || 30;
                             var keywords = item.iFormProps.autoQuery.params(1, pageSize, '').defaultKeyWords;
-                            if (!_this.storeLocalView.selectView.has(item.iAntdProps.name)) {
-                                _this.storeLocalView.initSelectView(item.iAntdProps.name, item.iFormProps.autoQuery, {
+                            if (!_this.storeLocalView._selectView.has(item.iAntdProps.name)) {
+                                _this.storeLocalView._initSelectView(item.iAntdProps.name, item.iFormProps.autoQuery, {
                                     paging: item.iFormProps.paging === void 0 ? false : item.iFormProps.paging,
                                     remote: item.iFormProps.remote === void 0 ? false : item.iFormProps.remote,
                                     pageSize: pageSize,
@@ -1945,8 +1945,8 @@ var ProForm = /** @class */ (function (_super) {
                                 });
                             }
                             if (item.iFormProps.autoQuery) {
-                                if (!_this.storeLocalView.selectOptions.has(item.iAntdProps.name)) {
-                                    _this.storeLocalView.initSelectOptions(item.iAntdProps.name, item.iFormProps.autoQuery);
+                                if (!_this.storeLocalView._selectOptions.has(item.iAntdProps.name)) {
+                                    _this.storeLocalView._initSelectOptions(item.iAntdProps.name, item.iFormProps.autoQuery);
                                 }
                                 if (isDispatch) {
                                     var name_1 = item.iAntdProps.name;
@@ -1968,8 +1968,8 @@ var ProForm = /** @class */ (function (_super) {
         }
     };
     ProForm.prototype.onSelectSearch = function (name, options) {
-        if (this.storeLocalView && this.storeLocalView.selectView.has(name)) {
-            var item = this.storeLocalView.selectView.get(name);
+        if (this.storeLocalView && this.storeLocalView._selectView.has(name)) {
+            var item = this.storeLocalView._selectView.get(name);
             this.storeLocalView.dispatchRequest(name, item.autoQuery, __assign({ pageIndex: options.pageIndex, pageSize: item.pageSize, keyWords: options.keywords }, options));
         }
     };
@@ -2302,7 +2302,7 @@ var ProForm = /** @class */ (function (_super) {
         }
         else if (control instanceof LabelWithSelectModel) {
             if (control instanceof LabelWithSelectModel && control.iFormProps.autoQuery) {
-                var view_1 = localview.selectView.get(control.iAntdProps.name);
+                var view_1 = localview._selectView.get(control.iAntdProps.name);
                 if (view_1 && view_1.currValue) {
                     var options = [];
                     var total = 0;
@@ -2353,7 +2353,6 @@ var ProForm = /** @class */ (function (_super) {
     ProForm.prototype.renderControls = function (controls) {
         var _this = this;
         var colCount = this.props.colCount || 2;
-        var form = this.props.form;
         var newcontrols = controls;
         if (this.storeLocalView.computedControlsSort.length) {
             newcontrols = [];
@@ -2386,8 +2385,7 @@ var ProForm = /** @class */ (function (_super) {
                     put: true,
                 }
             }, style: { width: '100%', display: 'contents' }, onChange: function (items, sort, evt) {
-                console.log(items);
-                _this.storeLocalView.updateControlsSort(items);
+                _this.storeLocalView._updateControlsSort(items);
                 _this.storeView._elementList.clear();
                 _this.storeView.computedAllFormFields.map(function (w) {
                     var name = w.iAntdProps.name;

@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-29 10:18:01
- * @LastEditTime: 2021-03-11 16:32:51
+ * @LastEditTime: 2021-03-15 10:07:20
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreForm/proFormStore.ts
@@ -350,12 +350,12 @@ export class ErrorViewModel {
 
 
 export class HLFormLocalView {
-  @observable selectOptions: IObservableMap<
+  @observable _selectOptions: IObservableMap<
     string,
     ISelectOptions[]
   > = observable.map();
 
-  @observable selectView: IObservableMap<
+  @observable _selectView: IObservableMap<
     string,
     {
       paging: boolean;
@@ -389,14 +389,22 @@ export class HLFormLocalView {
   @computed get computedControlsSort() {
     return this._controlsSort;
   }
-  @action updateControlsSort(sorts: string[]) {
+  @action _initControlsSort(sorts: string[]) {
+    sorts.map((value) => {
+      const _index = this._controlsSort.findIndex((item) => item === value);
+      if (_index < 0) {
+        this._controlsSort.push(value);
+      }
+    })
+  }
+  @action _updateControlsSort(sorts: string[]) {
     this._controlsSort = sorts;
   }
   @action setDragSort(sort: boolean) {
     this._isDragSort = sort;
   }
-  @action initSelectOptions(keys: string, autoQuery: ISelectAutoQuery) {
-    this.selectOptions.set(keys, [
+  @action _initSelectOptions(keys: string, autoQuery: ISelectAutoQuery) {
+    this._selectOptions.set(keys, [
       {
         keywords: '',
         // @ts-ignore
@@ -406,7 +414,7 @@ export class HLFormLocalView {
       },
     ]);
   }
-  @action initSelectView(
+  @action _initSelectView(
     keys: string,
     autoQuery: ISelectAutoQuery,
     options: {
@@ -417,7 +425,7 @@ export class HLFormLocalView {
       tableNameDb: string;
     }
   ) {
-    this.selectView.set(keys, {
+    this._selectView.set(keys, {
       paging: options.paging,
       remote: options.remote,
       autoQuery: autoQuery,
@@ -605,8 +613,8 @@ export class HLFormLocalView {
           });
         }
       };
-      const data = this.selectOptions.get(name); // 查询指定下拉组件数据
-      const currValue = this.selectView.get(name);
+      const data = this._selectOptions.get(name); // 查询指定下拉组件数据
+      const currValue = this._selectView.get(name);
       if (data) {
         // 如果数据存在
         let item = data.find(entity => entity.keywords === keyWords); // 查询指定下拉组件指定关键词数据
@@ -619,7 +627,7 @@ export class HLFormLocalView {
               observablePromise.PramsResult<any>
             >(),
           });
-          this.selectOptions.set(name, data);
+          this._selectOptions.set(name, data);
           item = data.find(entity => entity.keywords === keyWords);
         }
         
@@ -654,7 +662,7 @@ export class HLFormLocalView {
                     const dbData = this.tranSelectOptionsFromDd(value);
                     if (dbData) {
                       runInAction(() => {
-                        const newCurrValue = this.selectView.get(name);
+                        const newCurrValue = this._selectView.get(name);
                         for (let i = 1; i <= dbData.data.size; i++) {
                            //@ts-ignore
                           if (!newCurrValue.currValue.data.has(i.toString())) {
