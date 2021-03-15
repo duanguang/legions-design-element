@@ -12,7 +12,9 @@ title:
 ## en-US
 
 ````jsx
-import { LegionsProEchartsBox, LegionsProEchartsButton } from 'legions-pro-echarts';
+import { LegionsProEchartsBox } from 'legions-pro-echarts';
+import { LegionsProEchartsButton } from 'legions-pro-echarts/es/LegionsProEchartsParts';
+
 ReactDOM.render(
   <div>
         <LegionsProEchartsButton type="primary" style={{margin: 2}}>primary</LegionsProEchartsButton>

@@ -12,7 +12,8 @@ title:
 ## en-US
 
 ````jsx
-import { LegionsProEchartsBox, LegionsProEchartsTable } from 'legions-pro-echarts';
+import { LegionsProEchartsBox } from 'legions-pro-echarts';
+import { LegionsProEchartsTable } from 'legions-pro-echarts/es/LegionsProEchartsParts';
 ReactDOM.render(
   <div>
         <LegionsProEchartsBox title="带滚动条的表格" height="300px">

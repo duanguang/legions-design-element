@@ -12,7 +12,8 @@ title:
 ## en-US
 
 ````jsx
-import { LegionsProEchartsBox, LegionsProEchartsDatePicker } from 'legions-pro-echarts';
+import { LegionsProEchartsBox } from 'legions-pro-echarts';
+import { LegionsProEchartsDatePicker } from 'legions-pro-echarts/es/LegionsProEchartsParts';
 import moment from 'moment';
 
 ReactDOM.render(
