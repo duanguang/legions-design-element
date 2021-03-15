@@ -125,6 +125,8 @@ export declare class HlFormView {
         value: T;
         type: 'normal' | 'custom';
     };
+    /** 移除指定表单选项 */
+    removeFormItem(key: string): boolean;
     /** 初始化表单配置项元素 */
     _initFormItemField(key: string, value: IProFormFields['componentModel'], type?: 'normal' | 'custom'): void;
 }

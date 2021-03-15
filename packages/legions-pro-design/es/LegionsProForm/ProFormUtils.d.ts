@@ -86,6 +86,8 @@ export declare class ProFormUtils<Store, global = {}> {
     getFormConfig(componentConfigKey: string): IProFormUtils['componentModel'];
     private chkRenderConfig;
     private initFromState;
+    private createUid;
+    private transformAntdProps;
     renderSelectConfig(options: IRenderComponentParams<IFormSelectProps>): LabelWithSelectModel;
     renderInputConfig<T extends IFormInputProps>(options: IRenderComponentParams<T>): LabelWithInputModel;
     renderTextConfig<T extends IFormTextProps>(options: IRenderComponentParams<T>): LabelWithTextModel;

@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.7-beta.11
+  *  legions-pro-design v0.0.7-beta.12
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -1477,48 +1477,60 @@ var ProFormUtils = /** @class */ (function () {
             storeView._initFormItemField(key, iFormItemProps, 'custom');
         }
     };
+    ProFormUtils.prototype.createUid = function (name) {
+        var timeId = new Date().getTime();
+        var uid = name + "-" + shortHash("" + timeId + name);
+        return uid;
+    };
+    ProFormUtils.prototype.transformAntdProps = function (props) {
+        var id = props.id;
+        if (!this[id]) {
+            return __assign(__assign({}, props), { uuid: this.createUid(id) });
+        }
+        return this[id]['iAntdProps'];
+    };
     ProFormUtils.prototype.renderSelectConfig = function (options) {
         this.chkRenderConfig(options.iAntdProps.id);
-        this[options.iAntdProps.id] = new LabelWithSelectModel(options.iAntdProps, options.iFormProps, options.rules || []);
+        this[options.iAntdProps.id] = new LabelWithSelectModel(this.transformAntdProps(options.iAntdProps), options.iFormProps, options.rules || []);
         return this[options.iAntdProps.id];
     };
     ProFormUtils.prototype.renderInputConfig = function (options) {
         this.chkRenderConfig(options.iAntdProps.id);
-        return this[options.iAntdProps.id] = new LabelWithInputModel(options.iAntdProps, options.iFormProps, options.rules || []);
+        return this[options.iAntdProps.id] = new LabelWithInputModel(this.transformAntdProps(options.iAntdProps), options.iFormProps, options.rules || []);
     };
     ProFormUtils.prototype.renderTextConfig = function (options) {
         this.chkRenderConfig(options.iAntdProps.id);
-        this[options.iAntdProps.id] = new LabelWithTextModel(options.iAntdProps, options.iFormProps, options.rules || []);
+        this[options.iAntdProps.id] = new LabelWithTextModel(this.transformAntdProps(options.iAntdProps), options.iFormProps, options.rules || []);
         return this[options.iAntdProps.id];
     };
     ProFormUtils.prototype.renderDatePickerConfig = function (options) {
         this.chkRenderConfig(options.iAntdProps.id);
-        this[options.iAntdProps.id] = new LabelWithDatePickerModel(options.iAntdProps, options.iFormProps, options.rules || []);
+        this[options.iAntdProps.id] = new LabelWithDatePickerModel(this.transformAntdProps(options.iAntdProps), options.iFormProps, options.rules || []);
         return this[options.iAntdProps.id];
     };
     ProFormUtils.prototype.renderMonthPickerConfig = function (options) {
         this.chkRenderConfig(options.iAntdProps.id);
-        return this[options.iAntdProps.id] = new LabelWithMonthPickerModel(options.iAntdProps, options.iFormProps, options.rules || []);
+        return this[options.iAntdProps.id] = new LabelWithMonthPickerModel(this.transformAntdProps(options.iAntdProps), options.iFormProps, options.rules || []);
     };
     ProFormUtils.prototype.renderRangePickerConfig = function (options) {
         this.chkRenderConfig(options.iAntdProps.id);
-        return this[options.iAntdProps.id] = new LabelWithRangePickerModel(options.iAntdProps, options.iFormProps, options.rules || []);
+        return this[options.iAntdProps.id] = new LabelWithRangePickerModel(this.transformAntdProps(options.iAntdProps), options.iFormProps, options.rules || []);
     };
     ProFormUtils.prototype.renderInputNumberConfig = function (options) {
         this.chkRenderConfig(options.iAntdProps.id);
-        return this[options.iAntdProps.id] = new LabelWithInputNumberModel(options.iAntdProps, options.iFormProps, options.rules || []);
+        return this[options.iAntdProps.id] = new LabelWithInputNumberModel(this.transformAntdProps(options.iAntdProps), options.iFormProps, options.rules || []);
     };
     ProFormUtils.prototype.renderRadioButtonConfig = function (options) {
         this.chkRenderConfig(options.iAntdProps.id);
-        return this[options.iAntdProps.id] = new LabelWithRadioButtonModel(options.iAntdProps, options.iFormProps, options.rules || []);
+        return this[options.iAntdProps.id] = new LabelWithRadioButtonModel(this.transformAntdProps(options.iAntdProps), options.iFormProps, options.rules || []);
     };
     ProFormUtils.prototype.renderSwitchConfig = function (options) {
         this.chkRenderConfig(options.iAntdProps.id);
-        return this[options.iAntdProps.id] = new LabelWithSwitchModel(options.iAntdProps, options.iFormProps, options.rules || []);
+        return this[options.iAntdProps.id] = new LabelWithSwitchModel(this.transformAntdProps(options.iAntdProps), options.iFormProps, options.rules || []);
     };
     ProFormUtils.prototype.renderUploadConfig = function (options) {
         this.chkRenderConfig(options.iAntdProps.id);
-        return this[options.iAntdProps.id] = new LabelWithUploadModel(options.iAntdProps, options.iFormProps, options.rules || []);
+        return this[options.iAntdProps.id] = new LabelWithUploadModel(this.transformAntdProps(options.iAntdProps), options.iFormProps, options.rules || []);
     };
     /**
      * 自定义组件
