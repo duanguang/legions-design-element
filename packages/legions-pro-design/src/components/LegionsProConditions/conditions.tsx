@@ -730,13 +730,16 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
     renderDateRange(component: ConditionRangePickerModel) {
         const { conditionsProps,containerProps,jsonProperty } = component;
         const { labelSpan,defaultValue,visable,display,value=defaultValue,...prop } = conditionsProps
-        const placeholder = conditionsProps.placeholder as [string,string]
+        let placeholder = {placeholder:['',''] as [string,string]};
+        if (conditionsProps.placeholder) {
+            placeholder = {placeholder:conditionsProps.placeholder}
+        }
         return (<RangePicker
             allowClear={true}
             {...prop}
             value={value}
             onChange={this.handleChangeDate.bind(this,component)}
-            placeholder={placeholder}
+            {...placeholder}
         >
 
         </RangePicker>)

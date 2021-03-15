@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.7-beta.10
+  *  legions-pro-design v0.0.7-beta.12
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -838,8 +838,11 @@ var LegionsProConditions = /** @class */ (function (_super) {
     LegionsProConditions.prototype.renderDateRange = function (component) {
         var conditionsProps = component.conditionsProps, containerProps = component.containerProps, jsonProperty = component.jsonProperty;
         var labelSpan = conditionsProps.labelSpan, defaultValue = conditionsProps.defaultValue, visable = conditionsProps.visable, display = conditionsProps.display, _a = conditionsProps.value, value = _a === void 0 ? defaultValue : _a, prop = __rest(conditionsProps, ["labelSpan", "defaultValue", "visable", "display", "value"]);
-        var placeholder = conditionsProps.placeholder;
-        return (React.createElement(RangePicker, __assign({ allowClear: true }, prop, { value: value, onChange: this.handleChangeDate.bind(this, component), placeholder: placeholder })));
+        var placeholder = { placeholder: ['', ''] };
+        if (conditionsProps.placeholder) {
+            placeholder = { placeholder: conditionsProps.placeholder };
+        }
+        return (React.createElement(RangePicker, __assign({ allowClear: true }, prop, { value: value, onChange: this.handleChangeDate.bind(this, component) }, placeholder)));
     };
     LegionsProConditions.prototype.renderChxBox = function (component) {
         var conditionsProps = component.conditionsProps, containerProps = component.containerProps, jsonProperty = component.jsonProperty;

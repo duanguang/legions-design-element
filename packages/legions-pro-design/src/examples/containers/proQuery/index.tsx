@@ -135,7 +135,7 @@ export default class QueryDemo extends React.Component<{},Istate>{
             conditionsProps: {
                 label: '日期范围',
                 labelSpan: 5,
-                placeholder: ['开始日期','结束日期'],
+                /* placeholder: ['开始日期','结束日期'], */
                 onChange: (originValue,value,viewStore) => {
                     console.log(originValue,value,viewStore,'日期范围');
                 },
