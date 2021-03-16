@@ -667,14 +667,14 @@ var HlFormView = /** @class */ (function () {
             if (this.formfields.has(item.iAntdProps.id)) {
                 return {
                     //@ts-ignore
-                    value: this.formfields.get(key),
+                    value: this.formfields.get(item.iAntdProps.id),
                     type: 'normal',
                 };
             }
             else if (this._customFormFields.has(item.iAntdProps.id)) {
                 return {
                     //@ts-ignore
-                    value: this._customFormFields.get(key),
+                    value: this._customFormFields.get(item.iAntdProps.id),
                     type: 'custom',
                 };
             }

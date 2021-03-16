@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-29 10:18:01
- * @LastEditTime: 2021-03-16 10:09:19
+ * @LastEditTime: 2021-03-16 14:48:27
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreForm/proFormStore.ts
@@ -290,14 +290,14 @@ export class HlFormView {
       if (this.formfields.has(item.iAntdProps.id)) {
         return {
           //@ts-ignore
-          value: this.formfields.get(key),
+          value: this.formfields.get(item.iAntdProps.id),
           type:'normal',
         };   
       }
       else if (this._customFormFields.has(item.iAntdProps.id)) {
         return {
           //@ts-ignore
-          value: this._customFormFields.get(key),
+          value: this._customFormFields.get(item.iAntdProps.id),
           type:'custom',
         };
       }
