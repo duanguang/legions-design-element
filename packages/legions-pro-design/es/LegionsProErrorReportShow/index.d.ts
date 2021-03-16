@@ -61,6 +61,7 @@ export default class LegionsProErrorReportShow extends Component<IProps, IState>
             type: "normal" | "custom";
         };
         removeFormItem: (key: string) => boolean;
+        clearFormItem: () => void;
         _initFormItemField: (key: string, value: import("../LegionsProForm/FormInput").LabelWithInputModel | import("../LegionsProForm/FormInputNumber").LabelWithInputNumberModel | import("../LegionsProForm/FormDatePicker").LabelWithDatePickerModel | import("../LegionsProForm/FormMonthPicker").LabelWithMonthPickerModel | import("../LegionsProForm/FormRangePicker").LabelWithRangePickerModel | import("../LegionsProForm/FormUpload").LabelWithUploadModel | import("../LegionsProForm/FormSwitch").LabelWithSwitchModel | import("../LegionsProForm/FormRadioButton").LabelWithRadioButtonModel | import("../LegionsProForm/FormText").LabelWithTextModel | import("../LegionsProForm/interface").LabelWithSelectModel | import("../LegionsProForm/FormCheckbox").LabelWithCheckboxModel, type?: "normal" | "custom") => void;
     } & import("../LegionsStoreForm/proFormStore").IOtherView;
     handleIgnore(item: IErrorView): void;

@@ -91,6 +91,8 @@ interface IMethods {
     setFormStates: <T extends IProFormFields['componentModel']>(name: string, callback: (state: T) => void) => void;
     /** 添加新的表单项 */
     addFormItem: (list: Array<IProFormFields['componentModel']>) => void;
+    /** 清空表单选项 */
+    clearFormItem: () => void;
 }
 export interface IFormState {
     /**

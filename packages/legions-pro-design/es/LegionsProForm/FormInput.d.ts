@@ -79,8 +79,8 @@ export declare class TooltipInput extends React.Component<ITooltipInputProps, {}
         readonly computedFormFields: (LabelWithInputModel | import("./FormInputNumber").LabelWithInputNumberModel | import("./FormDatePicker").LabelWithDatePickerModel | import("./FormMonthPicker").LabelWithMonthPickerModel | import("./FormRangePicker").LabelWithRangePickerModel | import("./FormUpload").LabelWithUploadModel | import("./FormSwitch").LabelWithSwitchModel | import("./FormRadioButton").LabelWithRadioButtonModel | import("./FormText").LabelWithTextModel | import("./interface").LabelWithSelectModel | import("./FormCheckbox").LabelWithCheckboxModel)[];
         readonly computedAllFormFields: (LabelWithInputModel | import("./FormInputNumber").LabelWithInputNumberModel | import("./FormDatePicker").LabelWithDatePickerModel | import("./FormMonthPicker").LabelWithMonthPickerModel | import("./FormRangePicker").LabelWithRangePickerModel | import("./FormUpload").LabelWithUploadModel | import("./FormSwitch").LabelWithSwitchModel | import("./FormRadioButton").LabelWithRadioButtonModel | import("./FormText").LabelWithTextModel | import("./interface").LabelWithSelectModel | import("./FormCheckbox").LabelWithCheckboxModel)[];
         readonly computedErrorListView: IErrorView[];
-        readonly computedFormSize: "default" | "small" | "table";
-        updateFormSize: (size: "default" | "small" | "table") => void;
+        readonly computedFormSize: "small" | "table" | "default";
+        updateFormSize: (size: "small" | "table" | "default") => void;
         _collectErrorReactNode: (componentCode: string, errorUid: string) => void;
         setErrorErrorReactNodeList: (componentCode: string, errorListView: IErrorView[]) => void;
         handleIgnore: (componentCode: string, id: number) => void;
@@ -90,6 +90,7 @@ export declare class TooltipInput extends React.Component<ITooltipInputProps, {}
             type: "normal" | "custom";
         };
         removeFormItem: (key: string) => boolean;
+        clearFormItem: () => void;
         _initFormItemField: (key: string, value: LabelWithInputModel | import("./FormInputNumber").LabelWithInputNumberModel | import("./FormDatePicker").LabelWithDatePickerModel | import("./FormMonthPicker").LabelWithMonthPickerModel | import("./FormRangePicker").LabelWithRangePickerModel | import("./FormUpload").LabelWithUploadModel | import("./FormSwitch").LabelWithSwitchModel | import("./FormRadioButton").LabelWithRadioButtonModel | import("./FormText").LabelWithTextModel | import("./interface").LabelWithSelectModel | import("./FormCheckbox").LabelWithCheckboxModel, type?: "normal" | "custom") => void;
     } & import("../LegionsStoreForm/proFormStore").IOtherView;
     handleOnChange(even: any): void;
@@ -116,8 +117,8 @@ export default class FormInput extends AbstractForm<IFormWithInputProps> {
         readonly computedFormFields: (LabelWithInputModel | import("./FormInputNumber").LabelWithInputNumberModel | import("./FormDatePicker").LabelWithDatePickerModel | import("./FormMonthPicker").LabelWithMonthPickerModel | import("./FormRangePicker").LabelWithRangePickerModel | import("./FormUpload").LabelWithUploadModel | import("./FormSwitch").LabelWithSwitchModel | import("./FormRadioButton").LabelWithRadioButtonModel | import("./FormText").LabelWithTextModel | import("./interface").LabelWithSelectModel | import("./FormCheckbox").LabelWithCheckboxModel)[];
         readonly computedAllFormFields: (LabelWithInputModel | import("./FormInputNumber").LabelWithInputNumberModel | import("./FormDatePicker").LabelWithDatePickerModel | import("./FormMonthPicker").LabelWithMonthPickerModel | import("./FormRangePicker").LabelWithRangePickerModel | import("./FormUpload").LabelWithUploadModel | import("./FormSwitch").LabelWithSwitchModel | import("./FormRadioButton").LabelWithRadioButtonModel | import("./FormText").LabelWithTextModel | import("./interface").LabelWithSelectModel | import("./FormCheckbox").LabelWithCheckboxModel)[];
         readonly computedErrorListView: IErrorView[];
-        readonly computedFormSize: "default" | "small" | "table";
-        updateFormSize: (size: "default" | "small" | "table") => void;
+        readonly computedFormSize: "small" | "table" | "default";
+        updateFormSize: (size: "small" | "table" | "default") => void;
         _collectErrorReactNode: (componentCode: string, errorUid: string) => void;
         setErrorErrorReactNodeList: (componentCode: string, errorListView: IErrorView[]) => void;
         handleIgnore: (componentCode: string, id: number) => void;
@@ -127,6 +128,7 @@ export default class FormInput extends AbstractForm<IFormWithInputProps> {
             type: "normal" | "custom";
         };
         removeFormItem: (key: string) => boolean;
+        clearFormItem: () => void;
         _initFormItemField: (key: string, value: LabelWithInputModel | import("./FormInputNumber").LabelWithInputNumberModel | import("./FormDatePicker").LabelWithDatePickerModel | import("./FormMonthPicker").LabelWithMonthPickerModel | import("./FormRangePicker").LabelWithRangePickerModel | import("./FormUpload").LabelWithUploadModel | import("./FormSwitch").LabelWithSwitchModel | import("./FormRadioButton").LabelWithRadioButtonModel | import("./FormText").LabelWithTextModel | import("./interface").LabelWithSelectModel | import("./FormCheckbox").LabelWithCheckboxModel, type?: "normal" | "custom") => void;
     } & import("../LegionsStoreForm/proFormStore").IOtherView;
     componentDidMount(): void;

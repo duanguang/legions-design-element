@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.7-beta.12
+  *  legions-pro-design v0.0.7-beta.13
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -1879,6 +1879,9 @@ var ProForm = /** @class */ (function (_super) {
                     if (_this.storeLocalView.dragSortState) {
                         _this.storeLocalView._initControlsSort(controls.map(function (item) { return item.iAntdProps.name; }));
                     }
+                },
+                clearFormItem: function () {
+                    _this.storeView.clearFormItem();
                 }
             },
             validateFields: function (callback) {

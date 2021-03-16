@@ -86,7 +86,7 @@ export declare class HlFormView {
      * @readonly
      * @memberof HlFormView
      */
-    get computedFormSize(): "small" | "table" | "default";
+    get computedFormSize(): "small" | "default" | "table";
     /** 修改表单尺寸 */
     updateFormSize(size: 'default' | 'small' | 'table'): void;
     /**
@@ -127,6 +127,8 @@ export declare class HlFormView {
     };
     /** 移除指定表单选项 */
     removeFormItem(key: string): boolean;
+    /** 清空表单配置项 */
+    clearFormItem(): void;
     /** 初始化表单配置项元素 */
     _initFormItemField(key: string, value: IProFormFields['componentModel'], type?: 'normal' | 'custom'): void;
 }

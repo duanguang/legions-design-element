@@ -349,6 +349,9 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
                     if (this.storeLocalView.dragSortState) {
                         this.storeLocalView._initControlsSort(controls.map(item => item.iAntdProps.name));
                     }
+                },
+                clearFormItem: () => {
+                    this.storeView.clearFormItem();
                 }
             },
             validateFields: (callback: ValidateCallback) => {

@@ -410,6 +410,9 @@ export class ProForm extends React.Component<IProps,IState> {
                         this.formRef.store.updateFormInputData(this.formRef.uid,{text:{value:'222'}})
                     }}>文本框赋值</Button>
                     <Button onClick={() => {
+                        this.formRef.methods.clearFormItem();
+                    }}>清空表单项</Button>
+                    <Button onClick={() => {
                         const rules = FormFields.initFormRules<FormFields,{}>(FormFields,{})
                         const formUtils = new LegionsProForm.ProFormUtils();
                         formUtils.renderSelectConfig({

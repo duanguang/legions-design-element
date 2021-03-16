@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-29 10:26:57
- * @LastEditTime: 2021-03-15 09:27:30
+ * @LastEditTime: 2021-03-16 10:11:59
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProForm/interface/form.ts
@@ -114,6 +114,9 @@ interface IMethods {
 
   /** 添加新的表单项 */
   addFormItem: (list: Array<IProFormFields['componentModel']>) => void;
+
+  /** 清空表单选项 */
+  clearFormItem: () => void;
 }
 export interface IFormState {
   /**

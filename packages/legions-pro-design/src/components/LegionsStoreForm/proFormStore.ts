@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-29 10:18:01
- * @LastEditTime: 2021-03-15 15:52:37
+ * @LastEditTime: 2021-03-16 10:09:19
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreForm/proFormStore.ts
@@ -317,6 +317,11 @@ export class HlFormView {
       }
     }
     return false;
+  }
+  /** 清空表单配置项 */
+  @action clearFormItem() {
+    this.formfields.clear();
+    this._customFormFields.clear();
   }
   /** 初始化表单配置项元素 */
   @action _initFormItemField(key: string,value: IProFormFields['componentModel'],type: 'normal' | 'custom'='normal') {

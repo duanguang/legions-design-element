@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.7-beta.12
+  *  legions-pro-design v0.0.7-beta.13
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -695,6 +695,11 @@ var HlFormView = /** @class */ (function () {
         }
         return false;
     };
+    /** 清空表单配置项 */
+    HlFormView.prototype.clearFormItem = function () {
+        this.formfields.clear();
+        this._customFormFields.clear();
+    };
     /** 初始化表单配置项元素 */
     HlFormView.prototype._initFormItemField = function (key, value, type) {
         if (type === void 0) { type = 'normal'; }
@@ -821,6 +826,12 @@ var HlFormView = /** @class */ (function () {
         __metadata("design:paramtypes", [String]),
         __metadata("design:returntype", void 0)
     ], HlFormView.prototype, "removeFormItem", null);
+    __decorate([
+        action$1,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], HlFormView.prototype, "clearFormItem", null);
     __decorate([
         action$1,
         __metadata("design:type", Function),
