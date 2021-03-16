@@ -1,22 +1,28 @@
-import { Button,Col,Input,Row } from 'antd';
+---
+order: 0
+title:
+  zh-CN: 表格表单
+  en-US: tableForm
+---
+
+## zh-CN
+
+表格嵌套表单的简单使用
+
+## en-US
+
+```jsx
+import create from '../../../common/components/render.tsx';
+import { JsonProperty } from 'json-mapper-object';
+import { Button, Row } from 'antd';
 import React from 'react';
-import { bind,observer } from 'legions/store-react';
-import { LegionsProForm,LegionsProPageContainer, LegionsProTableForm } from '../../../components';
-import { observablePromise, observableViewModel } from 'legions/store-utils';
+import { observer } from 'legions/store-react';
 import { observable } from 'legions/store';
-import { HttpConfig } from '../../constants/httpConfig';
-import { InstanceProForm } from '../../../components/LegionsProForm/interface'
-import { TableFormDemoField } from './model';
-import { ClassOf } from 'legions-lunar/types/api/typescript';
+import { LegionsProForm,LegionsProPageContainer, LegionsProTableForm } from 'legions-pro-design';
+import { observableViewModel } from 'legions/store-utils';
 import moment from 'moment';
 import { toJS } from 'mobx';
-import { IProTableFormColumnConfigProps } from 'components/LegionsProTableForm/interface';
-interface IProps { }
-interface IState {
-    visible: boolean;
-    disabled: boolean;
-    xssValue: string;
-}
+import { TableFormDemoField } from '../demoTest/model';
 /** 列表字段实体 */
 class TableEntity {
     /** 序号 */
@@ -34,16 +40,20 @@ class TableEntity {
     /** 普通文本 */
     textComponent?: string = '普通文本';
 }
+interface IProps {}
+interface IState {
+    list:TableEntity[];
+}
 /** 表格列配置 */
-const tableColumns = (viewModel: PageViewModel,that:ProTableForm): IProTableFormColumnConfigProps<TableEntity>[] => [
-    { title: '序号', width: 40, dataIndex: 'index' },
-    { title: '文本框', width: 150, dataIndex: 'inputComponent' },
-    { title: '下拉框', width: 180, dataIndex: 'selectComponent' },
-    { title: '日期选择框', width: 150, dataIndex: 'dateComponent', render: (text, record, index) => record.dateComponent.format('YYYY-MM-DD HH:mm:ss')},
+const tableColumns = (that:ProTableFormDemo): IProTableFormColumnConfigProps<TableEntity>[] => [
+    { title: '序号', width: 50, dataIndex: 'index' },
+    { title: '文本框', width: 100, dataIndex: 'inputComponent' },
+    { title: '下拉框', width: 100, dataIndex: 'selectComponent' },
+    { title: '日期选择框', width: 130, dataIndex: 'dateComponent', render: (text, record, index) => record.dateComponent.format('YYYY-MM-DD HH:mm:ss')},
     { title: '单选框', width: 160, dataIndex: 'radioComponent' },
-    { title: '开关', width: 60, dataIndex: 'switchComponent', render: (text, record, index) => `${record.switchComponent}`},
+    { title: '开关', width: 80, dataIndex: 'switchComponent', render: (text, record, index) => `${record.switchComponent}`},
     { title: '普通文本', width: 80, dataIndex: 'textComponent' },
-    { title: '操作', width: 140, dataIndex: 'test', render: (text, record) => {
+    { title: '操作', width: 150, dataIndex: 'test', render: (text, record) => {
         const index = record['index'];
         return <div>
             <Button type="primary" onClick={() => {
@@ -61,36 +71,25 @@ const tableColumns = (viewModel: PageViewModel,that:ProTableForm): IProTableForm
                 {record['isRecordEdit'] ? '保存' : '编辑'}
             </Button>
             <Button type="danger" style={{marginLeft: 5}} onClick={() => {
-                const list = [...viewModel.list];
+                const list = [...that.state.list];
                 list.splice(index, 1);
-                viewModel.list = list.map((item, index) => ({...item, index}));
+                that.setState({list:list.map((item, index) => ({...item, index}))})
             }}>删除</Button>
         </div>
     }},
 ]
-class PageViewModel {
-    @observable list: TableEntity[] = [
-        {...new TableEntity(), index: 0},
-        {...new TableEntity(), index: 1},
-        {...new TableEntity(), index: 2},
-    ];
-}
-@observer
-export class ProTableForm extends React.Component<IProps,IState> {
-    formRef: InstanceProForm
-    viewModel = observableViewModel<PageViewModel>(new PageViewModel());
 
+class ProTableFormDemo extends React.Component<IProps,IState> {
+    formRef: InstanceProForm
     constructor(props: IProps) {
         super(props)
         this.state = {
-            visible: true,
-            disabled: false,
-            xssValue: '',
+            list:[
+                {...new TableEntity(), index: 0},
+                {...new TableEntity(), index: 1},
+                {...new TableEntity(), index: 2},
+            ],
         }
-    }
-    arr = this.createConfig()
-    componentDidMount() {
-        /* this.formRef.viewModel.setFormState('price',{visible:false}) */
     }
     createConfig() {
         const rules = TableFormDemoField.initFormRules<TableFormDemoField,{}>(TableFormDemoField,{})
@@ -99,7 +98,7 @@ export class ProTableForm extends React.Component<IProps,IState> {
         formUtils.renderInputConfig({
             iAntdProps: formUtils.createAntdProps('inputComponent',1),
             iFormProps: {
-                ...formUtils.createLayout('',0,2 * 12),
+                ...formUtils.createLayout('',0,24),
                 colon: false,
             },
             rules: rules.input,
@@ -108,7 +107,7 @@ export class ProTableForm extends React.Component<IProps,IState> {
         formUtils.renderSelectConfig({
             iAntdProps: formUtils.createAntdProps('selectComponent',1),
             iFormProps: {
-                ...formUtils.createLayout('',0,2 * 12),
+                ...formUtils.createLayout('',0,24),
                 colon: false,
                 options: [{ key: '1',value: '服务1' },{ key: '2',value: '服务2' }],
             },
@@ -118,7 +117,7 @@ export class ProTableForm extends React.Component<IProps,IState> {
         formUtils.renderDatePickerConfig({
             iAntdProps: formUtils.createAntdProps('dateComponent',1),
             iFormProps: {
-                ...formUtils.createLayout('',0,2 * 12),
+                ...formUtils.createLayout('',0,24),
                 colon: false,
                 format:'YYYY-MM-DD'
             },
@@ -128,7 +127,7 @@ export class ProTableForm extends React.Component<IProps,IState> {
         formUtils.renderRadioButtonConfig({
             iAntdProps: formUtils.createAntdProps('radioComponent',1),
             iFormProps: {
-                ...formUtils.createLayout('',0,2 * 12),
+                ...formUtils.createLayout('',0,24),
                 colon: false,
                 radio: {
                     options: [{ label: '1',value: '1' },{ label: '2',value: '2' },{ label: '3',value: '3' }],
@@ -160,31 +159,33 @@ export class ProTableForm extends React.Component<IProps,IState> {
         ]
     }
     render() {
-        console.log('render parent',this.viewModel);
-
+        console.log('render parent',this.state.list);
         return (<LegionsProPageContainer
-            query={null}
-            content={
-                <Row>
+            operation={<Row>
                     <Button type="primary" onClick={() => {
-                        this.viewModel.list = [
-                            ...this.viewModel.list,
+                        let data = [
+                            ...this.state.list,
                             {
                                 ...new TableEntity(),
-                                index: this.viewModel.list.length,
+                                index: this.state.list.length,
                             },
                         ]
+                        this.setState({list:data})
                     }}>添加行</Button>
                     <Button type="primary" style={{marginLeft: 5}} onClick={() => {
-                        this.viewModel.list[0].inputComponent = `${new Date().getTime()}`,
-                            this.viewModel.list = [...this.viewModel.list];
+                        let list = this.state.list
+                        list[0].inputComponent = `${new Date().getTime()}`
+                        this.setState({list:list})
                     }}>改变某个单元格数据</Button>
                     <Button type="primary" style={{marginLeft: 5}} onClick={() => {
                         this.formRef.viewModel.form.validateFields(() => void 0);
                     }}>表单校验</Button>
                     <Button type="primary" style={{marginLeft: 5}} onClick={() => {
-                        console.log(toJS(this.viewModel.list))
+                        console.log(toJS(this.state.list))
                     }}>打印列表数据</Button>
+                </Row>}
+            content={
+                <Row>
                     <LegionsProTableForm<TableEntity>
                     proFormConfig={{
                         controls: this.createConfig(),
@@ -192,15 +193,15 @@ export class ProTableForm extends React.Component<IProps,IState> {
                             formRef.viewModel.enableEnterSwitch = true;
                             this.formRef = formRef;
                         },
-                    }}
-                    proTableConfig={{
-                        columns: tableColumns(this.viewModel,this),
-                        dataSource: this.viewModel.list,
-                        uniqueKey: 'index',
 
                     }}
+                    proTableConfig={{
+                        columns: tableColumns(this),
+                        dataSource: this.state.list.slice(),
+                        uniqueKey: 'index',
+                    }}
                     onChange={(dataList) => {
-                        this.viewModel.list = dataList;
+                        this.setState({list:dataList})
                     }}
                 ></LegionsProTableForm>
 
@@ -209,4 +210,9 @@ export class ProTableForm extends React.Component<IProps,IState> {
         ></LegionsProPageContainer>)
     }
 }
-
+const root = props => {
+  return <ProTableFormDemo></ProTableFormDemo>;
+};
+const app = create();
+ReactDOM.render(React.createElement(app.start(root)), mountNode);
+```
