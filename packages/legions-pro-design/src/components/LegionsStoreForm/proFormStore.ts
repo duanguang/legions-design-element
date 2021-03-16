@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-29 10:18:01
- * @LastEditTime: 2021-03-15 10:07:20
+ * @LastEditTime: 2021-03-15 15:52:37
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreForm/proFormStore.ts
@@ -284,22 +284,39 @@ export class HlFormView {
     }
   }
   /** 查询表单元素字段配置信息 */
-  @action getFormItemField<T extends IProFormFields['componentModel']>(key: string):{value:T,type:'normal' | 'custom'} {
-    if (this.formfields.has(key)) {
-      return {
-        //@ts-ignore
-        value: this.formfields.get(key),
-        type:'normal',
-      };   
-    }
-    else if (this._customFormFields.has(key)) {
-      return {
-        //@ts-ignore
-        value: this._customFormFields.get(key),
-        type:'custom',
-      };
+  @action getFormItemField<T extends IProFormFields['componentModel']>(key: string): { value: T,type: 'normal' | 'custom' } {
+    let item = this.computedAllFormFields.find((item) => item.iAntdProps.uuid === key||item.iAntdProps.id===key);
+    if (item) {
+      if (this.formfields.has(item.iAntdProps.id)) {
+        return {
+          //@ts-ignore
+          value: this.formfields.get(key),
+          type:'normal',
+        };   
+      }
+      else if (this._customFormFields.has(item.iAntdProps.id)) {
+        return {
+          //@ts-ignore
+          value: this._customFormFields.get(key),
+          type:'custom',
+        };
+      }
     }
     return null;
+  }
+  /** 移除指定表单选项 */
+  @action removeFormItem(key: string) {
+    let item = this.computedAllFormFields.find((item) => item.iAntdProps.uuid === key || item.iAntdProps.id === key);
+    if (item) {
+      const id = item.iAntdProps.id
+      if (this.formfields.has(id)) {
+        return this.formfields.delete(id);
+      }
+      else if (this._customFormFields.has(id)) {
+        return this._customFormFields.delete(id);
+      }
+    }
+    return false;
   }
   /** 初始化表单配置项元素 */
   @action _initFormItemField(key: string,value: IProFormFields['componentModel'],type: 'normal' | 'custom'='normal') {
