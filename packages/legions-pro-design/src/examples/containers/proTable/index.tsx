@@ -63,6 +63,7 @@ export class ProTable extends LegionsProTable.ProTableBaseClass<IProps, { size: 
             width: '100px',
             sorter: true,
             render: (text) => {
+                console.log('render typeName');
                 return <span style={{ color: `${this.status.color}` }}>{text}</span>
             }
         })
@@ -77,6 +78,7 @@ export class ProTable extends LegionsProTable.ProTableBaseClass<IProps, { size: 
         this.setState({ size: e.target.value });
     }
     render() {
+        console.log('render parent');
         return (<LegionsProPageContainer
             operation={
                 <Row>
@@ -84,7 +86,7 @@ export class ProTable extends LegionsProTable.ProTableBaseClass<IProps, { size: 
                         this.updateColumns('name', { title: '姓名1' })
                     }}>改变列信息</Button>
                     <Button onClick={() => {
-                        this.refreshColumns('name', () => {
+                        this.refreshColumns('typeName', () => {
                             this.status.color = 'blue';
                         })
                     }}>改变地址栏颜色</Button>
@@ -147,7 +149,7 @@ export class ProTable extends LegionsProTable.ProTableBaseClass<IProps, { size: 
 
                             },
                             token: (() => {
-                                return process.env.environment === 'dev' ? 'SESSION=61e35aa5-13b4-46c2-9d8b-1cf3cf17864f' : 'SESSION=61e35aa5-13b4-46c2-9d8b-1cf3cf17864f';
+                                return process.env.environment === 'dev' ? 'SESSION=f446c145-9d9c-4fc9-9bc6-f277e4d5a16d' : 'SESSION=61e35aa5-13b4-46c2-9d8b-1cf3cf17864f';
                             })(),
 
                             method: 'post',

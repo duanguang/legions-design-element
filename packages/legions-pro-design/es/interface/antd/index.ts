@@ -1,10 +1,10 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-26 10:27:31
- * @LastEditTime: 2021-01-26 10:00:09
+ * @LastEditTime: 2021-03-16 14:58:47
  * @LastEditors: duanguang
  * @Description:
- * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/interface/antd/index.ts
+ * @FilePath: /legions-design-element/packages/legions-pro-design/es/interface/antd/index.ts
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
 import { ColProps } from 'antd/lib/grid/col';
@@ -64,6 +64,8 @@ export interface IAntdProps {
   name: string;
   placeholder: string;
   className?: string;
+   /** 只读 */
+   readonly uuid?: string;
   /**
    *
    * 分组ID

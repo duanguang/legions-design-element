@@ -1,7 +1,7 @@
 import { Button,Col,Input,Row } from 'antd';
 import React from 'react';
 import { bind,observer } from 'legions/store-react';
-import { LegionsProForm,LegionsProPageContainer, LegionsProTableForm } from '../../../components';
+import { LegionsProForm,LegionsProPageContainer, LegionsProTable, LegionsProTableForm } from '../../../components';
 import { observablePromise, observableViewModel } from 'legions/store-utils';
 import { observable } from 'legions/store';
 import { HttpConfig } from '../../constants/httpConfig';
@@ -10,6 +10,7 @@ import { TableFormDemoField } from './model';
 import { ClassOf } from 'legions-lunar/types/api/typescript';
 import moment from 'moment';
 import { toJS } from 'mobx';
+import { cloneDeep } from 'lodash'
 import { IProTableFormColumnConfigProps } from 'components/LegionsProTableForm/interface';
 interface IProps { }
 interface IState {
@@ -49,10 +50,12 @@ const tableColumns = (viewModel: PageViewModel,that:ProTableForm): IProTableForm
             <Button type="primary" onClick={() => {
                 if (record['isRecordEdit']) {
                     that.formRef.viewModel.form.validateFields((error) => {
+                        console.log( that.formRef,' that.formRef');
                         if (!error) {
                             that.formRef.methods.updateRecordEditData(record);
                         }
                     });
+                    /* that.formRef.methods.updateRecordEditData(record); */
                 } else {
                     console.log(that.formRef.viewModel,record);
                     that.formRef.methods.updateRecordEditData(record);
@@ -76,7 +79,7 @@ class PageViewModel {
     ];
 }
 @observer
-export class ProTableForm extends React.Component<IProps,IState> {
+export class ProTableForm extends LegionsProTable.ProTableBaseClass<IProps,IState,TableEntity> {
     formRef: InstanceProForm
     viewModel = observableViewModel<PageViewModel>(new PageViewModel());
 
@@ -87,12 +90,45 @@ export class ProTableForm extends React.Component<IProps,IState> {
             disabled: false,
             xssValue: '',
         }
+        this.pushColumns('index',  { title: '序号', width: 40,})
+        this.pushColumns('inputComponent',  { title: '文本框', width: 150,},)
+        this.pushColumns('selectComponent', { title: '下拉框', width: 180 },)
+        this.pushColumns('dateComponent',  { title: '日期选择框', width: 150, render: (text, record, index) => record.dateComponent.format('YYYY-MM-DD HH:mm:ss')})
+        this.pushColumns('radioComponent',  { title: '单选框', width: 160 })
+        this.pushColumns('switchComponent',  { title: '开关', width: 60, render: (text, record, index) => `${record.switchComponent}`})
+        this.pushColumns('textComponent', { title: '普通文本', width: 80 })
+        this.pushColumns('test', { title: '操作', width: 140, render: (text, record) => {
+            const index = record['index'];
+            return <div>
+                <Button type="primary" onClick={() => {
+                    if (record['isRecordEdit']) {
+                        this.formRef.viewModel.form.validateFields((error) => {
+                            if (!error) {
+                                this.formRef.methods.updateRecordEditData(record);
+                            }
+                        });
+                        /* this.formRef.methods.updateRecordEditData(record); */
+                    } else {
+                        console.log(this.formRef.viewModel,record);
+                        this.formRef.methods.updateRecordEditData(record);
+                    }
+                }}>
+                    {record['isRecordEdit'] ? '保存' : '编辑'}
+                </Button>
+                <Button type="danger" style={{marginLeft: 5}} onClick={() => {
+                    const list = [...this.viewModel.list];
+                    list.splice(index, 1);
+                    this.viewModel.list = list.map((item, index) => ({...item, index}));
+                }}>删除</Button>
+            </div>
+        }})
     }
     arr = this.createConfig()
     componentDidMount() {
         /* this.formRef.viewModel.setFormState('price',{visible:false}) */
     }
     createConfig() {
+        console.log('createConfig');
         const rules = TableFormDemoField.initFormRules<TableFormDemoField,{}>(TableFormDemoField,{})
         const formUtils = new LegionsProForm.ProFormUtils();
         /** input */
@@ -187,15 +223,15 @@ export class ProTableForm extends React.Component<IProps,IState> {
                     }}>打印列表数据</Button>
                     <LegionsProTableForm<TableEntity>
                     proFormConfig={{
-                        controls: this.createConfig(),
+                        controls: this.arr,
                         onReady: (_, formRef) => {
                             formRef.viewModel.enableEnterSwitch = true;
                             this.formRef = formRef;
                         },
                     }}
                     proTableConfig={{
-                        columns: tableColumns(this.viewModel,this),
-                        dataSource: this.viewModel.list,
+                        columns: this.columnsData,
+                        dataSource: cloneDeep([...this.viewModel.list]),
                         uniqueKey: 'index',
 
                     }}

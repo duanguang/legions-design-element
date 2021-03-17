@@ -632,6 +632,7 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
             this.setFieldsValues(containerProps.name,(value:ConditionTextModel) => {
                 value.conditionsProps.value=''
             })
+            this.viewStore._setVmModel(state)
             this.mapQueryValue()
         }} /> : null;
         return (
