@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.7-beta.12
+  *  legions-pro-design v0.0.7-beta.13
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -794,6 +794,7 @@ var LegionsProConditions = /** @class */ (function (_super) {
                 _this.setFieldsValues(containerProps.name, function (value) {
                     value.conditionsProps.value = '';
                 });
+                _this.viewStore._setVmModel(state);
                 _this.mapQueryValue();
             } }) : null;
         return (React.createElement(Tooltip, { trigger: "focus", title: (this.formatTrim(value)) ? React.createElement("pre", null, value.replace('↵', ',')) : null, placement: "topLeft" },
