@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-10 16:14:09
- * @LastEditTime: 2021-03-17 15:23:35
+ * @LastEditTime: 2021-03-17 15:59:49
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/script/entiy.js
@@ -33,7 +33,7 @@ const array_component = [
  'LegionsProIframe', */
 /* 'LegionsProForm', */
   
-'LegionsProConditions',
+'LegionsProForm',
 
 /*  'LegionsProInput',
   'LegionsProLayout',

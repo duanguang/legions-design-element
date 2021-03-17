@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.7-beta.13
+  *  legions-pro-design v0.0.7-beta.14
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -1022,8 +1022,8 @@ var FormSelect = /** @class */ (function (_super) {
         }
         this.props.iFormWithSelect && this.props.iFormWithSelect.onSearch && this.props.iFormWithSelect.onSearch(value);
     };
-    FormSelect.prototype.onChange = function (even) {
-        this.props.iFormWithSelect.onChange && this.props.iFormWithSelect.onChange(even);
+    FormSelect.prototype.onChange = function (even, res) {
+        this.props.iFormWithSelect.onChange && this.props.iFormWithSelect.onChange(even, res);
         if (this.FormHLSelectRef && this.props.formUid) {
             var viewStore = this.FormHLSelectRef.store.get(this.props.formUid);
             var view = viewStore.computedErrorReactNodeList.get(this.props.iAntdProps.name);

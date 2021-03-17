@@ -192,8 +192,8 @@ export default class FormSelect extends AbstractForm<IFormWithSelectProps,IState
         }
         this.props.iFormWithSelect && this.props.iFormWithSelect.onClear && this.props.iFormWithSelect.onClear()
     }
-    onChange(even) {
-        this.props.iFormWithSelect.onChange && this.props.iFormWithSelect.onChange(even)
+    onChange(even,res) {
+        this.props.iFormWithSelect.onChange && this.props.iFormWithSelect.onChange(even,res)
         if (this.FormHLSelectRef && this.props.formUid) {
             const viewStore = this.FormHLSelectRef.store.get(this.props.formUid)
             const view = viewStore.computedErrorReactNodeList.get(this.props.iAntdProps.name)
