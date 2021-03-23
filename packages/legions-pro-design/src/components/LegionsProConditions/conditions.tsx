@@ -813,8 +813,8 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
             </Menu>
         );
         return <React.Fragment>
-            <Row gutter={8} type="flex">
-                <Col span={6} ><Button
+            <Row gutter={8} type="flex" style={{ flexWrap: 'nowrap' }}>
+                <Col><Button
                     type="primary"
                     icon={'search'}
                     onClick={this.handleSearch.bind(this)}
@@ -822,12 +822,12 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
                 >{component.conditionsProps.searchText||'搜索'}
                 </Button>
                 </Col>
-                <Col span={6} >
+                <Col>
                     <Dropdown.Button type="ghost" onClick={this.handleReset.bind(this)} overlay={menu}>
                     {component.conditionsProps.resetText||'重置'}
                         </Dropdown.Button>
                 </Col>
-                <Col span={4} >
+                {component.conditionsProps.onRefresh && <Col>
                     <Button
                         onClick={() => {
                             const item = this.props.query.find((item) => item instanceof ConditionSearchModel);
@@ -835,13 +835,13 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
                                 item.conditionsProps.onRefresh && item.conditionsProps.onRefresh.call(this,cloneDeep(this.queryPrams),this.viewStore)
                             }
                          }}
-                         style={{ width: '100%',padding: '0 2px' }}
+                         /* style={{ width: '100%',padding: '0 2px' }} */
                         //@ts-ignore
                         title="刷新">
                         <Icon type="sync" title="刷新" />
                     </Button>
-                </Col>
-                <Col span={8}>
+                </Col>}
+                <Col>
                     <Button
                         type="ghost"
                         icon={this.state.collapsed ? 'down' : 'up'}
@@ -888,15 +888,22 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
 
     }
     getQueryItemSpan(item: IProConditions['componentModel']) {
+        const defaultCol = {
+            xs: 8,
+            sm: 8,
+            md: 6,
+            lg: 6,
+            xl: 4,
+        }
         const Resolution = item.containerProps.col[this.viewStore.compuedResolution];
         if (typeof Resolution === 'number') {
             return Resolution
         }
         else if (typeof Resolution === 'object') {
-            return Resolution.span || 4
+            return Resolution.span || defaultCol[this.viewStore.compuedResolution]
         }
         else {
-            return 4;
+            return defaultCol[this.viewStore.compuedResolution];
         }
     }
     renderSearchComponent() {
@@ -946,13 +953,8 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
                 labelSpan = 0;
             }
             const { offset,pull,push,md,xl,lg,sm,xs,...col } = item.containerProps.col;
-            const span = item.containerProps.col[this.viewStore.compuedResolution]
-            const colspan = {};
-            if (typeof span === 'number') {
-                colspan['span'] = span;
-            }else if(Object.prototype.toString.call(span) === "[object Object]"){
-                colspan['span'] = span.span;
-            }
+            const span = this.getQueryItemSpan(item)
+            const colspan = { span };
             const uid = item.containerProps.uuid;
             const { className = '',style = {},onClick } = item.containerProps;
             const click = {};
