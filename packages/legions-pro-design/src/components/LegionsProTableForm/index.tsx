@@ -1,6 +1,6 @@
 /*
- * @Author: duanguang 
- * @Date: 2020-08-05 12:02:20 
+ * @Author: duanguang
+ * @Date: 2020-08-05 12:02:20
  * @Last Modified by: duanguang
  * @Last Modified time: 2020-11-03 10:07:18
  * @description: 动态表格编辑组件，hlTable+hlForm
@@ -27,12 +27,13 @@ import get from 'lodash/get'
 import set from 'lodash/set'
 import has from 'lodash/has'
 import { IProFormFields } from '../LegionsStoreForm/interface';
+import ReactDOM from 'react-dom';
 /** 分割符，用于给表单字段添加下标时使用 */
 export const ProTableFormSeparator = '___';
 interface IProTableFormConfig<F> extends Partial<IProFormProps<F>>,Weaken<Partial<IProFormProps<F>>,'controls' | 'onReady'> {
     /**
     * 获取表单数据模型
-    * form  即将废弃，请formRef.viewModel.form 获取 
+    * form  即将废弃，请formRef.viewModel.form 获取
     *
     * @memberof IHLFormProps
     */
@@ -104,7 +105,7 @@ export default class LegionsProTableForm<T = {},F = {}> extends LegionsProForm.C
 
     constructor(props: ProTableFormProps<T,F>) {
         super(props);
-       
+
         this.state = {
             data: this.tranformData(cloneDeep(toJS(this.props.proTableConfig.dataSource))),
             recordEditData: new Map(),
@@ -123,14 +124,36 @@ export default class LegionsProTableForm<T = {},F = {}> extends LegionsProForm.C
             })
         }
     }
-    tranformData(data: T[]) {
+    /** 添加行数据 */
+    addEditRecord=(record:T,isRecordEdit:boolean = true)=>{
+        let recordData = this.tranformData([{...record,[this.props.proTableConfig.uniqueKey]:record[this.props.proTableConfig.uniqueKey]||`${shortHash(new Date().getTime())}${this.state.data.length}`}],isRecordEdit)
+        ReactDOM.unstable_batchedUpdates(() => {
+            this.setState({
+                data:[...this.state.data,...recordData]
+            },()=>{
+                this.props.onChange && this.props.onChange(this.state.data)
+            })
+        });
+    }
+    /** 删除行数据 */
+    deleteEditRecord=(rowKeyValue:string | number)=>{
+        const {data} = this.state
+        ReactDOM.unstable_batchedUpdates(()=>{
+            this.setState({
+                data:data.filter((i)=>i[this.props.proTableConfig.uniqueKey]!==rowKeyValue)
+            },()=>{
+                this.props.onChange && this.props.onChange(this.state.data)
+            })
+        })
+    }
+    tranformData(data: T[],isRecordEdit:boolean = false) {
         return data.map((item,index) => {
             const hlTableFormItem = {};
             if (!has(item,this.uniqueKey)) {
                 hlTableFormItem[this.uniqueKey] = `${shortHash(new Date().getTime())}${index}`
             }
             return {
-                isRecordEdit: false,
+                isRecordEdit: isRecordEdit,
                 ...item,
                 ...hlTableFormItem,
             }
@@ -158,7 +181,7 @@ export default class LegionsProTableForm<T = {},F = {}> extends LegionsProForm.C
         newControl.iAntdProps.id = keys;
         newControl.iAntdProps.name=`${control.iAntdProps.name}${ProTableFormSeparator}${key}`
         return formUtils.createFormComponent(newControl,formRef.viewModel.form,formRef.uid,formRef,key)
-        
+
     }
     /** 创建行表单 */
     createTable = () => {
@@ -209,7 +232,7 @@ export default class LegionsProTableForm<T = {},F = {}> extends LegionsProForm.C
                             this.formRef.viewModel.form.setFields({});
                             proTableConfig.onPagingQuery && proTableConfig.onPagingQuery(page,pageSize,isChangePageSize);
                         }}
-                        
+
                         columns={newColumns(formRef)}
                     ></LegionsProTable>
                 }
@@ -271,7 +294,9 @@ export default class LegionsProTableForm<T = {},F = {}> extends LegionsProForm.C
                         proFormConfig.onReady && proFormConfig.onReady(form,{
                             //@ts-ignore
                             ...formRef,methods: {
-                                updateRecordEditData: this.updateRecordEditData
+                                updateRecordEditData: this.updateRecordEditData,
+                                addEditRecord:this.addEditRecord,
+                                deleteEditRecord:this.deleteEditRecord,
                             }
                         })
                     }}
