@@ -1,5 +1,5 @@
 import { Button,Col,Input,Row } from 'antd';
-import React from 'react';
+import React,{useState} from 'react';
 import { bind,observer } from 'legions/store-react';
 import { LegionsProForm,LegionsProPageContainer, LegionsProTable, LegionsProTableForm } from '../../../components';
 import { observablePromise, observableViewModel } from 'legions/store-utils';
@@ -90,7 +90,7 @@ export class ProTableForm extends LegionsProTable.ProTableBaseClass<IProps,IStat
             disabled: false,
             xssValue: '',
         }
-        this.pushColumns('index',  { title: '序号', width: 40,})
+        this.pushColumns('key',  { title: '序号', width: 40,render:(text,record,index)=>index + 1})
         this.pushColumns('inputComponent',  { title: '文本框', width: 150,},)
         this.pushColumns('selectComponent', { title: '下拉框', width: 180 },)
         this.pushColumns('dateComponent',  { title: '日期选择框', width: 150, render: (text, record, index) => record.dateComponent.format('YYYY-MM-DD HH:mm:ss')})
@@ -107,7 +107,6 @@ export class ProTableForm extends LegionsProTable.ProTableBaseClass<IProps,IStat
                                 this.formRef.methods.updateRecordEditData(record);
                             }
                         });
-                        /* this.formRef.methods.updateRecordEditData(record); */
                     } else {
                         console.log(this.formRef.viewModel,record);
                         this.formRef.methods.updateRecordEditData(record);
@@ -116,19 +115,13 @@ export class ProTableForm extends LegionsProTable.ProTableBaseClass<IProps,IStat
                     {record['isRecordEdit'] ? '保存' : '编辑'}
                 </Button>
                 <Button type="danger" style={{marginLeft: 5}} onClick={() => {
-                    const list = [...this.viewModel.list];
-                    list.splice(index, 1);
-                    this.viewModel.list = list.map((item, index) => ({...item, index}));
+                    this.formRef.methods.deleteEditRecord(record['index'])
                 }}>删除</Button>
             </div>
         }})
     }
     arr = this.createConfig()
-    componentDidMount() {
-        /* this.formRef.viewModel.setFormState('price',{visible:false}) */
-    }
     createConfig() {
-        console.log('createConfig');
         const rules = TableFormDemoField.initFormRules<TableFormDemoField,{}>(TableFormDemoField,{})
         const formUtils = new LegionsProForm.ProFormUtils();
         /** input */
@@ -197,19 +190,13 @@ export class ProTableForm extends LegionsProTable.ProTableBaseClass<IProps,IStat
     }
     render() {
         console.log('render parent',this.viewModel);
-
         return (<LegionsProPageContainer
             query={null}
             content={
                 <Row>
                     <Button type="primary" onClick={() => {
-                        this.viewModel.list = [
-                            ...this.viewModel.list,
-                            {
-                                ...new TableEntity(),
-                                index: this.viewModel.list.length,
-                            },
-                        ]
+                        /* this.formRef.methods.addEditRecord(()=>({index:Date.now()})) */
+                        this.formRef.methods.addEditRecord(new TableEntity)
                     }}>添加行</Button>
                     <Button type="primary" style={{marginLeft: 5}} onClick={() => {
                         this.viewModel.list[0].inputComponent = `${new Date().getTime()}`,
