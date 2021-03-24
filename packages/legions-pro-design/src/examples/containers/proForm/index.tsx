@@ -31,7 +31,7 @@ export class ProForm extends React.Component<IProps,IState> {
     /* this.formRef.viewModel.setFormState('price',{visible:false}) */
     }
     createConfig() {
-        const rules = FormFields.initFormRules<FormFields,{}>(FormFields,{})
+        const rules = FormFields.initFormRules<FormFields,{that:ProForm}>(FormFields,{that:this})
         const formUtils = new LegionsProForm.ProFormUtils();
         
         formUtils.renderInputConfig({

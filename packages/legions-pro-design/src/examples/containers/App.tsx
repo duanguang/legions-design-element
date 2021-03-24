@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-03-02 14:19:18
- * @LastEditTime: 2021-03-11 09:55:52
+ * @LastEditTime: 2021-03-19 13:44:33
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/examples/containers/App.tsx
@@ -11,6 +11,7 @@ import { Route,Switch } from 'legions/router';
 import React from 'react';
 /* import '../assets/css/theme.less'; */
 import '../assets/css/theme.less'
+import Demo from './demo';
 import DataImportBaseDemo from './proDataImport/base';
 import DataImportLocalDemo from './proDataImport/local';
 import { ProForm } from './proForm';
@@ -32,7 +33,9 @@ export default class App extends React.Component {
     /* unstable_handleError(e) {
         console.dir(e,'unstable_handleError');
     } */
-
+    componentDidCatch(error, info) {     
+        console.log(error,info);
+    }
     render() {
         return (
             <Switch>
@@ -50,9 +53,7 @@ export default class App extends React.Component {
                 <Route path="/import/base" component={DataImportBaseDemo}></Route>
                 <Route path="/import/local" component={DataImportLocalDemo}></Route>
                 {/* <Route path="/chart" component={LegionsProEchartsChartPieDemo}></Route> */}
-                {/* <Route component={() => {
-                        return <div>hello world</div>
-                    }}/> */}
+                <Route component={Demo}/>
                 {this.props.children}
                 </React.Fragment>
                 </Switch>

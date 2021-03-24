@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-15 15:42:07
- * @LastEditTime: 2021-03-04 10:20:28
+ * @LastEditTime: 2021-03-17 17:36:10
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/examples/containers/proForm/model.ts
@@ -174,7 +174,8 @@ export class FormFields extends LegionsProForm.ProFormFields<FormFields>{
         error: '价格只能是数字',
         desc: '价格',
         type:'string',
-        validator:(value:string,error,callback)=>{ // 自定义验证规则
+        validator: (value: string,error,callback,props) => { // 自定义验证规则
+            console.log(props,'props');
             const regex=/^[1-9]\d*$/; // 自定义验证规则
             if(!(regex.test(value.toString()))){
                 callback(new Error('价格请输入数字'));

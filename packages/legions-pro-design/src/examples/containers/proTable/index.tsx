@@ -80,6 +80,7 @@ export class ProTable extends LegionsProTable.ProTableBaseClass<IProps, { size: 
     render() {
         console.log('render parent');
         return (<LegionsProPageContainer
+            
             operation={
                 <Row>
                     <Button onClick={() => {

@@ -553,6 +553,7 @@ const DrawerPositionWrap = {
                 x: distance.x - this.viewStore._resizableData.resizableX,
                 y: distance.y - this.viewStore._resizableData.resizableY
             };
+            
             /*  console.log('准备拖拽缩放移动坐标轴====satrt====')
              console.log('this.viewStore.resizableData',this.viewStore.resizableData)
              console.log('this.topLocation',this.topLocation)
