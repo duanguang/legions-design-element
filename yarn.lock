@@ -10807,19 +10807,19 @@ legions-control-container@^0.0.5:
   dependencies:
     reflect-metadata "^0.1.13"
 
-legions-decorator@0.0.6-beta.1:
-  version "0.0.6-beta.1"
-  resolved "https://registry.yarnpkg.com/legions-decorator/-/legions-decorator-0.0.6-beta.1.tgz#2b4f3b9b04c63c075b8a79fbe382a44590f3a14b"
-  integrity sha512-7lsi6mdckeYB9Wk7YU9a+ll5JfVzKi98FnT8yPgzrDMbijmRegWPYLkzNuoZPokD5nsLG5wmD/K6E9ueOAZ5bQ==
+legions-decorator@^0.0.4:
+  version "0.0.4"
+  resolved "https://registry.npm.taobao.org/legions-decorator/download/legions-decorator-0.0.4.tgz#a1d4853b29b32da10eee1d76dabf9f63b4587bed"
+  integrity sha1-odSFOymzLaEO7h122r+fY7RYe+0=
   dependencies:
     legions-utils-tool "^0.0.8"
     reflect-metadata "^0.1.13"
     warning "^3.0.0"
 
-legions-decorator@^0.0.4:
-  version "0.0.4"
-  resolved "https://registry.npm.taobao.org/legions-decorator/download/legions-decorator-0.0.4.tgz#a1d4853b29b32da10eee1d76dabf9f63b4587bed"
-  integrity sha1-odSFOymzLaEO7h122r+fY7RYe+0=
+legions-decorator@^0.0.6-beta.1:
+  version "0.0.6-beta.1"
+  resolved "http://192.168.200.99:4873/legions-decorator/-/legions-decorator-0.0.6-beta.1.tgz#2b4f3b9b04c63c075b8a79fbe382a44590f3a14b"
+  integrity sha512-7lsi6mdckeYB9Wk7YU9a+ll5JfVzKi98FnT8yPgzrDMbijmRegWPYLkzNuoZPokD5nsLG5wmD/K6E9ueOAZ5bQ==
   dependencies:
     legions-utils-tool "^0.0.8"
     reflect-metadata "^0.1.13"
@@ -10832,18 +10832,18 @@ legions-import-html-entry@^0.0.5:
   dependencies:
     whatwg-fetch "^3.4.1"
 
-legions-lunar@0.0.5-rc.2:
-  version "0.0.5-rc.2"
-  resolved "https://registry.yarnpkg.com/legions-lunar/-/legions-lunar-0.0.5-rc.2.tgz#31c9410b23e6ef3ce98f2e3644995d265eb3d89e"
-  integrity sha512-ekbQX06h+mQpoItH5KcFXMI5Otrtq5gaW6lnSs/AAtaxCtbZNjU1VQyY/M6zptScFJsb0iJFqstg9uvjs0Dj7Q==
-  dependencies:
-    legions-thirdparty-plugin "^0.0.8"
-    warning "^3.0.0"
-
 legions-lunar@^0.0.5-rc.1:
   version "0.0.5-rc.1"
   resolved "https://registry.npm.taobao.org/legions-lunar/download/legions-lunar-0.0.5-rc.1.tgz#3adfce332f9a8b1401517f2e5cfacb6f5c3b1976"
   integrity sha1-Ot/OMy+aixQBUX8uXPrLb1w7GXY=
+  dependencies:
+    legions-thirdparty-plugin "^0.0.8"
+    warning "^3.0.0"
+
+legions-lunar@^0.0.5-rc.2:
+  version "0.0.5"
+  resolved "http://192.168.200.99:4873/legions-lunar/-/legions-lunar-0.0.5.tgz#832ca0d82d5185603e992e6aa73ccb7a0d886172"
+  integrity sha512-elENpvzAVI+qxI1S/AXhlGz1IXbKd/g9/j/SZWIPuNFpufdGWd6BxmyOeh2tMtPWiih7+m0ap6ZyCagLv9Qnzw==
   dependencies:
     legions-thirdparty-plugin "^0.0.8"
     warning "^3.0.0"

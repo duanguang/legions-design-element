@@ -1,8 +1,8 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-08 12:00:22
- * @LastEditTime: 2021-03-09 22:36:40
- * @LastEditors: duanguang
+ * @LastEditTime: 2021-03-24 17:56:37
+ * @LastEditors: zhaoliang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProConditions/interface/index.ts
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
@@ -115,6 +115,7 @@ export interface IQueryTextNumberProps extends IQueryProps,Weaken<InputNumberPro
 export interface IQuerySelectProps extends IQueryProps,Weaken<IProSelectProps,'onChange'> {
     multiple?: boolean,
     loading?: boolean,
+    mappingParams?: [string, string]
     /** 自动托管下拉数据请求，在下拉框组件中使用,只支持一次性查询全部数据
      * 不支持远程根据关键词搜索
      */
@@ -131,6 +132,8 @@ export interface IQueryDateProps extends IQueryProps ,Weaken<DatePickerProps,'on
 }
 export interface IQueryRangePickerProps extends IQueryProps, Weaken<RangePickerProps,'onChange'|'placeholder'>{
     placeholder?: [string,string]
+    transformFormat?: string
+    mappingParams?: [string, string]
     /** 只读 */
     readonly onChange?: (originValue: {
         date: [moment.Moment,moment.Moment], dateString: [string, string]

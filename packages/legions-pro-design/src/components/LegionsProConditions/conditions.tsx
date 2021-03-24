@@ -343,6 +343,20 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
         let prams = this.queryPrams
         computedQuery.map((item) => {
             if (!(item instanceof ConditionSearchModel)) {
+                if (item instanceof ConditionRangePickerModel && item.conditionsProps.mappingParams) {
+                    const startTime = this.vmModel[item.containerProps.name][0]
+                    const endTime = this.vmModel[item.containerProps.name][1]
+                    const format = item.conditionsProps.transformFormat
+                    prams[item.conditionsProps.mappingParams[0]] = format && startTime && moment(startTime).format(format) || startTime
+                    prams[item.conditionsProps.mappingParams[1]] = format && endTime && moment(endTime).format(format) || endTime
+                }
+                if (item instanceof ConditionSelectModel && item.conditionsProps.mappingParams && item.conditionsProps.labelInValue) {
+                    console.log('2222', this.vmModel[item.containerProps.name])
+                    const key = this.vmModel[item.containerProps.name]['key']
+                    const label = this.vmModel[item.containerProps.name]['label']
+                    prams[item.conditionsProps.mappingParams[0]] = key
+                    prams[item.conditionsProps.mappingParams[1]] = label
+                }
                 prams[item.jsonProperty] = this.vmModel[item.containerProps.name]
             }
         })
@@ -892,7 +906,7 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
             xs: 8,
             sm: 8,
             md: 6,
-            lg: 6,
+            lg: 4,
             xl: 4,
         }
         const Resolution = item.containerProps.col[this.viewStore.compuedResolution];

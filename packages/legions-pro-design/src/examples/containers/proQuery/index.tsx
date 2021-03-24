@@ -96,7 +96,8 @@ export default class QueryDemo extends React.Component<{},Istate>{
                 options: [{ key: '111',value: '昊链科技' },
                     { key: '222',value: '昊链科技1' },
                     { key: '333',value: '昊链科技3' },
-                    { key: '444',value: '昊链科技4' }]
+                    { key: '444',value: '昊链科技4' }],
+                mappingParams: ['companyCode', 'companyName'],
             },
             jsonProperty:'orderNo2'
         })
@@ -142,6 +143,8 @@ export default class QueryDemo extends React.Component<{},Istate>{
                 defaultValue:[moment('2015-01-01', 'YYYY-MM-DD'),moment('2016-01-01', 'YYYY-MM-DD')],
                 format: 'YYYY-MM-DD',
                 /*showTime:true, */
+                transformFormat: 'x',
+                mappingParams: ['createTimeStart', 'createTimeEnd'],
             },
             jsonProperty:'orderNo4'
         })
