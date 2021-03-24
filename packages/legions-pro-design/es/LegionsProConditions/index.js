@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.7-beta.13
+  *  legions-pro-design v0.0.7-beta.15
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -885,22 +885,23 @@ var LegionsProConditions = /** @class */ (function (_super) {
             React.createElement(Menu.Item, { key: "small" }, "\u7D27\u51D1"),
             React.createElement(Menu.Item, { key: "default" }, "\u8212\u9002")));
         return React.createElement(React.Fragment, null,
-            React.createElement(Row, { gutter: 8, type: "flex" },
-                React.createElement(Col, { span: 6 },
+            React.createElement(Row, { gutter: 8, type: "flex", style: { flexWrap: 'nowrap' } },
+                React.createElement(Col, null,
                     React.createElement(Button, { type: "primary", icon: 'search', onClick: this.handleSearch.bind(this), style: { borderColor: "#46b8da", color: "white" } }, component.conditionsProps.searchText || '搜索')),
-                React.createElement(Col, { span: 6 },
+                React.createElement(Col, null,
                     React.createElement(Dropdown.Button, { type: "ghost", onClick: this.handleReset.bind(this), overlay: menu }, component.conditionsProps.resetText || '重置')),
-                React.createElement(Col, { span: 4 },
+                component.conditionsProps.onRefresh && React.createElement(Col, null,
                     React.createElement(Button, { onClick: function () {
                             var item = _this.props.query.find(function (item) { return item instanceof ConditionSearchModel; });
                             if (item && item instanceof ConditionSearchModel) {
                                 item.conditionsProps.onRefresh && item.conditionsProps.onRefresh.call(_this, cloneDeep(_this.queryPrams), _this.viewStore);
                             }
-                        }, style: { width: '100%', padding: '0 2px' }, 
+                        }, 
+                        /* style={{ width: '100%',padding: '0 2px' }} */
                         //@ts-ignore
                         title: "\u5237\u65B0" },
                         React.createElement(Icon, { type: "sync", title: "\u5237\u65B0" }))),
-                React.createElement(Col, { span: 8 },
+                React.createElement(Col, null,
                     React.createElement(Button, { type: "ghost", icon: this.state.collapsed ? 'down' : 'up', onClick: this.handleToggle.bind(this), style: { backgroundColor: "#fff", borderColor: "#46b8da" } }, this.state.collapsed ? '收起' : '展开'))));
     };
     LegionsProConditions.prototype.renderLabel = function (component, labelSpan) {
@@ -922,15 +923,22 @@ var LegionsProConditions = /** @class */ (function (_super) {
         return null;
     };
     LegionsProConditions.prototype.getQueryItemSpan = function (item) {
+        var defaultCol = {
+            xs: 8,
+            sm: 8,
+            md: 6,
+            lg: 6,
+            xl: 4,
+        };
         var Resolution = item.containerProps.col[this.viewStore.compuedResolution];
         if (typeof Resolution === 'number') {
             return Resolution;
         }
         else if (typeof Resolution === 'object') {
-            return Resolution.span || 4;
+            return Resolution.span || defaultCol[this.viewStore.compuedResolution];
         }
         else {
-            return 4;
+            return defaultCol[this.viewStore.compuedResolution];
         }
     };
     LegionsProConditions.prototype.renderSearchComponent = function () {
@@ -983,14 +991,8 @@ var LegionsProConditions = /** @class */ (function (_super) {
                 labelSpan = 0;
             }
             var _a = item.containerProps.col, offset = _a.offset, pull = _a.pull, push = _a.push, md = _a.md, xl = _a.xl, lg = _a.lg, sm = _a.sm, xs = _a.xs, col = __rest(_a, ["offset", "pull", "push", "md", "xl", "lg", "sm", "xs"]);
-            var span = item.containerProps.col[_this.viewStore.compuedResolution];
-            var colspan = {};
-            if (typeof span === 'number') {
-                colspan['span'] = span;
-            }
-            else if (Object.prototype.toString.call(span) === "[object Object]") {
-                colspan['span'] = span.span;
-            }
+            var span = _this.getQueryItemSpan(item);
+            var colspan = { span: span };
             var uid = item.containerProps.uuid;
             var _b = item.containerProps, _c = _b.className, className = _c === void 0 ? '' : _c, _d = _b.style, style = _d === void 0 ? {} : _d, onClick = _b.onClick;
             var click = {};

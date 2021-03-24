@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.7-beta.11
+  *  legions-pro-design v0.0.7-beta.15
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -15,6 +15,7 @@ import { shortHash } from 'legions-lunar/object-hash';
 import get from 'lodash/get';
 import set from 'lodash/set';
 import has from 'lodash/has';
+import ReactDOM from 'react-dom';
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -121,6 +122,30 @@ var LegionsProTableForm = /** @class */ (function (_super) {
                 });
             }
         };
+        /** 添加行数据 */
+        _this.addEditRecord = function (record, isRecordEdit) {
+            var _a;
+            if (isRecordEdit === void 0) { isRecordEdit = true; }
+            var recordData = _this.tranformData([__assign(__assign({}, record), (_a = {}, _a[_this.props.proTableConfig.uniqueKey] = record[_this.props.proTableConfig.uniqueKey] || "" + shortHash(new Date().getTime()) + _this.state.data.length, _a))], isRecordEdit);
+            ReactDOM.unstable_batchedUpdates(function () {
+                _this.setState({
+                    data: __spread(_this.state.data, recordData)
+                }, function () {
+                    _this.props.onChange && _this.props.onChange(_this.state.data);
+                });
+            });
+        };
+        /** 删除行数据 */
+        _this.deleteEditRecord = function (rowKeyValue) {
+            var data = _this.state.data;
+            ReactDOM.unstable_batchedUpdates(function () {
+                _this.setState({
+                    data: data.filter(function (i) { return i[_this.props.proTableConfig.uniqueKey] !== rowKeyValue; })
+                }, function () {
+                    _this.props.onChange && _this.props.onChange(_this.state.data);
+                });
+            });
+        };
         _this.createControl = function (control, key, formRef, formUtils) {
             var uid = formRef.uid, form = formRef.viewModel.form;
             /** 给表单字段id，名称，校验规则添加下标 */
@@ -220,14 +245,15 @@ var LegionsProTableForm = /** @class */ (function (_super) {
         enumerable: false,
         configurable: true
     });
-    LegionsProTableForm.prototype.tranformData = function (data) {
+    LegionsProTableForm.prototype.tranformData = function (data, isRecordEdit) {
         var _this = this;
+        if (isRecordEdit === void 0) { isRecordEdit = false; }
         return data.map(function (item, index) {
             var hlTableFormItem = {};
             if (!has(item, _this.uniqueKey)) {
                 hlTableFormItem[_this.uniqueKey] = "" + shortHash(new Date().getTime()) + index;
             }
-            return __assign(__assign({ isRecordEdit: false }, item), hlTableFormItem);
+            return __assign(__assign({ isRecordEdit: isRecordEdit }, item), hlTableFormItem);
         });
     };
     LegionsProTableForm.prototype.componentWillReceiveProps = function (nextProps) {
@@ -254,7 +280,9 @@ var LegionsProTableForm = /** @class */ (function (_super) {
                 uniqueUid: this.props['uniqueUid'] + "/proTableForm", onReady: function (form, formRef) {
                     _this.formRef = formRef;
                     proFormConfig.onReady && proFormConfig.onReady(form, __assign(__assign({}, formRef), { methods: {
-                            updateRecordEditData: _this.updateRecordEditData
+                            updateRecordEditData: _this.updateRecordEditData,
+                            addEditRecord: _this.addEditRecord,
+                            deleteEditRecord: _this.deleteEditRecord,
                         } }));
                 }, mapPropsToFields: function (props) {
                     return new BaseFormFields.initMapPropsToFields(__assign(__assign({}, props), _this.listToFormData(data)));

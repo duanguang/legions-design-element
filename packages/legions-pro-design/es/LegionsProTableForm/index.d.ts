@@ -78,7 +78,11 @@ export default class LegionsProTableForm<T = {}, F = {}> extends LegionsProForm.
     get uniqueKey(): string;
     constructor(props: ProTableFormProps<T, F>);
     updateRecordEditData: (record: Object) => void;
-    tranformData(data: T[]): ({
+    /** 添加行数据 */
+    addEditRecord: (record: T, isRecordEdit?: boolean) => void;
+    /** 删除行数据 */
+    deleteEditRecord: (rowKeyValue: string | number) => void;
+    tranformData(data: T[], isRecordEdit?: boolean): ({
         isRecordEdit: boolean;
     } & T)[];
     componentWillReceiveProps(nextProps: ProTableFormProps<T, F>): void;
