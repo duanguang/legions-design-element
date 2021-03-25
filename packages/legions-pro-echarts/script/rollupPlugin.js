@@ -22,6 +22,8 @@ const externalLib = [
     'echarts/components',
     'echarts/renderers',
     'echarts/core',
+    'echarts-liquidfill',
+    'echarts-wordcloud',
     /\.less/,
     /LegionsProEcharts(?!Parts)/,
     '../core',

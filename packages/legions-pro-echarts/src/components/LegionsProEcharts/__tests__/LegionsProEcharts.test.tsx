@@ -49,7 +49,7 @@ describe('折线图',() => {
         expect(component.instance().getEchartsInstance().id.substring(0,3)).toBe('ec_');
     })
     it('default props',() => {
-        /* const wrapper = render(<LegionsProEchartsChartPieMouter></LegionsProEchartsChartPieMouter>); */
+        /* const wrapper = render(<LegionsProEchartsPieMouter></LegionsProEchartsPieMouter>); */
         const component = mount(<LegionsProEcharts option={barOptions}
             className="echarts-for-react-root"
         ></LegionsProEcharts>);

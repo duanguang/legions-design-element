@@ -1,5 +1,5 @@
 import { Button } from 'antd';
-import { LegionsProEchartsBox, LegionsProEchartsChartPie } from 'components';
+import { LegionsProEchartsBox, LegionsProEchartsPie } from 'components';
 import { LegionsProEchartsInstance } from 'components/interface';
 import { mockService } from 'examples/services/mockService';
 import React from 'react';
@@ -9,12 +9,12 @@ export class ChartsPieDemo1 extends React.Component {
     render() {
         return (
             <LegionsProEchartsBox title="饼图" height="240px">
-                <LegionsProEchartsChartPie
+                <LegionsProEchartsPie
                     data={[
                         { value: 5210, name: '保税跨境', selected: true, itemStyle: { color: '#407fcc' } },
                         { value: 9610, name: '跨境直邮', selected: true, itemStyle: { color: '#00D2FF' } },
                     ]}
-                ></LegionsProEchartsChartPie>
+                ></LegionsProEchartsPie>
             </LegionsProEchartsBox>
         )
     }
@@ -33,12 +33,12 @@ export class ChartsPieDemo2 extends React.Component {
                 </div>}
                 height="240px"
             >
-                <LegionsProEchartsChartPie
+                <LegionsProEchartsPie
                     onChartReady={(instance: LegionsProEchartsInstance) => {
                         this.chartRef = instance;
                     }}
                     request={mockService.pieData}
-                ></LegionsProEchartsChartPie>
+                ></LegionsProEchartsPie>
             </LegionsProEchartsBox>
         )
     }

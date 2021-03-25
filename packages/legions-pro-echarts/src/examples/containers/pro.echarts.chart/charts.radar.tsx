@@ -1,11 +1,11 @@
-import { LegionsProEchartsBox, LegionsProEchartsChartRadar } from 'components';
+import { LegionsProEchartsBox, LegionsProEchartsRadar } from 'components';
 import React from 'react';
 
 export class ChartsRadarDemo1 extends React.Component {
     render() {
         return (
             <LegionsProEchartsBox title="雷达图" height="350px">
-                <LegionsProEchartsChartRadar
+                <LegionsProEchartsRadar
                     option={{
                         radar: {
                             indicator: [
@@ -30,7 +30,7 @@ export class ChartsRadarDemo1 extends React.Component {
                             ]
                         }]
                     }}
-                ></LegionsProEchartsChartRadar>
+                ></LegionsProEchartsRadar>
             </LegionsProEchartsBox>
         )
     }

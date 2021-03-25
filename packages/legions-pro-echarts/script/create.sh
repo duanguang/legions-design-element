@@ -1,7 +1,7 @@
 #!/bin/sh
 
-# array_components=['LegionsProEcharts','LegionsProEchartsBox','LegionsProEchartsBoxList','LegionsProEchartsChartBar',
-# 'LegionsProEchartsChartCard','LegionsProEchartsChartLine','LegionsProEchartsChartPie','LegionsProEchartsCol',
+# array_components=['LegionsProEcharts','LegionsProEchartsBox','LegionsProEchartsBoxList','LegionsProEchartsBar',
+# 'LegionsProEchartsCard','LegionsProEchartsLine','LegionsProEchartsPie','LegionsProEchartsCol',
 # 'LegionsProEchartsCore','LegionsProEchartsLayout','LegionsProEchartsLiquidFill','LegionsProEchartsMap','LegionsProEchartsRow']
 
 # for component in ${array_components}
@@ -26,23 +26,23 @@ cp -r -f ./types/components/LegionsProEcharts/*.d.ts ./es/LegionsProEcharts/
 cp -r -f ./types/components/LegionsProEchartsCore/*.d.ts ./es/LegionsProEchartsCore/
 # cp -r -f ./types/components/LegionsProEchartsCore/*.d.ts ./lib/LegionsProEchartsCore/
 
-cp -r -f ./types/components/LegionsProEchartsChartBar/*.d.ts ./es/LegionsProEchartsChartBar/
-# cp -r -f ./types/components/LegionsProEchartsChartBar/*.d.ts ./lib/LegionsProEchartsChartBar/
+cp -r -f ./types/components/LegionsProEchartsBar/*.d.ts ./es/LegionsProEchartsBar/
+# cp -r -f ./types/components/LegionsProEchartsBar/*.d.ts ./lib/LegionsProEchartsBar/
 
-cp -r -f ./types/components/LegionsProEchartsChartCard/*.d.ts ./es/LegionsProEchartsChartCard/
-# cp -r -f ./types/components/LegionsProEchartsChartCard/*.d.ts ./lib/LegionsProEchartsChartCard/
+cp -r -f ./types/components/LegionsProEchartsCard/*.d.ts ./es/LegionsProEchartsCard/
+# cp -r -f ./types/components/LegionsProEchartsCard/*.d.ts ./lib/LegionsProEchartsCard/
 
-cp -r -f ./types/components/LegionsProEchartsChartLine/*.d.ts ./es/LegionsProEchartsChartLine/
-# cp -r -f ./types/components/LegionsProEchartsChartLine/*.d.ts ./lib/LegionsProEchartsChartLine/
+cp -r -f ./types/components/LegionsProEchartsLine/*.d.ts ./es/LegionsProEchartsLine/
+# cp -r -f ./types/components/LegionsProEchartsLine/*.d.ts ./lib/LegionsProEchartsLine/
 
-cp -r -f ./types/components/LegionsProEchartsChartPie/*.d.ts ./es/LegionsProEchartsChartPie/
-# cp -r -f ./types/components/LegionsProEchartsChartPie/*.d.ts ./lib/LegionsProEchartsChartPie/
+cp -r -f ./types/components/LegionsProEchartsPie/*.d.ts ./es/LegionsProEchartsPie/
+# cp -r -f ./types/components/LegionsProEchartsPie/*.d.ts ./lib/LegionsProEchartsPie/
 
-cp -r -f ./types/components/LegionsProEchartsChartRadar/*.d.ts ./es/LegionsProEchartsChartRadar/
-# cp -r -f ./types/components/LegionsProEchartsChartRadar/*.d.ts ./lib/LegionsProEchartsChartRadar/
+cp -r -f ./types/components/LegionsProEchartsRadar/*.d.ts ./es/LegionsProEchartsRadar/
+# cp -r -f ./types/components/LegionsProEchartsRadar/*.d.ts ./lib/LegionsProEchartsRadar/
 
-cp -r -f ./types/components/LegionsProEchartsChartGauge/*.d.ts ./es/LegionsProEchartsChartGauge/
-# cp -r -f ./types/components/LegionsProEchartsChartGauge/*.d.ts ./lib/LegionsProEchartsChartGauge/
+cp -r -f ./types/components/LegionsProEchartsGauge/*.d.ts ./es/LegionsProEchartsGauge/
+# cp -r -f ./types/components/LegionsProEchartsGauge/*.d.ts ./lib/LegionsProEchartsGauge/
 
 cp -r -f ./types/components/LegionsProEchartsLayout/*.d.ts ./es/LegionsProEchartsLayout/
 # cp -r -f ./types/components/LegionsProEchartsLayout/*.d.ts ./lib/LegionsProEchartsLayout/
