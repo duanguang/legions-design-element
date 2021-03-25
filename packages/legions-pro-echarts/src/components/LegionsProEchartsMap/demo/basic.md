@@ -1,13 +1,13 @@
 ---
 order: 2
 title:
-  zh-CN: 世界地图
+  zh-CN: 基础地图
   en-US: Size
 ---
 
 ## zh-CN
 
-世界地图
+基础地图
 
 ## en-US
 

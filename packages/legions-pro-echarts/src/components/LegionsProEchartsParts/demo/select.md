@@ -12,7 +12,8 @@ title:
 ## en-US
 
 ````jsx
-import { LegionsProEchartsBox, LegionsProEchartsSelect } from 'legions-pro-echarts';
+import { LegionsProEchartsBox } from 'legions-pro-echarts';
+import { LegionsProEchartsSelect } from 'legions-pro-echarts/es/LegionsProEchartsParts';
 ReactDOM.render(
   <div>
        <LegionsProEchartsSelect>

@@ -12,7 +12,8 @@ title:
 ## en-US
 
 ````jsx
-import { LegionsProEchartsBox, LegionsProEchartsRadio } from 'legions-pro-echarts';
+import { LegionsProEchartsBox } from 'legions-pro-echarts';
+import { LegionsProEchartsRadio } from 'legions-pro-echarts/es/LegionsProEchartsParts';
 ReactDOM.render(
   <div>
         <LegionsProEchartsRadio defaultValue="1">

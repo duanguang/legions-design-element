@@ -62,6 +62,7 @@ module.exports = {
   },
   webpackConfig(config) {
       config.resolve.alias = {
+        'legions-pro-echarts/es/LegionsProEchartsParts': path.join(process.cwd(), 'src/components/LegionsProEchartsParts/index'),
         'legions-pro-echarts': path.join(process.cwd(), 'src/components/index'),
         'react-router': 'react-router/umd/ReactRouter',
     };

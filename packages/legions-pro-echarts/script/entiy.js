@@ -27,7 +27,7 @@ const array_components = [
     // 'LegionsProEchartsWordCloud',
     'LegionsProEchartsParts',
     // 'core',
-    'index',
+    // 'index',
     // 'interface',
 ]
 const browser = [
