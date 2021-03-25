@@ -22,12 +22,12 @@ const array_components = [
     // 'LegionsProEchartsCore',
     // 'LegionsProEchartsHeader',
     // 'LegionsProEchartsLayout',
-    'LegionsProEchartsLiquidFill',
+    // 'LegionsProEchartsLiquidFill',
     // 'LegionsProEchartsMap',
-    'LegionsProEchartsWordCloud',
+    // 'LegionsProEchartsWordCloud',
     // 'LegionsProEchartsParts',
     // 'core',
-    // 'index',
+    'index',
     // 'interface',
 ]
 const browser = [
