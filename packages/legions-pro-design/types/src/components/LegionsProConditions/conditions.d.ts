@@ -81,18 +81,18 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
         domHeight: number;
         widthContainer: number;
         selectOptions: import("../LegionsStoreConditions/interface").IObservableMap<string, import("../LegionsStoreConditions/interface").ISelectOptions>;
-        readonly computedQuery: (ConditionSelectModel | ConditionTextNumberModel | ConditionRadioButtonModel | ConditionTextAreaModel | ConditionTextModel | ConditionDateModel | ConditionSearchModel | ConditionRangePickerModel | ConditionGroupCheckBoxModel)[];
+        readonly computedQuery: (ConditionSelectModel | ConditionTextNumberModel | ConditionRadioButtonModel | ConditionTextAreaModel | ConditionTextModel | ConditionDateModel | ConditionRangePickerModel | ConditionSearchModel | ConditionGroupCheckBoxModel)[];
         readonly computedVmModel: any;
-        readonly computedSize: "default" | "small";
+        readonly computedSize: "small" | "default";
         readonly compuedResolution: "xs" | "sm" | "md" | "lg" | "xl";
         _setVmModel: (model: Object) => void;
         _clearQuery: () => void;
-        _firstInitQuery: (query: (ConditionSelectModel | ConditionTextNumberModel | ConditionRadioButtonModel | ConditionTextAreaModel | ConditionTextModel | ConditionDateModel | ConditionSearchModel | ConditionRangePickerModel | ConditionGroupCheckBoxModel)[]) => void;
-        _initQuery: (query: (ConditionSelectModel | ConditionTextNumberModel | ConditionRadioButtonModel | ConditionTextAreaModel | ConditionTextModel | ConditionDateModel | ConditionSearchModel | ConditionRangePickerModel | ConditionGroupCheckBoxModel)[], options?: {
+        _firstInitQuery: (query: (ConditionSelectModel | ConditionTextNumberModel | ConditionRadioButtonModel | ConditionTextAreaModel | ConditionTextModel | ConditionDateModel | ConditionRangePickerModel | ConditionSearchModel | ConditionGroupCheckBoxModel)[]) => void;
+        _initQuery: (query: (ConditionSelectModel | ConditionTextNumberModel | ConditionRadioButtonModel | ConditionTextAreaModel | ConditionTextModel | ConditionDateModel | ConditionRangePickerModel | ConditionSearchModel | ConditionGroupCheckBoxModel)[], options?: {
             isCache: boolean;
         }) => void;
-        _setQueryState: <T extends ConditionSelectModel | ConditionTextNumberModel | ConditionRadioButtonModel | ConditionTextAreaModel | ConditionTextModel | ConditionDateModel | ConditionSearchModel | ConditionRangePickerModel | ConditionGroupCheckBoxModel>(name: string, callback: (value: T) => void) => void;
-        _setSize: (size: "default" | "small") => void;
+        _setQueryState: <T extends ConditionSelectModel | ConditionTextNumberModel | ConditionRadioButtonModel | ConditionTextAreaModel | ConditionTextModel | ConditionDateModel | ConditionRangePickerModel | ConditionSearchModel | ConditionGroupCheckBoxModel>(name: string, callback: (value: T) => void) => void;
+        _setSize: (size: "small" | "default") => void;
         _dispatchRequest: (name: string, autoQuery: ISelectAutoQuery<{}>, options?: {
             pageIndex: number;
             pageSize?: number;
@@ -112,10 +112,11 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
     componentWillReceiveProps(nextProps: IProps): void;
     componentWillUnmount(): void;
     componentDidUpdate(): void;
-    dispatchRequest(query?: (ConditionSelectModel | ConditionTextNumberModel | ConditionRadioButtonModel | ConditionTextAreaModel | ConditionTextModel | ConditionDateModel | ConditionSearchModel | ConditionRangePickerModel | ConditionGroupCheckBoxModel)[]): void;
+    dispatchRequest(query?: (ConditionSelectModel | ConditionTextNumberModel | ConditionRadioButtonModel | ConditionTextAreaModel | ConditionTextModel | ConditionDateModel | ConditionRangePickerModel | ConditionSearchModel | ConditionGroupCheckBoxModel)[]): void;
     onDidMount(): void;
     setFieldsValues<T extends IProConditions['componentModel']>(name: string, callback: (value: T) => void): void;
-    initVModel(query?: (ConditionSelectModel | ConditionTextNumberModel | ConditionRadioButtonModel | ConditionTextAreaModel | ConditionTextModel | ConditionDateModel | ConditionSearchModel | ConditionRangePickerModel | ConditionGroupCheckBoxModel)[]): void;
+    mapPrams(item: Exclude<IProConditions['componentModel'], ConditionSearchModel>, data: any, prams: {}): {};
+    initVModel(query?: (ConditionSelectModel | ConditionTextNumberModel | ConditionRadioButtonModel | ConditionTextAreaModel | ConditionTextModel | ConditionDateModel | ConditionRangePickerModel | ConditionSearchModel | ConditionGroupCheckBoxModel)[]): void;
     /**
      * 把组件元素结果映射至查询条件
      *

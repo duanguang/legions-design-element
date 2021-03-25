@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.7-beta.15
+  *  legions-pro-design v0.0.7-beta.16
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -444,7 +444,35 @@ var LegionsProConditions = /** @class */ (function (_super) {
             callback(value);
         });
     };
+    LegionsProConditions.prototype.mapPrams = function (item, data, prams) {
+        if (item.jsonProperty.includes(',')) {
+            var paramslist = item.jsonProperty.split(',');
+            if (item instanceof ConditionRangePickerModel) {
+                var startTime = data && data[0] || '';
+                var endTime = data && data[1] || '';
+                var format = item.conditionsProps.transformFormat || 'YYYY-MM-DD';
+                prams[paramslist[0].trim()] = startTime && moment(startTime).format(format);
+                prams[paramslist[1].trim()] = endTime && moment(endTime).format(format);
+            }
+            if (item instanceof ConditionSelectModel) {
+                if (item.conditionsProps.labelInValue) {
+                    var key = data && data['key'] || '';
+                    var label = data && data['label'] || '';
+                    prams[paramslist[0].trim()] = key;
+                    prams[paramslist[1].trim()] = label;
+                }
+                else {
+                    prams[item.jsonProperty] = data;
+                }
+            }
+        }
+        else {
+            prams[item.jsonProperty] = data;
+        }
+        return prams;
+    };
     LegionsProConditions.prototype.initVModel = function (query) {
+        var _this = this;
         if (query === void 0) { query = this.props.query; }
         var data = {};
         var prams = {};
@@ -486,7 +514,7 @@ var LegionsProConditions = /** @class */ (function (_super) {
                         data[name] = defaultValue || value;
                     }
                 }
-                prams[item.jsonProperty] = data[name];
+                prams = _this.mapPrams(item, data[name], prams);
             }
         });
         this.queryPrams = prams;
@@ -503,7 +531,7 @@ var LegionsProConditions = /** @class */ (function (_super) {
         var prams = this.queryPrams;
         computedQuery.map(function (item) {
             if (!(item instanceof ConditionSearchModel)) {
-                prams[item.jsonProperty] = _this.vmModel[item.containerProps.name];
+                prams = _this.mapPrams(item, _this.vmModel[item.containerProps.name], prams);
             }
         });
         this.queryPrams = prams;
@@ -814,6 +842,12 @@ var LegionsProConditions = /** @class */ (function (_super) {
     };
     LegionsProConditions.prototype.renderSelect = function (component) {
         var conditionsProps = component.conditionsProps, containerProps = component.containerProps, jsonProperty = component.jsonProperty;
+        if (process.env.NODE_ENV !== 'production') {
+            if (jsonProperty.includes(',') && !conditionsProps.labelInValue) {
+                console.error('LegionsProCondition的Select组件未开启labelInValue时,参数jsonProperty建议不要使用带,(逗号)的字符串格式');
+                console.error('when the Select components of the LegionsProCondition is not used "labelInValue", "jsonProperty" should be string without "," ');
+            }
+        }
         var placeholder = conditionsProps.placeholder;
         var newData = conditionsProps.options;
         var labelSpan = conditionsProps.labelSpan, defaultValue = conditionsProps.defaultValue, visable = conditionsProps.visable, display = conditionsProps.display, _a = conditionsProps.value, value = _a === void 0 ? defaultValue : _a, prop = __rest(conditionsProps, ["labelSpan", "defaultValue", "visable", "display", "value"]);
