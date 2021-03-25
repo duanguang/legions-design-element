@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-08 12:00:22
- * @LastEditTime: 2021-03-25 10:12:31
+ * @LastEditTime: 2021-03-25 14:24:26
  * @LastEditors: zhaoliang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProConditions/interface/index.ts
@@ -131,7 +131,7 @@ export interface IQueryDateProps extends IQueryProps ,Weaken<DatePickerProps,'on
 }
 export interface IQueryRangePickerProps extends IQueryProps, Weaken<RangePickerProps,'onChange'|'placeholder'>{
     placeholder?: [string,string]
-    /** 取值时对日期进行格式化 */
+    /** 取值时对日期进行格式化 参数详情见moment.js官方文档: http://momentjs.cn/docs/#/displaying/format/ */
     transformFormat?: string
     /** 只读 */
     readonly onChange?: (originValue: {
