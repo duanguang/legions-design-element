@@ -1,8 +1,8 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-08 15:19:23
- * @LastEditTime: 2021-03-15 14:33:49
- * @LastEditors: duanguang
+ * @LastEditTime: 2021-03-26 16:00:56
+ * @LastEditors: zhaoliang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProForm/ProFormUtils.tsx
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
@@ -30,6 +30,7 @@ import { BaseFormFields } from 'legions-lunar/model';
 import { ClassOf } from 'legions-lunar/types/api/typescript';
 import { createFormRule } from 'legions-decorator/async.validator'; 
 import { shortHash } from 'legions-lunar/object-hash';
+import FormCheckbox from './FormCheckbox';
 interface IRenderComponentParams<T> {
 
     /**
@@ -64,7 +65,7 @@ interface IRenderComponentParams<T> {
 interface IProFormUtils {
     componentModel: LabelWithInputModel | LabelWithInputNumberModel | LabelWithDatePickerModel | LabelWithMonthPickerModel |
     LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel |
-    LabelWithRadioButtonModel | LabelWithTextModel | LabelWithSelectModel
+    LabelWithRadioButtonModel | LabelWithTextModel | LabelWithSelectModel | LabelWithCheckboxModel
 }
 export const size = {
     'default': {
@@ -93,6 +94,7 @@ export class ProFormUtils<Store,global = {}>{
     static LabelWithRadioButtonModel = LabelWithRadioButtonModel;
     static LabelWithTextModel = LabelWithTextModel;
     static LabelWithInputModel = LabelWithInputModel;
+    static LabelWithCheckboxModel = LabelWithCheckboxModel;
     static isFormHasError(getFieldsError: () => any) {
         let error = getFieldsError && getFieldsError()
         let has = false
@@ -424,6 +426,21 @@ export class ProFormUtils<Store,global = {}>{
                 >
 
                 </FormText>
+            )
+        }
+        else if (control instanceof LabelWithCheckboxModel) {
+            let { iAntdProps,rules,iFormProps } = control;
+            return (
+                <FormCheckbox
+                    iAntdProps={iAntdProps}
+                    form={form}
+                    rules={rules}
+                    key={key}
+                    formUid={formUid}
+                    iFormWithCheckbox={iFormProps}
+                >
+
+                </FormCheckbox>
             )
         }
         else {
