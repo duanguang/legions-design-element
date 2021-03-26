@@ -295,16 +295,19 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
                 const format = item.conditionsProps.transformFormat || 'YYYY-MM-DD'
                 prams[paramslist[0].trim()] = startTime && moment(startTime).format(format)
                 prams[paramslist[1].trim()] = endTime && moment(endTime).format(format)
-            }
-            if (item instanceof ConditionSelectModel) {
-                if (item.conditionsProps.labelInValue) {
-                    const key = data && data['key'] || ''
-                    const label = data && data['label'] || ''
-                    prams[paramslist[0].trim()] = key
-                    prams[paramslist[1].trim()] = label
-                } else {
-                    prams[item.jsonProperty] = data
+            } 
+            else if (item instanceof ConditionSelectModel && item.conditionsProps.labelInValue) {
+                const key = data && data['key'] || ''
+                const label = data && data['label'] || ''
+                prams[paramslist[0].trim()] = key
+                prams[paramslist[1].trim()] = label
+            } 
+            else {
+                if (process.env.NODE_ENV !== 'production') {
+                    console.error('非Select和RangePicker组件，参数jsonProperty建议不要使用带,(逗号)的字符串')
+                    console.error('if the components is not Select Or RangePicker, "jsonProperty" should be string without "," ')
                 }
+                prams[item.jsonProperty] = data
             }
         } else {
             prams[item.jsonProperty] = data
@@ -348,6 +351,9 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
                         }
                         data[name] = newValue;
                     }
+                    else if (item instanceof ConditionRangePickerModel) {
+                        data[name] = ['', ''];
+                    } 
                     else {
                         data[name] = defaultValue || value
                     }
