@@ -36,6 +36,7 @@ import { isArray } from 'legions-utils-tool/type.validation';
 import { CheckboxValueType } from 'antd/lib/checkbox/Group';
 import LegionsProDragger from '../LegionsProDragger';
 import { IProDraggerOptions, IProDraggerProps } from '../LegionsProDragger/interface';
+import ButtonGroup from 'antd/lib/button/button-group';
 const { RangePicker } = DatePicker;
 const Option = Select.Option;
 const { TextArea } = Input;
@@ -311,7 +312,7 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
                         defaultValue = item.conditionsProps.defaultChecked;
                         value = item.conditionsProps.checked || item.conditionsProps.value;
                     }
-                    
+
                     let newValue = null;
                     if (item instanceof ConditionDateModel) {
                         const  format= item.conditionsProps.format||'YYYY-MM-DD HH:mm:ss'
@@ -752,7 +753,7 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
             {...prop}
             defaultChecked={defaultChecked}
             onChange={this.handleChangeChx.bind(this,component)}
-            
+
         >
             {conditionsProps.label}
         </Checkbox>)
@@ -790,7 +791,7 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
                 {...prop}
                 style={{ width: '100%' }}
                 defaultValue={defaultValue}
-                
+
                 onChange={this.handleChange.bind(this,component)}
             >
                 {newData && newData.map((item) => {
@@ -814,18 +815,22 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
         );
         return <React.Fragment>
             <Row gutter={8} type="flex" style={{ flexWrap: 'nowrap' }}>
-                <Col><Button
-                    type="primary"
-                    icon={'search'}
-                    onClick={this.handleSearch.bind(this)}
-                    style={{ borderColor: `#46b8da`,color: `white` }}
-                >{component.conditionsProps.searchText||'搜索'}
+                <Col>
+                    <Button
+                        type="primary"
+                        icon={'search'}
+                        onClick={this.handleSearch.bind(this)}
+                    >{component.conditionsProps.searchText||'搜索'}
                 </Button>
                 </Col>
-                <Col>
-                    <Dropdown.Button type="ghost" onClick={this.handleReset.bind(this)} overlay={menu}>
-                    {component.conditionsProps.resetText||'重置'}
-                        </Dropdown.Button>
+                <Col className="legions-pro-query-reset">
+                    {/* <Dropdown.Button type="primary" onClick={this.handleReset.bind(this)} overlay={menu}>
+                        {component.conditionsProps.resetText||'重置'}
+                    </Dropdown.Button> */}
+                    <Button className="query-reset-btn" type="primary" ghost>{component.conditionsProps.resetText||'重置'}</Button>
+                    <Dropdown overlay={menu}>
+                        <Button type="primary" ghost icon="down"></Button>
+                    </Dropdown>
                 </Col>
                 {component.conditionsProps.onRefresh && <Col>
                     <Button
@@ -843,17 +848,13 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
                 </Col>}
                 <Col>
                     <Button
-                        type="ghost"
+                        type="primary"
+                        ghost
                         icon={this.state.collapsed ? 'down' : 'up'}
-                        onClick={this.handleToggle.bind(this)}
-                        style={{ backgroundColor: `#fff`,borderColor: `#46b8da` }}>
+                        onClick={this.handleToggle.bind(this)}>
                         {this.state.collapsed ? '收起' : '展开'}
                     </Button>
                 </Col>
-
-
-
-
             </Row>
         </React.Fragment>
     }
@@ -1019,8 +1020,8 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
                 >
                      {this.renderContent()}
                 </LegionsProDragger>:this.renderContent()}
-                
-                
+
+
             </Row>
         )
     }
