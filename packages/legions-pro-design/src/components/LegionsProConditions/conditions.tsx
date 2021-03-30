@@ -287,6 +287,31 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
             callback(value);
         });
     }
+    mapPrams(item: Exclude<IProConditions['componentModel'], ConditionSearchModel>, data: any, prams: {}) {
+        if (item.jsonProperty.includes(',')) {
+            const paramslist = item.jsonProperty.split(',')
+            if (item instanceof ConditionRangePickerModel) {
+                const startTime = data && data[0] || ''
+                const endTime = data && data[1] || ''
+                const format = item.conditionsProps.transformFormat || 'YYYY-MM-DD'
+                prams[paramslist[0].trim()] = startTime && moment(startTime).format(format)
+                prams[paramslist[1].trim()] = endTime && moment(endTime).format(format)
+            }
+            if (item instanceof ConditionSelectModel) {
+                if (item.conditionsProps.labelInValue) {
+                    const key = data && data['key'] || ''
+                    const label = data && data['label'] || ''
+                    prams[paramslist[0].trim()] = key
+                    prams[paramslist[1].trim()] = label
+                } else {
+                    prams[item.jsonProperty] = data
+                }
+            }
+        } else {
+            prams[item.jsonProperty] = data
+        }
+        return prams
+    }
     initVModel(query=this.props.query) {
         let data = {}
         let prams = {}
@@ -328,7 +353,7 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
                         data[name] = defaultValue || value
                     }
                 }
-                prams[item.jsonProperty] = data[name];
+                prams = this.mapPrams(item, data[name], prams)
             }
         })
         this.queryPrams = prams;
@@ -344,7 +369,7 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
         let prams = this.queryPrams
         computedQuery.map((item) => {
             if (!(item instanceof ConditionSearchModel)) {
-                prams[item.jsonProperty] = this.vmModel[item.containerProps.name]
+                prams = this.mapPrams(item, this.vmModel[item.containerProps.name], prams)
             }
         })
         this.queryPrams = prams;
@@ -685,6 +710,12 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
     }
     renderSelect(component: ConditionSelectModel) {
         const { conditionsProps,containerProps,jsonProperty } = component;
+        if (process.env.NODE_ENV !== 'production') {
+            if (jsonProperty.includes(',') && !conditionsProps.labelInValue) {
+                console.error('LegionsProCondition的Select组件未开启labelInValue时,参数jsonProperty建议不要使用带,(逗号)的字符串格式')
+                console.error('when the Select components of the LegionsProCondition is not used "labelInValue", "jsonProperty" should be string without "," ')
+            }
+        }
         const placeholder = conditionsProps.placeholder as string
         let newData = conditionsProps.options as Array<ISelectProps>
         const { labelSpan,defaultValue,visable,display,value=defaultValue,...prop } = conditionsProps

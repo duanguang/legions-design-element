@@ -98,7 +98,7 @@ export default class QueryDemo extends React.Component<{},Istate>{
                     { key: '333',value: '昊链科技3' },
                     { key: '444',value: '昊链科技4' }]
             },
-            jsonProperty:'orderNo2'
+            jsonProperty:'companyCode,companyName'
         })
         formUtils.renderDateConfig({
             containerProps: {
@@ -142,8 +142,9 @@ export default class QueryDemo extends React.Component<{},Istate>{
                 defaultValue:[moment('2015-01-01', 'YYYY-MM-DD'),moment('2016-01-01', 'YYYY-MM-DD')],
                 format: 'YYYY-MM-DD',
                 /*showTime:true, */
+                transformFormat: 'x',
             },
-            jsonProperty:'orderNo4'
+            jsonProperty: 'createTimeStart,createTimeEnd',
         })
         formUtils.renderCheckBoxConfig({
             containerProps: {
