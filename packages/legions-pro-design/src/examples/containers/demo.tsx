@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-03-19 13:42:21
- * @LastEditTime: 2021-03-22 09:57:59
+ * @LastEditTime: 2021-03-26 17:32:13
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/examples/containers/demo.tsx
@@ -11,18 +11,42 @@ import { Button } from 'antd';
 import React from 'react';
 export default class Demo extends React.Component<{},{
     username: string; 
+    val: number;
 }>{
     noContrl:React.RefObject<HTMLInputElement>
     constructor(props) {
         super(props);
         this.state = {
-            username:'xiaoming'
+            username: 'xiaoming',
+            val:0,
         }
         this.noContrl = React.createRef();
     }
     componentWillMount() {
     }
-    
+    componentDidMount() {
+        // 第一次调用
+        /* this.setState({ val: this.state.val + 1 });
+        console.log('first setState', this.state);
+
+        // 第二次调用
+        this.setState({ val: this.state.val + 1 });
+        console.log('second setState', this.state);
+
+        // 第三次调用
+        this.setState({ val: this.state.val + 1 }, () => {
+        console.log('in callback', this.state)
+        }); */
+        setTimeout(() => {
+            // 第一次调用
+            this.setState({ val: this.state.val + 1 });
+            console.log('first setState', this.state);
+        
+            // 第二次调用
+            this.setState({ val: this.state.val + 1 });
+            console.log('second setState', this.state);
+          });
+    }
     render() {
         console.log(this.noContrl);
         return <React.Fragment>
