@@ -5,11 +5,13 @@ import { ProTableView } from './ProTableView';
 import { ProTableLocalView } from './ProTableLocalView';
 import { IStoreBaseMeta } from '../LegionsStore/interface';
 import { ObservableMap } from 'mobx';
+import { PageListEntity } from './pageListEntity';
 declare type Proxify<T> = {
     [P in keyof T]: T[P];
 };
 export default class LegionsStoreTable extends LegionsStore.StoreBase {
     static meta: IStoreBaseMeta;
+    static pageListEntity: typeof PageListEntity;
     constructor(context: any);
     userInfo: {
         userName: string;

@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.7-beta.10
+  *  legions-pro-design v0.0.7-beta.17
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -21,7 +21,6 @@ import { legionsThirdpartyPlugin } from 'legions-thirdparty-plugin';
 import { LoggerManager } from 'legions-lunar/legion.plugin.sdk';
 import { cloneDeep } from 'lodash';
 import { observable, action } from 'legions/store';
-import LegionsModels from '../LegionsModels';
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -147,32 +146,6 @@ function __spread() {
     return ar;
 }
 
-/** 列表页数据模型类*/
-var PageListEntity = /** @class */ (function (_super) {
-    __extends(PageListEntity, _super);
-    function PageListEntity(options) {
-        var _this = _super.call(this) || this;
-        _this.total = 0;
-        _this.current = 1;
-        _this.pageSize = 10;
-        _this.result = [];
-        if (options && typeof options.responseData === 'object') {
-            _this.message = options.responseData.msg || '查询成功';
-            _this.success = options.responseData.ok ? true : false;
-            _this.code = options.responseData.status || '';
-            _this.total = options.responseData.total || 0;
-            _this.current = options.responseData.current || 1;
-            _this.pageSize = options.responseData.pageSize || 10;
-            if (options.mappingEntity &&
-                typeof options.mappingEntity === 'function') {
-                options.mappingEntity(_this, options.responseData);
-            }
-        }
-        return _this;
-    }
-    return PageListEntity;
-}(LegionsModels.BaseEntity));
-
 /**
  * 列表组件基类
  *
@@ -290,7 +263,7 @@ var ProTableBaseClass = /** @class */ (function (_super) {
             this.updateColumns(columnKey, {});
         }
     };
-    ProTableBaseClass.pageListEntity = PageListEntity;
+    ProTableBaseClass.pageListEntity = LegionsStoreTable.pageListEntity;
     __decorate([
         observable,
         __metadata("design:type", Object)

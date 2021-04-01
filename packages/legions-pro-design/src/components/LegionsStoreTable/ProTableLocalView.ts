@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-07 17:21:19
- * @LastEditTime: 2021-03-05 16:36:10
+ * @LastEditTime: 2021-04-01 14:55:48
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreTable/ProTableLocalView.ts
@@ -12,8 +12,7 @@ import LegionsCore from '../LegionsCore';
 import { cloneDeep } from 'lodash';
 import { observableViewModel, observablePromise } from 'legions/store-utils';
 import { ITableAutoQuery } from './interface';
-import  LegionsProTable  from '../LegionsProTable';
-import { PageListEntity } from '../LegionsProTable/pageListEntity';
+import { PageListEntity } from './pageListEntity';
 import {
   computed,
 } from 'mobx';
@@ -76,8 +75,7 @@ export class ProTableLocalView {
         let model: any = {};
         if (autoQuery.mappingEntity) {
           model = {
-            //@ts-ignore
-            model: LegionsProTable.ProTableBaseClass.pageListEntity,
+            model: PageListEntity,
             onBeforTranform: (value) => {
               return {
                 responseData: value,

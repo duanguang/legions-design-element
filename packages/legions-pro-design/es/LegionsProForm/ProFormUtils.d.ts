@@ -32,7 +32,7 @@ interface IRenderComponentParams<T> {
     formRef?: InstanceProForm;
 }
 interface IProFormUtils {
-    componentModel: LabelWithInputModel | LabelWithInputNumberModel | LabelWithDatePickerModel | LabelWithMonthPickerModel | LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel | LabelWithRadioButtonModel | LabelWithTextModel | LabelWithSelectModel;
+    componentModel: LabelWithInputModel | LabelWithInputNumberModel | LabelWithDatePickerModel | LabelWithMonthPickerModel | LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel | LabelWithRadioButtonModel | LabelWithTextModel | LabelWithSelectModel | LabelWithCheckboxModel;
 }
 export declare const size: {
     default: {
@@ -63,6 +63,7 @@ export declare class ProFormUtils<Store, global = {}> {
     static LabelWithRadioButtonModel: typeof LabelWithRadioButtonModel;
     static LabelWithTextModel: typeof LabelWithTextModel;
     static LabelWithInputModel: typeof LabelWithInputModel;
+    static LabelWithCheckboxModel: typeof LabelWithCheckboxModel;
     static isFormHasError(getFieldsError: () => any): boolean;
     readonly global: global;
     readonly mobxStore: Store;

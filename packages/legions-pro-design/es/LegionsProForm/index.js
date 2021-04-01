@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.7-beta.14
+  *  legions-pro-design v0.0.7-beta.17
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -1635,6 +1635,10 @@ var ProFormUtils = /** @class */ (function () {
             var iAntdProps = control.iAntdProps, rules = control.rules, iFormProps = control.iFormProps;
             return (React.createElement(FormText, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formUid: formUid, iFormText: iFormProps }));
         }
+        else if (control instanceof LabelWithCheckboxModel) {
+            var iAntdProps = control.iAntdProps, rules = control.rules, iFormProps = control.iFormProps;
+            return (React.createElement(FormCheckbox, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formUid: formUid, iFormWithCheckbox: iFormProps }));
+        }
         else {
             throw new Error("HLFormUtils: Unknown control. control = " + JSON.stringify(control));
         }
@@ -1650,6 +1654,7 @@ var ProFormUtils = /** @class */ (function () {
     ProFormUtils.LabelWithRadioButtonModel = LabelWithRadioButtonModel;
     ProFormUtils.LabelWithTextModel = LabelWithTextModel;
     ProFormUtils.LabelWithInputModel = LabelWithInputModel;
+    ProFormUtils.LabelWithCheckboxModel = LabelWithCheckboxModel;
     return ProFormUtils;
 }());
 var ProFormFields = /** @class */ (function (_super) {

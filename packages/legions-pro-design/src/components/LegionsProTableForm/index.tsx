@@ -295,6 +295,7 @@ export default class LegionsProTableForm<T = {},F = {}> extends LegionsProForm.C
                             //@ts-ignore
                             ...formRef,methods: {
                                 updateRecordEditData: this.updateRecordEditData,
+                                //@ts-ignore
                                 addEditRecord:this.addEditRecord,
                                 deleteEditRecord:this.deleteEditRecord,
                             }

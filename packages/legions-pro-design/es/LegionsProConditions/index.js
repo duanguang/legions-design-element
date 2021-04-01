@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.7-beta.16
+  *  legions-pro-design v0.0.7-beta.17
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -454,16 +454,18 @@ var LegionsProConditions = /** @class */ (function (_super) {
                 prams[paramslist[0].trim()] = startTime && moment(startTime).format(format);
                 prams[paramslist[1].trim()] = endTime && moment(endTime).format(format);
             }
-            if (item instanceof ConditionSelectModel) {
-                if (item.conditionsProps.labelInValue) {
-                    var key = data && data['key'] || '';
-                    var label = data && data['label'] || '';
-                    prams[paramslist[0].trim()] = key;
-                    prams[paramslist[1].trim()] = label;
+            else if (item instanceof ConditionSelectModel && item.conditionsProps.labelInValue) {
+                var key = data && data['key'] || '';
+                var label = data && data['label'] || '';
+                prams[paramslist[0].trim()] = key;
+                prams[paramslist[1].trim()] = label;
+            }
+            else {
+                if (process.env.NODE_ENV !== 'production') {
+                    console.error('非Select和RangePicker组件，参数jsonProperty建议不要使用带,(逗号)的字符串');
+                    console.error('if the components is not Select Or RangePicker, "jsonProperty" should be string without "," ');
                 }
-                else {
-                    prams[item.jsonProperty] = data;
-                }
+                prams[item.jsonProperty] = data;
             }
         }
         else {
@@ -509,6 +511,9 @@ var LegionsProConditions = /** @class */ (function (_super) {
                             newValue = moment(value).format(format);
                         }
                         data[name] = newValue;
+                    }
+                    else if (item instanceof ConditionRangePickerModel) {
+                        data[name] = ['', ''];
                     }
                     else {
                         data[name] = defaultValue || value;
@@ -921,9 +926,11 @@ var LegionsProConditions = /** @class */ (function (_super) {
         return React.createElement(React.Fragment, null,
             React.createElement(Row, { gutter: 8, type: "flex", style: { flexWrap: 'nowrap' } },
                 React.createElement(Col, null,
-                    React.createElement(Button, { type: "primary", icon: 'search', onClick: this.handleSearch.bind(this), style: { borderColor: "#46b8da", color: "white" } }, component.conditionsProps.searchText || '搜索')),
-                React.createElement(Col, null,
-                    React.createElement(Dropdown.Button, { type: "ghost", onClick: this.handleReset.bind(this), overlay: menu }, component.conditionsProps.resetText || '重置')),
+                    React.createElement(Button, { type: "primary", icon: 'search', onClick: this.handleSearch.bind(this) }, component.conditionsProps.searchText || '搜索')),
+                React.createElement(Col, { className: "legions-pro-query-reset" },
+                    React.createElement(Button, { className: "query-reset-btn", type: "primary", ghost: true }, component.conditionsProps.resetText || '重置'),
+                    React.createElement(Dropdown, { overlay: menu },
+                        React.createElement(Button, { type: "primary", ghost: true, icon: "down" }))),
                 component.conditionsProps.onRefresh && React.createElement(Col, null,
                     React.createElement(Button, { onClick: function () {
                             var item = _this.props.query.find(function (item) { return item instanceof ConditionSearchModel; });
@@ -936,7 +943,7 @@ var LegionsProConditions = /** @class */ (function (_super) {
                         title: "\u5237\u65B0" },
                         React.createElement(Icon, { type: "sync", title: "\u5237\u65B0" }))),
                 React.createElement(Col, null,
-                    React.createElement(Button, { type: "ghost", icon: this.state.collapsed ? 'down' : 'up', onClick: this.handleToggle.bind(this), style: { backgroundColor: "#fff", borderColor: "#46b8da" } }, this.state.collapsed ? '收起' : '展开'))));
+                    React.createElement(Button, { type: "primary", ghost: true, icon: this.state.collapsed ? 'down' : 'up', onClick: this.handleToggle.bind(this) }, this.state.collapsed ? '收起' : '展开'))));
     };
     LegionsProConditions.prototype.renderLabel = function (component, labelSpan) {
         if (!(component instanceof ConditionSearchModel) && !(component instanceof ConditionCheckBoxModel) && !(component instanceof ConditionGroupCheckBoxModel)) {

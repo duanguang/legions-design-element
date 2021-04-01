@@ -125,7 +125,7 @@ export default class LegionsProTable<TableRow = {}, Model = {}> extends React.Co
         updateOpenRowSelection: (isOpenRowSelection: boolean) => void;
     };
     get getLocalViewStore(): import("brain-store-utils").ViewModel<import("../LegionsStoreTable/ProTableLocalView").ProTableLocalView> & {
-        obState: import("brain-store-utils").observablePromise.PramsResult<import("./pageListEntity").PageListEntity<any>>;
+        obState: import("brain-store-utils").observablePromise.PramsResult<import("../LegionsStoreTable/pageListEntity").PageListEntity<any>>;
         _obStateMap: import("mobx").ObservableMap<string, {
             data: any[];
             total: number;
