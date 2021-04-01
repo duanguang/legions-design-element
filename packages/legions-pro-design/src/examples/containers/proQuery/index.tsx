@@ -298,6 +298,24 @@ export default class QueryDemo extends React.Component<{},Istate>{
             },
             jsonProperty:'orderNo9'
         })
+        formUtils.renderSearchConfig({
+            containerProps: {
+                name: 'search',
+                col: {
+                    md: 6,
+                    lg: 6,
+                    xl: 4,
+                },
+            },
+            conditionsProps: {
+                onSearch: (value,view) => {
+
+                },
+                onRefresh:()=>{
+
+                }
+            },
+        })
         return [
             formUtils.getConditionsConfig('vmOrderNo'),
             formUtils.getConditionsConfig('vmOrderNo1'),
@@ -327,7 +345,7 @@ export default class QueryDemo extends React.Component<{},Istate>{
                             value.conditionsProps.label = 'sss';
                             value.conditionsProps.value = '222';
                     })
-                
+
                 }}> 设置指定数据值{this.smp.get('ss').a.b}</Button>
                 <Button onClick={() => {
                     this.queryRef.methods.onRrmoteSearch('vmOrderNo9',{
@@ -356,7 +374,7 @@ export default class QueryDemo extends React.Component<{},Istate>{
                     /* isDragSort */
                     query={this.createConfig()}></LegionsProConditions>
                 </Row>
-                
+
             </div>
         )
     }
