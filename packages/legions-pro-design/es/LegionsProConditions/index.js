@@ -928,7 +928,7 @@ var LegionsProConditions = /** @class */ (function (_super) {
                 React.createElement(Col, null,
                     React.createElement(Button, { type: "primary", icon: 'search', onClick: this.handleSearch.bind(this) }, component.conditionsProps.searchText || '搜索')),
                 React.createElement(Col, { className: "legions-pro-query-reset" },
-                    React.createElement(Button, { className: "query-reset-btn", type: "primary", ghost: true }, component.conditionsProps.resetText || '重置'),
+                    React.createElement(Button, { className: "query-reset-btn", type: "primary", ghost: true, onClick: this.handleReset.bind(this) }, component.conditionsProps.resetText || '重置'),
                     React.createElement(Dropdown, { overlay: menu },
                         React.createElement(Button, { type: "primary", ghost: true, icon: "down" }))),
                 component.conditionsProps.onRefresh && React.createElement(Col, null,
@@ -1105,6 +1105,14 @@ var LegionsProConditions = /** @class */ (function (_super) {
     return LegionsProConditions;
 }(React.Component));
 
-
+/*
+ * @Author: duanguang
+ * @Date: 2021-01-04 16:30:32
+ * @LastEditTime: 2021-04-02 10:20:29
+ * @LastEditors: duanguang
+ * @Description:
+ * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProConditions/index.tsx
+ * @「扫去窗上的尘埃，才可以看到窗外的美景。」
+ */
 
 export default LegionsProConditions;
