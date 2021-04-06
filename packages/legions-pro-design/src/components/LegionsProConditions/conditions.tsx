@@ -296,13 +296,13 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
                 const format = item.conditionsProps.transformFormat || 'YYYY-MM-DD'
                 prams[paramslist[0].trim()] = startTime && moment(startTime).format(format)
                 prams[paramslist[1].trim()] = endTime && moment(endTime).format(format)
-            } 
+            }
             else if (item instanceof ConditionSelectModel && item.conditionsProps.labelInValue) {
                 const key = data && data['key'] || ''
                 const label = data && data['label'] || ''
                 prams[paramslist[0].trim()] = key
                 prams[paramslist[1].trim()] = label
-            } 
+            }
             else {
                 if (process.env.NODE_ENV !== 'production') {
                     console.error('非Select和RangePicker组件，参数jsonProperty建议不要使用带,(逗号)的字符串')
@@ -354,7 +354,7 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
                     }
                     else if (item instanceof ConditionRangePickerModel) {
                         data[name] = ['', ''];
-                    } 
+                    }
                     else {
                         data[name] = defaultValue || value
                     }
@@ -864,7 +864,7 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
                     {/* <Dropdown.Button type="primary" onClick={this.handleReset.bind(this)} overlay={menu}>
                         {component.conditionsProps.resetText||'重置'}
                     </Dropdown.Button> */}
-                    <Button className="query-reset-btn" type="primary" ghost>{component.conditionsProps.resetText||'重置'}</Button>
+                    <Button className="query-reset-btn" type="primary" ghost onClick={this.handleReset.bind(this)}>{component.conditionsProps.resetText||'重置'}</Button>
                     <Dropdown overlay={menu}>
                         <Button type="primary" ghost icon="down"></Button>
                     </Dropdown>
