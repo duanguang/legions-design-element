@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-31 15:04:38
- * @LastEditTime: 2021-03-02 18:43:38
+ * @LastEditTime: 2021-04-01 18:53:43
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreLayout/ProxySanbox.ts
@@ -185,12 +185,12 @@ export class ProxySanbox {
         window.location.hash.replace('#', '')
       );
     }
-    /** 只要是沙箱的页面，在离开时都执行卸载 */
+    /** 沙箱页面离开时，并且下一个进入的页面是iframe，卸载沙箱页面回到根路径  */
     if (
       unmoutPane &&
       unmoutPane.loadingMode === 'sandbox' &&
       mountPane &&
-      mountPane.loadingMode !== 'sandbox'
+      mountPane.loadingMode === 'iframe'
     ) {
       this.unmountSanboxMicroApp(unmoutPane, mountPane);
     }

@@ -340,8 +340,8 @@ export default class ContentPart extends React.Component<IProps,IState> {
     const pane = store.panes.find((item) => item.key === activeKey);
     const oldpane = store.panes.find((item) => item.key === store.activeKey);
     store.setActiveKey(activeKey);
-    this.props.menuStore.triggerSetBreadCrumbsEven(this.props.router)
     store.proxySanbox.switchTabPaneSanboxMicroApp(oldpane,pane);
+    this.props.menuStore.triggerSetBreadCrumbsEven(this.props.router);
   }
 
   /**

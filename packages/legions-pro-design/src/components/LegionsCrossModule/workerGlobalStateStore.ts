@@ -65,6 +65,7 @@ export default class WorkerGlobalStateStore<IGlobalState,User={}> extends Legion
             eventScopes:options.eventScopes,
           })
     }
+    /** 监听广播数据(主要用于基座跟子应用不在同一个容器，比如iframe) */
     listeningGlobalStateChange(options: {
         /** 监听事件队列数据 */
         eventScopes: IResource[],

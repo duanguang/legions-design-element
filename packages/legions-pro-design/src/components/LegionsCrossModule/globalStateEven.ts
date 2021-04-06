@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-04 11:17:55
- * @LastEditTime: 2021-03-03 16:34:46
+ * @LastEditTime: 2021-04-02 12:08:53
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsCrossModule/globalStateEven.ts
@@ -78,7 +78,10 @@ function subscribeLegionsProGlobal(callback: (value: {
                 } 
                 if (count > 60) {
                     count = 0;
-                    console.error('获取全局数据超时,可能没找到，请检查全局是否存在!');
+                    console.groupCollapsed('获取全局数据超时,失败原因如下:')
+                    console.error('可能没找到，请检查全局是否存在LegionsProGlobal!');
+                    console.error('可能跨域，请检查模块间是否允许跨域');
+                    console.groupEnd()
                     clearInterval(timeid)
                 }
               }, 400);
