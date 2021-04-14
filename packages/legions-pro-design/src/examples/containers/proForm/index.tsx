@@ -187,7 +187,7 @@ export class ProForm extends React.Component<IProps,IState> {
                     },
                 ],
                 maxTagCount: 2,
-                labelInValue: true,
+               /*  labelInValue: true, */
                 mode: 'multiple',
             },
             rules: rules.selectedItemMultiple,

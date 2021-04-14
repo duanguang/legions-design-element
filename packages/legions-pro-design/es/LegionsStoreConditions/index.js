@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.7-beta.10
+  *  legions-pro-design v0.0.7-beta.19
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -91,7 +91,7 @@ function __values(o) {
 /*
  * @Author: duanguang
  * @Date: 2021-01-07 16:49:31
- * @LastEditTime: 2021-03-10 16:05:06
+ * @LastEditTime: 2021-04-14 14:56:16
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreConditions/conditionView.ts
@@ -297,7 +297,12 @@ var ConditionView = /** @class */ (function () {
                 delete params.defaultKeyWords;
                 var headers = {};
                 if (autoQuery.token) {
-                    headers = { 'api-cookie': autoQuery.token };
+                    if (typeof autoQuery.token === 'string') {
+                        headers = { 'api-cookie': autoQuery.token };
+                    }
+                    else if (typeof autoQuery.token === 'function') {
+                        headers = { 'api-cookie': autoQuery.token() };
+                    }
                 }
                 if (autoQuery.requestBeforeTransformParams) {
                     params = autoQuery.requestBeforeTransformParams(__assign(__assign({}, params), { pageIndex: options.pageIndex, pageSize: options.pageSize }));

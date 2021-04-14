@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+    </head>
+
+    <body>
+        <canvas id="circle" width="800" height="500"></canvas>
+
+        <script>
+            //    获取圆上的点
+            let center = {
+                x: 250,
+                y: 250
+            };
+            let radius = 150;
+            let cxt = null;
+
+            function initCanvas() {
+                cxt = document.getElementById('circle').getContext('2d');
+                cxt.fillStyle = '#000';
+                cxt.fillRect(0, 0, 800, 500);
+            }
+
+            function getCirclePoint(center, radius) {
+                let ce = center;
+                let r = radius;
+                let c = radius;
+                let points = [];
+                let degree = 30;
+                cxt.arc(ce.x, ce.y, r, 0, 2 * Math.PI);
+                cxt.strokeStyle = '#fff';
+                cxt.stroke();
+                cxt.save();
+                /* for (let i = 0; i < 12; i++) {
+                    degree = i * 30;
+                    //通过数学函数获取点
+                    console.log('Math.PI * 2 / 360 * degree', Math.PI * 2 / 360 * degree);
+                    let x = ce.x + Math.cos(Math.PI * 2 / 360 * degree) * r;
+                    let y = ce.y + Math.sin(Math.PI * 2 / 360 * degree) * r;
+                    points.push({
+                        x: x,
+                        y: y
+                    });
+                    cxt.beginPath();
+                    cxt.arc(x, y, 5, 0, 360);
+                    cxt.strokeStyle = '#fff';
+                    cxt.stroke();
+                    cxt.closePath();
+                    cxt.save();
+                } */
+            }
+
+            initCanvas();
+            getCirclePoint(center, radius);
+            /** 
+             *  判断一个点是否在圆的内部 
+             *  @param point  测试点坐标 
+             *  @param circle 圆心坐标 
+             *  @param r 圆半径 
+             *  返回true为真，false为假 
+             *  */
+            function pointInsideCircle(point, circle, r) {
+                if (r === 0) return false
+                var dx = circle[0] - point[0]
+                var dy = circle[1] - point[1]
+                return dx * dx + dy * dy <= r * r
+            }
+            document.onclick = function (e) {
+
+                var r = 150; //半径
+                var x1 = 250;
+                var y1 = 250;
+                var x2 = e.clientX;
+                var y2 = e.clientY;
+                var distance = Math.abs(Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2)));
+                console.log(distance);
+                if (distance <= 150)
+                    alert("Yes!");
+            }
+
+        </script>
+    </body>
+
+</html>

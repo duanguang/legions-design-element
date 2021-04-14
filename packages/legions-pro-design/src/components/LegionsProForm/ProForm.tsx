@@ -1026,11 +1026,12 @@ export class LegionsProForm<mapProps = {}> extends React.Component<IProFormProps
             this.freezeUid = this.uid;
             this.decryptionFreezeUid = this.uid;
         }
-        this.props.store.add(this.uid,{
-            InputDataModel: this.props.InputDataModel,
-            formRef:this,
-        })
-
+        if (!this.props.store.get(this.uid)) {
+            this.props.store.add(this.uid,{
+                InputDataModel: this.props.InputDataModel,
+                formRef:this,
+            })
+        }
     }
     get storeView() {
         return this.props.store.HLFormContainer.get(this.uid)

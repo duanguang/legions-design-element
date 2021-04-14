@@ -269,7 +269,7 @@ export default class QueryDemo extends React.Component<{},Istate>{
                     isInitialize: false,
                     ApiUrl: 'https://gateway.hoolinks.com/api/gateway',
                     method: 'post',
-                    token: 'SESSION=ffeb848f-53f1-4d50-b021-5ef3789a2fbd;',
+                    token: (function token(){    /** 权限字符串自行输入*/    return 'token'})(),
                     mappingEntity: (that,res) => {
                         that.total = res['total'];
                         that.current = res['current'];

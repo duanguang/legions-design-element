@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.7-beta.17
+  *  legions-pro-design v0.0.7-beta.19
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -1049,7 +1049,10 @@ var LegionsProTable = /** @class */ (function (_super) {
         var _this = this;
         var RowIndex = this.getViewStore.selectedRowKeys.findIndex(function (item) { return item === record[_this.props.uniqueKey]; });
         var getCheckboxPropsItem = this.getCheckboxPropsItem(record);
-        if (RowIndex > -1) {
+        if (this.props.rowClassName) {
+            return this.props.rowClassName(record, index);
+        }
+        else if (RowIndex > -1) {
             return 'row-color';
         }
         else if (getCheckboxPropsItem && getCheckboxPropsItem['disabled']) {

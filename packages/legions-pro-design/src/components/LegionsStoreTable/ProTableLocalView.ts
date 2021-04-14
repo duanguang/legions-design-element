@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-07 17:21:19
- * @LastEditTime: 2021-04-01 14:55:48
+ * @LastEditTime: 2021-04-14 14:58:40
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreTable/ProTableLocalView.ts
@@ -86,7 +86,12 @@ export class ProTableLocalView {
         }
         let headers = {};
         if (autoQuery.token) {
-            headers={'api-cookie': autoQuery.token}
+            if (typeof autoQuery.token === 'string') {
+                headers={'api-cookie': autoQuery.token}
+            }
+            else if (typeof autoQuery.token === 'function') {
+                headers={'api-cookie': autoQuery.token()}
+            }
         }
         if (autoQuery.method === 'post') {
           return server.post<PageListEntity<any>, any>({

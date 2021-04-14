@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.7-beta.17
+  *  legions-pro-design v0.0.7-beta.19
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -2522,10 +2522,12 @@ var LegionsProForm = /** @class */ (function (_super) {
             _this.freezeUid = _this.uid;
             _this.decryptionFreezeUid = _this.uid;
         }
-        _this.props.store.add(_this.uid, {
-            InputDataModel: _this.props.InputDataModel,
-            formRef: _this,
-        });
+        if (!_this.props.store.get(_this.uid)) {
+            _this.props.store.add(_this.uid, {
+                InputDataModel: _this.props.InputDataModel,
+                formRef: _this,
+            });
+        }
         return _this;
     }
     Object.defineProperty(LegionsProForm.prototype, "storeView", {

@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-07 16:49:31
- * @LastEditTime: 2021-03-10 16:05:06
+ * @LastEditTime: 2021-04-14 14:56:16
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreConditions/conditionView.ts
@@ -212,7 +212,12 @@ export class ConditionView<Query = {}> {
                 delete params.defaultKeyWords;
                 let headers = {};
                 if (autoQuery.token) {
-                    headers={'api-cookie': autoQuery.token}
+                    if (typeof autoQuery.token === 'string') {
+                        headers={'api-cookie': autoQuery.token}
+                    }
+                    else if (typeof autoQuery.token === 'function') {
+                        headers={'api-cookie': autoQuery.token()}
+                    }
                 }
                 if (autoQuery.requestBeforeTransformParams) {
                     params = autoQuery.requestBeforeTransformParams({...params,pageIndex:options.pageIndex,pageSize:options.pageSize})
