@@ -3,7 +3,7 @@ import { observablePromise } from 'legions/store-utils';
 import { ViewModel } from 'brain-store-utils';
 import { ProTableView } from '../ProTableView';
 import { ProTableLocalView } from '../ProTableLocalView';
-import { PageListEntity } from '../../LegionsProTable/pageListEntity';
+import { PageListEntity } from '../pageListEntity';
 import { request } from 'legions/request';
 export interface ITableColumnConfig {
     /** 当传入的title不为string类型时，可传label作为checkbox的label展示 */
@@ -68,7 +68,7 @@ export interface ITableAutoQuery<Model = {}> {
      * @type {string}
      * @memberof IAutoQuery
      */
-    token?: string;
+    token?: string | (() => string);
     /**
      * 表格绑定数据前转换符合表格数据结构的数据
      *
