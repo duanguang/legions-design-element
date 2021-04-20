@@ -1,9 +1,8 @@
 /**
-  *  legions-pro-design v0.0.7-beta.15
+  *  legions-pro-design v0.0.7-beta.21
   * (c) 2021 duanguang
   * @license MIT
   */
-import { debounce } from 'legions-utils-tool/debounce';
 import React from 'react';
 import { BaseFormFields } from 'legions-lunar/model';
 import LegionsProTable from '../LegionsProTable';
@@ -91,7 +90,7 @@ var ProTableFormProps = /** @class */ (function () {
          */
         this.className = '';
         /**
-         * 数据变化监听
+         * 数据变化监听,请勿同步table.dataSource回组件内部，引发务必要性能问题
          * @memberof ProTableFormProps
          */
         this.onChange = function () { return void 0; };
@@ -104,13 +103,15 @@ var LegionsProTableForm = /** @class */ (function (_super) {
         var _this = _super.call(this, props) || this;
         /** 用于缓存上一次onFieldsChange中改变的状态，除了value */
         _this.fieldsOtherCache = new Map();
+        /** table数据缓存，编辑数据时，收集变化数据结果，在保存时统一同步到state.data */
+        _this.dataSourcesCache = [];
         /** 行缓存, 避免表格render多次执行导致表单各种行为异常 */
         _this.recordCache = new Map();
         /** 表单实体 */
         _this.formRef = null;
         _this.rules = null;
         _this.updateRecordEditData = function (record) {
-            var data = _this.state.data;
+            var data = _this.dataSourcesCache;
             var index = data.findIndex(function (item) {
                 return get(item, _this.uniqueKey) === get(record, _this.uniqueKey);
             });
@@ -119,6 +120,8 @@ var LegionsProTableForm = /** @class */ (function (_super) {
                 set(data[index], 'isRecordEdit', isRecordEdit);
                 _this.setState({
                     data: data
+                }, function () {
+                    _this.dataSourcesCache = _this.state.data;
                 });
             }
         };
@@ -128,8 +131,10 @@ var LegionsProTableForm = /** @class */ (function (_super) {
             if (isRecordEdit === void 0) { isRecordEdit = true; }
             var recordData = _this.tranformData([__assign(__assign({}, record), (_a = {}, _a[_this.props.proTableConfig.uniqueKey] = record[_this.props.proTableConfig.uniqueKey] || "" + shortHash(new Date().getTime()) + _this.state.data.length, _a))], isRecordEdit);
             ReactDOM.unstable_batchedUpdates(function () {
+                var data = __spread(_this.state.data, recordData);
+                _this.dataSourcesCache = data;
                 _this.setState({
-                    data: __spread(_this.state.data, recordData)
+                    data: data
                 }, function () {
                     _this.props.onChange && _this.props.onChange(_this.state.data);
                 });
@@ -139,8 +144,10 @@ var LegionsProTableForm = /** @class */ (function (_super) {
         _this.deleteEditRecord = function (rowKeyValue) {
             var data = _this.state.data;
             ReactDOM.unstable_batchedUpdates(function () {
+                var newData = data.filter(function (i) { return i[_this.props.proTableConfig.uniqueKey] !== rowKeyValue; });
+                _this.dataSourcesCache = newData;
                 _this.setState({
-                    data: data.filter(function (i) { return i[_this.props.proTableConfig.uniqueKey] !== rowKeyValue; })
+                    data: newData
                 }, function () {
                     _this.props.onChange && _this.props.onChange(_this.state.data);
                 });
@@ -227,11 +234,13 @@ var LegionsProTableForm = /** @class */ (function (_super) {
                     newData[rowIndex] = __assign(__assign({}, newData[rowIndex]), (_a = {}, _a[name] = fields[key]['value'], _a));
                 }
             });
+            _this.dataSourcesCache = newData;
             return newData;
         };
         _this.state = {
             data: _this.tranformData(cloneDeep(toJS(_this.props.proTableConfig.dataSource))),
             recordEditData: new Map(),
+            formConfigs: [],
         };
         return _this;
     }
@@ -264,16 +273,10 @@ var LegionsProTableForm = /** @class */ (function (_super) {
             this.fieldsOtherCache.clear();
             this.recordCache.clear();
         }
-        if (nextData !== dataSource) {
-            this.setState({
-                data: this.tranformData(cloneDeep(toJS(nextData)))
-            });
-        }
     };
     LegionsProTableForm.prototype.render = function () {
         var _this = this;
         var _a = this.props, style = _a.style, className = _a.className, proFormConfig = _a.proFormConfig;
-        var data = this.state.data;
         return (React.createElement("div", { style: style, className: "ProTableForm  legions-pro-tableForm " + className },
             React.createElement(LegionsProForm, __assign({}, proFormConfig, { 
                 //@ts-ignore
@@ -281,16 +284,22 @@ var LegionsProTableForm = /** @class */ (function (_super) {
                     _this.formRef = formRef;
                     proFormConfig.onReady && proFormConfig.onReady(form, __assign(__assign({}, formRef), { methods: {
                             updateRecordEditData: _this.updateRecordEditData,
+                            //@ts-ignore
                             addEditRecord: _this.addEditRecord,
                             deleteEditRecord: _this.deleteEditRecord,
+                            setTableFormDataSource: function (dataValue) {
+                                _this.setState({
+                                    data: dataValue,
+                                });
+                            }
                         } }));
                 }, mapPropsToFields: function (props) {
-                    return new BaseFormFields.initMapPropsToFields(__assign(__assign({}, props), _this.listToFormData(data)));
-                }, onFieldsChange: debounce(function (props, fields) {
+                    return new BaseFormFields.initMapPropsToFields(__assign(__assign({}, props), _this.listToFormData(_this.dataSourcesCache)));
+                }, onFieldsChange: (function (props, fields) {
                     _this.formRef.store.updateFormInputData(_this.formRef.uid, fields);
-                    _this.props.onChange(_this.formDataToList(data, fields));
+                    _this.props.onChange(cloneDeep(_this.formDataToList(_this.dataSourcesCache, fields)));
                     proFormConfig.onFieldsChange && proFormConfig.onFieldsChange(props, fields);
-                }, 10), controls: this.createTable() }))));
+                }), controls: this.createTable() }))));
     };
     LegionsProTableForm.defaultProps = new ProTableFormProps();
     return LegionsProTableForm;
