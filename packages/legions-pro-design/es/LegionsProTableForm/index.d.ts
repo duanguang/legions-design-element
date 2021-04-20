@@ -53,7 +53,7 @@ export declare class ProTableFormProps<T = {}, F = {}> {
      */
     className?: string;
     /**
-     * 数据变化监听
+     * 数据变化监听,请勿同步table.dataSource回组件内部，引发务必要性能问题
      * @memberof ProTableFormProps
      */
     onChange?: (dataList: T[]) => void;
@@ -64,11 +64,14 @@ declare type IFormRules<FormRules> = {
 interface IState<T = {}> {
     data: T[];
     recordEditData: Map<string, boolean>;
+    formConfigs: Array<IProFormFields['componentModel']>;
 }
 export default class LegionsProTableForm<T = {}, F = {}> extends LegionsProForm.CreateForm<ProTableFormProps<T, F>, IState<T>> {
     static defaultProps: Object;
     /** 用于缓存上一次onFieldsChange中改变的状态，除了value */
     fieldsOtherCache: Map<any, any>;
+    /** table数据缓存，编辑数据时，收集变化数据结果，在保存时统一同步到state.data */
+    dataSourcesCache: T[];
     /** 行缓存, 避免表格render多次执行导致表单各种行为异常 */
     recordCache: Map<any, any>;
     /** 表单实体 */

@@ -75,7 +75,7 @@ export class ProTableFormProps<T = {},F = {}> {
      */
     className?: string = '';
     /**
-     * 数据变化监听
+     * 数据变化监听,请勿同步table.dataSource回组件内部，引发务必要性能问题
      * @memberof ProTableFormProps
      */
     onChange?: (dataList: T[]) => void = () => void 0;
@@ -85,17 +85,22 @@ type IFormRules<FormRules> = {
 }
 interface IState<T = {}> {
     data: T[];
-    recordEditData: Map<string,boolean>
+    recordEditData: Map<string,boolean>;
+    formConfigs:Array<IProFormFields['componentModel']>
 }
 export default class LegionsProTableForm<T = {},F = {}> extends LegionsProForm.CreateForm<ProTableFormProps<T,F>,IState<T>>{
     static defaultProps = new ProTableFormProps() as Object;
     /** 用于缓存上一次onFieldsChange中改变的状态，除了value */
     fieldsOtherCache = new Map();
+
+    /** table数据缓存，编辑数据时，收集变化数据结果，在保存时统一同步到state.data */
+    dataSourcesCache:T[] = [];
     /** 行缓存, 避免表格render多次执行导致表单各种行为异常 */
     recordCache = new Map();
     /** 表单实体 */
     formRef: InstanceProForm = null;
     rules: IFormRules<any> = null;
+    
     /** 行唯一id */
     get uniqueKey() {
         /*  const { proTableConfig: { uniqueKey } = {} } = this.props;
@@ -109,18 +114,21 @@ export default class LegionsProTableForm<T = {},F = {}> extends LegionsProForm.C
         this.state = {
             data: this.tranformData(cloneDeep(toJS(this.props.proTableConfig.dataSource))),
             recordEditData: new Map(),
+            formConfigs:[],
         }
     }
     updateRecordEditData = (record: Object) => {
-        const { data } = this.state;
+        const data = this.dataSourcesCache;
         const index = data.findIndex((item) => {
             return get(item,this.uniqueKey) === get(record,this.uniqueKey)
         })
         if (index > -1) {
             const isRecordEdit = !get(data[index],'isRecordEdit');
-            set(data[index],'isRecordEdit',isRecordEdit)
+            set(data[index],'isRecordEdit',isRecordEdit);
             this.setState({
                 data: data
+            },() => {
+                    this.dataSourcesCache = this.state.data;
             })
         }
     }
@@ -128,9 +136,11 @@ export default class LegionsProTableForm<T = {},F = {}> extends LegionsProForm.C
     addEditRecord=(record:T,isRecordEdit:boolean = true)=>{
         let recordData = this.tranformData([{...record,[this.props.proTableConfig.uniqueKey]:record[this.props.proTableConfig.uniqueKey]||`${shortHash(new Date().getTime())}${this.state.data.length}`}],isRecordEdit)
         ReactDOM.unstable_batchedUpdates(() => {
+            const data = [...this.state.data,...recordData];
+            this.dataSourcesCache = data;
             this.setState({
-                data:[...this.state.data,...recordData]
-            },()=>{
+                data:data
+            },() => {
                 this.props.onChange && this.props.onChange(this.state.data)
             })
         });
@@ -138,9 +148,11 @@ export default class LegionsProTableForm<T = {},F = {}> extends LegionsProForm.C
     /** 删除行数据 */
     deleteEditRecord=(rowKeyValue:string | number)=>{
         const {data} = this.state
-        ReactDOM.unstable_batchedUpdates(()=>{
+        ReactDOM.unstable_batchedUpdates(() => {
+            const newData = data.filter((i) => i[this.props.proTableConfig.uniqueKey] !== rowKeyValue);
+            this.dataSourcesCache = newData;
             this.setState({
-                data:data.filter((i)=>i[this.props.proTableConfig.uniqueKey]!==rowKeyValue)
+                data:newData
             },()=>{
                 this.props.onChange && this.props.onChange(this.state.data)
             })
@@ -166,11 +178,6 @@ export default class LegionsProTableForm<T = {},F = {}> extends LegionsProForm.C
         if (dataSource.length !== nextData.length) {
             this.fieldsOtherCache.clear()
             this.recordCache.clear()
-        }
-        if (nextData !== dataSource) {
-            this.setState({
-                data: this.tranformData(cloneDeep(toJS(nextData)))
-            })
         }
     }
     createControl = (control: IProFormFields['componentModel'],key: number,formRef: InstanceProForm,formUtils:InstanceType<typeof LegionsProForm.ProFormUtils>) => {
@@ -277,12 +284,12 @@ export default class LegionsProTableForm<T = {},F = {}> extends LegionsProForm.C
                 }
             }
         })
+        this.dataSourcesCache = newData;
         return newData;
     }
 
     render() {
         const { style,className,proFormConfig } = this.props;
-        const { data } = this.state;
         return (
             <div style={style} className={`ProTableForm  legions-pro-tableForm ${className}`}>
                 <LegionsProForm<F>
@@ -297,18 +304,23 @@ export default class LegionsProTableForm<T = {},F = {}> extends LegionsProForm.C
                                 updateRecordEditData: this.updateRecordEditData,
                                 //@ts-ignore
                                 addEditRecord:this.addEditRecord,
-                                deleteEditRecord:this.deleteEditRecord,
+                                deleteEditRecord: this.deleteEditRecord,
+                                setTableFormDataSource: (dataValue) => {
+                                    this.setState({
+                                        data:dataValue,
+                                    })
+                                }
                             }
                         })
                     }}
                     mapPropsToFields={(props) => {
-                        return new BaseFormFields.initMapPropsToFields({...props,...this.listToFormData(data)})
+                        return new BaseFormFields.initMapPropsToFields({...props,...this.listToFormData(this.dataSourcesCache)})
                     }}
-                    onFieldsChange={debounce((props,fields) => {
+                    onFieldsChange={((props,fields) => {
                         this.formRef.store.updateFormInputData(this.formRef.uid,fields);
-                        this.props.onChange(this.formDataToList(data,fields));
+                        this.props.onChange(cloneDeep(this.formDataToList(this.dataSourcesCache,fields)));
                         proFormConfig.onFieldsChange && proFormConfig.onFieldsChange(props,fields)
-                    },10) as () => void}
+                    }) as () => void}
                     controls={this.createTable()}
                 />
             </div>

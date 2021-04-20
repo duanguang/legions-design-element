@@ -130,7 +130,8 @@ export default class QueryDemo extends React.Component<{},Istate>{
                     lg: 4,
                     xl: 4,
                 },
-                name:'vmOrderNo4'
+                name: 'vmOrderNo4',
+                
             },
             conditionsProps: {
                 label: '日期范围',

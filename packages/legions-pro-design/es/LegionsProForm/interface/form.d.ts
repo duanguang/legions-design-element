@@ -84,6 +84,8 @@ interface IMethods {
     updateRecordEditData?: (record: Object) => void;
     addEditRecord?: (record: Object, isRecordEdit?: boolean) => void;
     deleteEditRecord?: (rowKey: string | number) => void;
+    /** 设置表格表单列表数据源数据 */
+    setTableFormDataSource?: (data: any[]) => void;
     /** 查询指定下拉组件数据项 */
     getQuerySelectOption?: (
     /** 下拉组件name值，对应container.component.JsonProperty.name */ name: string, 

@@ -97,7 +97,7 @@ export class ProForm extends React.Component<IProps,IState> {
                     label: '订单1',
                     key: '1',
                     extendedField: '222',
-                    disabled: true,
+                   /*  disabled: true, */
                 },
                 {
                     value: '工单',
@@ -407,6 +407,11 @@ export class ProForm extends React.Component<IProps,IState> {
                         this.formRef.viewModel.updateFormSize('table')
                     }}>表单尺寸</Button>
                     <Button onClick={() => {
+                        this.formRef.methods.setFormStates<InstanceType<typeof LegionsProForm['LabelWithSelectModel']>>('selectedItem',(value)=>{
+                            value.iFormProps.mode = 'multiple';
+                        })
+                    }}>设置为多选</Button>
+                    <Button onClick={() => {
                         this.formRef.store.updateFormInputData(this.formRef.uid,{text:{value:'222'}})
                     }}>文本框赋值</Button>
                     <Button onClick={() => {
@@ -500,11 +505,12 @@ export class ProForm extends React.Component<IProps,IState> {
                     }}
                     isDragSort
                     mapPropsToFields={(props) => {
+                        console.log('mapPropsToFields');
                         return new FormFields(props)
                     }}
                     onFieldsChange={(props,formFields) => {
                         this.formRef.store.updateFormInputData(this.formRef.uid,formFields)
-                        console.log(formFields,this.formRef.viewModel.InputDataModel);
+                        console.log('onFieldsChange');
                     }}
                     size="small"
                     controls={this.createConfig()}

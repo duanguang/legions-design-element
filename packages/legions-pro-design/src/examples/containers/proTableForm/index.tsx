@@ -49,6 +49,7 @@ const tableColumns = (viewModel: PageViewModel,that:ProTableForm): IProTableForm
         return <div>
             <Button type="primary" onClick={() => {
                 if (record['isRecordEdit']) {
+                    
                     that.formRef.viewModel.form.validateFields((error) => {
                         console.log( that.formRef,' that.formRef');
                         if (!error) {
@@ -57,7 +58,7 @@ const tableColumns = (viewModel: PageViewModel,that:ProTableForm): IProTableForm
                     });
                     /* that.formRef.methods.updateRecordEditData(record); */
                 } else {
-                    console.log(that.formRef.viewModel,record);
+                    
                     that.formRef.methods.updateRecordEditData(record);
                 }
             }}>
@@ -102,6 +103,7 @@ export class ProTableForm extends LegionsProTable.ProTableBaseClass<IProps,IStat
             return <div>
                 <Button type="primary" onClick={() => {
                     if (record['isRecordEdit']) {
+                        console.log('tableColumns');
                         this.formRef.viewModel.form.validateFields((error) => {
                             if (!error) {
                                 this.formRef.methods.updateRecordEditData(record);
@@ -223,7 +225,7 @@ export class ProTableForm extends LegionsProTable.ProTableBaseClass<IProps,IStat
 
                     }}
                     onChange={(dataList) => {
-                        this.viewModel.list = dataList;
+                        /* this.viewModel.list = dataList; */
                     }}
                 ></LegionsProTableForm>
 

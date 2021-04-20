@@ -62,7 +62,7 @@ export default class LegionsProVirtualTable extends Component<IProTableProps, IS
         colSpan?: number;
         width?: React.ReactText;
         className?: string;
-        fixed?: boolean | "left" | "right";
+        fixed?: boolean | "right" | "left";
         filterIcon?: React.ReactNode;
         filteredValue?: any[];
         sortOrder?: boolean | "ascend" | "descend";

@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-29 10:26:57
- * @LastEditTime: 2021-03-16 10:11:59
+ * @LastEditTime: 2021-04-20 15:13:35
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProForm/interface/form.ts
@@ -105,7 +105,9 @@ interface IMethods {
    * 表格表单中使用 */
   updateRecordEditData?: (record: Object) => void;
   addEditRecord?:(record:Object,isRecordEdit?:boolean) => void ;
-  deleteEditRecord?:(rowKey:string | number)=>void ;
+  deleteEditRecord?: (rowKey: string | number) => void;
+  /** 设置表格表单列表数据源数据 */
+  setTableFormDataSource?: (data: any[]) => void;
   /** 查询指定下拉组件数据项 */
   getQuerySelectOption?: (
     /** 下拉组件name值，对应container.component.JsonProperty.name */ name: string,
