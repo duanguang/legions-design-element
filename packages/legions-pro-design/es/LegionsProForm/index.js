@@ -1,10 +1,10 @@
 /**
-  *  legions-pro-design v0.0.7-beta.19
+  *  legions-pro-design v0.0.7-beta.21
   * (c) 2021 duanguang
   * @license MIT
   */
 import React, { Component } from 'react';
-import { Tooltip, Input, Row, Form, Icon, message, DatePicker, Select, InputNumber, Switch, Radio, Checkbox, Anchor, Col, Dropdown, Menu, Affix } from 'antd';
+import { Tooltip, Input, Row, Form, Icon, message, DatePicker, Select, InputNumber, Switch, Radio, Checkbox, Cascader, Anchor, Col, Dropdown, Menu, Affix } from 'antd';
 import { getStringLen } from 'legions-utils-tool/format.string';
 import { shortHash } from 'legions-lunar/object-hash';
 import { bind, observer } from 'legions/store-react';
@@ -1341,6 +1341,51 @@ var FormCheckbox = /** @class */ (function (_super) {
     return FormCheckbox;
 }(AbstractForm));
 
+var FormItem$b = Form.Item;
+var LabelWithCascaderModel = /** @class */ (function () {
+    function LabelWithCascaderModel(iAntdProps, iFormProps, rules) {
+        this.iAntdProps = iAntdProps;
+        this.iFormProps = iFormProps;
+        this.rules = rules;
+    }
+    return LabelWithCascaderModel;
+}());
+var FormCascader = /** @class */ (function (_super) {
+    __extends(FormCascader, _super);
+    function FormCascader(props) {
+        var _this = _super.call(this, props) || this;
+        _this.FormUploadRef = null;
+        _this.handlePreview = function (file) {
+        };
+        return _this;
+    }
+    FormCascader.prototype.componentDidMount = function () {
+        this.didMountClearNodeQueue(this.FormUploadRef, this.props.formUid, this.props.iAntdProps.name);
+    };
+    FormCascader.prototype.shouldComponentUpdate = function (nextProps, nextState, context) {
+        return this.isShouldComponentUpdate(this.FormUploadRef, this.props.formUid, nextProps.iAntdProps.name);
+    };
+    FormCascader.prototype.render = function () {
+        var _this = this;
+        var _a = this.props, form = _a.form, iAntdProps = _a.iAntdProps, iFormWithCascader = _a.iFormWithCascader, children = _a.children, rules = _a.rules;
+        var getFieldsError = form.getFieldsError, getFieldDecorator = form.getFieldDecorator;
+        var label = iFormWithCascader.label, labelCol = iFormWithCascader.labelCol, wrapperCol = iFormWithCascader.wrapperCol, props = __rest(iFormWithCascader, ["label", "labelCol", "wrapperCol"]);
+        var formItemProps = {};
+        if ('colon' in props) {
+            formItemProps['colon'] = props.colon;
+        }
+        return (React.createElement(FormElement, { form: form, onReady: function (value) {
+                _this.FormUploadRef = value;
+            }, elType: "", nextElementKey: iAntdProps.nextElementKey, elementKey: iAntdProps.name, formUid: this.props.formUid },
+            React.createElement(FormItem$b, __assign({}, formItemProps, { className: iAntdProps.className, label: label, labelCol: labelCol, wrapperCol: wrapperCol }),
+                getFieldDecorator(iAntdProps.name, {
+                    rules: rules,
+                })(React.createElement(Cascader, __assign({}, props))),
+                children)));
+    };
+    return FormCascader;
+}(AbstractForm));
+
 var CreateForm = /** @class */ (function (_super) {
     __extends(CreateForm, _super);
     function CreateForm() {
@@ -1390,21 +1435,10 @@ var CreateForm = /** @class */ (function (_super) {
         var iAntdProps = control.iAntdProps, rules = control.rules, iFormProps = control.iFormProps;
         return (React.createElement(FormText, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formUid: formUid, iFormText: iFormProps }));
     };
-    /* protected createFormHlTable(key:number,control:LabelWithHLTableModel,form:WrappedFormUtils,formUid:string){
-        let {iAntdProps,rules,iFormWithTable}=control;
-        return(
-            <FormHLTable
-                iAntdProps={iAntdProps}
-                form={form}
-                rules={rules}
-                key={key}
-                formUid={formUid}
-                iFormWithTable={iFormWithTable}
-            >
-
-            </FormHLTable>
-        )
-    } */
+    CreateForm.prototype.createFormCascader = function (key, control, form, formUid, formRef) {
+        var iAntdProps = control.iAntdProps, rules = control.rules, iFormProps = control.iFormProps;
+        return React.createElement(FormCascader, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formUid: formUid, iFormWithCascader: iFormProps });
+    };
     CreateForm.prototype.createFormCheckbox = function (key, control, form, formUid, formRef) {
         var iAntdProps = control.iAntdProps, rules = control.rules, iFormProps = control.iFormProps;
         return (React.createElement(FormCheckbox, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formUid: formUid, iFormWithCheckbox: iFormProps }));
@@ -1547,6 +1581,10 @@ var ProFormUtils = /** @class */ (function () {
         this.chkRenderConfig(options.iAntdProps.id);
         return this[options.iAntdProps.id] = new LabelWithCheckboxModel(options.iAntdProps, options.iFormProps, options.rules || []);
     };
+    ProFormUtils.prototype.renderCascaderConfig = function (options) {
+        this.chkRenderConfig(options.iAntdProps.id);
+        return this[options.iAntdProps.id] = new LabelWithCascaderModel(options.iAntdProps, options.iFormProps, options.rules || []);
+    };
     /**
      * 生成一个表单基础组件
      * 应用场景一般自定义组件由很多比如input,select等组成，可以通过此方法快速创建一个组件
@@ -1639,6 +1677,10 @@ var ProFormUtils = /** @class */ (function () {
             var iAntdProps = control.iAntdProps, rules = control.rules, iFormProps = control.iFormProps;
             return (React.createElement(FormCheckbox, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formUid: formUid, iFormWithCheckbox: iFormProps }));
         }
+        else if (control instanceof LabelWithCascaderModel) {
+            var iAntdProps = control.iAntdProps, rules = control.rules, iFormProps = control.iFormProps;
+            return React.createElement(FormCascader, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formUid: formUid, iFormWithCascader: iFormProps });
+        }
         else {
             throw new Error("HLFormUtils: Unknown control. control = " + JSON.stringify(control));
         }
@@ -1671,7 +1713,7 @@ var ProFormFields = /** @class */ (function (_super) {
 }(BaseFormFields));
 
 var Link = Anchor.Link;
-var FormItem$b = Form.Item;
+var FormItem$c = Form.Item;
 var baseCls = "legions-pro-form";
 var KeydownEnum$1;
 (function (KeydownEnum) {
@@ -2366,6 +2408,9 @@ var ProForm = /** @class */ (function (_super) {
         else if (control instanceof LabelWithCheckboxModel) {
             return _super.prototype.createFormCheckbox.call(this, key, control, form, this.uid, viewModel);
         }
+        else if (control instanceof LabelWithCascaderModel) {
+            return _super.prototype.createFormCascader.call(this, key, control, form, this.uid, viewModel);
+        }
         else {
             throw new Error("ComponentClass: Unknown control. control = " + JSON.stringify(control));
         }
@@ -2557,6 +2602,7 @@ var LegionsProForm = /** @class */ (function (_super) {
     LegionsProForm.LabelWithRadioButtonModel = LabelWithRadioButtonModel;
     LegionsProForm.LabelWithTextModel = LabelWithTextModel;
     LegionsProForm.LabelWithInputModel = LabelWithInputModel;
+    LegionsProForm.LabelWithCascaderModel = LabelWithCascaderModel;
     LegionsProForm.BaseFormFields = BaseFormFields;
     LegionsProForm.ProFormFields = ProFormFields;
     LegionsProForm = __decorate([

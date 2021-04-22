@@ -156,7 +156,8 @@ export class ProTable extends LegionsProTable.ProTableBaseClass<IProps, { size: 
                             method: 'post',
                             ApiUrl: 'https://gateway.hoolinks.com/api/gateway',
                             mappingEntity: (that, res) => {
-                                that.result = res['data']
+                                that.result = res['data'];
+                                that.total=res['total']
                             },
                         }}
                     >

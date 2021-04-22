@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-29 10:08:53
- * @LastEditTime: 2021-03-05 15:46:40
+ * @LastEditTime: 2021-04-22 17:32:30
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProForm/interface/index.ts
@@ -63,4 +63,6 @@ export type { IFormCheckboxProps } from '../FormCheckbox';
 export  { LabelWithCheckboxModel,LabelWithCheckboxPartialModel } from '../FormCheckbox';
 
 export { InstanceProForm } from './form'
+
+export { LabelWithCascaderModel } from '../FormCascader';
 

@@ -1,8 +1,8 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-08 15:19:23
- * @LastEditTime: 2021-03-26 16:00:56
- * @LastEditors: zhaoliang
+ * @LastEditTime: 2021-04-22 17:41:19
+ * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProForm/ProFormUtils.tsx
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
@@ -15,7 +15,7 @@ import {
     WrappedFormUtils,
     ColProps
 } from '../interface/antd';
-import { IFormCheckboxProps, IFormDatePickerProps, IFormInputNumberProps, IFormInputProps, IFormMonthPickerProps, IFormRadioButtonProps, IFormRangePickerProps, IFormRenderProps, IFormSelectProps, IFormState, IFormSwitchProps, IFormTextProps, IFormUploadProps, InstanceProForm, LabelWithCheckboxModel, LabelWithDatePickerModel, LabelWithSelectModel, LabelWithInputModel, LabelWithInputNumberModel, LabelWithMonthPickerModel, LabelWithRadioButtonModel, LabelWithRangePickerModel, LabelWithRenderModel, LabelWithSwitchModel, LabelWithTextModel, LabelWithUploadModel } from './interface';
+import { IFormCheckboxProps, IFormDatePickerProps, IFormInputNumberProps, IFormInputProps, IFormMonthPickerProps, IFormRadioButtonProps, IFormRangePickerProps, IFormRenderProps, IFormSelectProps, IFormState, IFormSwitchProps, IFormTextProps, IFormUploadProps, InstanceProForm, LabelWithCheckboxModel, LabelWithDatePickerModel, LabelWithSelectModel, LabelWithInputModel, LabelWithInputNumberModel, LabelWithMonthPickerModel, LabelWithRadioButtonModel, LabelWithRangePickerModel, LabelWithRenderModel, LabelWithSwitchModel, LabelWithTextModel, LabelWithUploadModel, LabelWithCascaderModel } from './interface';
 import FormInput from './FormInput';
 import FormInputNumber from './FormInputNumber';
 import FormSelect from './FormSelect';
@@ -31,6 +31,7 @@ import { ClassOf } from 'legions-lunar/types/api/typescript';
 import { createFormRule } from 'legions-decorator/async.validator'; 
 import { shortHash } from 'legions-lunar/object-hash';
 import FormCheckbox from './FormCheckbox';
+import FormCascader, { IFormCascaderProps } from './FormCascader';
 interface IRenderComponentParams<T> {
 
     /**
@@ -65,7 +66,7 @@ interface IRenderComponentParams<T> {
 interface IProFormUtils {
     componentModel: LabelWithInputModel | LabelWithInputNumberModel | LabelWithDatePickerModel | LabelWithMonthPickerModel |
     LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel |
-    LabelWithRadioButtonModel | LabelWithTextModel | LabelWithSelectModel | LabelWithCheckboxModel
+    LabelWithRadioButtonModel | LabelWithTextModel | LabelWithSelectModel | LabelWithCheckboxModel|LabelWithCascaderModel
 }
 export const size = {
     'default': {
@@ -233,7 +234,10 @@ export class ProFormUtils<Store,global = {}>{
         this.chkRenderConfig(options.iAntdProps.id)
         return this[options.iAntdProps.id] = new LabelWithCheckboxModel(options.iAntdProps,options.iFormProps,options.rules || []);
     }
-    
+    renderCascaderConfig(options: IRenderComponentParams<IFormCascaderProps>): LabelWithCascaderModel {
+        this.chkRenderConfig(options.iAntdProps.id)
+        return this[options.iAntdProps.id] = new LabelWithCascaderModel(options.iAntdProps,options.iFormProps,options.rules || []);
+    }
     /**
      * 生成一个表单基础组件
      * 应用场景一般自定义组件由很多比如input,select等组成，可以通过此方法快速创建一个组件
@@ -442,6 +446,17 @@ export class ProFormUtils<Store,global = {}>{
 
                 </FormCheckbox>
             )
+        }
+        else if (control instanceof LabelWithCascaderModel) {
+            let { iAntdProps,rules,iFormProps } = control;
+            return <FormCascader
+                iAntdProps={iAntdProps}
+                form={form}
+                rules={rules}
+                key={key}
+                formUid={formUid}
+                iFormWithCascader={iFormProps}
+            ></FormCascader>;
         }
         else {
             throw new Error(`HLFormUtils: Unknown control. control = ${JSON.stringify(control)}`);

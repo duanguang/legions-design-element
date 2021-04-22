@@ -307,7 +307,7 @@ export default class LegionsProTableForm<T = {},F = {}> extends LegionsProForm.C
                                 deleteEditRecord: this.deleteEditRecord,
                                 setTableFormDataSource: (dataValue) => {
                                     this.setState({
-                                        data:dataValue,
+                                        data:this.tranformData(cloneDeep(toJS(dataValue))),
                                     })
                                 }
                             }

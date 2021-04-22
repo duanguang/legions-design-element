@@ -17,7 +17,7 @@ import {
   LabelWithDatePickerPartialModel,
   LabelWithInputPartialModel,LabelWithInputNumberPartialModel,
   LabelWithMonthPickerPartialModel,LabelWithRadioButtonPartialModel,LabelWithRangePickerPartialModel,
-  LabelWithSwitchPartialModel,LabelWithTextPartialModel,LabelWithUploadPartialModel, LabelWithCheckboxModel
+  LabelWithSwitchPartialModel,LabelWithTextPartialModel,LabelWithUploadPartialModel, LabelWithCheckboxModel,LabelWithCascaderModel
 } from '../../LegionsProForm/interface'
 import LegionsModels from '../../LegionsModels'
 import { TabsFormView, TabsItemView } from '../tabsView';
@@ -267,7 +267,7 @@ export declare type ITabsFormItem = { key: string;tabsItemView:TabsItemView}
 export interface IProFormFields {
     componentModel: LabelWithInputModel | LabelWithInputNumberModel | LabelWithDatePickerModel | LabelWithMonthPickerModel |
     LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel |
-    LabelWithRadioButtonModel | LabelWithTextModel | LabelWithSelectModel|LabelWithCheckboxModel
+    LabelWithRadioButtonModel | LabelWithTextModel | LabelWithSelectModel|LabelWithCheckboxModel|LabelWithCascaderModel
 }
 export interface IProUpdateFormFields {
   componentModel: LabelWithInputPartialModel | LabelWithInputNumberPartialModel | LabelWithDatePickerPartialModel |

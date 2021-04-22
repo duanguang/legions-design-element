@@ -289,7 +289,7 @@ var LegionsProTableForm = /** @class */ (function (_super) {
                             deleteEditRecord: _this.deleteEditRecord,
                             setTableFormDataSource: function (dataValue) {
                                 _this.setState({
-                                    data: dataValue,
+                                    data: _this.tranformData(cloneDeep(toJS(dataValue))),
                                 });
                             }
                         } }));

@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-15 15:42:07
- * @LastEditTime: 2021-03-17 17:36:10
+ * @LastEditTime: 2021-04-22 17:49:38
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/examples/containers/proForm/model.ts
@@ -187,6 +187,17 @@ export class FormFields extends LegionsProForm.ProFormFields<FormFields>{
     })
     price:IBaseFormFields<string>= {
         value: '',
+        ignore: true,
+        }
+    @FormRuleProperty({
+        required: true,
+        name: 'cascader',
+        error: '级联',
+        desc: '级联',
+        type:'array',
+    })
+    cascader:IBaseFormFields<string[]>= {
+        value: void 0,
         ignore: true,
     }
     constructor(form?: FormFields) {

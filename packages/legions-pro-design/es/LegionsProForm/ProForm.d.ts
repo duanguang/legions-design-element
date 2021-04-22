@@ -14,6 +14,7 @@ import { InstanceProForm } from './interface/form';
 import { LabelWithCheckboxModel } from './FormCheckbox';
 import { BaseFormFields } from 'legions-lunar/model';
 import { ProFormFields, ProFormUtils } from './ProFormUtils';
+import { LabelWithCascaderModel } from './FormCascader';
 export interface IProFormProps<mapProps = {}> {
     form?: WrappedFormUtils;
     /**
@@ -108,6 +109,7 @@ export declare class LegionsProForm<mapProps = {}> extends React.Component<IProF
     static LabelWithRadioButtonModel: typeof LabelWithRadioButtonModel;
     static LabelWithTextModel: typeof LabelWithTextModel;
     static LabelWithInputModel: typeof LabelWithInputModel;
+    static LabelWithCascaderModel: typeof LabelWithCascaderModel;
     static BaseFormFields: typeof BaseFormFields;
     static ProFormFields: typeof ProFormFields;
     /** 根据时间戳生成，每次初始化表单组件都会产生新的值*/
@@ -133,8 +135,8 @@ export declare class LegionsProForm<mapProps = {}> extends React.Component<IProF
             validateStatus: "" | "error";
         }>;
         readonly computedAllElementList: string[];
-        readonly computedFormFields: (LabelWithInputModel | LabelWithInputNumberModel | LabelWithDatePickerModel | LabelWithMonthPickerModel | LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel | LabelWithRadioButtonModel | LabelWithTextModel | LabelWithSelectModel | LabelWithCheckboxModel)[];
-        readonly computedAllFormFields: (LabelWithInputModel | LabelWithInputNumberModel | LabelWithDatePickerModel | LabelWithMonthPickerModel | LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel | LabelWithRadioButtonModel | LabelWithTextModel | LabelWithSelectModel | LabelWithCheckboxModel)[];
+        readonly computedFormFields: (LabelWithInputModel | LabelWithInputNumberModel | LabelWithDatePickerModel | LabelWithMonthPickerModel | LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel | LabelWithRadioButtonModel | LabelWithTextModel | LabelWithSelectModel | LabelWithCheckboxModel | LabelWithCascaderModel)[];
+        readonly computedAllFormFields: (LabelWithInputModel | LabelWithInputNumberModel | LabelWithDatePickerModel | LabelWithMonthPickerModel | LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel | LabelWithRadioButtonModel | LabelWithTextModel | LabelWithSelectModel | LabelWithCheckboxModel | LabelWithCascaderModel)[];
         readonly computedErrorListView: IErrorView[];
         readonly computedFormSize: "default" | "small" | "table";
         updateFormSize: (size: "default" | "small" | "table") => void;
@@ -142,13 +144,13 @@ export declare class LegionsProForm<mapProps = {}> extends React.Component<IProF
         setErrorErrorReactNodeList: (componentCode: string, errorListView: IErrorView[]) => void;
         handleIgnore: (componentCode: string, id: number) => void;
         _addAllElementKeys: (keys: string) => void;
-        getFormItemField: <T extends LabelWithInputModel | LabelWithInputNumberModel | LabelWithDatePickerModel | LabelWithMonthPickerModel | LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel | LabelWithRadioButtonModel | LabelWithTextModel | LabelWithSelectModel | LabelWithCheckboxModel>(key: string) => {
+        getFormItemField: <T extends LabelWithInputModel | LabelWithInputNumberModel | LabelWithDatePickerModel | LabelWithMonthPickerModel | LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel | LabelWithRadioButtonModel | LabelWithTextModel | LabelWithSelectModel | LabelWithCheckboxModel | LabelWithCascaderModel>(key: string) => {
             value: T;
             type: "normal" | "custom";
         };
         removeFormItem: (key: string) => boolean;
         clearFormItem: () => void;
-        _initFormItemField: (key: string, value: LabelWithInputModel | LabelWithInputNumberModel | LabelWithDatePickerModel | LabelWithMonthPickerModel | LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel | LabelWithRadioButtonModel | LabelWithTextModel | LabelWithSelectModel | LabelWithCheckboxModel, type?: "normal" | "custom") => void;
+        _initFormItemField: (key: string, value: LabelWithInputModel | LabelWithInputNumberModel | LabelWithDatePickerModel | LabelWithMonthPickerModel | LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel | LabelWithRadioButtonModel | LabelWithTextModel | LabelWithSelectModel | LabelWithCheckboxModel | LabelWithCascaderModel, type?: "normal" | "custom") => void;
     } & import("../LegionsStoreForm/proFormStore").IOtherView;
     render(): JSX.Element;
 }

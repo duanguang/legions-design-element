@@ -1,8 +1,9 @@
 import React from 'react';
 import { IAntdProps, IAntdRule, WrappedFormUtils, ColProps } from '../interface/antd';
-import { IFormCheckboxProps, IFormDatePickerProps, IFormInputNumberProps, IFormInputProps, IFormMonthPickerProps, IFormRadioButtonProps, IFormRangePickerProps, IFormRenderProps, IFormSelectProps, IFormSwitchProps, IFormTextProps, IFormUploadProps, InstanceProForm, LabelWithCheckboxModel, LabelWithDatePickerModel, LabelWithSelectModel, LabelWithInputModel, LabelWithInputNumberModel, LabelWithMonthPickerModel, LabelWithRadioButtonModel, LabelWithRangePickerModel, LabelWithRenderModel, LabelWithSwitchModel, LabelWithTextModel, LabelWithUploadModel } from './interface';
+import { IFormCheckboxProps, IFormDatePickerProps, IFormInputNumberProps, IFormInputProps, IFormMonthPickerProps, IFormRadioButtonProps, IFormRangePickerProps, IFormRenderProps, IFormSelectProps, IFormSwitchProps, IFormTextProps, IFormUploadProps, InstanceProForm, LabelWithCheckboxModel, LabelWithDatePickerModel, LabelWithSelectModel, LabelWithInputModel, LabelWithInputNumberModel, LabelWithMonthPickerModel, LabelWithRadioButtonModel, LabelWithRangePickerModel, LabelWithRenderModel, LabelWithSwitchModel, LabelWithTextModel, LabelWithUploadModel, LabelWithCascaderModel } from './interface';
 import { BaseFormFields } from 'legions-lunar/model';
 import { ClassOf } from 'legions-lunar/types/api/typescript';
+import { IFormCascaderProps } from './FormCascader';
 interface IRenderComponentParams<T> {
     /**
      *
@@ -32,7 +33,7 @@ interface IRenderComponentParams<T> {
     formRef?: InstanceProForm;
 }
 interface IProFormUtils {
-    componentModel: LabelWithInputModel | LabelWithInputNumberModel | LabelWithDatePickerModel | LabelWithMonthPickerModel | LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel | LabelWithRadioButtonModel | LabelWithTextModel | LabelWithSelectModel | LabelWithCheckboxModel;
+    componentModel: LabelWithInputModel | LabelWithInputNumberModel | LabelWithDatePickerModel | LabelWithMonthPickerModel | LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel | LabelWithRadioButtonModel | LabelWithTextModel | LabelWithSelectModel | LabelWithCheckboxModel | LabelWithCascaderModel;
 }
 export declare const size: {
     default: {
@@ -108,6 +109,7 @@ export declare class ProFormUtils<Store, global = {}> {
      */
     renderCustomConfig(options: IRenderComponentParams<IFormRenderProps>): LabelWithRenderModel;
     renderCheckboxConfig(options: IRenderComponentParams<IFormCheckboxProps>): LabelWithCheckboxModel;
+    renderCascaderConfig(options: IRenderComponentParams<IFormCascaderProps>): LabelWithCascaderModel;
     /**
      * 生成一个表单基础组件
      * 应用场景一般自定义组件由很多比如input,select等组成，可以通过此方法快速创建一个组件

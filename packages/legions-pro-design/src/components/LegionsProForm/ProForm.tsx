@@ -30,6 +30,7 @@ import { BaseFormFields, HlLabeledValue } from 'legions-lunar/model';
 import { legionsPlugins,LegionsPluginsExecute,LoggerManager } from 'legions-lunar/legion.plugin.sdk';
 import { formClasses,ProFormFields,ProFormUtils,size } from './ProFormUtils';
 import { cloneDeep } from 'lodash'
+import { LabelWithCascaderModel } from './FormCascader';
 const baseCls = `legions-pro-form`
 
 export interface IProFormProps<mapProps = {}> {
@@ -805,16 +806,19 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
             return super.createFormUpload(key,control,form,this.uid,viewModel);
         }
         else if (control instanceof LabelWithSwitchModel) {
-            return super.createFormSwitch(key,control,form,this.uid,viewModel)
+            return super.createFormSwitch(key,control,form,this.uid,viewModel);
         }
         else if (control instanceof LabelWithRadioButtonModel) {
-            return super.createFormRadioButton(key,control,form,this.uid,viewModel)
+            return super.createFormRadioButton(key,control,form,this.uid,viewModel);
         }
         else if (control instanceof LabelWithTextModel) {
-            return super.createFormText(key,control,form,this.uid,viewModel)
+            return super.createFormText(key,control,form,this.uid,viewModel);
         }
         else if (control instanceof LabelWithCheckboxModel) {
-            return super.createFormCheckbox(key,control,form,this.uid,viewModel)
+            return super.createFormCheckbox(key,control,form,this.uid,viewModel);
+        }
+        else if (control instanceof LabelWithCascaderModel) {
+            return super.createFormCascader(key,control,form,this.uid,viewModel);
         }
         else {
             throw new Error(`ComponentClass: Unknown control. control = ${JSON.stringify(control)}`);
@@ -1000,6 +1004,7 @@ export class LegionsProForm<mapProps = {}> extends React.Component<IProFormProps
     static LabelWithRadioButtonModel = LabelWithRadioButtonModel;
     static LabelWithTextModel = LabelWithTextModel;
     static LabelWithInputModel = LabelWithInputModel;
+    static LabelWithCascaderModel = LabelWithCascaderModel;
     static BaseFormFields = BaseFormFields
     static ProFormFields = ProFormFields
     /** 根据时间戳生成，每次初始化表单组件都会产生新的值*/

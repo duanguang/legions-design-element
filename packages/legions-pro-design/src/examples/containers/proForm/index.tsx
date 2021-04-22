@@ -220,6 +220,39 @@ export class ProForm extends React.Component<IProps,IState> {
                 },
             },
         })
+        formUtils.renderCascaderConfig({
+            iAntdProps: formUtils.createAntdProps('cascader',2,'级联'),
+            iFormProps: {
+                ...formUtils.createLayout('级联',5,7),
+                options:[{
+                    value: 'zhejiang',
+                    label: '浙江',
+                    children: [{
+                      value: 'hangzhou',
+                      label: '杭州',
+                      children: [{
+                        value: 'xihu',
+                        label: 'West Lake',
+                      }],
+                    }],
+                  }, {
+                    value: 'jiangsu',
+                    label: 'Jiangsu',
+                    children: [{
+                      value: 'nanjing',
+                      label: 'Nanjing',
+                      children: [{
+                        value: 'zhonghuamen',
+                        label: 'Zhong Hua Men',
+                      }],
+                    }],
+                    }],
+                onChange: (value,selectedOptions) => {
+                    console.log(selectedOptions,'selectedOptions');
+                }
+            },
+            rules: rules.cascader,
+        })
         formUtils.renderCustomConfig({
             iAntdProps: formUtils.createAntdProps('customRender',2,''),
             iFormProps: {
@@ -274,6 +307,7 @@ export class ProForm extends React.Component<IProps,IState> {
             formUtils.getFormConfig('customRenderInput'),
             formUtils.getFormConfig('customRender'),
             formUtils.getFormConfig('upload'),
+            formUtils.getFormConfig('cascader'),
             /* formUtils.getFormConfig('textarea'), */
             /* formUtils.getFormConfig('password'),
             formUtils.getFormConfig('numberText'),
@@ -509,8 +543,9 @@ export class ProForm extends React.Component<IProps,IState> {
                         return new FormFields(props)
                     }}
                     onFieldsChange={(props,formFields) => {
+                        console.log('onFieldsChange',formFields,this.formRef.viewModel.InputDataModel);
                         this.formRef.store.updateFormInputData(this.formRef.uid,formFields)
-                        console.log('onFieldsChange');
+                       
                     }}
                     size="small"
                     controls={this.createConfig()}
