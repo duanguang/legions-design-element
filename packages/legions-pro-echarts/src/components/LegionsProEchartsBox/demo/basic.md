@@ -15,7 +15,7 @@ base box
 
 ```jsx
 import React from 'react';
-import { LegionsProEchartsBox, LegionsProEchartsChartPie } from 'legions-pro-echarts';
+import { LegionsProEchartsBox, LegionsProEchartsPie } from 'legions-pro-echarts';
 
 export class Demo extends React.Component {
     render() {

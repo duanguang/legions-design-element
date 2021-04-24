@@ -15,7 +15,7 @@ import { ChartsPieDemo1, ChartsPieDemo2 } from './charts.pie';
 import { ChartsRadarDemo1 } from './charts.radar';
 import WordCloudDemo from './charts.wordCloud';
 const { ProRow, ProCol } = LegionsProEchartsLayout;
-export class LegionsProEchartsChartPieDemo extends React.Component {
+export class LegionsProEchartsPieDemo extends React.Component {
     render() {
         return (
             <LegionsProEchartsLayout gutter={6}>

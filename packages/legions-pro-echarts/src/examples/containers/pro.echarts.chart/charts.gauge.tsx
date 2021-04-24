@@ -1,11 +1,11 @@
-import { LegionsProEchartsBox, LegionsProEchartsChartGauge } from 'components';
+import { LegionsProEchartsBox, LegionsProEchartsGauge } from 'components';
 import React from 'react';
 
 export class ChartsGaugeDemo1 extends React.Component {
     render() {
         return (
             <LegionsProEchartsBox title="仪表盘" height="350px">
-                <LegionsProEchartsChartGauge
+                <LegionsProEchartsGauge
                     option={{
                         series: [{
                             data: [{
@@ -14,7 +14,7 @@ export class ChartsGaugeDemo1 extends React.Component {
                             }]
                         }]
                     }}
-                ></LegionsProEchartsChartGauge>
+                ></LegionsProEchartsGauge>
             </LegionsProEchartsBox>
         )
     }

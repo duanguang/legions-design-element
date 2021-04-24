@@ -1,4 +1,4 @@
 import React from 'react';
-export declare class LegionsProEchartsChartPieDemo extends React.Component {
+export declare class LegionsProEchartsPieDemo extends React.Component {
     render(): JSX.Element;
 }
