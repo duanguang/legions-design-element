@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.7-beta.2
+  *  legions-pro-design v0.0.7-beta.17
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -12,7 +12,6 @@ import LegionsModels from '../LegionsModels';
 import { editTableColumns, queryTableColumns } from '../services';
 import LegionsCore from '../LegionsCore';
 import { cloneDeep } from 'lodash';
-import LegionsProTable from '../LegionsProTable';
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -954,6 +953,32 @@ var ProTableView = /** @class */ (function () {
     return ProTableView;
 }());
 
+/** 列表页数据模型类*/
+var PageListEntity = /** @class */ (function (_super) {
+    __extends(PageListEntity, _super);
+    function PageListEntity(options) {
+        var _this = _super.call(this) || this;
+        _this.total = 0;
+        _this.current = 1;
+        _this.pageSize = 10;
+        _this.result = [];
+        if (options && typeof options.responseData === 'object') {
+            _this.message = options.responseData.msg || '查询成功';
+            _this.success = options.responseData.ok ? true : false;
+            _this.code = options.responseData.status || '';
+            _this.total = options.responseData.total || 0;
+            _this.current = options.responseData.current || 1;
+            _this.pageSize = options.responseData.pageSize || 10;
+            if (options.mappingEntity &&
+                typeof options.mappingEntity === 'function') {
+                options.mappingEntity(_this, options.responseData);
+            }
+        }
+        return _this;
+    }
+    return PageListEntity;
+}(LegionsModels.BaseEntity));
+
 var ProTableLocalView = /** @class */ (function () {
     function ProTableLocalView() {
         /**
@@ -1005,8 +1030,7 @@ var ProTableLocalView = /** @class */ (function () {
                 var model = {};
                 if (autoQuery.mappingEntity) {
                     model = {
-                        //@ts-ignore
-                        model: LegionsProTable.ProTableBaseClass.pageListEntity,
+                        model: PageListEntity,
                         onBeforTranform: function (value) {
                             return {
                                 responseData: value,
@@ -1085,7 +1109,7 @@ var ProTableLocalView = /** @class */ (function () {
 /*
  * @Author: duanguang
  * @Date: 2020-12-26 11:35:17
- * @LastEditTime: 2021-03-02 18:53:40
+ * @LastEditTime: 2021-04-01 14:54:12
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreTable/index.ts
@@ -1159,6 +1183,7 @@ var LegionsStoreTable = /** @class */ (function (_super) {
         return this.HlTableLocalStateContainer.get(uid);
     };
     LegionsStoreTable.meta = __assign({}, LegionsStore.StoreBase.meta);
+    LegionsStoreTable.pageListEntity = PageListEntity;
     __decorate([
         observable,
         __metadata("design:type", Object)

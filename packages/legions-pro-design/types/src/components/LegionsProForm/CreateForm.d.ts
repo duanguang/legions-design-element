@@ -6,7 +6,7 @@ import { LabelWithDatePickerModel } from './FormDatePicker';
 import { LabelWithMonthPickerModel } from './FormMonthPicker';
 import { LabelWithRangePickerModel } from './FormRangePicker';
 import { LabelWithUploadModel } from './FormUpload';
-import { LabelWithSelectModel } from './interface';
+import { LabelWithCascaderModel, LabelWithSelectModel } from './interface';
 import { LabelWithInputNumberModel } from './FormInputNumber';
 import { InstanceProForm } from './interface';
 import { LabelWithSwitchModel } from './FormSwitch';
@@ -25,5 +25,6 @@ export default abstract class CreateForm<Props, State> extends React.Component<P
     protected createFormSwitch(key: number | string, control: LabelWithSwitchModel, form: WrappedFormUtils, formUid: string, formRef: InstanceProForm): JSX.Element;
     protected createFormRadioButton(key: number | string, control: LabelWithRadioButtonModel, form: WrappedFormUtils, formUid: string, formRef: InstanceProForm): JSX.Element;
     protected createFormText(key: number | string, control: LabelWithTextModel, form: WrappedFormUtils, formUid: string, formRef: InstanceProForm): JSX.Element;
+    protected createFormCascader(key: number | string, control: LabelWithCascaderModel, form: WrappedFormUtils, formUid: string, formRef: InstanceProForm): JSX.Element;
     protected createFormCheckbox(key: number | string, control: LabelWithCheckboxModel, form: WrappedFormUtils, formUid: string, formRef: InstanceProForm): JSX.Element;
 }

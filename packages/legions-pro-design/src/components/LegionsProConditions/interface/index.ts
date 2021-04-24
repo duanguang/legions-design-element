@@ -1,8 +1,8 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-08 12:00:22
- * @LastEditTime: 2021-03-09 22:36:40
- * @LastEditors: duanguang
+ * @LastEditTime: 2021-03-25 14:24:26
+ * @LastEditors: zhaoliang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProConditions/interface/index.ts
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
@@ -131,6 +131,8 @@ export interface IQueryDateProps extends IQueryProps ,Weaken<DatePickerProps,'on
 }
 export interface IQueryRangePickerProps extends IQueryProps, Weaken<RangePickerProps,'onChange'|'placeholder'>{
     placeholder?: [string,string]
+    /** 取值时对日期进行格式化 参数详情见moment.js官方文档: http://momentjs.cn/docs/#/displaying/format/ */
+    transformFormat?: string
     /** 只读 */
     readonly onChange?: (originValue: {
         date: [moment.Moment,moment.Moment], dateString: [string, string]

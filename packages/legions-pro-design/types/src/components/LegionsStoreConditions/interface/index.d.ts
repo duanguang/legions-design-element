@@ -93,7 +93,7 @@ export interface ISelectAutoQuery<Model = {}> {
      * @type {string}
      * @memberof ISelectAutoQuery
      */
-    token?: string;
+    token?: string | (() => string);
     /**
     * 在下拉组件装载时是否默认自动发送请求
     *

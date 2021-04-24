@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.7-beta.6
+  *  legions-pro-design v0.0.7-beta.20
   * (c) 2021 duanguang
   * @license MIT
   */

@@ -82,7 +82,7 @@ export default class LegionsProTable<TableRow = {}, Model = {}> extends React.Co
         pageSize: number;
         selectedRowKeys: string[] | number[];
         _expandRow?: string;
-        _type?: "radio" | "checkbox";
+        _type?: "checkbox" | "radio";
         _rowSelectionClickType?: "radio" | "check";
         columns?: (TableColumnConfig<{}> & import("../LegionsStoreTable/interface").ITableColumnConfig)[];
         _obTableListCustom: import("../LegionsModels/pro.table.model").TableColumnsContainerEntity;
@@ -125,7 +125,7 @@ export default class LegionsProTable<TableRow = {}, Model = {}> extends React.Co
         updateOpenRowSelection: (isOpenRowSelection: boolean) => void;
     };
     get getLocalViewStore(): import("brain-store-utils").ViewModel<import("../LegionsStoreTable/ProTableLocalView").ProTableLocalView> & {
-        obState: import("brain-store-utils").observablePromise.PramsResult<import("./pageListEntity").PageListEntity<any>>;
+        obState: import("brain-store-utils").observablePromise.PramsResult<import("../LegionsStoreTable/pageListEntity").PageListEntity<any>>;
         _obStateMap: import("mobx").ObservableMap<string, {
             data: any[];
             total: number;

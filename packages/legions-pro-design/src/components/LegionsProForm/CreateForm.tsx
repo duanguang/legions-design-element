@@ -7,7 +7,7 @@ import FormMonthPicker, { LabelWithMonthPickerModel } from './FormMonthPicker';
 import FormRangePicker, { LabelWithRangePickerModel } from './FormRangePicker';
 import FormUpload, { LabelWithUploadModel } from './FormUpload';
 import FormSelect from './FormSelect';
-import {LabelWithSelectModel} from './interface'
+import {LabelWithCascaderModel, LabelWithSelectModel} from './interface'
 import FormInputNumber, { LabelWithInputNumberModel } from './FormInputNumber';
 import { InstanceProForm } from './interface';
 import FormSwitch, { LabelWithSwitchModel } from './FormSwitch';
@@ -15,6 +15,7 @@ import FormRadioButton, { LabelWithRadioButtonModel } from './FormRadioButton';
 /* import FormHLTable, { LabelWithHLTableModel } from './FormHLTable'; */
 import FormText,{ LabelWithTextModel } from './FormText';
 import FormCheckbox, { LabelWithCheckboxModel } from './FormCheckbox';
+import FormCascader from './FormCascader';
 export default abstract class CreateForm<Props, State> extends React.Component<Props, State> {
     protected createFormInput(key: number|string, control: LabelWithInputModel, form: WrappedFormUtils, formUid: string,formRef: InstanceProForm) {
         const { iAntdProps,iFormProps,rules } = control;
@@ -176,21 +177,17 @@ export default abstract class CreateForm<Props, State> extends React.Component<P
         )
     }
 
-    /* protected createFormHlTable(key:number,control:LabelWithHLTableModel,form:WrappedFormUtils,formUid:string){
-        let {iAntdProps,rules,iFormWithTable}=control;
-        return(
-            <FormHLTable
-                iAntdProps={iAntdProps}
-                form={form}
-                rules={rules}
-                key={key}
-                formUid={formUid}
-                iFormWithTable={iFormWithTable}
-            >
-
-            </FormHLTable>
-        )
-    } */
+    protected createFormCascader(key: number | string,control: LabelWithCascaderModel,form: WrappedFormUtils,formUid: string,formRef: InstanceProForm) {
+        let { iAntdProps,rules,iFormProps } = control;
+        return <FormCascader
+            iAntdProps={iAntdProps}
+            form={form}
+            rules={rules}
+            key={key}
+            formUid={formUid}
+            iFormWithCascader={iFormProps}
+        ></FormCascader>
+    }
     protected createFormCheckbox(key: number|string, control: LabelWithCheckboxModel, form: WrappedFormUtils, formUid: string,formRef: InstanceProForm) {
         let { iAntdProps, rules, iFormProps } = control;
         return (

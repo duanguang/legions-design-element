@@ -1,6 +1,5 @@
 import React from 'react';
 import { InstanceProTable, ITableColumnConfigProps } from './interface';
-import { PageListEntity } from './pageListEntity';
 /**
  * 列表组件基类
  *
@@ -14,7 +13,7 @@ import { PageListEntity } from './pageListEntity';
  * @template QueryParams 搜索条件对象类型约束结构 默认any类型
  */
 export declare class ProTableBaseClass<P, S, Columns = {}, QueryParams = any> extends React.Component<P, S> {
-    static pageListEntity: typeof PageListEntity;
+    static pageListEntity: typeof import("../LegionsStoreTable/pageListEntity").PageListEntity;
     tableRef: InstanceProTable;
     queryPrams: QueryParams;
     private columnsDataMap;

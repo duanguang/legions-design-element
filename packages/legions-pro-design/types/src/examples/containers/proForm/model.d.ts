@@ -34,6 +34,7 @@ export declare class FormFields extends LegionsProForm.ProFormFields<FormFields>
      */
     priceType: IBaseFormFields<string>;
     price: IBaseFormFields<string>;
+    cascader: IBaseFormFields<string[]>;
     constructor(form?: FormFields);
 }
 export {};

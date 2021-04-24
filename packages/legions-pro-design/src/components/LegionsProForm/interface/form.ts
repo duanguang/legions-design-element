@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-29 10:26:57
- * @LastEditTime: 2021-03-05 16:14:36
+ * @LastEditTime: 2021-04-20 15:13:35
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProForm/interface/form.ts
@@ -104,13 +104,23 @@ interface IMethods {
   /** 表格表单变更数据行编辑及保存状态
    * 表格表单中使用 */
   updateRecordEditData?: (record: Object) => void;
+  addEditRecord?:(record:Object,isRecordEdit?:boolean) => void ;
+  deleteEditRecord?: (rowKey: string | number) => void;
+  /** 设置表格表单列表数据源数据 */
+  setTableFormDataSource?: (data: any[]) => void;
   /** 查询指定下拉组件数据项 */
   getQuerySelectOption?: (
     /** 下拉组件name值，对应container.component.JsonProperty.name */ name: string,
     /** 下拉选项key值*/ optionKey: string
   ) => { readonly option: HlLabeledValue };
 
-  setFormStates: <T extends IProFormFields['componentModel']>(name: string,callback: (state: T) => void) => void
+  setFormStates: <T extends IProFormFields['componentModel']>(name: string,callback: (state: T) => void) => void;
+
+  /** 添加新的表单项 */
+  addFormItem: (list: Array<IProFormFields['componentModel']>) => void;
+
+  /** 清空表单选项 */
+  clearFormItem: () => void;
 }
 export interface IFormState {
   /**

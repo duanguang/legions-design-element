@@ -5,7 +5,7 @@ import { ViewModel } from 'brain-store-utils';
 import { IAntdSelectOption } from '../../interface/antd';
 import LegionsStoreForm from '..';
 import { HLFormLocalView, HlFormView, IOtherView } from '../proFormStore';
-import { LabelWithDatePickerModel, LabelWithSelectModel, LabelWithInputModel, LabelWithInputNumberModel, LabelWithMonthPickerModel, LabelWithRadioButtonModel, LabelWithRangePickerModel, LabelWithSwitchModel, LabelWithTextModel, LabelWithUploadModel, LabelWithDatePickerPartialModel, LabelWithInputPartialModel, LabelWithInputNumberPartialModel, LabelWithMonthPickerPartialModel, LabelWithRadioButtonPartialModel, LabelWithRangePickerPartialModel, LabelWithSwitchPartialModel, LabelWithTextPartialModel, LabelWithUploadPartialModel, LabelWithCheckboxModel } from '../../LegionsProForm/interface';
+import { LabelWithDatePickerModel, LabelWithSelectModel, LabelWithInputModel, LabelWithInputNumberModel, LabelWithMonthPickerModel, LabelWithRadioButtonModel, LabelWithRangePickerModel, LabelWithSwitchModel, LabelWithTextModel, LabelWithUploadModel, LabelWithDatePickerPartialModel, LabelWithInputPartialModel, LabelWithInputNumberPartialModel, LabelWithMonthPickerPartialModel, LabelWithRadioButtonPartialModel, LabelWithRangePickerPartialModel, LabelWithSwitchPartialModel, LabelWithTextPartialModel, LabelWithUploadPartialModel, LabelWithCheckboxModel, LabelWithCascaderModel } from '../../LegionsProForm/interface';
 import LegionsModels from '../../LegionsModels';
 import { TabsFormView, TabsItemView } from '../tabsView';
 export interface IErrorView {
@@ -220,7 +220,7 @@ export declare type ITabsFormItem = {
     tabsItemView: TabsItemView;
 };
 export interface IProFormFields {
-    componentModel: LabelWithInputModel | LabelWithInputNumberModel | LabelWithDatePickerModel | LabelWithMonthPickerModel | LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel | LabelWithRadioButtonModel | LabelWithTextModel | LabelWithSelectModel | LabelWithCheckboxModel;
+    componentModel: LabelWithInputModel | LabelWithInputNumberModel | LabelWithDatePickerModel | LabelWithMonthPickerModel | LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel | LabelWithRadioButtonModel | LabelWithTextModel | LabelWithSelectModel | LabelWithCheckboxModel | LabelWithCascaderModel;
 }
 export interface IProUpdateFormFields {
     componentModel: LabelWithInputPartialModel | LabelWithInputNumberPartialModel | LabelWithDatePickerPartialModel | LabelWithMonthPickerPartialModel | LabelWithRangePickerPartialModel | LabelWithUploadPartialModel | LabelWithSwitchPartialModel | LabelWithRadioButtonPartialModel | LabelWithTextPartialModel;

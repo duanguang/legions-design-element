@@ -1,7 +1,7 @@
 import React from 'react';
 import UserInfoStore from '../../stores/UserInfoStore';
 import LegionsStoreLayout from '../../../components/LegionsStoreLayout';
-import { InstanceLegionsProModal } from '../../../components/LegionsProModal/interface';
+import { InstanceProModal } from '../../../components/LegionsProModal/interface';
 import { InstanceProTable } from '../../../components/LegionsProTable/interface';
 interface IProps {
     store?: UserInfoStore;
@@ -11,7 +11,7 @@ interface IState {
 }
 export declare class ProLayout extends React.Component<IProps, IState> {
     modalContentType: 'pass' | 'task' | '';
-    modalRef: InstanceLegionsProModal;
+    modalRef: InstanceProModal;
     taskCenterTableRef: InstanceProTable;
     constructor(props: IProps);
     componentDidMount(): void;

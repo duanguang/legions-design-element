@@ -9,8 +9,12 @@ function isChangelog(pathname) {
 export default collect(async (nextProps) => {
   const { pathname } = nextProps.location;
   const pageDataPath = pathname.replace('-cn','').split('/');
-  for(let k in nextProps.data.components) {
-    nextProps.data.components[k.toLocaleLowerCase()] = nextProps.data.components[k]
+  if (nextProps.data.components['src']) {
+    nextProps.data.components = nextProps.data.components['src']['components']
+  } else {
+    for(let k in nextProps.data.components) {
+      nextProps.data.components[k.toLocaleLowerCase()] = nextProps.data.components[k]
+    }
   }
   const pageData = isChangelog(pathname) ?
     nextProps.data.changelog.CHANGELOG :

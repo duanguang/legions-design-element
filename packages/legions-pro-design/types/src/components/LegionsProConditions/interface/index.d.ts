@@ -109,6 +109,8 @@ export interface IQueryDateProps extends IQueryProps, Weaken<DatePickerProps, 'o
 }
 export interface IQueryRangePickerProps extends IQueryProps, Weaken<RangePickerProps, 'onChange' | 'placeholder'> {
     placeholder?: [string, string];
+    /** 取值时对日期进行格式化 参数详情见moment.js官方文档: http://momentjs.cn/docs/#/displaying/format/ */
+    transformFormat?: string;
     /** 只读 */
     readonly onChange?: (originValue: {
         date: [moment.Moment, moment.Moment];

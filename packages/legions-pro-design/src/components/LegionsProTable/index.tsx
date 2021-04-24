@@ -738,7 +738,10 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
     onRowClassName(record,index): string {
         const RowIndex = this.getViewStore.selectedRowKeys.findIndex((item) => item === record[this.props.uniqueKey]);
         const getCheckboxPropsItem = this.getCheckboxPropsItem(record)
-        if (RowIndex > -1) {
+        if(this.props.rowClassName){
+            return this.props.rowClassName(record,index)
+        }
+        else if (RowIndex > -1) {
             return 'row-color'
         }
         else if (getCheckboxPropsItem && getCheckboxPropsItem['disabled']) {

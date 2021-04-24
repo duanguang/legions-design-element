@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-08 15:19:23
- * @LastEditTime: 2021-03-05 15:47:20
+ * @LastEditTime: 2021-04-22 17:41:19
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProForm/ProFormUtils.tsx
@@ -15,7 +15,7 @@ import {
     WrappedFormUtils,
     ColProps
 } from '../interface/antd';
-import { IFormCheckboxProps, IFormDatePickerProps, IFormInputNumberProps, IFormInputProps, IFormMonthPickerProps, IFormRadioButtonProps, IFormRangePickerProps, IFormRenderProps, IFormSelectProps, IFormState, IFormSwitchProps, IFormTextProps, IFormUploadProps, InstanceProForm, LabelWithCheckboxModel, LabelWithDatePickerModel, LabelWithSelectModel, LabelWithInputModel, LabelWithInputNumberModel, LabelWithMonthPickerModel, LabelWithRadioButtonModel, LabelWithRangePickerModel, LabelWithRenderModel, LabelWithSwitchModel, LabelWithTextModel, LabelWithUploadModel } from './interface';
+import { IFormCheckboxProps, IFormDatePickerProps, IFormInputNumberProps, IFormInputProps, IFormMonthPickerProps, IFormRadioButtonProps, IFormRangePickerProps, IFormRenderProps, IFormSelectProps, IFormState, IFormSwitchProps, IFormTextProps, IFormUploadProps, InstanceProForm, LabelWithCheckboxModel, LabelWithDatePickerModel, LabelWithSelectModel, LabelWithInputModel, LabelWithInputNumberModel, LabelWithMonthPickerModel, LabelWithRadioButtonModel, LabelWithRangePickerModel, LabelWithRenderModel, LabelWithSwitchModel, LabelWithTextModel, LabelWithUploadModel, LabelWithCascaderModel } from './interface';
 import FormInput from './FormInput';
 import FormInputNumber from './FormInputNumber';
 import FormSelect from './FormSelect';
@@ -29,6 +29,9 @@ import FormText from './FormText';
 import { BaseFormFields } from 'legions-lunar/model';
 import { ClassOf } from 'legions-lunar/types/api/typescript';
 import { createFormRule } from 'legions-decorator/async.validator'; 
+import { shortHash } from 'legions-lunar/object-hash';
+import FormCheckbox from './FormCheckbox';
+import FormCascader, { IFormCascaderProps } from './FormCascader';
 interface IRenderComponentParams<T> {
 
     /**
@@ -63,7 +66,7 @@ interface IRenderComponentParams<T> {
 interface IProFormUtils {
     componentModel: LabelWithInputModel | LabelWithInputNumberModel | LabelWithDatePickerModel | LabelWithMonthPickerModel |
     LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel |
-    LabelWithRadioButtonModel | LabelWithTextModel | LabelWithSelectModel
+    LabelWithRadioButtonModel | LabelWithTextModel | LabelWithSelectModel | LabelWithCheckboxModel|LabelWithCascaderModel
 }
 export const size = {
     'default': {
@@ -92,6 +95,7 @@ export class ProFormUtils<Store,global = {}>{
     static LabelWithRadioButtonModel = LabelWithRadioButtonModel;
     static LabelWithTextModel = LabelWithTextModel;
     static LabelWithInputModel = LabelWithInputModel;
+    static LabelWithCheckboxModel = LabelWithCheckboxModel;
     static isFormHasError(getFieldsError: () => any) {
         let error = getFieldsError && getFieldsError()
         let has = false
@@ -159,48 +163,60 @@ export class ProFormUtils<Store,global = {}>{
             storeView._initFormItemField(key,iFormItemProps,'custom')
         }
     }
+    private createUid(name:string) {
+        const timeId = new Date().getTime()
+         const uid = `${name}-${shortHash(`${timeId}${name}`)}`
+         return uid;
+     }
+     private transformAntdProps(props: IAntdProps) {
+         const id = props.id;
+         if (!this[id]) {
+             return {...props,uuid:this.createUid(id)}
+         }
+         return this[id]['iAntdProps'];
+     }
     renderSelectConfig(options: IRenderComponentParams<IFormSelectProps>): LabelWithSelectModel {
         this.chkRenderConfig(options.iAntdProps.id)
-        this[options.iAntdProps.id] = new LabelWithSelectModel(options.iAntdProps,options.iFormProps,options.rules || [])
+        this[options.iAntdProps.id] = new LabelWithSelectModel(this.transformAntdProps(options.iAntdProps),options.iFormProps,options.rules || [])
         return this[options.iAntdProps.id];
     }
     renderInputConfig<T extends IFormInputProps>(options: IRenderComponentParams<T>): LabelWithInputModel {
         this.chkRenderConfig(options.iAntdProps.id)
-        return this[options.iAntdProps.id] = new LabelWithInputModel(options.iAntdProps,options.iFormProps,options.rules || []);
+        return this[options.iAntdProps.id] = new LabelWithInputModel(this.transformAntdProps(options.iAntdProps),options.iFormProps,options.rules || []);
     }
     renderTextConfig<T extends IFormTextProps>(options: IRenderComponentParams<T>): LabelWithTextModel {
         this.chkRenderConfig(options.iAntdProps.id)
-        this[options.iAntdProps.id] = new LabelWithTextModel(options.iAntdProps,options.iFormProps,options.rules || [])
+        this[options.iAntdProps.id] = new LabelWithTextModel(this.transformAntdProps(options.iAntdProps),options.iFormProps,options.rules || [])
         return this[options.iAntdProps.id];
     }
     renderDatePickerConfig(options: IRenderComponentParams<IFormDatePickerProps>): LabelWithDatePickerModel {
         this.chkRenderConfig(options.iAntdProps.id)
-        this[options.iAntdProps.id] = new LabelWithDatePickerModel(options.iAntdProps,options.iFormProps,options.rules || [])
+        this[options.iAntdProps.id] = new LabelWithDatePickerModel(this.transformAntdProps(options.iAntdProps),options.iFormProps,options.rules || [])
         return this[options.iAntdProps.id];
     }
     renderMonthPickerConfig(options: IRenderComponentParams<IFormMonthPickerProps>): LabelWithMonthPickerModel {
         this.chkRenderConfig(options.iAntdProps.id)
-        return this[options.iAntdProps.id] = new LabelWithMonthPickerModel(options.iAntdProps,options.iFormProps,options.rules || []);
+        return this[options.iAntdProps.id] = new LabelWithMonthPickerModel(this.transformAntdProps(options.iAntdProps),options.iFormProps,options.rules || []);
     }
     renderRangePickerConfig(options: IRenderComponentParams<IFormRangePickerProps>): LabelWithRangePickerModel {
         this.chkRenderConfig(options.iAntdProps.id)
-        return this[options.iAntdProps.id] = new LabelWithRangePickerModel(options.iAntdProps,options.iFormProps,options.rules || []);
+        return this[options.iAntdProps.id] = new LabelWithRangePickerModel(this.transformAntdProps(options.iAntdProps),options.iFormProps,options.rules || []);
     }
     renderInputNumberConfig(options: IRenderComponentParams<IFormInputNumberProps>): LabelWithInputNumberModel {
         this.chkRenderConfig(options.iAntdProps.id)
-        return this[options.iAntdProps.id] = new LabelWithInputNumberModel(options.iAntdProps,options.iFormProps,options.rules || []);
+        return this[options.iAntdProps.id] = new LabelWithInputNumberModel(this.transformAntdProps(options.iAntdProps),options.iFormProps,options.rules || []);
     }
     renderRadioButtonConfig(options: IRenderComponentParams<IFormRadioButtonProps>): LabelWithRadioButtonModel {
         this.chkRenderConfig(options.iAntdProps.id)
-        return this[options.iAntdProps.id] = new LabelWithRadioButtonModel(options.iAntdProps,options.iFormProps,options.rules || []);
+        return this[options.iAntdProps.id] = new LabelWithRadioButtonModel(this.transformAntdProps(options.iAntdProps),options.iFormProps,options.rules || []);
     }
     renderSwitchConfig(options: IRenderComponentParams<IFormSwitchProps>): LabelWithSwitchModel {
         this.chkRenderConfig(options.iAntdProps.id)
-        return this[options.iAntdProps.id] = new LabelWithSwitchModel(options.iAntdProps,options.iFormProps,options.rules || []);
+        return this[options.iAntdProps.id] = new LabelWithSwitchModel(this.transformAntdProps(options.iAntdProps),options.iFormProps,options.rules || []);
     }
     renderUploadConfig(options: IRenderComponentParams<IFormUploadProps>): LabelWithUploadModel {
         this.chkRenderConfig(options.iAntdProps.id)
-        return this[options.iAntdProps.id] = new LabelWithUploadModel(options.iAntdProps,options.iFormProps,options.rules || []);
+        return this[options.iAntdProps.id] = new LabelWithUploadModel(this.transformAntdProps(options.iAntdProps),options.iFormProps,options.rules || []);
     }
 
     /**
@@ -218,7 +234,10 @@ export class ProFormUtils<Store,global = {}>{
         this.chkRenderConfig(options.iAntdProps.id)
         return this[options.iAntdProps.id] = new LabelWithCheckboxModel(options.iAntdProps,options.iFormProps,options.rules || []);
     }
-    
+    renderCascaderConfig(options: IRenderComponentParams<IFormCascaderProps>): LabelWithCascaderModel {
+        this.chkRenderConfig(options.iAntdProps.id)
+        return this[options.iAntdProps.id] = new LabelWithCascaderModel(options.iAntdProps,options.iFormProps,options.rules || []);
+    }
     /**
      * 生成一个表单基础组件
      * 应用场景一般自定义组件由很多比如input,select等组成，可以通过此方法快速创建一个组件
@@ -412,6 +431,32 @@ export class ProFormUtils<Store,global = {}>{
 
                 </FormText>
             )
+        }
+        else if (control instanceof LabelWithCheckboxModel) {
+            let { iAntdProps,rules,iFormProps } = control;
+            return (
+                <FormCheckbox
+                    iAntdProps={iAntdProps}
+                    form={form}
+                    rules={rules}
+                    key={key}
+                    formUid={formUid}
+                    iFormWithCheckbox={iFormProps}
+                >
+
+                </FormCheckbox>
+            )
+        }
+        else if (control instanceof LabelWithCascaderModel) {
+            let { iAntdProps,rules,iFormProps } = control;
+            return <FormCascader
+                iAntdProps={iAntdProps}
+                form={form}
+                rules={rules}
+                key={key}
+                formUid={formUid}
+                iFormWithCascader={iFormProps}
+            ></FormCascader>;
         }
         else {
             throw new Error(`HLFormUtils: Unknown control. control = ${JSON.stringify(control)}`);

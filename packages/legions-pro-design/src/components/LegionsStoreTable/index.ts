@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-26 11:35:17
- * @LastEditTime: 2021-03-02 18:53:40
+ * @LastEditTime: 2021-04-01 14:54:12
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreTable/index.ts
@@ -24,6 +24,7 @@ import { ProTableView } from './ProTableView';
 import { ProTableLocalView } from './ProTableLocalView';
 import {IStoreBaseMeta} from '../LegionsStore/interface';
 import { ObservableMap } from 'mobx';
+import { PageListEntity } from './pageListEntity';
 
 type Proxify<T> = {
   [P in keyof T]: T[P];
@@ -34,6 +35,7 @@ export default class LegionsStoreTable extends LegionsStore.StoreBase {
   static meta: IStoreBaseMeta = {
     ...LegionsStore.StoreBase.meta,
   };
+  static pageListEntity = PageListEntity;
   constructor(context) {
     super(context);
   }

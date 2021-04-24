@@ -33,7 +33,7 @@ export default class FormSelect extends AbstractForm<IFormWithSelectProps, IStat
     onSelect(value: any, option: any): void;
     onSearch(value: string): void;
     onClear: () => void;
-    onChange(even: any): void;
+    onChange(even: any, res: any): void;
     onPagingQuery: (pageIndex: number, pageSize: number, value?: string | string[] | number[] | LabeledValue | LabeledValue[]) => void;
     shouldComponentUpdate(nextProps: IFormWithSelectProps, nextState: any, context: any): boolean;
     render(): JSX.Element;

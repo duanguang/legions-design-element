@@ -5,14 +5,13 @@ import { LegionsProForm,LegionsProPageContainer,LegionsProLayout,LegionsProModal
 import { observablePromise } from 'legions/store-utils';
 import { observable } from 'legions/store';
 import { getSystem,getToken,HttpConfig,SocketUrl } from '../../constants/httpConfig';
-import { InstanceForm } from '../../../components/LegionsProForm/interface'
 import { FormFields } from '../proForm/model';
 import { ClassOf } from 'legions-lunar/types/api/typescript';
 import { exportTaskDeleteService,getMenuList } from '../../services/menuService';
 import UserInfoStore from '../../stores/UserInfoStore';
 import LegionsStoreLayout from '../../../components/LegionsStoreLayout';
 import { page } from 'legions-lunar/mobx-decorator';
-import { InstanceLegionsProModal } from '../../../components/LegionsProModal/interface';
+import { InstanceProModal } from '../../../components/LegionsProModal/interface';
 import { TableColumnConfig } from '../../../components/interface/antd';
 import { ExportTaskEntity } from '../../models/ExportTaskEntity';
 import { download } from 'legions-utils-tool/download';
@@ -130,7 +129,7 @@ let isRegisterTask = false;
 @observer
 export class ProLayout extends React.Component<IProps,IState> {
     @observable modalContentType: 'pass' | 'task' | '' = ''
-    modalRef: InstanceLegionsProModal = null;
+    modalRef: InstanceProModal = null;
     taskCenterTableRef: InstanceProTable = null
     constructor(props: IProps) {
         super(props)

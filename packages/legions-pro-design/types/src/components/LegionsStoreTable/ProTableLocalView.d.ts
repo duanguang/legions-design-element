@@ -1,6 +1,6 @@
 import { observablePromise } from 'legions/store-utils';
 import { ITableAutoQuery } from './interface';
-import { PageListEntity } from '../LegionsProTable/pageListEntity';
+import { PageListEntity } from './pageListEntity';
 export declare class ProTableLocalView {
     /**
      *

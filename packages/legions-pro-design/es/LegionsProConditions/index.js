@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.7-beta.10
+  *  legions-pro-design v0.0.7-beta.18
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -444,7 +444,37 @@ var LegionsProConditions = /** @class */ (function (_super) {
             callback(value);
         });
     };
+    LegionsProConditions.prototype.mapPrams = function (item, data, prams) {
+        if (item.jsonProperty.includes(',')) {
+            var paramslist = item.jsonProperty.split(',');
+            if (item instanceof ConditionRangePickerModel) {
+                var startTime = data && data[0] || '';
+                var endTime = data && data[1] || '';
+                var format = item.conditionsProps.transformFormat || 'YYYY-MM-DD';
+                prams[paramslist[0].trim()] = startTime && moment(startTime).format(format);
+                prams[paramslist[1].trim()] = endTime && moment(endTime).format(format);
+            }
+            else if (item instanceof ConditionSelectModel && item.conditionsProps.labelInValue) {
+                var key = data && data['key'] || '';
+                var label = data && data['label'] || '';
+                prams[paramslist[0].trim()] = key;
+                prams[paramslist[1].trim()] = label;
+            }
+            else {
+                if (process.env.NODE_ENV !== 'production') {
+                    console.error('非Select和RangePicker组件，参数jsonProperty建议不要使用带,(逗号)的字符串');
+                    console.error('if the components is not Select Or RangePicker, "jsonProperty" should be string without "," ');
+                }
+                prams[item.jsonProperty] = data;
+            }
+        }
+        else {
+            prams[item.jsonProperty] = data;
+        }
+        return prams;
+    };
     LegionsProConditions.prototype.initVModel = function (query) {
+        var _this = this;
         if (query === void 0) { query = this.props.query; }
         var data = {};
         var prams = {};
@@ -482,11 +512,14 @@ var LegionsProConditions = /** @class */ (function (_super) {
                         }
                         data[name] = newValue;
                     }
+                    else if (item instanceof ConditionRangePickerModel) {
+                        data[name] = ['', ''];
+                    }
                     else {
                         data[name] = defaultValue || value;
                     }
                 }
-                prams[item.jsonProperty] = data[name];
+                prams = _this.mapPrams(item, data[name], prams);
             }
         });
         this.queryPrams = prams;
@@ -503,7 +536,7 @@ var LegionsProConditions = /** @class */ (function (_super) {
         var prams = this.queryPrams;
         computedQuery.map(function (item) {
             if (!(item instanceof ConditionSearchModel)) {
-                prams[item.jsonProperty] = _this.vmModel[item.containerProps.name];
+                prams = _this.mapPrams(item, _this.vmModel[item.containerProps.name], prams);
             }
         });
         this.queryPrams = prams;
@@ -794,6 +827,7 @@ var LegionsProConditions = /** @class */ (function (_super) {
                 _this.setFieldsValues(containerProps.name, function (value) {
                     value.conditionsProps.value = '';
                 });
+                _this.viewStore._setVmModel(state);
                 _this.mapQueryValue();
             } }) : null;
         return (React.createElement(Tooltip, { trigger: "focus", title: (this.formatTrim(value)) ? React.createElement("pre", null, value.replace('↵', ',')) : null, placement: "topLeft" },
@@ -813,6 +847,12 @@ var LegionsProConditions = /** @class */ (function (_super) {
     };
     LegionsProConditions.prototype.renderSelect = function (component) {
         var conditionsProps = component.conditionsProps, containerProps = component.containerProps, jsonProperty = component.jsonProperty;
+        if (process.env.NODE_ENV !== 'production') {
+            if (jsonProperty.includes(',') && !conditionsProps.labelInValue) {
+                console.error('LegionsProCondition的Select组件未开启labelInValue时,参数jsonProperty建议不要使用带,(逗号)的字符串格式');
+                console.error('when the Select components of the LegionsProCondition is not used "labelInValue", "jsonProperty" should be string without "," ');
+            }
+        }
         var placeholder = conditionsProps.placeholder;
         var newData = conditionsProps.options;
         var labelSpan = conditionsProps.labelSpan, defaultValue = conditionsProps.defaultValue, visable = conditionsProps.visable, display = conditionsProps.display, _a = conditionsProps.value, value = _a === void 0 ? defaultValue : _a, prop = __rest(conditionsProps, ["labelSpan", "defaultValue", "visable", "display", "value"]);
@@ -838,8 +878,11 @@ var LegionsProConditions = /** @class */ (function (_super) {
     LegionsProConditions.prototype.renderDateRange = function (component) {
         var conditionsProps = component.conditionsProps, containerProps = component.containerProps, jsonProperty = component.jsonProperty;
         var labelSpan = conditionsProps.labelSpan, defaultValue = conditionsProps.defaultValue, visable = conditionsProps.visable, display = conditionsProps.display, _a = conditionsProps.value, value = _a === void 0 ? defaultValue : _a, prop = __rest(conditionsProps, ["labelSpan", "defaultValue", "visable", "display", "value"]);
-        var placeholder = conditionsProps.placeholder;
-        return (React.createElement(RangePicker, __assign({ allowClear: true }, prop, { value: value, onChange: this.handleChangeDate.bind(this, component), placeholder: placeholder })));
+        var placeholder = { placeholder: ['', ''] };
+        if (conditionsProps.placeholder) {
+            placeholder = { placeholder: conditionsProps.placeholder };
+        }
+        return (React.createElement(RangePicker, __assign({ allowClear: true }, prop, { value: value, onChange: this.handleChangeDate.bind(this, component) }, placeholder)));
     };
     LegionsProConditions.prototype.renderChxBox = function (component) {
         var conditionsProps = component.conditionsProps, containerProps = component.containerProps, jsonProperty = component.jsonProperty;
@@ -881,23 +924,26 @@ var LegionsProConditions = /** @class */ (function (_super) {
             React.createElement(Menu.Item, { key: "small" }, "\u7D27\u51D1"),
             React.createElement(Menu.Item, { key: "default" }, "\u8212\u9002")));
         return React.createElement(React.Fragment, null,
-            React.createElement(Row, { gutter: 8, type: "flex" },
-                React.createElement(Col, { span: 6 },
-                    React.createElement(Button, { type: "primary", icon: 'search', onClick: this.handleSearch.bind(this), style: { borderColor: "#46b8da", color: "white" } }, component.conditionsProps.searchText || '搜索')),
-                React.createElement(Col, { span: 6 },
-                    React.createElement(Dropdown.Button, { type: "ghost", onClick: this.handleReset.bind(this), overlay: menu }, component.conditionsProps.resetText || '重置')),
-                React.createElement(Col, { span: 4 },
+            React.createElement(Row, { gutter: 8, type: "flex", style: { flexWrap: 'nowrap' } },
+                React.createElement(Col, null,
+                    React.createElement(Button, { type: "primary", icon: 'search', onClick: this.handleSearch.bind(this) }, component.conditionsProps.searchText || '搜索')),
+                React.createElement(Col, { className: "legions-pro-query-reset" },
+                    React.createElement(Button, { className: "query-reset-btn", type: "primary", ghost: true, onClick: this.handleReset.bind(this) }, component.conditionsProps.resetText || '重置'),
+                    React.createElement(Dropdown, { overlay: menu },
+                        React.createElement(Button, { type: "primary", ghost: true, icon: "down" }))),
+                component.conditionsProps.onRefresh && React.createElement(Col, null,
                     React.createElement(Button, { onClick: function () {
                             var item = _this.props.query.find(function (item) { return item instanceof ConditionSearchModel; });
                             if (item && item instanceof ConditionSearchModel) {
                                 item.conditionsProps.onRefresh && item.conditionsProps.onRefresh.call(_this, cloneDeep(_this.queryPrams), _this.viewStore);
                             }
-                        }, style: { width: '100%', padding: '0 2px' }, 
+                        }, 
+                        /* style={{ width: '100%',padding: '0 2px' }} */
                         //@ts-ignore
                         title: "\u5237\u65B0" },
                         React.createElement(Icon, { type: "sync", title: "\u5237\u65B0" }))),
-                React.createElement(Col, { span: 8 },
-                    React.createElement(Button, { type: "ghost", icon: this.state.collapsed ? 'down' : 'up', onClick: this.handleToggle.bind(this), style: { backgroundColor: "#fff", borderColor: "#46b8da" } }, this.state.collapsed ? '收起' : '展开'))));
+                React.createElement(Col, null,
+                    React.createElement(Button, { type: "primary", ghost: true, icon: this.state.collapsed ? 'down' : 'up', onClick: this.handleToggle.bind(this) }, this.state.collapsed ? '收起' : '展开'))));
     };
     LegionsProConditions.prototype.renderLabel = function (component, labelSpan) {
         if (!(component instanceof ConditionSearchModel) && !(component instanceof ConditionCheckBoxModel) && !(component instanceof ConditionGroupCheckBoxModel)) {
@@ -918,15 +964,22 @@ var LegionsProConditions = /** @class */ (function (_super) {
         return null;
     };
     LegionsProConditions.prototype.getQueryItemSpan = function (item) {
+        var defaultCol = {
+            xs: 8,
+            sm: 8,
+            md: 6,
+            lg: 6,
+            xl: 4,
+        };
         var Resolution = item.containerProps.col[this.viewStore.compuedResolution];
         if (typeof Resolution === 'number') {
             return Resolution;
         }
         else if (typeof Resolution === 'object') {
-            return Resolution.span || 4;
+            return Resolution.span || defaultCol[this.viewStore.compuedResolution];
         }
         else {
-            return 4;
+            return defaultCol[this.viewStore.compuedResolution];
         }
     };
     LegionsProConditions.prototype.renderSearchComponent = function () {
@@ -979,14 +1032,8 @@ var LegionsProConditions = /** @class */ (function (_super) {
                 labelSpan = 0;
             }
             var _a = item.containerProps.col, offset = _a.offset, pull = _a.pull, push = _a.push, md = _a.md, xl = _a.xl, lg = _a.lg, sm = _a.sm, xs = _a.xs, col = __rest(_a, ["offset", "pull", "push", "md", "xl", "lg", "sm", "xs"]);
-            var span = item.containerProps.col[_this.viewStore.compuedResolution];
-            var colspan = {};
-            if (typeof span === 'number') {
-                colspan['span'] = span;
-            }
-            else if (Object.prototype.toString.call(span) === "[object Object]") {
-                colspan['span'] = span.span;
-            }
+            var span = _this.getQueryItemSpan(item);
+            var colspan = { span: span };
             var uid = item.containerProps.uuid;
             var _b = item.containerProps, _c = _b.className, className = _c === void 0 ? '' : _c, _d = _b.style, style = _d === void 0 ? {} : _d, onClick = _b.onClick;
             var click = {};
@@ -1061,10 +1108,10 @@ var LegionsProConditions = /** @class */ (function (_super) {
 /*
  * @Author: duanguang
  * @Date: 2021-01-04 16:30:32
- * @LastEditTime: 2021-02-03 11:49:08
+ * @LastEditTime: 2021-04-02 10:20:29
  * @LastEditors: duanguang
  * @Description:
- * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProQueryConditions/index.tsx
+ * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProConditions/index.tsx
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
 

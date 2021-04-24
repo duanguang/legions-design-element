@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-07 17:17:41
- * @LastEditTime: 2021-03-05 16:40:03
+ * @LastEditTime: 2021-04-14 14:57:58
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreTable/interface/index.ts
@@ -12,7 +12,7 @@ import { observableViewModel,observablePromise } from 'legions/store-utils';
 import { ViewModel } from 'brain-store-utils';
 import { ProTableView } from '../ProTableView';
 import { ProTableLocalView } from '../ProTableLocalView';
-import { PageListEntity } from '../../LegionsProTable/pageListEntity';
+import { PageListEntity } from '../pageListEntity';
 import { request } from 'legions/request';
 import { ClassOf } from 'legions-lunar/types/api/typescript';
 export interface ITableColumnConfig {
@@ -79,7 +79,7 @@ export interface ITableAutoQuery<Model = {}> {
    * @type {string}
    * @memberof IAutoQuery
    */
-  token?: string;
+  token?: string|(()=>string);
 
   /**
    * 表格绑定数据前转换符合表格数据结构的数据

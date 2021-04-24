@@ -23,7 +23,7 @@ interface IProps {
      */
     onReady?: (instance: InstanceProModal) => void;
     /** 本地数据同步到服务端的接口 */
-    
+
     customColumnsConfig: {
         /** 编辑自定义信息同步到服务端接口地址 */
         editApi: string;
@@ -130,7 +130,7 @@ export default class LegionsProTableCustomColumns extends Component<IProps, ISta
                                                 <span style={{ display: 'inline-block', whiteSpace: 'normal',verticalAlign:'middle',lineHeight:'15px' }}>
                                                     {item.title}
                                                 </span>
-                                               
+
                                             </div>
                                         </Col>
                                     })}
@@ -165,7 +165,7 @@ export default class LegionsProTableCustomColumns extends Component<IProps, ISta
                                                 const entity = this.viewStore.columns.find((item) => item.dataIndex === columnKey)
                                                 if (entity) {
                                                     if (entity.hasOwnProperty('fixed')) { // 当用户移动的是固定列时，排序不执行
-                                                        const currIndex = items.findIndex((item) => item === columnKey) 
+                                                        const currIndex = items.findIndex((item) => item === columnKey)
                                                         if (entity['fixed'] === 'left' && currIndex > 0) {
                                                             /** 如果拖拽左侧固定列，则只能插入在最左侧位置 */
                                                             const newItem = this.viewStore.computedShowColumns[currIndex-1] || {}
@@ -175,10 +175,10 @@ export default class LegionsProTableCustomColumns extends Component<IProps, ISta
                                                             }
                                                         }
                                                         else if (entity['fixed'] === 'right') {
-                                                            /**  如果右侧固定列取消显示即currIndex =-1,则不拦截 
+                                                            /**  如果右侧固定列取消显示即currIndex =-1,则不拦截
                                                              *  如果右侧固定列拖拽显示，则只能移动到最右侧最后一个位置
                                                             */
-                                                            if (currIndex>-1&&currIndex < items.length - 1) { 
+                                                            if (currIndex>-1&&currIndex < items.length - 1) {
                                                                 message.error(`${name}列已固定在右侧，您无法移动至其他位置`,4)
                                                                 return;
                                                             }
@@ -223,7 +223,7 @@ export default class LegionsProTableCustomColumns extends Component<IProps, ISta
                                                 }
                                             }
                                             if (this.viewStore.computedShowColumns.length === items.length) { // 表示在当前区域做排序处理
-                                               
+
                                                 this.viewStore._orderSortRightShowColumns(items)
                                                 this.viewStore._setLocalStorageShowColumns(this.props.customColumnsConfig.editApi)
                                                 /* localStorage.setItem(this.viewStore.computedStorageShowColumnsKeys,JSON.stringify(this.viewStore.computedShowColumns)); */
@@ -244,13 +244,13 @@ export default class LegionsProTableCustomColumns extends Component<IProps, ISta
                                         } */
                                          /* const className = `${this.viewStore.computedStorageShowColumnsKeys}disabled` */
                                          /* const className = `disabled` */
-                                         
+
                                         return <Col span={8} style={{ marginBottom: '15px',display:'table' }}  data-id={item.dataIndex} key={item.dataIndex}>
-                                            <div className={`table-columns-col  cursor-move`} style={{ backgroundColor: '#108ee9',color:'#fff'}}>
+                                            <div className={`table-columns-col  col-color-blue`}>
                                                 <span style={{ display: 'inline-block', whiteSpace: 'normal',verticalAlign:'middle',lineHeight:'15px' }}>
                                                     {item.title}
                                                 </span>
-                                               
+
                                             </div>
 
                                         </Col>

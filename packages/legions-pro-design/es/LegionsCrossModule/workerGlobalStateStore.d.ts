@@ -58,6 +58,7 @@ export default class WorkerGlobalStateStore<IGlobalState, User = {}> extends Leg
         /** 监听回调执行函数 */
         callback: (value: IGlobalStates & IGlobalState, prev: IGlobalStates & IGlobalState, event: IIGlobalStateEvent) => void;
     }): void;
+    /** 监听广播数据(主要用于基座跟子应用不在同一个容器，比如iframe) */
     listeningGlobalStateChange(options: {
         /** 监听事件队列数据 */
         eventScopes: IResource[];

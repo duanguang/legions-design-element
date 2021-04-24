@@ -125,6 +125,10 @@ export declare class HlFormView {
         value: T;
         type: 'normal' | 'custom';
     };
+    /** 移除指定表单选项 */
+    removeFormItem(key: string): boolean;
+    /** 清空表单配置项 */
+    clearFormItem(): void;
     /** 初始化表单配置项元素 */
     _initFormItemField(key: string, value: IProFormFields['componentModel'], type?: 'normal' | 'custom'): void;
 }
@@ -157,8 +161,8 @@ export declare class ErrorViewModel {
     validateStatus: '' | 'error';
 }
 export declare class HLFormLocalView {
-    selectOptions: IObservableMap<string, ISelectOptions[]>;
-    selectView: IObservableMap<string, {
+    _selectOptions: IObservableMap<string, ISelectOptions[]>;
+    _selectView: IObservableMap<string, {
         paging: boolean;
         remote: boolean;
         autoQuery: ISelectAutoQuery;
@@ -186,10 +190,11 @@ export declare class HLFormLocalView {
      */
     get dragSortState(): boolean;
     get computedControlsSort(): string[];
-    updateControlsSort(sorts: string[]): void;
+    _initControlsSort(sorts: string[]): void;
+    _updateControlsSort(sorts: string[]): void;
     setDragSort(sort: boolean): void;
-    initSelectOptions(keys: string, autoQuery: ISelectAutoQuery): void;
-    initSelectView(keys: string, autoQuery: ISelectAutoQuery, options: {
+    _initSelectOptions(keys: string, autoQuery: ISelectAutoQuery): void;
+    _initSelectView(keys: string, autoQuery: ISelectAutoQuery, options: {
         paging: boolean;
         remote: boolean;
         keywords: string;

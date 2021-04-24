@@ -86,7 +86,6 @@ export class ProModal extends React.Component<IProps,IState> {
                     value: '订单',
                     label: '订单1',
                     key: '1',
-                    keyValue: '222',
                     disabled: true,
                 },
                 {

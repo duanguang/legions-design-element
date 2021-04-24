@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-29 10:18:01
- * @LastEditTime: 2021-03-11 16:32:51
+ * @LastEditTime: 2021-03-16 14:48:27
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreForm/proFormStore.ts
@@ -284,22 +284,44 @@ export class HlFormView {
     }
   }
   /** 查询表单元素字段配置信息 */
-  @action getFormItemField<T extends IProFormFields['componentModel']>(key: string):{value:T,type:'normal' | 'custom'} {
-    if (this.formfields.has(key)) {
-      return {
-        //@ts-ignore
-        value: this.formfields.get(key),
-        type:'normal',
-      };   
-    }
-    else if (this._customFormFields.has(key)) {
-      return {
-        //@ts-ignore
-        value: this._customFormFields.get(key),
-        type:'custom',
-      };
+  @action getFormItemField<T extends IProFormFields['componentModel']>(key: string): { value: T,type: 'normal' | 'custom' } {
+    let item = this.computedAllFormFields.find((item) => item.iAntdProps.uuid === key||item.iAntdProps.id===key);
+    if (item) {
+      if (this.formfields.has(item.iAntdProps.id)) {
+        return {
+          //@ts-ignore
+          value: this.formfields.get(item.iAntdProps.id),
+          type:'normal',
+        };   
+      }
+      else if (this._customFormFields.has(item.iAntdProps.id)) {
+        return {
+          //@ts-ignore
+          value: this._customFormFields.get(item.iAntdProps.id),
+          type:'custom',
+        };
+      }
     }
     return null;
+  }
+  /** 移除指定表单选项 */
+  @action removeFormItem(key: string) {
+    let item = this.computedAllFormFields.find((item) => item.iAntdProps.uuid === key || item.iAntdProps.id === key);
+    if (item) {
+      const id = item.iAntdProps.id
+      if (this.formfields.has(id)) {
+        return this.formfields.delete(id);
+      }
+      else if (this._customFormFields.has(id)) {
+        return this._customFormFields.delete(id);
+      }
+    }
+    return false;
+  }
+  /** 清空表单配置项 */
+  @action clearFormItem() {
+    this.formfields.clear();
+    this._customFormFields.clear();
   }
   /** 初始化表单配置项元素 */
   @action _initFormItemField(key: string,value: IProFormFields['componentModel'],type: 'normal' | 'custom'='normal') {
@@ -350,12 +372,12 @@ export class ErrorViewModel {
 
 
 export class HLFormLocalView {
-  @observable selectOptions: IObservableMap<
+  @observable _selectOptions: IObservableMap<
     string,
     ISelectOptions[]
   > = observable.map();
 
-  @observable selectView: IObservableMap<
+  @observable _selectView: IObservableMap<
     string,
     {
       paging: boolean;
@@ -389,14 +411,22 @@ export class HLFormLocalView {
   @computed get computedControlsSort() {
     return this._controlsSort;
   }
-  @action updateControlsSort(sorts: string[]) {
+  @action _initControlsSort(sorts: string[]) {
+    sorts.map((value) => {
+      const _index = this._controlsSort.findIndex((item) => item === value);
+      if (_index < 0) {
+        this._controlsSort.push(value);
+      }
+    })
+  }
+  @action _updateControlsSort(sorts: string[]) {
     this._controlsSort = sorts;
   }
   @action setDragSort(sort: boolean) {
     this._isDragSort = sort;
   }
-  @action initSelectOptions(keys: string, autoQuery: ISelectAutoQuery) {
-    this.selectOptions.set(keys, [
+  @action _initSelectOptions(keys: string, autoQuery: ISelectAutoQuery) {
+    this._selectOptions.set(keys, [
       {
         keywords: '',
         // @ts-ignore
@@ -406,7 +436,7 @@ export class HLFormLocalView {
       },
     ]);
   }
-  @action initSelectView(
+  @action _initSelectView(
     keys: string,
     autoQuery: ISelectAutoQuery,
     options: {
@@ -417,7 +447,7 @@ export class HLFormLocalView {
       tableNameDb: string;
     }
   ) {
-    this.selectView.set(keys, {
+    this._selectView.set(keys, {
       paging: options.paging,
       remote: options.remote,
       autoQuery: autoQuery,
@@ -605,8 +635,8 @@ export class HLFormLocalView {
           });
         }
       };
-      const data = this.selectOptions.get(name); // 查询指定下拉组件数据
-      const currValue = this.selectView.get(name);
+      const data = this._selectOptions.get(name); // 查询指定下拉组件数据
+      const currValue = this._selectView.get(name);
       if (data) {
         // 如果数据存在
         let item = data.find(entity => entity.keywords === keyWords); // 查询指定下拉组件指定关键词数据
@@ -619,7 +649,7 @@ export class HLFormLocalView {
               observablePromise.PramsResult<any>
             >(),
           });
-          this.selectOptions.set(name, data);
+          this._selectOptions.set(name, data);
           item = data.find(entity => entity.keywords === keyWords);
         }
         
@@ -654,7 +684,7 @@ export class HLFormLocalView {
                     const dbData = this.tranSelectOptionsFromDd(value);
                     if (dbData) {
                       runInAction(() => {
-                        const newCurrValue = this.selectView.get(name);
+                        const newCurrValue = this._selectView.get(name);
                         for (let i = 1; i <= dbData.data.size; i++) {
                            //@ts-ignore
                           if (!newCurrValue.currValue.data.has(i.toString())) {

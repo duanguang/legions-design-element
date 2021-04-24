@@ -53,7 +53,7 @@ export declare class ProTableFormProps<T = {}, F = {}> {
      */
     className?: string;
     /**
-     * 数据变化监听
+     * 数据变化监听,请勿同步table.dataSource回组件内部，引发务必要性能问题
      * @memberof ProTableFormProps
      */
     onChange?: (dataList: T[]) => void;
@@ -64,11 +64,14 @@ declare type IFormRules<FormRules> = {
 interface IState<T = {}> {
     data: T[];
     recordEditData: Map<string, boolean>;
+    formConfigs: Array<IProFormFields['componentModel']>;
 }
 export default class LegionsProTableForm<T = {}, F = {}> extends LegionsProForm.CreateForm<ProTableFormProps<T, F>, IState<T>> {
     static defaultProps: Object;
     /** 用于缓存上一次onFieldsChange中改变的状态，除了value */
     fieldsOtherCache: Map<any, any>;
+    /** table数据缓存，编辑数据时，收集变化数据结果，在保存时统一同步到state.data */
+    dataSourcesCache: T[];
     /** 行缓存, 避免表格render多次执行导致表单各种行为异常 */
     recordCache: Map<any, any>;
     /** 表单实体 */
@@ -78,13 +81,17 @@ export default class LegionsProTableForm<T = {}, F = {}> extends LegionsProForm.
     get uniqueKey(): string;
     constructor(props: ProTableFormProps<T, F>);
     updateRecordEditData: (record: Object) => void;
-    tranformData(data: T[]): ({
+    /** 添加行数据 */
+    addEditRecord: (record: T, isRecordEdit?: boolean) => void;
+    /** 删除行数据 */
+    deleteEditRecord: (rowKeyValue: string | number) => void;
+    tranformData(data: T[], isRecordEdit?: boolean): ({
         isRecordEdit: boolean;
     } & T)[];
     componentWillReceiveProps(nextProps: ProTableFormProps<T, F>): void;
     createControl: (control: IProFormFields['componentModel'], key: number, formRef: InstanceProForm, formUtils: InstanceType<typeof LegionsProForm.ProFormUtils>) => JSX.Element;
     /** 创建行表单 */
-    createTable: () => (import("../LegionsProForm/FormInput").LabelWithInputModel | import("../LegionsProForm/FormInputNumber").LabelWithInputNumberModel | import("../LegionsProForm/FormDatePicker").LabelWithDatePickerModel | import("../LegionsProForm/FormMonthPicker").LabelWithMonthPickerModel | import("../LegionsProForm/FormRangePicker").LabelWithRangePickerModel | import("../LegionsProForm/FormUpload").LabelWithUploadModel | import("../LegionsProForm/FormSwitch").LabelWithSwitchModel | import("../LegionsProForm/FormRadioButton").LabelWithRadioButtonModel | import("../LegionsProForm/FormText").LabelWithTextModel | import("../LegionsProForm/interface").LabelWithSelectModel)[];
+    createTable: () => (import("../LegionsProForm/FormInput").LabelWithInputModel | import("../LegionsProForm/FormInputNumber").LabelWithInputNumberModel | import("../LegionsProForm/FormDatePicker").LabelWithDatePickerModel | import("../LegionsProForm/FormMonthPicker").LabelWithMonthPickerModel | import("../LegionsProForm/FormRangePicker").LabelWithRangePickerModel | import("../LegionsProForm/FormUpload").LabelWithUploadModel | import("../LegionsProForm/FormSwitch").LabelWithSwitchModel | import("../LegionsProForm/FormRadioButton").LabelWithRadioButtonModel | import("../LegionsProForm/FormText").LabelWithTextModel | import("../LegionsProForm/interface").LabelWithSelectModel | import("../LegionsProForm/FormCheckbox").LabelWithCheckboxModel | import("../LegionsProForm/FormCascader").LabelWithCascaderModel)[];
     /** 数据转化，列表数据转化为表单数据 */
     listToFormData: (data?: T[]) => {};
     /** 数据转化，表单数据转列表数据 */

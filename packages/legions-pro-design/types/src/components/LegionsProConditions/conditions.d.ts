@@ -115,6 +115,7 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
     dispatchRequest(query?: (ConditionSelectModel | ConditionTextNumberModel | ConditionRadioButtonModel | ConditionTextAreaModel | ConditionTextModel | ConditionDateModel | ConditionSearchModel | ConditionRangePickerModel | ConditionGroupCheckBoxModel)[]): void;
     onDidMount(): void;
     setFieldsValues<T extends IProConditions['componentModel']>(name: string, callback: (value: T) => void): void;
+    mapPrams(item: Exclude<IProConditions['componentModel'], ConditionSearchModel>, data: any, prams: {}): {};
     initVModel(query?: (ConditionSelectModel | ConditionTextNumberModel | ConditionRadioButtonModel | ConditionTextAreaModel | ConditionTextModel | ConditionDateModel | ConditionSearchModel | ConditionRangePickerModel | ConditionGroupCheckBoxModel)[]): void;
     /**
      * 把组件元素结果映射至查询条件

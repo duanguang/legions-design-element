@@ -1,10 +1,10 @@
 /**
-  *  legions-pro-design v0.0.7-beta.10
+  *  legions-pro-design v0.0.7-beta.21
   * (c) 2021 duanguang
   * @license MIT
   */
 import React, { Component } from 'react';
-import { Tooltip, Input, Row, Form, Icon, message, DatePicker, Select, InputNumber, Switch, Radio, Checkbox, Anchor, Col, Dropdown, Menu, Affix } from 'antd';
+import { Tooltip, Input, Row, Form, Icon, message, DatePicker, Select, InputNumber, Switch, Radio, Checkbox, Cascader, Anchor, Col, Dropdown, Menu, Affix } from 'antd';
 import { getStringLen } from 'legions-utils-tool/format.string';
 import { shortHash } from 'legions-lunar/object-hash';
 import { bind, observer } from 'legions/store-react';
@@ -886,7 +886,7 @@ var FormSelect = /** @class */ (function (_super) {
         _this.onClear = function () {
             /** 启用了远程搜索才会在清除输入触发时调用搜索接口 */
             if (_this.props.formStore && _this.props.formStore.localViewModel && _this.props.iFormWithSelect.remote) {
-                var view = _this.props.formStore.localViewModel.selectView.get(_this.props.iAntdProps.name);
+                var view = _this.props.formStore.localViewModel._selectView.get(_this.props.iAntdProps.name);
                 if (view && view.autoQuery) {
                     _this.props.formStore.localViewModel.dispatchRequest(_this.props.iAntdProps.name, view.autoQuery, {
                         pageIndex: 1,
@@ -899,7 +899,7 @@ var FormSelect = /** @class */ (function (_super) {
         };
         _this.onPagingQuery = function (pageIndex, pageSize, value) {
             if (_this.props.formStore && _this.props.formStore.localViewModel) {
-                var view = _this.props.formStore.localViewModel.selectView.get(_this.props.iAntdProps.name);
+                var view = _this.props.formStore.localViewModel._selectView.get(_this.props.iAntdProps.name);
                 if (view && view.autoQuery) {
                     _this.props.formStore.localViewModel.dispatchRequest(_this.props.iAntdProps.name, view.autoQuery, {
                         pageIndex: pageIndex,
@@ -1008,7 +1008,7 @@ var FormSelect = /** @class */ (function (_super) {
         }
         /** 启用了远程搜索才会在搜索输入触发时调用 */
         if (this.props.formStore && this.props.formStore.localViewModel && this.props.iFormWithSelect.remote) {
-            var view = this.props.formStore.localViewModel.selectView.get(this.props.iAntdProps.name);
+            var view = this.props.formStore.localViewModel._selectView.get(this.props.iAntdProps.name);
             if (view && view.autoQuery) {
                 this.props.formStore.localViewModel.dispatchRequest(this.props.iAntdProps.name, view.autoQuery, {
                     pageIndex: 1,
@@ -1022,8 +1022,8 @@ var FormSelect = /** @class */ (function (_super) {
         }
         this.props.iFormWithSelect && this.props.iFormWithSelect.onSearch && this.props.iFormWithSelect.onSearch(value);
     };
-    FormSelect.prototype.onChange = function (even) {
-        this.props.iFormWithSelect.onChange && this.props.iFormWithSelect.onChange(even);
+    FormSelect.prototype.onChange = function (even, res) {
+        this.props.iFormWithSelect.onChange && this.props.iFormWithSelect.onChange(even, res);
         if (this.FormHLSelectRef && this.props.formUid) {
             var viewStore = this.FormHLSelectRef.store.get(this.props.formUid);
             var view = viewStore.computedErrorReactNodeList.get(this.props.iAntdProps.name);
@@ -1341,6 +1341,51 @@ var FormCheckbox = /** @class */ (function (_super) {
     return FormCheckbox;
 }(AbstractForm));
 
+var FormItem$b = Form.Item;
+var LabelWithCascaderModel = /** @class */ (function () {
+    function LabelWithCascaderModel(iAntdProps, iFormProps, rules) {
+        this.iAntdProps = iAntdProps;
+        this.iFormProps = iFormProps;
+        this.rules = rules;
+    }
+    return LabelWithCascaderModel;
+}());
+var FormCascader = /** @class */ (function (_super) {
+    __extends(FormCascader, _super);
+    function FormCascader(props) {
+        var _this = _super.call(this, props) || this;
+        _this.FormUploadRef = null;
+        _this.handlePreview = function (file) {
+        };
+        return _this;
+    }
+    FormCascader.prototype.componentDidMount = function () {
+        this.didMountClearNodeQueue(this.FormUploadRef, this.props.formUid, this.props.iAntdProps.name);
+    };
+    FormCascader.prototype.shouldComponentUpdate = function (nextProps, nextState, context) {
+        return this.isShouldComponentUpdate(this.FormUploadRef, this.props.formUid, nextProps.iAntdProps.name);
+    };
+    FormCascader.prototype.render = function () {
+        var _this = this;
+        var _a = this.props, form = _a.form, iAntdProps = _a.iAntdProps, iFormWithCascader = _a.iFormWithCascader, children = _a.children, rules = _a.rules;
+        var getFieldsError = form.getFieldsError, getFieldDecorator = form.getFieldDecorator;
+        var label = iFormWithCascader.label, labelCol = iFormWithCascader.labelCol, wrapperCol = iFormWithCascader.wrapperCol, props = __rest(iFormWithCascader, ["label", "labelCol", "wrapperCol"]);
+        var formItemProps = {};
+        if ('colon' in props) {
+            formItemProps['colon'] = props.colon;
+        }
+        return (React.createElement(FormElement, { form: form, onReady: function (value) {
+                _this.FormUploadRef = value;
+            }, elType: "", nextElementKey: iAntdProps.nextElementKey, elementKey: iAntdProps.name, formUid: this.props.formUid },
+            React.createElement(FormItem$b, __assign({}, formItemProps, { className: iAntdProps.className, label: label, labelCol: labelCol, wrapperCol: wrapperCol }),
+                getFieldDecorator(iAntdProps.name, {
+                    rules: rules,
+                })(React.createElement(Cascader, __assign({}, props))),
+                children)));
+    };
+    return FormCascader;
+}(AbstractForm));
+
 var CreateForm = /** @class */ (function (_super) {
     __extends(CreateForm, _super);
     function CreateForm() {
@@ -1390,21 +1435,10 @@ var CreateForm = /** @class */ (function (_super) {
         var iAntdProps = control.iAntdProps, rules = control.rules, iFormProps = control.iFormProps;
         return (React.createElement(FormText, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formUid: formUid, iFormText: iFormProps }));
     };
-    /* protected createFormHlTable(key:number,control:LabelWithHLTableModel,form:WrappedFormUtils,formUid:string){
-        let {iAntdProps,rules,iFormWithTable}=control;
-        return(
-            <FormHLTable
-                iAntdProps={iAntdProps}
-                form={form}
-                rules={rules}
-                key={key}
-                formUid={formUid}
-                iFormWithTable={iFormWithTable}
-            >
-
-            </FormHLTable>
-        )
-    } */
+    CreateForm.prototype.createFormCascader = function (key, control, form, formUid, formRef) {
+        var iAntdProps = control.iAntdProps, rules = control.rules, iFormProps = control.iFormProps;
+        return React.createElement(FormCascader, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formUid: formUid, iFormWithCascader: iFormProps });
+    };
     CreateForm.prototype.createFormCheckbox = function (key, control, form, formUid, formRef) {
         var iAntdProps = control.iAntdProps, rules = control.rules, iFormProps = control.iFormProps;
         return (React.createElement(FormCheckbox, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formUid: formUid, iFormWithCheckbox: iFormProps }));
@@ -1477,48 +1511,60 @@ var ProFormUtils = /** @class */ (function () {
             storeView._initFormItemField(key, iFormItemProps, 'custom');
         }
     };
+    ProFormUtils.prototype.createUid = function (name) {
+        var timeId = new Date().getTime();
+        var uid = name + "-" + shortHash("" + timeId + name);
+        return uid;
+    };
+    ProFormUtils.prototype.transformAntdProps = function (props) {
+        var id = props.id;
+        if (!this[id]) {
+            return __assign(__assign({}, props), { uuid: this.createUid(id) });
+        }
+        return this[id]['iAntdProps'];
+    };
     ProFormUtils.prototype.renderSelectConfig = function (options) {
         this.chkRenderConfig(options.iAntdProps.id);
-        this[options.iAntdProps.id] = new LabelWithSelectModel(options.iAntdProps, options.iFormProps, options.rules || []);
+        this[options.iAntdProps.id] = new LabelWithSelectModel(this.transformAntdProps(options.iAntdProps), options.iFormProps, options.rules || []);
         return this[options.iAntdProps.id];
     };
     ProFormUtils.prototype.renderInputConfig = function (options) {
         this.chkRenderConfig(options.iAntdProps.id);
-        return this[options.iAntdProps.id] = new LabelWithInputModel(options.iAntdProps, options.iFormProps, options.rules || []);
+        return this[options.iAntdProps.id] = new LabelWithInputModel(this.transformAntdProps(options.iAntdProps), options.iFormProps, options.rules || []);
     };
     ProFormUtils.prototype.renderTextConfig = function (options) {
         this.chkRenderConfig(options.iAntdProps.id);
-        this[options.iAntdProps.id] = new LabelWithTextModel(options.iAntdProps, options.iFormProps, options.rules || []);
+        this[options.iAntdProps.id] = new LabelWithTextModel(this.transformAntdProps(options.iAntdProps), options.iFormProps, options.rules || []);
         return this[options.iAntdProps.id];
     };
     ProFormUtils.prototype.renderDatePickerConfig = function (options) {
         this.chkRenderConfig(options.iAntdProps.id);
-        this[options.iAntdProps.id] = new LabelWithDatePickerModel(options.iAntdProps, options.iFormProps, options.rules || []);
+        this[options.iAntdProps.id] = new LabelWithDatePickerModel(this.transformAntdProps(options.iAntdProps), options.iFormProps, options.rules || []);
         return this[options.iAntdProps.id];
     };
     ProFormUtils.prototype.renderMonthPickerConfig = function (options) {
         this.chkRenderConfig(options.iAntdProps.id);
-        return this[options.iAntdProps.id] = new LabelWithMonthPickerModel(options.iAntdProps, options.iFormProps, options.rules || []);
+        return this[options.iAntdProps.id] = new LabelWithMonthPickerModel(this.transformAntdProps(options.iAntdProps), options.iFormProps, options.rules || []);
     };
     ProFormUtils.prototype.renderRangePickerConfig = function (options) {
         this.chkRenderConfig(options.iAntdProps.id);
-        return this[options.iAntdProps.id] = new LabelWithRangePickerModel(options.iAntdProps, options.iFormProps, options.rules || []);
+        return this[options.iAntdProps.id] = new LabelWithRangePickerModel(this.transformAntdProps(options.iAntdProps), options.iFormProps, options.rules || []);
     };
     ProFormUtils.prototype.renderInputNumberConfig = function (options) {
         this.chkRenderConfig(options.iAntdProps.id);
-        return this[options.iAntdProps.id] = new LabelWithInputNumberModel(options.iAntdProps, options.iFormProps, options.rules || []);
+        return this[options.iAntdProps.id] = new LabelWithInputNumberModel(this.transformAntdProps(options.iAntdProps), options.iFormProps, options.rules || []);
     };
     ProFormUtils.prototype.renderRadioButtonConfig = function (options) {
         this.chkRenderConfig(options.iAntdProps.id);
-        return this[options.iAntdProps.id] = new LabelWithRadioButtonModel(options.iAntdProps, options.iFormProps, options.rules || []);
+        return this[options.iAntdProps.id] = new LabelWithRadioButtonModel(this.transformAntdProps(options.iAntdProps), options.iFormProps, options.rules || []);
     };
     ProFormUtils.prototype.renderSwitchConfig = function (options) {
         this.chkRenderConfig(options.iAntdProps.id);
-        return this[options.iAntdProps.id] = new LabelWithSwitchModel(options.iAntdProps, options.iFormProps, options.rules || []);
+        return this[options.iAntdProps.id] = new LabelWithSwitchModel(this.transformAntdProps(options.iAntdProps), options.iFormProps, options.rules || []);
     };
     ProFormUtils.prototype.renderUploadConfig = function (options) {
         this.chkRenderConfig(options.iAntdProps.id);
-        return this[options.iAntdProps.id] = new LabelWithUploadModel(options.iAntdProps, options.iFormProps, options.rules || []);
+        return this[options.iAntdProps.id] = new LabelWithUploadModel(this.transformAntdProps(options.iAntdProps), options.iFormProps, options.rules || []);
     };
     /**
      * 自定义组件
@@ -1534,6 +1580,10 @@ var ProFormUtils = /** @class */ (function () {
     ProFormUtils.prototype.renderCheckboxConfig = function (options) {
         this.chkRenderConfig(options.iAntdProps.id);
         return this[options.iAntdProps.id] = new LabelWithCheckboxModel(options.iAntdProps, options.iFormProps, options.rules || []);
+    };
+    ProFormUtils.prototype.renderCascaderConfig = function (options) {
+        this.chkRenderConfig(options.iAntdProps.id);
+        return this[options.iAntdProps.id] = new LabelWithCascaderModel(options.iAntdProps, options.iFormProps, options.rules || []);
     };
     /**
      * 生成一个表单基础组件
@@ -1623,6 +1673,14 @@ var ProFormUtils = /** @class */ (function () {
             var iAntdProps = control.iAntdProps, rules = control.rules, iFormProps = control.iFormProps;
             return (React.createElement(FormText, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formUid: formUid, iFormText: iFormProps }));
         }
+        else if (control instanceof LabelWithCheckboxModel) {
+            var iAntdProps = control.iAntdProps, rules = control.rules, iFormProps = control.iFormProps;
+            return (React.createElement(FormCheckbox, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formUid: formUid, iFormWithCheckbox: iFormProps }));
+        }
+        else if (control instanceof LabelWithCascaderModel) {
+            var iAntdProps = control.iAntdProps, rules = control.rules, iFormProps = control.iFormProps;
+            return React.createElement(FormCascader, { iAntdProps: iAntdProps, form: form, rules: rules, key: key, formUid: formUid, iFormWithCascader: iFormProps });
+        }
         else {
             throw new Error("HLFormUtils: Unknown control. control = " + JSON.stringify(control));
         }
@@ -1638,6 +1696,7 @@ var ProFormUtils = /** @class */ (function () {
     ProFormUtils.LabelWithRadioButtonModel = LabelWithRadioButtonModel;
     ProFormUtils.LabelWithTextModel = LabelWithTextModel;
     ProFormUtils.LabelWithInputModel = LabelWithInputModel;
+    ProFormUtils.LabelWithCheckboxModel = LabelWithCheckboxModel;
     return ProFormUtils;
 }());
 var ProFormFields = /** @class */ (function (_super) {
@@ -1654,7 +1713,7 @@ var ProFormFields = /** @class */ (function (_super) {
 }(BaseFormFields));
 
 var Link = Anchor.Link;
-var FormItem$b = Form.Item;
+var FormItem$c = Form.Item;
 var baseCls = "legions-pro-form";
 var KeydownEnum$1;
 (function (KeydownEnum) {
@@ -1702,7 +1761,7 @@ var ProForm = /** @class */ (function (_super) {
             }
             _this.storeLocalView.setDragSort(_this.props.isDragSort);
             if (_this.storeLocalView.dragSortState) {
-                _this.storeLocalView.updateControlsSort(_this.props.controls.map(function (item) { return item.iAntdProps.name; }));
+                _this.storeLocalView._initControlsSort(_this.props.controls.map(function (item) { return item.iAntdProps.name; }));
             }
         }
         _this.storeView.updateFormSize(_this.props.size);
@@ -1842,7 +1901,7 @@ var ProForm = /** @class */ (function (_super) {
                     _this.onSelectSearch(name, options);
                 },
                 getQuerySelectOption: function (name, optionKey) {
-                    var selectView = _this.storeLocalView.selectView.get(name);
+                    var selectView = _this.storeLocalView._selectView.get(name);
                     var optionItem = new HlLabeledValue();
                     if (selectView && selectView.currValue) {
                         for (var i = 1; i <= selectView.currValue.data.size; i++) {
@@ -1860,6 +1919,16 @@ var ProForm = /** @class */ (function (_super) {
                 },
                 setFormStates: function (name, callback) {
                     _this.setFormStates(name, callback);
+                },
+                addFormItem: function (controls) {
+                    _this.initFromState(controls);
+                    _this.initSelectView(true, controls);
+                    if (_this.storeLocalView.dragSortState) {
+                        _this.storeLocalView._initControlsSort(controls.map(function (item) { return item.iAntdProps.name; }));
+                    }
+                },
+                clearFormItem: function () {
+                    _this.storeView.clearFormItem();
                 }
             },
             validateFields: function (callback) {
@@ -1878,14 +1947,6 @@ var ProForm = /** @class */ (function (_super) {
         this.consoleLog('hlFormContainer-componentDidMount');
     };
     ProForm.prototype.componentWillReceiveProps = function (nextProps) {
-        if (this.props.controls !== nextProps.controls) {
-            /*  this.setFormItemStateDisabled({
-                 props: this.props,nextProps
-             }) */
-            if (this.storeLocalView.dragSortState) {
-                this.storeLocalView.updateControlsSort(nextProps.controls.map(function (item) { return item.iAntdProps.name; }));
-            }
-        }
         if (nextProps.size !== this.props.size) {
             this.storeView.updateFormSize(nextProps.size);
         }
@@ -1905,10 +1966,11 @@ var ProForm = /** @class */ (function (_super) {
         this.consoleLog('hlFormContainer-componentWillUnmount');
         /* document.removeEventListener('keydown',this.handleKeyDown.bind(this)) */
     };
-    ProForm.prototype.initFromState = function () {
+    ProForm.prototype.initFromState = function (controls) {
         var _this = this;
-        if (this.props.controls && Array.isArray(this.props.controls)) {
-            this.props.controls.map(function (item) {
+        if (controls === void 0) { controls = this.props.controls; }
+        if (controls && Array.isArray(controls)) {
+            controls.map(function (item) {
                 var name = item['iAntdProps'].name;
                 _this.storeView._initFormItemField(name, item);
                 if (!_this.storeView.renderNodeQueue.has(name)) {
@@ -1935,8 +1997,8 @@ var ProForm = /** @class */ (function (_super) {
                         if (_this.storeLocalView && item.iAntdProps) {
                             var pageSize = item.iFormProps.pageSize || 30;
                             var keywords = item.iFormProps.autoQuery.params(1, pageSize, '').defaultKeyWords;
-                            if (!_this.storeLocalView.selectView.has(item.iAntdProps.name)) {
-                                _this.storeLocalView.initSelectView(item.iAntdProps.name, item.iFormProps.autoQuery, {
+                            if (!_this.storeLocalView._selectView.has(item.iAntdProps.name)) {
+                                _this.storeLocalView._initSelectView(item.iAntdProps.name, item.iFormProps.autoQuery, {
                                     paging: item.iFormProps.paging === void 0 ? false : item.iFormProps.paging,
                                     remote: item.iFormProps.remote === void 0 ? false : item.iFormProps.remote,
                                     pageSize: pageSize,
@@ -1945,8 +2007,8 @@ var ProForm = /** @class */ (function (_super) {
                                 });
                             }
                             if (item.iFormProps.autoQuery) {
-                                if (!_this.storeLocalView.selectOptions.has(item.iAntdProps.name)) {
-                                    _this.storeLocalView.initSelectOptions(item.iAntdProps.name, item.iFormProps.autoQuery);
+                                if (!_this.storeLocalView._selectOptions.has(item.iAntdProps.name)) {
+                                    _this.storeLocalView._initSelectOptions(item.iAntdProps.name, item.iFormProps.autoQuery);
                                 }
                                 if (isDispatch) {
                                     var name_1 = item.iAntdProps.name;
@@ -1968,8 +2030,8 @@ var ProForm = /** @class */ (function (_super) {
         }
     };
     ProForm.prototype.onSelectSearch = function (name, options) {
-        if (this.storeLocalView && this.storeLocalView.selectView.has(name)) {
-            var item = this.storeLocalView.selectView.get(name);
+        if (this.storeLocalView && this.storeLocalView._selectView.has(name)) {
+            var item = this.storeLocalView._selectView.get(name);
             this.storeLocalView.dispatchRequest(name, item.autoQuery, __assign({ pageIndex: options.pageIndex, pageSize: item.pageSize, keyWords: options.keywords }, options));
         }
     };
@@ -2302,7 +2364,7 @@ var ProForm = /** @class */ (function (_super) {
         }
         else if (control instanceof LabelWithSelectModel) {
             if (control instanceof LabelWithSelectModel && control.iFormProps.autoQuery) {
-                var view_1 = localview.selectView.get(control.iAntdProps.name);
+                var view_1 = localview._selectView.get(control.iAntdProps.name);
                 if (view_1 && view_1.currValue) {
                     var options = [];
                     var total = 0;
@@ -2346,6 +2408,9 @@ var ProForm = /** @class */ (function (_super) {
         else if (control instanceof LabelWithCheckboxModel) {
             return _super.prototype.createFormCheckbox.call(this, key, control, form, this.uid, viewModel);
         }
+        else if (control instanceof LabelWithCascaderModel) {
+            return _super.prototype.createFormCascader.call(this, key, control, form, this.uid, viewModel);
+        }
         else {
             throw new Error("ComponentClass: Unknown control. control = " + JSON.stringify(control));
         }
@@ -2353,7 +2418,6 @@ var ProForm = /** @class */ (function (_super) {
     ProForm.prototype.renderControls = function (controls) {
         var _this = this;
         var colCount = this.props.colCount || 2;
-        var form = this.props.form;
         var newcontrols = controls;
         if (this.storeLocalView.computedControlsSort.length) {
             newcontrols = [];
@@ -2386,8 +2450,7 @@ var ProForm = /** @class */ (function (_super) {
                     put: true,
                 }
             }, style: { width: '100%', display: 'contents' }, onChange: function (items, sort, evt) {
-                console.log(items);
-                _this.storeLocalView.updateControlsSort(items);
+                _this.storeLocalView._updateControlsSort(items);
                 _this.storeView._elementList.clear();
                 _this.storeView.computedAllFormFields.map(function (w) {
                     var name = w.iAntdProps.name;
@@ -2504,10 +2567,12 @@ var LegionsProForm = /** @class */ (function (_super) {
             _this.freezeUid = _this.uid;
             _this.decryptionFreezeUid = _this.uid;
         }
-        _this.props.store.add(_this.uid, {
-            InputDataModel: _this.props.InputDataModel,
-            formRef: _this,
-        });
+        if (!_this.props.store.get(_this.uid)) {
+            _this.props.store.add(_this.uid, {
+                InputDataModel: _this.props.InputDataModel,
+                formRef: _this,
+            });
+        }
         return _this;
     }
     Object.defineProperty(LegionsProForm.prototype, "storeView", {
@@ -2537,6 +2602,7 @@ var LegionsProForm = /** @class */ (function (_super) {
     LegionsProForm.LabelWithRadioButtonModel = LabelWithRadioButtonModel;
     LegionsProForm.LabelWithTextModel = LabelWithTextModel;
     LegionsProForm.LabelWithInputModel = LabelWithInputModel;
+    LegionsProForm.LabelWithCascaderModel = LabelWithCascaderModel;
     LegionsProForm.BaseFormFields = BaseFormFields;
     LegionsProForm.ProFormFields = ProFormFields;
     LegionsProForm = __decorate([

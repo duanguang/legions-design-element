@@ -43,6 +43,8 @@ export interface IAntdProps {
     name: string;
     placeholder: string;
     className?: string;
+    /** 只读 */
+    readonly uuid?: string;
     /**
      *
      * 分组ID

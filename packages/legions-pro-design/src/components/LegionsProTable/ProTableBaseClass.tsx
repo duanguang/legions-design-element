@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-13 11:06:29
- * @LastEditTime: 2021-03-05 17:05:06
+ * @LastEditTime: 2021-04-01 14:56:48
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProTable/ProTableBaseClass.tsx
@@ -13,7 +13,7 @@ import { ObservableMap,toJS } from 'mobx';
 import * as mobx from 'mobx';
 import { TableColumnConfig } from '../interface/antd';
 import { InstanceProTable, ITableColumnConfigProps } from './interface';
-import { PageListEntity } from './pageListEntity';
+import LegionsStoreTable from '../LegionsStoreTable';
 import { ClassOf } from 'legions-lunar/types/api/typescript';
 
 /**
@@ -29,7 +29,7 @@ import { ClassOf } from 'legions-lunar/types/api/typescript';
  * @template QueryParams 搜索条件对象类型约束结构 默认any类型
  */
 export class ProTableBaseClass<P,S,Columns = {},QueryParams = any> extends React.Component<P,S>{
-    static pageListEntity = PageListEntity;
+    static pageListEntity = LegionsStoreTable.pageListEntity;
     tableRef: InstanceProTable = null;
     //@ts-ignore
     queryPrams: QueryParams = {}

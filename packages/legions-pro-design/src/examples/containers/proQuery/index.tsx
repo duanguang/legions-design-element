@@ -98,7 +98,7 @@ export default class QueryDemo extends React.Component<{},Istate>{
                     { key: '333',value: '昊链科技3' },
                     { key: '444',value: '昊链科技4' }]
             },
-            jsonProperty:'orderNo2'
+            jsonProperty:'companyCode,companyName'
         })
         formUtils.renderDateConfig({
             containerProps: {
@@ -130,20 +130,22 @@ export default class QueryDemo extends React.Component<{},Istate>{
                     lg: 4,
                     xl: 4,
                 },
-                name:'vmOrderNo4'
+                name: 'vmOrderNo4',
+                
             },
             conditionsProps: {
                 label: '日期范围',
                 labelSpan: 5,
-                placeholder: ['开始日期','结束日期'],
+                /* placeholder: ['开始日期','结束日期'], */
                 onChange: (originValue,value,viewStore) => {
                     console.log(originValue,value,viewStore,'日期范围');
                 },
                 defaultValue:[moment('2015-01-01', 'YYYY-MM-DD'),moment('2016-01-01', 'YYYY-MM-DD')],
                 format: 'YYYY-MM-DD',
                 /*showTime:true, */
+                transformFormat: 'x',
             },
-            jsonProperty:'orderNo4'
+            jsonProperty: 'createTimeStart,createTimeEnd',
         })
         formUtils.renderCheckBoxConfig({
             containerProps: {
@@ -268,7 +270,7 @@ export default class QueryDemo extends React.Component<{},Istate>{
                     isInitialize: false,
                     ApiUrl: 'https://gateway.hoolinks.com/api/gateway',
                     method: 'post',
-                    token: 'SESSION=ffeb848f-53f1-4d50-b021-5ef3789a2fbd;',
+                    token: (function token(){    /** 权限字符串自行输入*/    return 'token'})(),
                     mappingEntity: (that,res) => {
                         that.total = res['total'];
                         that.current = res['current'];
@@ -296,6 +298,24 @@ export default class QueryDemo extends React.Component<{},Istate>{
                 },
             },
             jsonProperty:'orderNo9'
+        })
+        formUtils.renderSearchConfig({
+            containerProps: {
+                name: 'search',
+                col: {
+                    md: 6,
+                    lg: 6,
+                    xl: 4,
+                },
+            },
+            conditionsProps: {
+                onSearch: (value,view) => {
+
+                },
+                onRefresh:()=>{
+
+                }
+            },
         })
         return [
             formUtils.getConditionsConfig('vmOrderNo'),
@@ -326,7 +346,7 @@ export default class QueryDemo extends React.Component<{},Istate>{
                             value.conditionsProps.label = 'sss';
                             value.conditionsProps.value = '222';
                     })
-                
+
                 }}> 设置指定数据值{this.smp.get('ss').a.b}</Button>
                 <Button onClick={() => {
                     this.queryRef.methods.onRrmoteSearch('vmOrderNo9',{
@@ -355,7 +375,7 @@ export default class QueryDemo extends React.Component<{},Istate>{
                     /* isDragSort */
                     query={this.createConfig()}></LegionsProConditions>
                 </Row>
-                
+
             </div>
         )
     }

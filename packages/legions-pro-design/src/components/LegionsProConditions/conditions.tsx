@@ -36,6 +36,7 @@ import { isArray } from 'legions-utils-tool/type.validation';
 import { CheckboxValueType } from 'antd/lib/checkbox/Group';
 import LegionsProDragger from '../LegionsProDragger';
 import { IProDraggerOptions, IProDraggerProps } from '../LegionsProDragger/interface';
+import ButtonGroup from 'antd/lib/button/button-group';
 const { RangePicker } = DatePicker;
 const Option = Select.Option;
 const { TextArea } = Input;
@@ -286,6 +287,34 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
             callback(value);
         });
     }
+    mapPrams(item: Exclude<IProConditions['componentModel'], ConditionSearchModel>, data: any, prams: {}) {
+        if (item.jsonProperty.includes(',')) {
+            const paramslist = item.jsonProperty.split(',')
+            if (item instanceof ConditionRangePickerModel) {
+                const startTime = data && data[0] || ''
+                const endTime = data && data[1] || ''
+                const format = item.conditionsProps.transformFormat || 'YYYY-MM-DD'
+                prams[paramslist[0].trim()] = startTime && moment(startTime).format(format)
+                prams[paramslist[1].trim()] = endTime && moment(endTime).format(format)
+            }
+            else if (item instanceof ConditionSelectModel && item.conditionsProps.labelInValue) {
+                const key = data && data['key'] || ''
+                const label = data && data['label'] || ''
+                prams[paramslist[0].trim()] = key
+                prams[paramslist[1].trim()] = label
+            }
+            else {
+                if (process.env.NODE_ENV !== 'production') {
+                    console.error('非Select和RangePicker组件，参数jsonProperty建议不要使用带,(逗号)的字符串')
+                    console.error('if the components is not Select Or RangePicker, "jsonProperty" should be string without "," ')
+                }
+                prams[item.jsonProperty] = data
+            }
+        } else {
+            prams[item.jsonProperty] = data
+        }
+        return prams
+    }
     initVModel(query=this.props.query) {
         let data = {}
         let prams = {}
@@ -311,7 +340,7 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
                         defaultValue = item.conditionsProps.defaultChecked;
                         value = item.conditionsProps.checked || item.conditionsProps.value;
                     }
-                    
+
                     let newValue = null;
                     if (item instanceof ConditionDateModel) {
                         const  format= item.conditionsProps.format||'YYYY-MM-DD HH:mm:ss'
@@ -323,11 +352,14 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
                         }
                         data[name] = newValue;
                     }
+                    else if (item instanceof ConditionRangePickerModel) {
+                        data[name] = ['', ''];
+                    }
                     else {
                         data[name] = defaultValue || value
                     }
                 }
-                prams[item.jsonProperty] = data[name];
+                prams = this.mapPrams(item, data[name], prams)
             }
         })
         this.queryPrams = prams;
@@ -343,7 +375,7 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
         let prams = this.queryPrams
         computedQuery.map((item) => {
             if (!(item instanceof ConditionSearchModel)) {
-                prams[item.jsonProperty] = this.vmModel[item.containerProps.name]
+                prams = this.mapPrams(item, this.vmModel[item.containerProps.name], prams)
             }
         })
         this.queryPrams = prams;
@@ -632,6 +664,7 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
             this.setFieldsValues(containerProps.name,(value:ConditionTextModel) => {
                 value.conditionsProps.value=''
             })
+            this.viewStore._setVmModel(state)
             this.mapQueryValue()
         }} /> : null;
         return (
@@ -683,6 +716,12 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
     }
     renderSelect(component: ConditionSelectModel) {
         const { conditionsProps,containerProps,jsonProperty } = component;
+        if (process.env.NODE_ENV !== 'production') {
+            if (jsonProperty.includes(',') && !conditionsProps.labelInValue) {
+                console.error('LegionsProCondition的Select组件未开启labelInValue时,参数jsonProperty建议不要使用带,(逗号)的字符串格式')
+                console.error('when the Select components of the LegionsProCondition is not used "labelInValue", "jsonProperty" should be string without "," ')
+            }
+        }
         const placeholder = conditionsProps.placeholder as string
         let newData = conditionsProps.options as Array<ISelectProps>
         const { labelSpan,defaultValue,visable,display,value=defaultValue,...prop } = conditionsProps
@@ -730,13 +769,16 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
     renderDateRange(component: ConditionRangePickerModel) {
         const { conditionsProps,containerProps,jsonProperty } = component;
         const { labelSpan,defaultValue,visable,display,value=defaultValue,...prop } = conditionsProps
-        const placeholder = conditionsProps.placeholder as [string,string]
+        let placeholder = {placeholder:['',''] as [string,string]};
+        if (conditionsProps.placeholder) {
+            placeholder = {placeholder:conditionsProps.placeholder}
+        }
         return (<RangePicker
             allowClear={true}
             {...prop}
             value={value}
             onChange={this.handleChangeDate.bind(this,component)}
-            placeholder={placeholder}
+            {...placeholder}
         >
 
         </RangePicker>)
@@ -748,7 +790,7 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
             {...prop}
             defaultChecked={defaultChecked}
             onChange={this.handleChangeChx.bind(this,component)}
-            
+
         >
             {conditionsProps.label}
         </Checkbox>)
@@ -786,7 +828,7 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
                 {...prop}
                 style={{ width: '100%' }}
                 defaultValue={defaultValue}
-                
+
                 onChange={this.handleChange.bind(this,component)}
             >
                 {newData && newData.map((item) => {
@@ -809,21 +851,25 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
             </Menu>
         );
         return <React.Fragment>
-            <Row gutter={8} type="flex">
-                <Col span={6} ><Button
-                    type="primary"
-                    icon={'search'}
-                    onClick={this.handleSearch.bind(this)}
-                    style={{ borderColor: `#46b8da`,color: `white` }}
-                >{component.conditionsProps.searchText||'搜索'}
+            <Row gutter={8} type="flex" style={{ flexWrap: 'nowrap' }}>
+                <Col>
+                    <Button
+                        type="primary"
+                        icon={'search'}
+                        onClick={this.handleSearch.bind(this)}
+                    >{component.conditionsProps.searchText||'搜索'}
                 </Button>
                 </Col>
-                <Col span={6} >
-                    <Dropdown.Button type="ghost" onClick={this.handleReset.bind(this)} overlay={menu}>
-                    {component.conditionsProps.resetText||'重置'}
-                        </Dropdown.Button>
+                <Col className="legions-pro-query-reset">
+                    {/* <Dropdown.Button type="primary" onClick={this.handleReset.bind(this)} overlay={menu}>
+                        {component.conditionsProps.resetText||'重置'}
+                    </Dropdown.Button> */}
+                    <Button className="query-reset-btn" type="primary" ghost onClick={this.handleReset.bind(this)}>{component.conditionsProps.resetText||'重置'}</Button>
+                    <Dropdown overlay={menu}>
+                        <Button type="primary" ghost icon="down"></Button>
+                    </Dropdown>
                 </Col>
-                <Col span={4} >
+                {component.conditionsProps.onRefresh && <Col>
                     <Button
                         onClick={() => {
                             const item = this.props.query.find((item) => item instanceof ConditionSearchModel);
@@ -831,25 +877,21 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
                                 item.conditionsProps.onRefresh && item.conditionsProps.onRefresh.call(this,cloneDeep(this.queryPrams),this.viewStore)
                             }
                          }}
-                         style={{ width: '100%',padding: '0 2px' }}
+                         /* style={{ width: '100%',padding: '0 2px' }} */
                         //@ts-ignore
                         title="刷新">
                         <Icon type="sync" title="刷新" />
                     </Button>
-                </Col>
-                <Col span={8}>
+                </Col>}
+                <Col>
                     <Button
-                        type="ghost"
+                        type="primary"
+                        ghost
                         icon={this.state.collapsed ? 'down' : 'up'}
-                        onClick={this.handleToggle.bind(this)}
-                        style={{ backgroundColor: `#fff`,borderColor: `#46b8da` }}>
+                        onClick={this.handleToggle.bind(this)}>
                         {this.state.collapsed ? '收起' : '展开'}
                     </Button>
                 </Col>
-
-
-
-
             </Row>
         </React.Fragment>
     }
@@ -884,15 +926,22 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
 
     }
     getQueryItemSpan(item: IProConditions['componentModel']) {
+        const defaultCol = {
+            xs: 8,
+            sm: 8,
+            md: 6,
+            lg: 6,
+            xl: 4,
+        }
         const Resolution = item.containerProps.col[this.viewStore.compuedResolution];
         if (typeof Resolution === 'number') {
             return Resolution
         }
         else if (typeof Resolution === 'object') {
-            return Resolution.span || 4
+            return Resolution.span || defaultCol[this.viewStore.compuedResolution]
         }
         else {
-            return 4;
+            return defaultCol[this.viewStore.compuedResolution];
         }
     }
     renderSearchComponent() {
@@ -942,13 +991,8 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
                 labelSpan = 0;
             }
             const { offset,pull,push,md,xl,lg,sm,xs,...col } = item.containerProps.col;
-            const span = item.containerProps.col[this.viewStore.compuedResolution]
-            const colspan = {};
-            if (typeof span === 'number') {
-                colspan['span'] = span;
-            }else if(Object.prototype.toString.call(span) === "[object Object]"){
-                colspan['span'] = span.span;
-            }
+            const span = this.getQueryItemSpan(item)
+            const colspan = { span };
             const uid = item.containerProps.uuid;
             const { className = '',style = {},onClick } = item.containerProps;
             const click = {};
@@ -1013,8 +1057,8 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
                 >
                      {this.renderContent()}
                 </LegionsProDragger>:this.renderContent()}
-                
-                
+
+
             </Row>
         )
     }
