@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-03-02 14:19:18
- * @LastEditTime: 2021-03-19 13:44:33
+ * @LastEditTime: 2021-04-27 16:40:03
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/examples/containers/App.tsx
@@ -12,6 +12,8 @@ import React from 'react';
 /* import '../assets/css/theme.less'; */
 import '../assets/css/theme.less'
 import Demo from './demo';
+import { CenterLayout } from './demo-center';
+import { FlexLayout } from './demo-layout';
 import DataImportBaseDemo from './proDataImport/base';
 import DataImportLocalDemo from './proDataImport/local';
 import { ProForm } from './proForm';
@@ -51,9 +53,11 @@ export default class App extends React.Component {
                 <Route path="/select" component={ProSelectDemo}></Route>
                 <Route path="/zoom" component={ZoomableDemo}></Route>
                 <Route path="/import/base" component={DataImportBaseDemo}></Route>
-                <Route path="/import/local" component={DataImportLocalDemo}></Route>
+                    <Route path="/import/local" component={DataImportLocalDemo}></Route>
+                    <Route path="/flex" component={FlexLayout}></Route>
+                    <Route path="/center" component={CenterLayout}></Route>
                 {/* <Route path="/chart" component={LegionsProEchartsChartPieDemo}></Route> */}
-                <Route component={Demo}/>
+                {/* <Route component={Demo}/> */}
                 {this.props.children}
                 </React.Fragment>
                 </Switch>
