@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-03-02 14:19:18
- * @LastEditTime: 2021-04-27 16:40:03
+ * @LastEditTime: 2021-05-13 22:11:13
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/examples/containers/App.tsx
@@ -11,6 +11,7 @@ import { Route,Switch } from 'legions/router';
 import React from 'react';
 /* import '../assets/css/theme.less'; */
 import '../assets/css/theme.less'
+import { CropperImage } from './cropper-image';
 import Demo from './demo';
 import { CenterLayout } from './demo-center';
 import { FlexLayout } from './demo-layout';
@@ -53,9 +54,10 @@ export default class App extends React.Component {
                 <Route path="/select" component={ProSelectDemo}></Route>
                 <Route path="/zoom" component={ZoomableDemo}></Route>
                 <Route path="/import/base" component={DataImportBaseDemo}></Route>
-                    <Route path="/import/local" component={DataImportLocalDemo}></Route>
-                    <Route path="/flex" component={FlexLayout}></Route>
-                    <Route path="/center" component={CenterLayout}></Route>
+                <Route path="/import/local" component={DataImportLocalDemo}></Route>
+                <Route path="/flex" component={FlexLayout}></Route>
+                <Route path="/center" component={CenterLayout}></Route>
+                <Route path="/cropper" component={CropperImage}></Route>
                 {/* <Route path="/chart" component={LegionsProEchartsChartPieDemo}></Route> */}
                 {/* <Route component={Demo}/> */}
                 {this.props.children}

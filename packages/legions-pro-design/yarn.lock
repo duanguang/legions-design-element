@@ -9293,7 +9293,7 @@ legions-decorator@^0.0.4:
 
 legions-import-html-entry@^0.0.5:
   version "0.0.5"
-  resolved "http://192.168.200.99:4873/legions-import-html-entry/-/legions-import-html-entry-0.0.5.tgz#4d830d5f51d8d278665ef96ee6800e894cf9bdee"
+  resolved "https://registry.npm.taobao.org/legions-import-html-entry/-/legions-import-html-entry-0.0.5.tgz#4d830d5f51d8d278665ef96ee6800e894cf9bdee"
   integrity sha512-Ze84WgDWwM9ntCasycqNAOhm7GrHhmtngT4j9VMRAqAgWeFVXf0HTOFQKxv7MbsgRMPCv7ZAZeF00nfWTQzodw==
   dependencies:
     whatwg-fetch "^3.4.1"
@@ -9308,7 +9308,7 @@ legions-lunar@^0.0.5-rc.1:
 
 legions-micro-service@^0.0.9:
   version "0.0.9"
-  resolved "http://192.168.200.99:4873/legions-micro-service/-/legions-micro-service-0.0.9.tgz#4bea4db9f43f302c4b1acb94bd4db2efc83911ea"
+  resolved "https://registry.npm.taobao.org/legions-micro-service/-/legions-micro-service-0.0.9.tgz#4bea4db9f43f302c4b1acb94bd4db2efc83911ea"
   integrity sha512-K44pQ1mqIiJHRxFlfiq5tZNu34AnZz9yxJlAeCvbU8xs0/hIIasCSVUp/xVO7wjwQ2O3WZVTrdWTiTDb85XkGA==
   dependencies:
     legions-import-html-entry "^0.0.5"
@@ -14686,7 +14686,7 @@ simple-swizzle@^0.2.2:
 
 single-spa@^5.6.1:
   version "5.9.0"
-  resolved "http://192.168.200.99:4873/single-spa/-/single-spa-5.9.0.tgz#e0ca2864c2e0f6917286a5d6b70c507f8f5fc840"
+  resolved "https://registry.npm.taobao.org/single-spa/-/single-spa-5.9.0.tgz#e0ca2864c2e0f6917286a5d6b70c507f8f5fc840"
   integrity sha512-GhOceK36ruH8hhGFR7o3kkbrhoRG0m8/Ygsr16/qJ60El5OSz2WCYL4BFvX9nHwH2jpzgCqgoOWH9O5+So2dvQ==
 
 sisteransi@^1.0.5:

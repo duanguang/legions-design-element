@@ -22,6 +22,7 @@
     "legions-micro-service":"^0.1.0",
     "legions-control-container": "^0.0.5",
     "legions-nprogress": "^0.0.5",
+    "cropperjs":"^1.5.10",
     "sortablejs": "^1.10.0-rc3",
     "qr.js": "0.0.0",
     "raphael": "^2.2.6",
