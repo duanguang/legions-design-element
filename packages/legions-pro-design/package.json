@@ -39,7 +39,8 @@
     "antd": "^2.7.4",
     "brain-cli": "^1.0.8-alpha.5",
     "bezier-easing": "^2.0.3",
-
+    "spark-md5":"^3.0.1",
+    "node-7z":"^2.1.2",
     "bisheng": "^1.2.3",
     "bisheng-plugin-antd": "^1.0.1",
     "bisheng-plugin-description": "^0.1.4",
