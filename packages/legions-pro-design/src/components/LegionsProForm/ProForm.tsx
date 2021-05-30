@@ -1018,6 +1018,7 @@ export class LegionsProForm<mapProps = {}> extends React.Component<IProFormProps
     decryptionFreezeUid = ''
     constructor(props){
         super(props);
+        console.log(this.props['uniqueUid'],this.props);
         if (this.props['uniqueUid']) {
             this.decryptionFreezeUid = `${this.props['uniqueUid']}${this.props.uniqueKeys || ''}${process.env.environment === 'production' ? 'production' : ''}`;
             this.freezeUid = `form${shortHash(this.decryptionFreezeUid)}`;

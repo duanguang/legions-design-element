@@ -37,7 +37,6 @@
     "@types/react": "^16.9.35",
     "@types/react-dom": "^0.14.22",
     "antd": "^2.7.4",
-    "brain-cli": "^1.0.8-alpha.5",
     "bezier-easing": "^2.0.3",
     "spark-md5":"^3.0.1",
     "node-7z":"^2.1.2",
@@ -97,6 +96,7 @@
     "copy:ts":"sh script/create.sh",
     "start:react15": "cd examples/react15 && yarn dev",
     "dev": "brain-cli dev",
+    "build:all": "brain-cli build test --apps=examples",
     "dll": "brain-cli dll",
     "release": "bash build/release.sh"
   },

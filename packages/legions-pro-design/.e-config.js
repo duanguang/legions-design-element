@@ -1,3 +1,4 @@
+const getCustomTransformers = require('./webpack.ts-transformers');
 /** @format */
 const {
   createTransformer,
@@ -18,7 +19,7 @@ module.exports = function (configs) {
     publicPath: '/app/',
     isTslint: true,
     //server:'test.hoolinks.com',
-    //server:'127.0.0.1',
+    server:'127.0.0.1',
     devServer: Object.assign({}, configs.devServer, {
       proxy: {
         '/v1/oss/uploadByForm': {
@@ -74,7 +75,8 @@ module.exports = function (configs) {
       commonsChunkPlugin: ['common', 'vendor'],
       tsCompilePlugin: {
         option: {
-          getCustomTransformers: () => ({
+          getCustomTransformers:path.join(__dirname, './webpack.ts-transformers.js'),
+          /* () => ({
             before: [
               createTransformer([
                 {
@@ -93,11 +95,13 @@ module.exports = function (configs) {
                 ],
               }),
             ],
-          }),
+          }), */
         },
       },
       disableReactHotLoader: false,
-
+      happyPack: {
+        open:false,
+      },
       cssModules: {
         enable: true, // 默认false
       },
@@ -118,27 +122,39 @@ module.exports = function (configs) {
       extend: (loaders,{ isDev,loaderType,projectType,transform }) => {
         const nodeModulesPath=path.resolve('../../', 'node_modules')
         if (loaderType === 'JsLoader') {
-          loaders.push({
+          if (loaders.length) {
+            loaders[0].include = [...loaders[0].include,
+            path.join(process.cwd(), 'node_modules/legions-mobx-decorator'),
+            path.join(process.cwd(), 'node_modules/legions-lunar'),
+            path.join(process.cwd(), 'node_modules/legions-micro-service'),
+            ]
+          }
+          /* loaders.push({
             test: /\.(jsx|js)?$/,
             include: [
               path.join(process.cwd(), 'node_modules/legions-mobx-decorator'),
               path.join(process.cwd(), 'node_modules/legions-lunar'),
               path.join(process.cwd(), 'node_modules/legions-micro-service'),
-              /* path.join(process.cwd(), 'components'), */
             ],
             loader: 'happypack/loader?id=js',
-          });
+          }); */
         }
         if (loaderType === 'TsLoader' && projectType === 'ts') {
-          loaders.push({
+          
+          if (loaders.length) {
+            loaders[0].include = [...loaders[0].include,
+              path.join(process.cwd(), 'node_modules/legions-mobx-decorator'),
+              path.join(process.cwd(), 'node_modules/legions-lunar'),
+            ]
+          }
+         /*  loaders.push({
             test: /\.(ts|tsx)$/,
             include: [
               path.join(process.cwd(), 'node_modules/legions-mobx-decorator'),
               path.join(process.cwd(), 'node_modules/legions-lunar'),
-              /* path.join(process.cwd(), 'components'), */
             ],
             loader: 'happypack/loader?id=ts',
-          });
+          }); */
         }
         if (loaderType === 'StyleLoader' && transform) {
           const newLoaders = [
