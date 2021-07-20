@@ -1836,6 +1836,11 @@
     "@types/minimatch" "*"
     "@types/node" "*"
 
+"@types/history@*":
+  version "4.7.9"
+  resolved "https://registry.nlark.com/@types/history/download/@types/history-4.7.9.tgz#1cfb6d60ef3822c589f18e70f8b12f9a28ce8724"
+  integrity sha1-HPttYO84IsWJ8Y5w+LEvmijOhyQ=
+
 "@types/istanbul-lib-coverage@*", "@types/istanbul-lib-coverage@^2.0.0":
   version "2.0.3"
   resolved "https://registry.npm.taobao.org/@types/istanbul-lib-coverage/download/@types/istanbul-lib-coverage-2.0.3.tgz?cache=0&sync_timestamp=1605053987538&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fistanbul-lib-coverage%2Fdownload%2F%40types%2Fistanbul-lib-coverage-2.0.3.tgz#4ba8ddb720221f432e443bd5f9117fd22cfd4762"
@@ -1932,12 +1937,45 @@
   dependencies:
     "@types/react" "*"
 
+"@types/react-dom@^16.9.14":
+  version "16.9.14"
+  resolved "https://registry.nlark.com/@types/react-dom/download/@types/react-dom-16.9.14.tgz#674b8f116645fe5266b40b525777fc6bb8eb3bcd"
+  integrity sha1-Z0uPEWZF/lJmtAtSV3f8a7jrO80=
+  dependencies:
+    "@types/react" "^16"
+
+"@types/react-router-dom@^4.3.5":
+  version "4.3.5"
+  resolved "https://registry.nlark.com/@types/react-router-dom/download/@types/react-router-dom-4.3.5.tgz#72f229967690c890d00f96e6b85e9ee5780db31f"
+  integrity sha1-cvIplnaQyJDQD5bmuF6e5XgNsx8=
+  dependencies:
+    "@types/history" "*"
+    "@types/react" "*"
+    "@types/react-router" "*"
+
+"@types/react-router@*":
+  version "5.1.16"
+  resolved "https://registry.nlark.com/@types/react-router/download/@types/react-router-5.1.16.tgz#f3ba045fb96634e38b21531c482f9aeb37608a99"
+  integrity sha1-87oEX7lmNOOLIVMcSC+a6zdgipk=
+  dependencies:
+    "@types/history" "*"
+    "@types/react" "*"
+
 "@types/react@*":
   version "17.0.0"
   resolved "https://registry.npm.taobao.org/@types/react/download/@types/react-17.0.0.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Freact%2Fdownload%2F%40types%2Freact-17.0.0.tgz#5af3eb7fad2807092f0046a1302b7823e27919b8"
   integrity sha1-WvPrf60oBwkvAEahMCt4I+J5Gbg=
   dependencies:
     "@types/prop-types" "*"
+    csstype "^3.0.2"
+
+"@types/react@^16":
+  version "16.14.11"
+  resolved "https://registry.nlark.com/@types/react/download/@types/react-16.14.11.tgz?cache=0&sync_timestamp=1625682926121&other_urls=https%3A%2F%2Fregistry.nlark.com%2F%40types%2Freact%2Fdownload%2F%40types%2Freact-16.14.11.tgz#992a0cd4b66b9f27315042b5d96e976717368f04"
+  integrity sha1-mSoM1LZrnycxUEK12W6XZxc2jwQ=
+  dependencies:
+    "@types/prop-types" "*"
+    "@types/scheduler" "*"
     csstype "^3.0.2"
 
 "@types/react@^16.9.35":
@@ -1954,6 +1992,11 @@
   integrity sha1-8mB00jjgJlnjI84aE9BB7uKA4ZQ=
   dependencies:
     "@types/node" "*"
+
+"@types/scheduler@*":
+  version "0.16.2"
+  resolved "https://registry.nlark.com/@types/scheduler/download/@types/scheduler-0.16.2.tgz#1a62f89525723dde24ba1b01b092bf5df8ad4d39"
+  integrity sha1-GmL4lSVyPd4kuhsBsJK/XfitTTk=
 
 "@types/stack-utils@^1.0.1":
   version "1.0.1"
@@ -3498,47 +3541,42 @@ brain-cli@^1.1.1:
     webpack-filter-warnings-plugin "^1.2.1"
     webpack-spritesmith "^1.1.0"
 
-brain-store-react@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.npm.taobao.org/brain-store-react/download/brain-store-react-1.0.2.tgz#b8148499e3d4ed4e2ba48a8cfad6277885211b9d"
-  integrity sha1-uBSEmePU7U4rpIqM+tYneIUhG50=
+brain-store-react@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.nlark.com/brain-store-react/download/brain-store-react-1.1.0.tgz#abb4e50bba67ba27d7c51ea4b33e6a8b9c4d121c"
+  integrity sha1-q7TlC7pnuifXxR6ksz5qi5xNEhw=
   dependencies:
-    hoist-non-react-statics "^3.3.0"
-    mobx-react "^6.1.1"
-
-brain-store-utils@^0.1.13-beta.3:
-  version "0.1.13-beta.3"
-  resolved "https://registry.npm.taobao.org/brain-store-utils/download/brain-store-utils-0.1.13-beta.3.tgz#71b762da547b31254282a39d69d52311a3e3e822"
-  integrity sha1-cbdi2lR7MSVCgqOdadUjEaPj6CI=
-  dependencies:
-    invariant "^2.2.1"
     warning "^3.0.0"
 
-brain-store@^0.1.10-rc.1:
-  version "0.1.10-rc.1"
-  resolved "https://registry.npm.taobao.org/brain-store/download/brain-store-0.1.10-rc.1.tgz#b518b7a20010e204e83bee14fd63efd468b2ba76"
-  integrity sha1-tRi3ogAQ4gToO+4U/WPv1GiyunY=
+brain-store-utils@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.nlark.com/brain-store-utils/download/brain-store-utils-0.2.0.tgz#65ca7bc096337f5684f22eb497f3ee6d80799f8d"
+  integrity sha1-Zcp7wJYzf1aE8i60l/PubYB5n40=
   dependencies:
-    invariant "^2.2.1"
-    is-plain-object "^2.0.1"
-    superagent "^3.4.4"
     warning "^3.0.0"
 
-brains@^1.0.3-beta.1:
-  version "1.0.3-beta.1"
-  resolved "https://registry.npm.taobao.org/brains/download/brains-1.0.3-beta.1.tgz#56a32d7399c5d76cd7f2cc81b833659d2953b3b2"
-  integrity sha1-VqMtc5nF12zX8syBuDNlnSlTs7I=
+brain-store@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.nlark.com/brain-store/download/brain-store-0.2.0.tgz#4bf33381c02287ead7d9b0eb2766ebdc7b6c08a8"
+  integrity sha1-S/MzgcAih+rX2bDrJ2br3HtsCKg=
   dependencies:
-    brain-store-react "^1.0.2"
+    history "^4.7.2"
+    invariant "^2.2.1"
+    reflect-metadata "^0.1.13"
+    uuid "^3.4.0"
+
+brains@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.nlark.com/brains/download/brains-1.1.0.tgz#981e057a1d8bb66d1c640d54a0d3afb2a9f06a88"
+  integrity sha1-mB4Feh2Ltm0cZA1UoNOvsqnwaog=
+  dependencies:
+    "@types/react-router-dom" "^4.3.5"
+    brain-store "^0.2.0"
+    brain-store-react "^1.1.0"
     history "^4.6.1"
     invariant "^2.2.1"
-    isomorphic-fetch "2.2.1"
-    mobx "^4.13.0"
-    mobx-react-devtools "^6.1.1"
-    react "^16.8.3"
-    react-dom "^16.8.3"
+    is-plain-object "^2.0.4"
     react-router-dom "^4.0.0"
-    superagent "^3.4.4"
     warning "^3.0.0"
 
 brorand@^1.0.1:
@@ -8432,7 +8470,7 @@ is-plain-obj@^2.0.0:
   resolved "https://registry.npm.taobao.org/is-plain-obj/download/is-plain-obj-2.1.0.tgz#45e42e37fccf1f40da8e5f76ee21515840c09287"
   integrity sha1-ReQuN/zPH0Dajl927iFRWEDAkoc=
 
-is-plain-object@^2.0.1, is-plain-object@^2.0.3, is-plain-object@^2.0.4:
+is-plain-object@^2.0.3, is-plain-object@^2.0.4:
   version "2.0.4"
   resolved "https://registry.npm.taobao.org/is-plain-object/download/is-plain-object-2.0.4.tgz#2c163b3fafb1b606d9d17928f05c2a1c38e07677"
   integrity sha1-LBY7P6+xtgbZ0Xko8FwqHDjgdnc=
@@ -9450,23 +9488,22 @@ legions-control-container@^0.0.5:
   dependencies:
     reflect-metadata "^0.1.13"
 
-legions-decorator@^0.0.4:
-  version "0.0.4"
-  resolved "https://registry.npm.taobao.org/legions-decorator/download/legions-decorator-0.0.4.tgz#a1d4853b29b32da10eee1d76dabf9f63b4587bed"
-  integrity sha1-odSFOymzLaEO7h122r+fY7RYe+0=
+legions-decorator@^0.0.6:
+  version "0.0.6"
+  resolved "https://registry.nlark.com/legions-decorator/download/legions-decorator-0.0.6.tgz#3f9a98333d6457a2f35896727c298f4e422bddc0"
+  integrity sha1-P5qYMz1kV6LzWJZyfCmPTkIr3cA=
   dependencies:
-    legions-utils-tool "^0.0.8"
+    legions-utils-tool "^0.0.11"
     reflect-metadata "^0.1.13"
     warning "^3.0.0"
 
-legions-decorator@^0.0.6-beta.1:
-  version "0.0.6-beta.1"
-  resolved "https://registry.yarnpkg.com/legions-decorator/-/legions-decorator-0.0.6-beta.1.tgz#2b4f3b9b04c63c075b8a79fbe382a44590f3a14b"
-  integrity sha512-7lsi6mdckeYB9Wk7YU9a+ll5JfVzKi98FnT8yPgzrDMbijmRegWPYLkzNuoZPokD5nsLG5wmD/K6E9ueOAZ5bQ==
+legions-fetch@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.nlark.com/legions-fetch/download/legions-fetch-0.0.2.tgz#333d61eb642961452801c9c59bb95e408e465526"
+  integrity sha1-Mz1h62QpYUUoAcnFm7leQI5GVSY=
   dependencies:
-    legions-utils-tool "^0.0.8"
-    reflect-metadata "^0.1.13"
-    warning "^3.0.0"
+    isomorphic-fetch "2.2.1"
+    superagent "^3.4.4"
 
 legions-import-html-entry@^0.0.5:
   version "0.0.5"
@@ -9475,18 +9512,10 @@ legions-import-html-entry@^0.0.5:
   dependencies:
     whatwg-fetch "^3.4.1"
 
-legions-lunar@^0.0.5-rc.1:
-  version "0.0.5-rc.1"
-  resolved "https://registry.npm.taobao.org/legions-lunar/download/legions-lunar-0.0.5-rc.1.tgz#3adfce332f9a8b1401517f2e5cfacb6f5c3b1976"
-  integrity sha1-Ot/OMy+aixQBUX8uXPrLb1w7GXY=
-  dependencies:
-    legions-thirdparty-plugin "^0.0.8"
-    warning "^3.0.0"
-
-legions-lunar@^0.0.5-rc.2:
-  version "0.0.5-rc.3"
-  resolved "https://registry.yarnpkg.com/legions-lunar/-/legions-lunar-0.0.5-rc.3.tgz#b880fc7d02e846617a938fb79713fc5b1fae1135"
-  integrity sha512-rlQ1ZtAoIK5NUicOFZDElM44rzPjvB4VwQAGhbIUKU6MDnyTwnlgFWoMU3ZcFKisj2qMxLNFw1tyDmCnCweUJw==
+legions-lunar@^0.0.7:
+  version "0.0.7"
+  resolved "https://registry.nlark.com/legions-lunar/download/legions-lunar-0.0.7.tgz#7b695db7fa2637c223cdbb8da35077ff43346f79"
+  integrity sha1-e2ldt/omN8IjzbuNo1B3/0M0b3k=
   dependencies:
     legions-thirdparty-plugin "^0.0.8"
     warning "^3.0.0"
@@ -9537,22 +9566,24 @@ legions-rpc-cli@^0.0.8:
     typescript "^4.0.2"
     uglify-js "^3.1.2"
 
+legions-socket@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.nlark.com/legions-socket/download/legions-socket-0.0.2.tgz#350c342e28826edd492258918c6c4ebfd7362b30"
+  integrity sha1-NQw0LiiCbt1JIliRjGxOv9c2KzA=
+  dependencies:
+    socket.io-client "^2.2.0"
+
 legions-thirdparty-plugin@^0.0.8:
   version "0.0.8"
   resolved "https://registry.npm.taobao.org/legions-thirdparty-plugin/download/legions-thirdparty-plugin-0.0.8.tgz#b5a683c58fc6d0bd2a8a155015ad9a2e4ec277e4"
   integrity sha1-taaDxY/G0L0qihVQFa2aLk7Cd+Q=
 
-legions-utils-tool@^0.0.10:
-  version "0.0.10"
-  resolved "https://registry.npm.taobao.org/legions-utils-tool/download/legions-utils-tool-0.0.10.tgz#c91b6212245f1444daf21e0b36d52c6d17b110fc"
-  integrity sha1-yRtiEiRfFETa8h4LNtUsbRexEPw=
+legions-utils-tool@^0.0.11:
+  version "0.0.11"
+  resolved "https://registry.nlark.com/legions-utils-tool/download/legions-utils-tool-0.0.11.tgz#83ff854f35cf602be37edfdea5d4fc3da97ae4ce"
+  integrity sha1-g/+FTzXPYCvjft/epdT8Pal65M4=
   dependencies:
     javascript-state-machine "^3.1.0"
-
-legions-utils-tool@^0.0.8:
-  version "0.0.8"
-  resolved "https://registry.npm.taobao.org/legions-utils-tool/download/legions-utils-tool-0.0.8.tgz#c58cb1e5ca4e4b6754913474fb401163c46ec116"
-  integrity sha1-xYyx5cpOS2dUkTR0+0ARY8RuwRY=
 
 legions-utils-tool@^0.0.9-rc.1:
   version "0.0.9"
@@ -9561,18 +9592,29 @@ legions-utils-tool@^0.0.9-rc.1:
   dependencies:
     javascript-state-machine "^3.1.0"
 
-legions@^1.0.9-rc.2:
-  version "1.0.9-rc.2"
-  resolved "https://registry.npm.taobao.org/legions/download/legions-1.0.9-rc.2.tgz#42b87e86c88bae6221231161e119276728e76664"
-  integrity sha1-Qrh+hsiLrmIhIxFh4RknZyjnZmQ=
+legions@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.nlark.com/legions/download/legions-1.1.2.tgz#907027edacfe6d0d54943009c217c2b3b0ad942c"
+  integrity sha1-kHAn7az+bQ1UlDAJwhfCs7CtlCw=
   dependencies:
-    brain-store "^0.1.10-rc.1"
-    brain-store-react "^1.0.2"
-    brain-store-utils "^0.1.13-beta.3"
-    brains "^1.0.3-beta.1"
+    "@types/react" "^16.9.35"
+    "@types/react-dom" "^16.9.14"
+    brain-store "^0.2.0"
+    brain-store-react "^1.1.0"
+    brain-store-utils "^0.2.0"
+    brains "^1.1.0"
     classnames "^2.2.5"
+    hoist-non-react-statics "^3.3.0"
     invariant "^2.2.1"
     json-mapper-object "^0.0.9-rc1"
+    legions-fetch "^0.0.2"
+    legions-socket "^0.0.2"
+    lodash "^4.17.21"
+    mobx "^4.15.7"
+    mobx-react "^6.3.1"
+    mobx-react-devtools "^6.1.1"
+    react "^16.14.0"
+    react-dom "^16.14.0"
     warning "^3.0.0"
 
 less-loader@^5.0.0:
@@ -9909,6 +9951,11 @@ lodash@^4.0.1, lodash@^4.16.5, lodash@^4.17.10, lodash@^4.17.11, lodash@^4.17.14
   version "4.17.20"
   resolved "https://registry.npm.taobao.org/lodash/download/lodash-4.17.20.tgz#b44a9b6297bcb698f1c51a3545a2b3b368d59c52"
   integrity sha1-tEqbYpe8tpjxxRo1RaKzs2jVnFI=
+
+lodash@^4.17.21:
+  version "4.17.21"
+  resolved "https://registry.nlark.com/lodash/download/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
+  integrity sha1-Z5WRxWTDv/quhFTPCz3zcMPWkRw=
 
 log-symbols@^2.0.0, log-symbols@^2.2.0:
   version "2.2.0"
@@ -10485,16 +10532,16 @@ mobx-react-lite@^2.2.0:
   resolved "https://registry.npm.taobao.org/mobx-react-lite/download/mobx-react-lite-2.2.2.tgz#87c217dc72b4e47b22493daf155daf3759f868a6"
   integrity sha1-h8IX3HK05HsiST2vFV2vN1n4aKY=
 
-mobx-react@^6.1.1:
+mobx-react@^6.3.1:
   version "6.3.1"
-  resolved "https://registry.npm.taobao.org/mobx-react/download/mobx-react-6.3.1.tgz#204f9756e42e19d91cb6598837063b7e7de87c52"
+  resolved "https://registry.nlark.com/mobx-react/download/mobx-react-6.3.1.tgz#204f9756e42e19d91cb6598837063b7e7de87c52"
   integrity sha1-IE+XVuQuGdkctlmINwY7fn3ofFI=
   dependencies:
     mobx-react-lite "^2.2.0"
 
-mobx@^4.13.0:
+mobx@^4.15.7:
   version "4.15.7"
-  resolved "https://registry.npm.taobao.org/mobx/download/mobx-4.15.7.tgz#933281268c3b4658b6cf2526e872cf78ea48ab95"
+  resolved "https://registry.nlark.com/mobx/download/mobx-4.15.7.tgz#933281268c3b4658b6cf2526e872cf78ea48ab95"
   integrity sha1-kzKBJow7Rli2zyUm6HLPeOpIq5U=
 
 mockdate@^2.0.1:
@@ -13445,7 +13492,7 @@ react-document-title@^2.0.1, react-document-title@^2.0.3:
     prop-types "^15.5.6"
     react-side-effect "^1.0.2"
 
-react-dom@^16.0.0, react-dom@^16.8.3:
+react-dom@^16.0.0, react-dom@^16.14.0:
   version "16.14.0"
   resolved "https://registry.npm.taobao.org/react-dom/download/react-dom-16.14.0.tgz?cache=0&sync_timestamp=1610382875107&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Freact-dom%2Fdownload%2Freact-dom-16.14.0.tgz#7ad838ec29a777fb3c75c3a190f661cf92ab8b89"
   integrity sha1-etg47Cmnd/s8dcOhkPZhz5Kri4k=
@@ -13633,7 +13680,7 @@ react-test-renderer@^16.0.0-0:
     react-is "^16.8.6"
     scheduler "^0.19.1"
 
-react@^16.0.0, react@^16.8.3:
+react@^16.0.0, react@^16.14.0:
   version "16.14.0"
   resolved "https://registry.npm.taobao.org/react/download/react-16.14.0.tgz?cache=0&sync_timestamp=1610380933072&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Freact%2Fdownload%2Freact-16.14.0.tgz#94d776ddd0aaa37da3eda8fc5b6b18a4c9a3114d"
   integrity sha1-lNd23dCqo32j7aj8W2sYpMmjEU0=
