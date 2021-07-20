@@ -147,7 +147,7 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
         this.traceId = this.uid;
         this.freezeuid = this.uid;
         this.tableThead = `table-thead${this.uid}`;
-        const keys= 'uniqueUid'
+        const keys = 'uniqueUid'
         invariant(this.props[keys],`[legionsProTable]:props.${keys} cannot be empty`);
         if (this.props[keys]) {
             this.decryptionfreezeuid = `${this.props[keys]}`
@@ -393,12 +393,13 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
                 }
             }
         })
-    }
-    componentWillMount() {
-
         if (this.props.autoQuery) {
             this.subscription = this.props.store.schedule([this.log.bind(this,this.freezeuid)])
         }
+    }
+    componentWillMount() {
+
+        
         this.consoleLog('componentWillMount')
         /* this.subscription.unsubscribe() */
     }

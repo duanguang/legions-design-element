@@ -1,19 +1,21 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-07 17:16:35
- * @LastEditTime: 2021-03-02 18:48:19
+ * @LastEditTime: 2021-07-11 18:09:17
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreTable/ProTableView.ts
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
-import { observable, action, StoreModules } from 'legions/store';
+import {  StoreModules } from 'legions/store';
 import {
   computed,
   autorun,
   runInAction,
   isComputed,
   ObservableMap,
+  observable,
+  action,
   isObservableArray,
 } from 'mobx';
 import * as mobx from 'mobx';

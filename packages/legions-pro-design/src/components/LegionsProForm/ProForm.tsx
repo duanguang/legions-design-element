@@ -32,7 +32,6 @@ import { formClasses,ProFormFields,ProFormUtils,size } from './ProFormUtils';
 import { cloneDeep } from 'lodash'
 import { LabelWithCascaderModel } from './FormCascader';
 const baseCls = `legions-pro-form`
-
 export interface IProFormProps<mapProps = {}> {
     form?: WrappedFormUtils,
 

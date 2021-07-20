@@ -5,11 +5,9 @@
   "workspaces": [
     "packages/*"
   ],
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
-    "lerna": "^3.22.1",
-    "brain-cli": "^1.1.0",
-    "import-lazy":"^2.1.0"
+    "brain-cli": "file:.yalc/brain-cli",
+    "import-lazy": "^2.1.0"
   }
 }

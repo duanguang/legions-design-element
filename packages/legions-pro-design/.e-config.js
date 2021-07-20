@@ -53,7 +53,7 @@ module.exports = function (configs) {
         },
       },
     }),
-    apps: ['examples', 'examples'],
+    apps: ['examples'],
     entries: ['src/examples/index'],
     webpack: {
       dllConfig: {
@@ -120,13 +120,19 @@ module.exports = function (configs) {
         }),
       ],
       extend: (loaders,{ isDev,loaderType,projectType,transform }) => {
-        const nodeModulesPath=path.resolve('../../', 'node_modules')
+        const nodeModulesPath = path.resolve('../../','node_modules')
         if (loaderType === 'JsLoader') {
           if (loaders.length) {
             loaders[0].include = [...loaders[0].include,
             path.join(process.cwd(), 'node_modules/legions-mobx-decorator'),
             path.join(process.cwd(), 'node_modules/legions-lunar'),
             path.join(process.cwd(), 'node_modules/legions-micro-service'),
+            
+              /* path.join(nodeModulesPath, 'legions'),
+              path.join(nodeModulesPath, 'brains'),
+              path.join(nodeModulesPath, 'brain-store'),
+              path.join(nodeModulesPath, 'brain-store-react'), */
+              /* path.join(nodeModulesPath, 'brain-store-utils'), */
             ]
           }
           /* loaders.push({

@@ -1,4 +1,3 @@
-import { get, post } from 'legions/request';
 import { MockContainerEntity } from '../models/mockEntity';
 import { MockPageListEntity } from '../models/mockListEntity';
 
@@ -8,7 +7,7 @@ export function getMockData(){
       name:'小明',
       age:'22',
     }}});
-    let timeNum = 5000;
+    let timeNum = 1000;
     setTimeout(()=>{
       resolve(info)
     },timeNum)

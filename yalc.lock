@@ -1,0 +1,11 @@
+{
+  "version": "v1",
+  "packages": {
+    "brain-cli": {
+      "version": "1.1.2",
+      "signature": "9e8a08e04d15175f1cc54a1cba37c425",
+      "file": true,
+      "replaced": "^1.1.1"
+    }
+  }
+}

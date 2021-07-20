@@ -1,13 +1,13 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-07 17:21:19
- * @LastEditTime: 2021-04-14 14:58:40
+ * @LastEditTime: 2021-07-11 18:09:43
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreTable/ProTableLocalView.ts
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
-import { observable, action, StoreModules } from 'legions/store';
+import {  StoreModules } from 'legions/store';
 import LegionsCore from '../LegionsCore';
 import { cloneDeep } from 'lodash';
 import { observableViewModel, observablePromise } from 'legions/store-utils';
@@ -15,6 +15,7 @@ import { ITableAutoQuery } from './interface';
 import { PageListEntity } from './pageListEntity';
 import {
   computed,
+  observable, action,
 } from 'mobx';
 export class ProTableLocalView {
   /**
