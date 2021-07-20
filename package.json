@@ -5,9 +5,11 @@
   "workspaces": [
     "packages/*"
   ],
-  "dependencies": {},
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
   "devDependencies": {
-    "brain-cli": "file:.yalc/brain-cli",
+    "brain-cli": "^1.1.1",
     "import-lazy": "^2.1.0"
   }
 }

@@ -1,9 +1,8 @@
+/** @format */
+
 const getCustomTransformers = require('./webpack.ts-transformers');
 /** @format */
-const {
-  createTransformer,
-  createTransformerReactJsxProps,
-} = require('ts-plugin-legions');
+const { createTransformer, createTransformerReactJsxProps } = require('ts-plugin-legions');
 var packageConfig = require('./package.json');
 const FilterWarningsPlugin = require('webpack-filter-warnings-plugin');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
@@ -19,7 +18,7 @@ module.exports = function (configs) {
     publicPath: '/app/',
     isTslint: true,
     //server:'test.hoolinks.com',
-    server:'127.0.0.1',
+    server: '127.0.0.1',
     devServer: Object.assign({}, configs.devServer, {
       proxy: {
         '/v1/oss/uploadByForm': {
@@ -34,10 +33,7 @@ module.exports = function (configs) {
           secure: false,
           onProxyReq: (proxyReq, req, res) => {
             proxyReq.setHeader('host', 'qa-scm.hoolinks.com');
-            proxyReq.setHeader(
-              'cookie',
-              'SESSION=86b2ee3f-537b-4fad-97bd-8fca31463729'
-            );
+            proxyReq.setHeader('cookie', 'SESSION=86b2ee3f-537b-4fad-97bd-8fca31463729');
           },
         },
         '/common/excel/import': {
@@ -45,10 +41,7 @@ module.exports = function (configs) {
           secure: false,
           onProxyReq: (proxyReq, req, res) => {
             proxyReq.setHeader('host', 'uat-scm.hoolinks.com');
-            proxyReq.setHeader(
-              'cookie',
-              'SESSION=5263812c-5586-43dc-97c8-829f00e5fda3'
-            );
+            proxyReq.setHeader('cookie', 'SESSION=5263812c-5586-43dc-97c8-829f00e5fda3');
           },
         },
       },
@@ -75,7 +68,7 @@ module.exports = function (configs) {
       commonsChunkPlugin: ['common', 'vendor'],
       tsCompilePlugin: {
         option: {
-          getCustomTransformers:path.join(__dirname, './webpack.ts-transformers.js'),
+          getCustomTransformers: path.join(__dirname, './webpack.ts-transformers.js'),
           /* () => ({
             before: [
               createTransformer([
@@ -100,7 +93,7 @@ module.exports = function (configs) {
       },
       disableReactHotLoader: false,
       happyPack: {
-        open:false,
+        open: false,
       },
       cssModules: {
         enable: true, // 默认false
@@ -108,10 +101,7 @@ module.exports = function (configs) {
       plugins: [
         new ProgressBarPlugin({
           summary: false,
-          format:
-            `${chalk.green.bold('build [:bar]')}` +
-            chalk.green.bold(':percent') +
-            ' (:elapsed seconds)',
+          format: `${chalk.green.bold('build [:bar]')}` + chalk.green.bold(':percent') + ' (:elapsed seconds)',
           summaryContent: '',
         }),
         new webpack.NamedChunksPlugin(),
@@ -119,21 +109,24 @@ module.exports = function (configs) {
           exclude: /export .* was not found in/,
         }),
       ],
-      extend: (loaders,{ isDev,loaderType,projectType,transform }) => {
-        const nodeModulesPath = path.resolve('../../','node_modules')
+      extend: (loaders, { isDev, loaderType, projectType, transform }) => {
+        const nodeModulesPath = path.resolve('../../', 'node_modules');
         if (loaderType === 'JsLoader') {
           if (loaders.length) {
-            loaders[0].include = [...loaders[0].include,
-            path.join(process.cwd(), 'node_modules/legions-mobx-decorator'),
-            path.join(process.cwd(), 'node_modules/legions-lunar'),
-            path.join(process.cwd(), 'node_modules/legions-micro-service'),
-            
+            loaders[0].exclude = [...loaders[0].exclude, path.join(nodeModulesPath)];
+            loaders[0].include = [
+              ...loaders[0].include,
+              path.join(process.cwd(), 'node_modules/legions-mobx-decorator'),
+              /*  path.join(process.cwd(), 'node_modules/legions-lunar'), */
+              path.join(process.cwd(), 'node_modules/legions-micro-service'),
+
               /* path.join(nodeModulesPath, 'legions'),
               path.join(nodeModulesPath, 'brains'),
               path.join(nodeModulesPath, 'brain-store'),
               path.join(nodeModulesPath, 'brain-store-react'), */
               /* path.join(nodeModulesPath, 'brain-store-utils'), */
-            ]
+            ];
+            console.log(loaders);
           }
           /* loaders.push({
             test: /\.(jsx|js)?$/,
@@ -146,14 +139,14 @@ module.exports = function (configs) {
           }); */
         }
         if (loaderType === 'TsLoader' && projectType === 'ts') {
-          
           if (loaders.length) {
-            loaders[0].include = [...loaders[0].include,
+            loaders[0].include = [
+              ...loaders[0].include,
               path.join(process.cwd(), 'node_modules/legions-mobx-decorator'),
-              path.join(process.cwd(), 'node_modules/legions-lunar'),
-            ]
+              /* path.join(process.cwd(), 'node_modules/legions-lunar'), */
+            ];
           }
-         /*  loaders.push({
+          /*  loaders.push({
             test: /\.(ts|tsx)$/,
             include: [
               path.join(process.cwd(), 'node_modules/legions-mobx-decorator'),
@@ -172,11 +165,11 @@ module.exports = function (configs) {
             {
               test: /\.less/,
               use: transform.execution(null, {
-                  loader: 'less-loader',
-                  options: { javascriptEnabled: true },
+                loader: 'less-loader',
+                options: { javascriptEnabled: true },
               }),
               include: [path.resolve(nodeModulesPath, 'antd')],
-          },
+            },
             /* {
               test: new RegExp(`^(?!.*\\.modules).*\\.less`),
               use: transform.execution(null, {
@@ -188,7 +181,7 @@ module.exports = function (configs) {
               ],
             }, */
           ];
-          newLoaders.map(item => {
+          newLoaders.map((item) => {
             loaders.push(item);
           });
         }
@@ -211,8 +204,9 @@ module.exports = function (configs) {
               /*  targets: {
                        esmodules: true,
                      }, */
-              useBuiltIns: 'entry', // entry usage
-              corejs: '2',
+              modules: false,
+              useBuiltIns: 'usage',
+              corejs: '3',
               targets: {
                 browsers: [
                   // 浏览器
