@@ -1,7 +1,7 @@
 import { Button,Icon,message,Progress,Spin,Upload,Row,Col } from 'antd';
 import React from 'react';
 import { UploadChangeParam,UploadFile } from '../interface/antd';
-import { legionsThirdpartyPlugin } from 'legions-thirdparty-plugin';
+import { runScriptsSdk } from 'legions-thirdparty-plugin';
 import { NProgress } from 'legions-nprogress';
 import './style/index.less';
 import { FileTypeList,XlsType,XlsxType } from './uploadType';
@@ -82,13 +82,13 @@ export default class LegionsProUpload extends React.Component<IProUploadProps,IS
             this.props.onError && this.props.onError({ file,fileList },e)
         }
         reader.onload = (e: ProgressEvent) => {
-            if (!legionsThirdpartyPlugin.plugins.excel) {
+            if (!runScriptsSdk.plugins.xlsx) {
                 message.warning('Plugin is not ready to excel, Please install at the entrance(legionsThirdpartyPlugin.use({name:"excel",url:"xxxx"}))');
                 return;
             }
             // @ts-ignore
             const data = e.target.result
-            const { header,results } = legionsThirdpartyPlugin.plugins.excel.read(data,'array')
+            const { header,results } = runScriptsSdk.plugins.xlsx.read(data,'array')
             NProgress.done();
             this.setState({
                 uploadLoading: false,

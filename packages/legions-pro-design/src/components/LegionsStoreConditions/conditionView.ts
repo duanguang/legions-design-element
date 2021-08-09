@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-07 16:49:31
- * @LastEditTime: 2021-04-14 14:56:16
+ * @LastEditTime: 2021-08-09 23:30:53
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreConditions/conditionView.ts
@@ -10,14 +10,13 @@
 
 import { observable, action, StoreModules } from 'legions/store';
 import { observableViewModel, observablePromise } from 'legions/store-utils';
-import { ViewModel } from 'brain-store-utils';
 import { computed,ObservableMap } from 'mobx';
 import LegionsCore from '../LegionsCore'
 import { IObservableMap,ISelectAutoQuery,ISelectOptions } from './interface';
 import { cloneDeep } from 'lodash'
 import { IProConditions } from '../LegionsProConditions/ProConditionsUtils';
 import LegionsModels from '../LegionsModels';
-import { legionsThirdpartyPlugin } from 'legions-thirdparty-plugin';
+import { runScriptsSdk } from 'legions-thirdparty-plugin';
 import {setStorageItems,getStorageItem} from 'legions-utils-tool/storage'
 export class ConditionView<Query = {}> {
     constructor(uid: string='') {
@@ -164,7 +163,7 @@ export class ConditionView<Query = {}> {
             }
         })
         if (options && options.isCache) {
-            if (!legionsThirdpartyPlugin.plugins.dexie) {
+            if (!runScriptsSdk.plugins.dexie) {
                 setStorageItems(this.uid,JSON.stringify(caches))
             }
         }

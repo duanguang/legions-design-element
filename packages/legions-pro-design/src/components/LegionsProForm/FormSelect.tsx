@@ -9,9 +9,8 @@ import LegionsProSelect from '../LegionsProSelect'
 import AbstractForm from './AbstractForm';
 import FormElement from './FormElement';
 import {InstanceFormElement} from './interface/formElement'
-import LegionsProErrorReportShow from '../LegionsProErrorReportShow'
 import { on,off } from 'legions-utils-tool/dom'
-import { legionsThirdpartyPlugin } from 'legions-thirdparty-plugin';
+import { runScriptsSdk } from 'legions-thirdparty-plugin';
 import { IFormSelectProps, IFormSelectWrapError, IFormWithSelectProps } from './interface/select';
 
 
@@ -25,28 +24,13 @@ export class HLSelectWrapError extends React.Component<IFormSelectProps & IProSe
     render() {
         const { formItemName,formHLSelectRef,formUid,...props } = this.props;
         let isShowErrorView = false;
-        if (formHLSelectRef && this.props.formUid) {
-            const viewStore = formHLSelectRef.store.get(this.props.formUid)
-            if (viewStore.computedErrorReactNodeList.has(this.props.formItemName)) {
-                const uid = viewStore.computedErrorReactNodeList.get(this.props.formItemName).uid
-                isShowErrorView = viewStore._errorListView.has(uid)
-            }
-        }
         return (
-            <LegionsProErrorReportShow
-                formUid={this.props.formUid}
-                code={this.props.formItemName}
-                errorClassName={'tip-icon'}
-                onIgnoreError={this.props.onIgnoreError}
-                className={isShowErrorView ? 'errorView' : ''}
-            >
-                <LegionsProSelect
-                    style={{ width: '100%' }}
-                    placeholder={this.props.placeholder}
-                    {...props}
-                >
-                </LegionsProSelect>
-            </LegionsProErrorReportShow>
+            <LegionsProSelect
+            style={{ width: '100%' }}
+            placeholder={this.props.placeholder}
+            {...props}
+        >
+        </LegionsProSelect>
         );
     }
 }
@@ -106,10 +90,10 @@ export default class FormSelect extends AbstractForm<IFormWithSelectProps,IState
             const value = this.props.form.getFieldValue(this.props.iAntdProps.name)
             const values = this.translabelInValue(value,this.props.iFormWithSelect.options)
             if (!Array.isArray(values) && values && values['label']) {
-                if (!legionsThirdpartyPlugin.plugins.clipboard) {
+                if (!runScriptsSdk.plugins.clipboard) {
                     message.warning('Plugin is not ready to clipboard')
                 } else {
-                    legionsThirdpartyPlugin.plugins.clipboard.copyText(values['label'] as string).then((res) => {
+                    runScriptsSdk.plugins.clipboard.copyText(values['label'] as string).then((res) => {
                         const el = document.querySelector(`.${this.FormHLSelectRef.uid}`);
                         if (el) {
                             const selectDom = el.querySelector(`.ant-select-selection--single`)
@@ -155,13 +139,6 @@ export default class FormSelect extends AbstractForm<IFormWithSelectProps,IState
         this.props.iFormWithSelect && this.props.iFormWithSelect.onSelect && this.props.iFormWithSelect.onSelect(value,option)
     }
     onSearch(value: string) {
-        if (this.FormHLSelectRef && this.props.formUid) {
-            const viewStore = this.FormHLSelectRef.store.get(this.props.formUid)
-            const view = viewStore.computedErrorReactNodeList.get(this.props.iAntdProps.name)
-            if (view && view.validateStatus !== '') {
-                view.validateStatus = ''
-            }
-        }
         /** 启用了远程搜索才会在搜索输入触发时调用 */
         if (this.props.formStore && this.props.formStore.localViewModel && this.props.iFormWithSelect.remote) {
             const view = this.props.formStore.localViewModel._selectView.get(this.props.iAntdProps.name)
@@ -194,13 +171,6 @@ export default class FormSelect extends AbstractForm<IFormWithSelectProps,IState
     }
     onChange(even,res) {
         this.props.iFormWithSelect.onChange && this.props.iFormWithSelect.onChange(even,res)
-        if (this.FormHLSelectRef && this.props.formUid) {
-            const viewStore = this.FormHLSelectRef.store.get(this.props.formUid)
-            const view = viewStore.computedErrorReactNodeList.get(this.props.iAntdProps.name)
-            if (view) {
-                view.validateStatus = ''
-            }
-        }
         if (this.state.styleClassFocus) {
             this.setState({ styleClassFocus: '' })
         }

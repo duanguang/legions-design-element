@@ -1,21 +1,18 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-29 10:21:54
- * @LastEditTime: 2021-02-05 16:32:00
+ * @LastEditTime: 2021-08-09 23:23:03
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/db/SelectDatabase.ts
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
 import { Database } from './Database';
-import { legionsThirdpartyPlugin } from 'legions-thirdparty-plugin';
-import { ISelectDatabaseDB } from './interface'
-//
-// Declare Database
-//
+import { runScriptsSdk } from 'legions-thirdparty-plugin';
+import Dexie from 'dexie';
 export class SelectDatabaseDB extends Database {
   //@ts-ignore Dexie.Table<ISelectDatabaseDB, number>;
-  public selectItem: Dexie; // id is number in this case
+  public selectItem: Dexie.Table; // id is number in this case
 
   /**
    *Creates an instance of SelectDatabase.
@@ -25,9 +22,9 @@ export class SelectDatabaseDB extends Database {
    */
   public constructor(tableName: string) {
     super();
-    if (!legionsThirdpartyPlugin.plugins.dexie) {
-      legionsThirdpartyPlugin.subscribe('dexie',() => {
-        const db = legionsThirdpartyPlugin.plugins.dexie.getInstanceDexie(
+    if (!runScriptsSdk.plugins.dexie) {
+      runScriptsSdk.subscribe('dexie',() => {
+        const db = runScriptsSdk.plugins.dexie.getInstanceDexie(
           tableName
         );
         if (db && db.db) {
@@ -36,7 +33,7 @@ export class SelectDatabaseDB extends Database {
       });
     } else {
       
-      const db = legionsThirdpartyPlugin.plugins.dexie.getInstanceDexie(
+      const db = runScriptsSdk.plugins.dexie.getInstanceDexie(
         tableName
       );
       if (db && db.db) {

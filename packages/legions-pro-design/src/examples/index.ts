@@ -12,11 +12,11 @@
 
 import create from 'legions';
 import App from './containers/App';
-import { legionsThirdpartyPlugin } from 'legions-thirdparty-plugin';
+import { runScriptsSdk } from 'legions-thirdparty-plugin';
 import { legionsThirdpartyMap } from './constants/legionsConfig';
 /* const SocketIO = require('socket.io-client'); */
 
-legionsThirdpartyPlugin.use([legionsThirdpartyMap.excel, legionsThirdpartyMap.clipboard, legionsThirdpartyMap.dexie]);
+runScriptsSdk.use([legionsThirdpartyMap.excel, legionsThirdpartyMap.clipboard, legionsThirdpartyMap.dexie]);
 const app = create({ enableDevTools: false, router: true, history: null });
 const a = [...[12, 13]];
 console.log(a);

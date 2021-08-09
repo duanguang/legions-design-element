@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-07 17:21:19
- * @LastEditTime: 2021-07-11 18:09:43
+ * @LastEditTime: 2021-08-09 23:42:48
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreTable/ProTableLocalView.ts
@@ -21,9 +21,9 @@ export class ProTableLocalView {
   /**
    *
    * 表格接口数据
-   * @memberof HLTableLocalView
+   * @memberof ProTableLocalView
    */
-  @observable obState = observablePromise<PageListEntity<any>>();
+  @observable obState = observablePromise<PageListEntity<any>>(null);
 
   @observable _obStateMap= observable.map<string,
     {

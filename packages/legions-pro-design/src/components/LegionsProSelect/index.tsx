@@ -14,7 +14,7 @@ import {
 import { formatTrim } from 'legions-utils-tool/format.string'
 import { SelectValue } from 'antd/lib/select';
 import { slice } from 'lodash'
-import { legionsThirdpartyPlugin } from 'legions-thirdparty-plugin';
+import { runScriptsSdk } from 'legions-thirdparty-plugin';
 import { IProSelectProps,IOptions,LabeledValue } from './interface';
 
 interface IState {
@@ -589,10 +589,10 @@ export default class LegionsProSelect extends React.Component<IProSelectProps,IS
         })
     }
     copyText(value) {
-        if (!legionsThirdpartyPlugin.plugins.clipboard) {
+        if (!runScriptsSdk.plugins.clipboard) {
             message.warning('Plugin is not ready to clipboard')
         } else {
-            legionsThirdpartyPlugin.plugins.clipboard.copyText(value).then((res) => {
+            runScriptsSdk.plugins.clipboard.copyText(value).then((res) => {
                 message.success('复制成功')
             },() => {
                 message.error('复制失败',4)
