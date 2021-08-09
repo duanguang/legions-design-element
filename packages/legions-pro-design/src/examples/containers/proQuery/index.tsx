@@ -309,12 +309,13 @@ export default class QueryDemo extends React.Component<{},Istate>{
                 },
             },
             conditionsProps: {
+                
                 onSearch: (value,view) => {
 
                 },
                 onRefresh:()=>{
 
-                }
+                },
             },
         })
         return [
