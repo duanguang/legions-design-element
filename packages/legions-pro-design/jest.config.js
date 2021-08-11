@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-09 15:43:49
- * @LastEditTime: 2021-08-10 22:18:12
+ * @LastEditTime: 2021-08-11 23:34:08
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/jest.config.js
@@ -18,17 +18,18 @@ module.exports = {
   // 对 ts tsx 文件使用 ts-jest 进行运行测试
   transform: {
     '.(ts|tsx)': 'ts-jest',
-    /* 'legions-lunar': 'ts-jest', */
+    'legions-lunar/object-hash': 'babel-jest',
     "lodash": 'ts-jest',
-    '.(js|jsx)': 'babel-jest',
   },
   transformIgnorePatterns: [
-    'node_modules/(?!legions-lunar)',
    /*  'node_modules/(?!legions/store-react)', */
-    'node_modules/(?!brain-store-react)',
+    'node_modules/(?!(brain-store-react|legions-lunar|legions))',
   ],
+  moduleDirectories: [
+    'node_modules',
+],
   // 测试环境
-  testEnvironment: 'node',
+  testEnvironment: 'jest-environment-jsdom-fourteen',
   // 测试文件匹配
   testRegex: '(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$',
   collectCoverage: true,
@@ -52,6 +53,7 @@ module.exports = {
   globals: {
     'ts-jest': {
       diagnostics: false,
+      "tsConfig": '<rootDir>/tsconfig.json'
     },
   },
 };

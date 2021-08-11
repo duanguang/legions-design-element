@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-04-26 16:23:25
- * @LastEditTime: 2021-08-10 21:50:18
+ * @LastEditTime: 2021-08-12 00:21:45
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProForm/__tests__/LegionsProForm.test.tsx
@@ -9,15 +9,13 @@
  */
 
 import React from 'react';
-import LegionsProTable from '..';
 import { mount,render,shallow,configure } from 'enzyme';
 import { JsonProperty } from 'json-mapper-object';
 import { FormFields } from '../demoTest/model';
 import LegionsProForm from '..';
 import { InstanceProForm } from '../interface';
-import { Col, Row } from 'antd';
-
-
+import { Col,Row } from 'antd';
+import { App } from '../demoTest/app';
 class ProFormTest extends React.Component<{},{}>{
     formRef: InstanceProForm
     constructor(props) {
@@ -37,7 +35,6 @@ class ProFormTest extends React.Component<{},{}>{
             /* disabled: true, */
                 onChange: (even) => {
                     const value = this.formRef.viewModel.InputDataModel as FormFields;
-                    console.log(value,even,'value');
                     this.setState({
                         xssValue:value.text.value
                     })
@@ -241,7 +238,6 @@ class ProFormTest extends React.Component<{},{}>{
                     }],
                     }],
                 onChange: (value,selectedOptions) => {
-                    console.log(selectedOptions,'selectedOptions');
                 }
             },
             rules: rules.cascader,
@@ -313,11 +309,9 @@ class ProFormTest extends React.Component<{},{}>{
         }}
         isDragSort
         mapPropsToFields={(props) => {
-            console.log('mapPropsToFields');
             return new FormFields(props)
         }}
         onFieldsChange={(props,formFields) => {
-            console.log('onFieldsChange',formFields,this.formRef.viewModel.InputDataModel);
             this.formRef.store.updateFormInputData(this.formRef.uid,formFields)
            
         }}
@@ -346,8 +340,9 @@ describe('表单',() => {
         jest.useRealTimers();
     });
     it("获取表单示例",() => {
-        const componet = mount(<ProFormTest></ProFormTest>)
-        console.log(componet);
+        const componet = mount(<ProFormTest></ProFormTest>,{
+            wrappingComponent:App
+        })
         expect(componet).not.toBe(null)
     })
 })

@@ -1,17 +1,16 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-19 17:47:07
- * @LastEditTime: 2021-08-10 21:48:09
+ * @LastEditTime: 2021-08-11 23:49:03
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProForm/demoTest/model.ts
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
-import { LegionsProForm, LegionsProPageContainer } from 'legions-pro-design';
+import LegionsProForm from '../';
 import { UploadChangeParam } from 'antd/lib/upload/interface';
 import { FormRuleProperty } from 'legions-decorator/async.validator';
 import { IBaseFormFields,HlLabeledValue } from 'legions-lunar/model';
-import { ClassOf } from 'legions-lunar/types/api/typescript';
 interface IFormFieldUserRenderInput1{
     currency: string,
     /** 只读 */
