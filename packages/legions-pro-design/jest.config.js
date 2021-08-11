@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-09 15:43:49
- * @LastEditTime: 2021-04-27 10:45:59
+ * @LastEditTime: 2021-08-10 22:18:12
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/jest.config.js
@@ -18,10 +18,15 @@ module.exports = {
   // 对 ts tsx 文件使用 ts-jest 进行运行测试
   transform: {
     '.(ts|tsx)': 'ts-jest',
-    'legions-lunar': 'ts-jest',
-    "lodash":'ts-jest',
+    /* 'legions-lunar': 'ts-jest', */
+    "lodash": 'ts-jest',
+    '.(js|jsx)': 'babel-jest',
   },
-  transformIgnorePatterns:['node_modules/(?!legions-lunar)'],
+  transformIgnorePatterns: [
+    'node_modules/(?!legions-lunar)',
+   /*  'node_modules/(?!legions/store-react)', */
+    'node_modules/(?!brain-store-react)',
+  ],
   // 测试环境
   testEnvironment: 'node',
   // 测试文件匹配
@@ -38,7 +43,7 @@ module.exports = {
       statements: 95,
     }, */
   },
-  "testEnvironment": "jsdom",
+  /* "testEnvironment": "jsdom", */
   "setupFiles": [
     "./script/setup.ts",
     "jest-canvas-mock",
