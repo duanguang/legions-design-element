@@ -22,30 +22,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">94.87% </span>
+                <span class="strong">38.46% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>37/39</span>
+                <span class='fraction'>15/39</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">50% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>2/4</span>
+                <span class='fraction'>0/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">77.78% </span>
+                <span class="strong">22.22% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>7/9</span>
+                <span class='fraction'>2/9</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">93.33% </span>
+                <span class="strong">43.33% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>28/30</span>
+                <span class='fraction'>13/30</span>
             </div>
         
             
@@ -54,7 +54,7 @@
             Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
         </p>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -182,9 +182,9 @@
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -221,12 +221,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -234,27 +232,29 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -294,9 +294,9 @@ import {IProUploadProps} from '../LegionsProUpload/interface'
 const FormItem = Form.Item;
 &nbsp;
 export class LabelWithUploadModel {
-    constructor(public iAntdProps: IAntdProps,
-        public iFormProps: IFormUploadProps,
-        public rules?: IAntdRule[],
+<span class="fstat-no" title="function not covered" >    constructor(public <span class="cstat-no" title="statement not covered" >i</span>AntdProps: IAntdProps,</span>
+        public <span class="cstat-no" title="statement not covered" >iFormProps: IFormUploadProps,</span>
+        public <span class="cstat-no" title="statement not covered" >rules?: IAntdRule[],</span>
     ) {
 &nbsp;
     }
@@ -333,10 +333,10 @@ interface IFileList {
     url: string
 }
 export default class FormUpload extends AbstractForm&lt;IFormWithUpload,ISate&gt;{
-    FormUploadRef: InstanceFormElement = null
-    constructor(props) {
-        super(props)<span class="branch-1 cbranch-no" title="branch not covered" >;</span>
-        this.state = {
+<span class="cstat-no" title="statement not covered" >    FormUploadRef: InstanceFormElement = null</span>
+<span class="fstat-no" title="function not covered" >    constructor(p</span>rops) {
+<span class="cstat-no" title="statement not covered" >        super(props);</span>
+<span class="cstat-no" title="statement not covered" >        this.state = {</span>
             previewImage: '',
             fileList: [{
                 uid: -1,
@@ -346,27 +346,27 @@ export default class FormUpload extends AbstractForm&lt;IFormWithUpload,ISate&gt
             }]
         }
     }
-    handlePreview = <span class="fstat-no" title="function not covered" >(f</span>ile) =&gt; {
+<span class="cstat-no" title="statement not covered" >    handlePreview = <span class="fstat-no" title="function not covered" >(f</span>ile) =&gt; {</span>
 &nbsp;
     }
-    componentDidMount() {
-        this.didMountClearNodeQueue(this.FormUploadRef,this.props.formUid,this.props.iAntdProps.name)
+<span class="fstat-no" title="function not covered" >    componentDidMount(</span>) {
+<span class="cstat-no" title="statement not covered" >        this.didMountClearNodeQueue(this.FormUploadRef,this.props.formUid,this.props.iAntdProps.name)</span>
     }
 <span class="fstat-no" title="function not covered" >    shouldComponentUpdate(</span>nextProps:IFormWithUpload,nextState,context) {
 <span class="cstat-no" title="statement not covered" >       return this.isShouldComponentUpdate(this.FormUploadRef,this.props.formUid,nextProps.iAntdProps.name)</span>
     }
-    public render() {
-        const { form,iAntdProps,iFormWithUpload,children,rules } = this.props;
-        const { getFieldsError,getFieldDecorator } = form;
-        const { label,labelCol,wrapperCol,...props } = iFormWithUpload
-        let formItemProps = {};
-        <span class="missing-if-branch" title="if path not taken" >I</span>if ('colon' in props) {
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >    public r</span></span>ender() {
+        const { form<span class="cstat-no" title="statement not covered" >,i</span>AntdProps<span class="cstat-no" title="statement not covered" >,i</span>FormWithUpload<span class="cstat-no" title="statement not covered" >,c</span>hildren<span class="cstat-no" title="statement not covered" >,r</span>ules<span class="cstat-no" title="statement not covered" > } = <span class="cstat-no" title="statement not covered" >t</span>his.props;</span>
+        const { getFieldsError,getFieldDecorator } = <span class="cstat-no" title="statement not covered" >form;</span>
+        const { label,labelCol,wrapperCol,...props<span class="cstat-no" title="statement not covered" > } = <span class="cstat-no" title="statement not covered" >i</span>FormWithUpload</span>
+        let formItemProps = <span class="cstat-no" title="statement not covered" >{};</span>
+<span class="cstat-no" title="statement not covered" >        if ('colon' in props) {</span>
 <span class="cstat-no" title="statement not covered" >            formItemProps['colon'] = props.colon;</span>
         }
-        return (
+<span class="cstat-no" title="statement not covered" >        return (</span>
             &lt;FormElement form={form}
-                onReady={(value) =&gt; {
-                    this.FormUploadRef = value
+                onReady={<span class="fstat-no" title="function not covered" >(v</span>alue) =&gt; {
+<span class="cstat-no" title="statement not covered" >                    this.FormUploadRef = value</span>
                 }}
                 elType=""
                 nextElementKey={iAntdProps.nextElementKey}
@@ -399,7 +399,7 @@ export default class FormUpload extends AbstractForm&lt;IFormWithUpload,ISate&gt
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu Aug 12 2021 00:50:28 GMT+0800 (GMT+08:00)
+                at Fri Aug 13 2021 00:05:31 GMT+0800 (GMT+08:00)
             </div>
         </div>
         <script src="../prettify.js"></script>

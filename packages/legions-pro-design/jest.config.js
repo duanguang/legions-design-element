@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-09 15:43:49
- * @LastEditTime: 2021-08-11 23:34:08
+ * @LastEditTime: 2021-08-12 23:18:08
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/jest.config.js
@@ -53,7 +53,10 @@ module.exports = {
   globals: {
     'ts-jest': {
       diagnostics: false,
-      "tsConfig": '<rootDir>/tsconfig.json'
+      "tsConfig": '<rootDir>/tsconfig.json',
+      astTransformers: [
+        '<rootDir>/ts-jest-integration'
+      ],
     },
   },
 };

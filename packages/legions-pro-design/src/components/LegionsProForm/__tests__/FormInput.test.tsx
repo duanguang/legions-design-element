@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-04-26 16:23:25
- * @LastEditTime: 2021-08-12 00:20:15
+ * @LastEditTime: 2021-08-12 23:58:47
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProForm/__tests__/FormInput.test.tsx
@@ -15,7 +15,10 @@ import LegionsProForm from '..';
 import { InstanceProForm } from '../interface';
 import { App ,Apps} from '../demoTest/app';
 import FormInput from '../FormInput';
-class ProFormTest extends React.Component<{},{}>{
+import { cwd } from 'process';
+import { resolve,join } from 'path';
+const workDir=join(process.cwd(),'..')
+class ProFormTest extends React.Component{
     formRef: InstanceProForm
     constructor(props) {
         super(props);
@@ -51,6 +54,7 @@ class ProFormTest extends React.Component<{},{}>{
         InputDataModel={FormFields}
         onReady={(form,ref) => {
             this.formRef = Object.assign(ref,{ that: this });
+            console.log(this.formRef.decryptionFreezeUid,this.formRef.freezeUid);
             this.formRef.viewModel.enableEnterSwitch = true;
         }}
         isDragSort
@@ -68,16 +72,23 @@ class ProFormTest extends React.Component<{},{}>{
     }
 }
 describe('Form:Input',() => {
+    const componet = mount(<ProFormTest></ProFormTest>,{
+        wrappingComponent:App
+    })
+    const instance = componet.instance() as ProFormTest;
     beforeAll(() => {
         jest.useFakeTimers();
     });
     afterAll(() => {
         jest.useRealTimers();
     });
-    it("获取表单示例",() => {
-        const componet = mount(<ProFormTest></ProFormTest>,{
-            wrappingComponent:App
-        })
+    it("Form:formRef",() => {
+        expect(instance.formRef).not.toBe(null)
+    })
+    it("Form:decryptionFreezeUid",() => {
+        const filename = __filename.replace(`${workDir}/`,'')
+        const decryptionFreezeUid = `${filename}/ProFormTest/LegionsProFormuid1`
+        expect(instance.formRef.decryptionFreezeUid).toEqual(decryptionFreezeUid)
         expect(componet.find(FormInput)).toHaveLength(1)
         expect(componet).not.toBe(null)
     })

@@ -22,30 +22,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">40% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>20/20</span>
+                <span class='fraction'>8/20</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>2/2</span>
+                <span class='fraction'>0/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">40% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>5/5</span>
+                <span class='fraction'>2/5</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">46.15% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>13/13</span>
+                <span class='fraction'>6/13</span>
             </div>
         
             
@@ -54,7 +54,7 @@
             Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
         </p>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -163,9 +163,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -211,13 +211,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React from 'react'
@@ -245,9 +245,9 @@ export class LabelWithRenderModel {
      * @param {IAntdRule[]} [rules]
      * @memberof LabelWithRenderModel
      */
-    constructor(public iAntdProps: IAntdProps,
-        public iFormProps?: IFormRenderProps,
-        public rules?: IAntdRule[],//验证规则
+<span class="fstat-no" title="function not covered" >    constructor(public <span class="cstat-no" title="statement not covered" >i</span>AntdProps: IAntdProps,</span>
+        public <span class="cstat-no" title="statement not covered" >iFormProps?: IFormRenderProps,</span>
+        public <span class="cstat-no" title="statement not covered" >rules?: IAntdRule[],</span>//验证规则
     ) {
 &nbsp;
     }
@@ -292,14 +292,14 @@ interface IFormWithRenderProps {
     // children?: React.ReactNode;
 }
 export default class FormRender extends React.Component&lt;IFormWithRenderProps&gt;{
-    constructor(props) {
-        super(props)
+<span class="fstat-no" title="function not covered" >    constructor(p</span>rops) {
+<span class="cstat-no" title="statement not covered" >        super(props)</span>
     }
-    render() {
-        const { form,iAntdProps,iFormRender,children,rules } = this.props;
+<span class="fstat-no" title="function not covered" >    render(</span>) {
+        const { form<span class="cstat-no" title="statement not covered" >,i</span>AntdProps<span class="cstat-no" title="statement not covered" >,i</span>FormRender<span class="cstat-no" title="statement not covered" >,c</span>hildren<span class="cstat-no" title="statement not covered" >,r</span>ules<span class="cstat-no" title="statement not covered" > } = <span class="cstat-no" title="statement not covered" >t</span>his.props;</span>
 &nbsp;
-        const { getFieldDecorator } = form;
-        return iFormRender.render(form,iAntdProps,rules,this.props.formRef)
+        const { getFieldDecorator } = <span class="cstat-no" title="statement not covered" >form;</span>
+<span class="cstat-no" title="statement not covered" >        return iFormRender.render(form,iAntdProps,rules,this.props.formRef)</span>
     }
 }
 &nbsp;</pre></td></tr></table></pre>
@@ -309,7 +309,7 @@ export default class FormRender extends React.Component&lt;IFormWithRenderProps&
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu Aug 12 2021 00:50:28 GMT+0800 (GMT+08:00)
+                at Fri Aug 13 2021 00:05:31 GMT+0800 (GMT+08:00)
             </div>
         </div>
         <script src="../prettify.js"></script>

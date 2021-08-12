@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-04-26 16:23:25
- * @LastEditTime: 2021-08-12 00:21:45
+ * @LastEditTime: 2021-08-13 00:05:16
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProForm/__tests__/LegionsProForm.test.tsx
@@ -10,7 +10,6 @@
 
 import React from 'react';
 import { mount,render,shallow,configure } from 'enzyme';
-import { JsonProperty } from 'json-mapper-object';
 import { FormFields } from '../demoTest/model';
 import LegionsProForm from '..';
 import { InstanceProForm } from '../interface';
@@ -307,7 +306,6 @@ class ProFormTest extends React.Component<{},{}>{
             this.formRef = Object.assign(ref,{ that: this });
             this.formRef.viewModel.enableEnterSwitch = true;
         }}
-        isDragSort
         mapPropsToFields={(props) => {
             return new FormFields(props)
         }}
@@ -316,19 +314,9 @@ class ProFormTest extends React.Component<{},{}>{
            
         }}
         size="small"
-        controls={this.createConfig()}
+        controls={[]}
         colCount={2}
-        group={[{
-            name:'文本输入',
-            id: 1,
-            active: true,
-            isFolding:true,
-        },{
-            name:'下拉框',
-            id: 2,
-            active: true,
-            isFolding:true,
-        }]}
+        group={[]}
     ></LegionsProForm>
     }
 }
