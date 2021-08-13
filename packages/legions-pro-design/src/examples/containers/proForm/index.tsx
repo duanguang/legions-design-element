@@ -54,7 +54,8 @@ export class ProForm extends React.Component<IProps,IState> {
                     this.setState({
                         xssValue:value.text.value
                     })
-                }
+                },
+                colon:false
             },
             rules: rules.text
         });

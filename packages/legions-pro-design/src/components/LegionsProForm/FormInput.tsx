@@ -83,12 +83,6 @@ export class TooltipInput extends React.Component<ITooltipInputProps,{}>{
         super(props)
         
     }
-    get store() {
-        if (this.props.FormInputRef && this.props.formUid) {
-            return this.props.FormInputRef.store.get(this.props.formUid)
-        }
-        return null
-    }
     /* onChanges = (() => {
         let updb = this.props.onChange;
         if (200 >= 0) {
@@ -178,7 +172,7 @@ export default class FormInput extends AbstractForm<IFormWithInputProps>{
         }
         /* const el = document.querySelector(`.${this.FormInputRef.uid}`); */
         const even = e.target
-        even.select()
+        even.select&&even.select()
         this.props.iFormInput && this.props.iFormInput.onFocus && this.props.iFormInput.onFocus(e)
     }
     onBlur(even) {
@@ -202,7 +196,7 @@ export default class FormInput extends AbstractForm<IFormWithInputProps>{
         const maxLength = iFormInput.maxLength ? parseInt(iFormInput.maxLength) : 50
         const placeholder = iAntdProps.placeholder || ''
         let formItemProps = {};
-        if (colon) {
+        if (colon!==void 0) {
             formItemProps['colon'] = colon;
         }
         return (

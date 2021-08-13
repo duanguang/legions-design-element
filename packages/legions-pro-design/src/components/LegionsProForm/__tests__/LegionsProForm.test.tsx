@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-04-26 16:23:25
- * @LastEditTime: 2021-08-13 00:05:16
+ * @LastEditTime: 2021-08-13 23:20:11
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProForm/__tests__/LegionsProForm.test.tsx
@@ -331,6 +331,8 @@ describe('表单',() => {
         const componet = mount(<ProFormTest></ProFormTest>,{
             wrappingComponent:App
         })
+        componet
+        const instance = componet.instance() as ProFormTest;
         expect(componet).not.toBe(null)
     })
 })
