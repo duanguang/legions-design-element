@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-04-26 16:23:25
- * @LastEditTime: 2021-08-14 00:22:50
+ * @LastEditTime: 2021-08-15 23:40:08
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProForm/__tests__/FormInput.test.tsx
@@ -18,6 +18,8 @@ import FormInput from '../FormInput';
 import { cwd } from 'process';
 import { resolve,join } from 'path';
 import { Form } from 'antd';
+import {Input} from 'antd';
+const { TextArea } = Input;
 const FormItem = Form.Item;
 const workDir=join(process.cwd(),'..')
 class ProFormTest extends React.Component{
@@ -124,5 +126,11 @@ describe('Form:Input',() => {
         })
         expect(formItem).toHaveLength(1)
         expect(formItem.getDOMNode().className.includes('ant-form-item-no-colon')).toBe(true)
+    })
+    it("Form: TextArea",() => {
+        instance.formRef.methods.setFormStates<InstanceType<typeof LegionsProForm.LabelWithInputModel>>('text',(value) => {
+            value.iFormProps.type = 'textarea'
+        })
+        expect(componet.getDOMNode().querySelector('textarea')).not.toEqual(null)
     })
 })
