@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-04-26 16:23:25
- * @LastEditTime: 2021-08-15 23:40:08
+ * @LastEditTime: 2021-08-16 23:53:32
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProForm/__tests__/FormInput.test.tsx
@@ -39,9 +39,6 @@ class ProFormTest extends React.Component{
                 type: 'text',
                 onChange: (even) => {
                     const value = this.formRef.viewModel.InputDataModel as FormFields;
-                    this.setState({
-                        xssValue:value.text.value
-                    })
                 },
                 onFocus: (even) => {
                     this.formRef.store.updateFormInputData(this.formRef.uid,{ text: { value: '聚焦' } })
@@ -52,7 +49,6 @@ class ProFormTest extends React.Component{
             },
             rules: rules.text
         });
-        
         return [
             formUtils.getFormConfig('text'),
         ]
@@ -93,6 +89,15 @@ describe('Form:Input',() => {
     it("Form:formRef",() => {
         expect(instance.formRef).not.toBe(null)
     })
+    it("Form: clear input",() => {
+        componet.find('input').simulate('focus')
+        componet.find('input').simulate('change',{ target: { value: '清除内容' } });
+        expect(componet.find('input').prop('value')).toEqual('清除内容')
+        /*  expect(componet.render()).toMatchSnapshot(); */
+        expect(componet.getDOMNode().querySelector('.anticon-close-circle')).not.toBe(null);
+        componet.find('.anticon-close-circle').at(0).simulate('click');
+        expect(componet.find('input').prop('value')).toEqual('');
+    })
     it("Form:decryptionFreezeUid",() => {
         const filename = __filename.replace(`${workDir}/`,'')
         const decryptionFreezeUid = `${filename}/ProFormTest/LegionsProFormuid1`
@@ -127,10 +132,12 @@ describe('Form:Input',() => {
         expect(formItem).toHaveLength(1)
         expect(formItem.getDOMNode().className.includes('ant-form-item-no-colon')).toBe(true)
     })
+    
     it("Form: TextArea",() => {
         instance.formRef.methods.setFormStates<InstanceType<typeof LegionsProForm.LabelWithInputModel>>('text',(value) => {
             value.iFormProps.type = 'textarea'
         })
         expect(componet.getDOMNode().querySelector('textarea')).not.toEqual(null)
     })
+    
 })
