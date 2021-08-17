@@ -19,11 +19,10 @@ import { IFormSelectProps, IFormSelectWrapError, IFormWithSelectProps } from './
 
 
 
-export class HLSelectWrapError extends React.Component<IFormSelectProps & IProSelectProps & IFormSelectWrapError> {
+export class SelectWrap extends React.Component<IFormSelectProps & IProSelectProps & IFormSelectWrapError> {
 
     render() {
         const { formItemName,formHLSelectRef,formUid,...props } = this.props;
-        let isShowErrorView = false;
         return (
             <LegionsProSelect
             style={{ width: '100%' }}
@@ -222,7 +221,7 @@ export default class FormSelect extends AbstractForm<IFormWithSelectProps,IState
                     {getFieldDecorator(iAntdProps.name,{
                         rules: rules,
                     })(
-                        <HLSelectWrapError
+                        <SelectWrap
                             /* size="default" */
                             {...props}
                             selectAllClass={this.state.styleClassFocus}
@@ -242,7 +241,7 @@ export default class FormSelect extends AbstractForm<IFormWithSelectProps,IState
                             onChange={this.onChange.bind(this)}
                             onFocus={this.onFocus.bind(this)}>
 
-                        </HLSelectWrapError>
+                        </SelectWrap>
                     )}
                     {children}
                 </FormItem>
