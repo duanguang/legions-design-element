@@ -1,26 +1,24 @@
 import StoreBase, { IStoreBaseMeta } from '../../common/stores/StoreBase';
-import { observablePromise } from 'legions/store-utils';
 import { MockPageListEntity } from '../models/mockListEntity';
 import { UserInfoContainerEntity } from '../models/userInfoEntity';
 import { ExportTaskEntity } from 'examples/models/ExportTaskEntity';
-import { SearchEntity } from 'examples/containers/proQuery/searchEntity';
-export declare const User: import("brain-store").IResource;
+export declare const User: import("brain-store/types/api/resourceEvent").IResource;
 export default class UserInfoStore extends StoreBase {
     static meta: IStoreBaseMeta;
-    obMockList: observablePromise.PramsResult<MockPageListEntity>;
+    obMockList: import("legions/store-utils").ObservablePromiseModel<MockPageListEntity>;
     /**
      * 用户信息
      *
      * @memberof UserInfoStore
      */
-    obUserInfo: observablePromise.PramsResult<UserInfoContainerEntity>;
-    authEntity: observablePromise.PramsResult<UserInfoContainerEntity>;
+    obUserInfo: import("legions/store-utils").ObservablePromiseModel<UserInfoContainerEntity>;
+    authEntity: import("legions/store-utils").ObservablePromiseModel<UserInfoContainerEntity>;
     exportTaskList: ExportTaskEntity[];
     system: string;
     todos: UserInfoContainerEntity;
     obUserPageList: {
         keyWords: string;
-        data: import("mobx").ObservableMap<observablePromise.PramsResult<SearchEntity>, any>;
+        data: import("mobx").ObservableMap<any, any>;
     };
     get uid(): string;
     /** 原产国Format */

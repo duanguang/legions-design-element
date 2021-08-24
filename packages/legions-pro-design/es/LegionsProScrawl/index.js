@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.3
+  *  legions-pro-design v0.0.8-beta.1
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -10,7 +10,7 @@ import { message, Icon, Popover, Slider } from 'antd';
 import { observer } from 'legions/store-react';
 import { observableViewModel } from 'legions/store-utils';
 import { observable, computed } from 'mobx';
-import { legionsThirdpartyPlugin } from 'legions-thirdparty-plugin';
+import { runScriptsSdk } from 'legions-thirdparty-plugin';
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -31,11 +31,13 @@ PERFORMANCE OF THIS SOFTWARE.
 var extendStatics = function(d, b) {
     extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
     return extendStatics(d, b);
 };
 
 function __extends(d, b) {
+    if (typeof b !== "function" && b !== null)
+        throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
     extendStatics(d, b);
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -69,6 +71,7 @@ function __read(o, n) {
     return ar;
 }
 
+/** @deprecated */
 function __spread() {
     for (var ar = [], i = 0; i < arguments.length; i++)
         ar = ar.concat(__read(arguments[i]));
@@ -234,7 +237,7 @@ var LegionsProScrawl = /** @class */ (function (_super) {
     };
     LegionsProScrawl.prototype.handleToImage = function () {
         var _this = this;
-        if (!legionsThirdpartyPlugin.plugins.html2canvas) {
+        if (!runScriptsSdk.plugins.html2canvas) {
             message.warning('Plugin is not ready to excel, Please install at the entrance(legionsThirdpartyPlugin.use({name:"html2canvas",url:"xxxx"}))');
             return;
         }
@@ -242,7 +245,7 @@ var LegionsProScrawl = /** @class */ (function (_super) {
         if (this.props.onRenderhtml2canvas) {
             body = this.props.onRenderhtml2canvas();
         }
-        legionsThirdpartyPlugin.plugins.html2canvas.html2canvas(body, this.props.html2canvasOptions).then(function (canvas) {
+        runScriptsSdk.plugins.html2canvas.html2canvas(body, this.props.html2canvasOptions).then(function (canvas) {
             /* canvas.id = 'screenshotCanvas';
             document.body.appendChild(canvas);
             const can = document.getElementById("screenshotCanvas");

@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-10 16:14:09
- * @LastEditTime: 2021-04-22 17:55:32
+ * @LastEditTime: 2021-08-24 22:16:57
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/script/entiy.js
@@ -27,32 +27,30 @@ const array_component = [
 /*   'LegionsProBaiduMap',
 'LegionsProBreadcrumb',
 'LegionsProDataImport',
-'LegionsProDragger',
-'LegionsProErrorReportShow',
-'LegionsProException',
+'LegionsProDragger', */
+/* 'LegionsProException',
  'LegionsProIframe', */
 /* 'LegionsProForm', */
-  'LegionsProForm',
-/*  'LegionsProInput',
+ /* 'LegionsProInput',
   'LegionsProLayout',
 'LegionsProLineOverflow',
 'LegionsProModal',
-'LegionsProNumericInput',
-'LegionsProPageContainer',
+'LegionsProNumericInput', */
+/* 'LegionsProPageContainer',
   'LegionsProPrint', */
-/*   'LegionsProQrCode',
+ /*  'LegionsProQrCode',
 'LegionsProConditions',
   'LegionsProScrawl',
   'LegionsProSelect',
-  'LegionsProTable',
- 'LegionsProTableCustomColumns',
+  'LegionsProTable', */
+ /* 'LegionsProTableCustomColumns',
   'LegionsProTableForm', */
   /* 'LegionsProTabsForm',
 'LegionsProModalForm',
 'LegionsProTextArea',
 'LegionsProUEditor',
-  'LegionsProUpload',
-'LegionsProVirtualTable', */
+  'LegionsProUpload', */
+'LegionsProVirtualTable',
   /* 'LgeionsProVirtualList', */
 ]
 const browser = [

@@ -1,12 +1,14 @@
 import { IProSelectProps } from '../../LegionsProSelect/interface';
-import { observablePromise } from 'legions/store-utils';
+import { ObservablePromiseModel } from 'legions/store-utils';
 import { WrappedFormUtils, IAntdProps, IAntdFormItemProps, IAntdRule, IAntdSelectOption } from '../../interface/antd';
 import { InstanceFormElement } from './formElement';
 import { IErrorView, InstanceProForm } from './form';
 import LegionsModels from '../../LegionsModels';
-import { request } from 'legions/request';
 declare type HeadersPrams = {
     'Content-Type'?: 'application/json' | 'application/x-www-form-urlencoded';
+    dataType?: 'json';
+    processData?: boolean;
+    [propName: string]: any;
 };
 export interface IFormSelectProps extends IProSelectProps, IAntdFormItemProps {
     /**
@@ -80,7 +82,7 @@ export interface ISelectAutoQuery<Model = {}> {
      */
     options?: HeadersPrams & {
         [key: string]: string;
-    } & request.HeadersPrams;
+    };
     /**
      * 转换服务端数据
      *
@@ -94,7 +96,7 @@ export interface ISelectAutoQuery<Model = {}> {
      * 当外部数据不确定时，此时我们需要一个适配器转换从接口中取到的数据，用于绑定下拉选项
      * @memberof ISelectAutoQuery
      */
-    transform: (value: observablePromise.PramsResult<InstanceType<typeof LegionsModels.SelectKeyValue>>) => {
+    transform: (value: ObservablePromiseModel<InstanceType<typeof LegionsModels.SelectKeyValue>>) => {
         total: number;
         data: IAntdSelectOption[];
     };

@@ -18,7 +18,7 @@ export default class WorkerGlobalStateStore<IGlobalState, User = {}> extends Leg
     userInfo: IUserInfo<User>;
     menuList: InstanceType<typeof LegionsModels['MenuEntity']>[];
     masterEventScopes: {
-        userEvent: import("brain-store").IResource;
+        userEvent: import("brain-store/types/api/resourceEvent").IResource;
     };
     /** 打开菜单页签方法 */
     openTabPane: IGlobalStates['methods']['openTabPane'];

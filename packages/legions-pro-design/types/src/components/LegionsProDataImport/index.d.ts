@@ -1,11 +1,11 @@
 import { ColumnProps } from 'antd/lib/table/Column';
-import { ViewModel } from 'brain-store-utils';
 import React from 'react';
 import { UploadChangeParam, UploadFile, UploadFileStatus } from '../interface/antd';
 import { OpenConfirm } from 'legions-lunar/antd-toolkit';
 import { IProTableProps } from '../LegionsProTable/interface';
 import { IProUploadProps } from '../LegionsProUpload/interface';
 import './style/index.less';
+import { ViewModel } from 'brain-store-utils/types/create-view-model';
 declare type Proxify<T> = {
     [P in keyof T]: T[P];
 };
@@ -140,7 +140,12 @@ declare class IViewModel<TableRow = {}> {
 }
 export default class LegionsProDataImport<TableRow = {}, Model = {}> extends React.Component<IProps<ProDataImportRow & TableRow, Model>> {
     static defaultProps: Object;
-    viewModel: ViewModel<IViewModel<ProDataImportRow & TableRow>> & import("brain-store-utils").Proxify<IViewModel<ProDataImportRow & TableRow>>;
+    viewModel: ViewModel<IViewModel<ProDataImportRow & TableRow>> & {
+        list: (ProDataImportRow & TableRow)[];
+        file: Partial<UploadFile>;
+        fileStatus: UploadFileStatus;
+        isCover: boolean;
+    };
     /** 正确数据 */
     get successList(): (ProDataImportRow & TableRow)[];
     /** 错误数据 */

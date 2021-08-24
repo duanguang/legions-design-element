@@ -38,7 +38,7 @@ export declare class MasterGlobalStateStore extends LegionsStore.StoreBase<ICont
         receiveMessage: (receive: any) => void;
     };
     masterEventScopes: {
-        userEvent: import("brain-store").IResource;
+        userEvent: import("brain-store/types/api/resourceEvent").IResource;
     };
     constructor(context: IContext);
     listeningGlobalStateChange(options: {

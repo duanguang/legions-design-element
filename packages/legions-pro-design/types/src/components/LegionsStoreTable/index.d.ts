@@ -1,11 +1,11 @@
 /** @format */
 import LegionsStore from '../LegionsStore';
-import { ViewModel } from 'brain-store-utils';
 import { ProTableView } from './ProTableView';
 import { ProTableLocalView } from './ProTableLocalView';
 import { IStoreBaseMeta } from '../LegionsStore/interface';
 import { ObservableMap } from 'mobx';
 import { PageListEntity } from './pageListEntity';
+import { ViewModel } from 'brain-store-utils/types/create-view-model';
 declare type Proxify<T> = {
     [P in keyof T]: T[P];
 };
@@ -24,8 +24,8 @@ export default class LegionsStoreTable extends LegionsStore.StoreBase {
      *
      * @memberof HLTableStore
      */
-    HlTableContainer: ObservableMap<string, ViewModel<ProTableView> & Proxify<ProTableView>>;
-    HlTableContainerModules: ObservableMap<string, any>;
+    TableContainer: ObservableMap<string, ViewModel<ProTableView> & Proxify<ProTableView>>;
+    TableContainerModules: ObservableMap<string, any>;
     /**
      *
      *  数据生命周期，应用重新数据前有效

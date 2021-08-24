@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.7-beta.21
+  *  legions-pro-design v0.0.8-beta.1
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -10,12 +10,10 @@ import { shortHash } from 'legions-lunar/object-hash';
 import { bind, observer } from 'legions/store-react';
 import { findDOMNode } from 'react-dom';
 import LegionsStoreForm from '../LegionsStoreForm';
-import LegionsProErrorReportShow from '../LegionsProErrorReportShow';
-import classNames from 'classnames';
 import LegionsProUpload from '../LegionsProUpload';
 import LegionsProSelect from '../LegionsProSelect';
 import { off, on } from 'legions-utils-tool/dom';
-import { legionsThirdpartyPlugin } from 'legions-thirdparty-plugin';
+import { runScriptsSdk } from 'legions-thirdparty-plugin';
 import './style/index.less';
 import { debounce } from 'legions-utils-tool/debounce';
 import { toJS, runInAction } from 'mobx';
@@ -44,11 +42,13 @@ PERFORMANCE OF THIS SOFTWARE.
 var extendStatics = function(d, b) {
     extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
     return extendStatics(d, b);
 };
 
 function __extends(d, b) {
+    if (typeof b !== "function" && b !== null)
+        throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
     extendStatics(d, b);
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -117,6 +117,7 @@ function __read(o, n) {
     return ar;
 }
 
+/** @deprecated */
 function __spread() {
     for (var ar = [], i = 0; i < arguments.length; i++)
         ar = ar.concat(__read(arguments[i]));
@@ -460,16 +461,6 @@ var TooltipInput = /** @class */ (function (_super) {
     function TooltipInput(props) {
         return _super.call(this, props) || this;
     }
-    Object.defineProperty(TooltipInput.prototype, "store", {
-        get: function () {
-            if (this.props.FormInputRef && this.props.formUid) {
-                return this.props.FormInputRef.store.get(this.props.formUid);
-            }
-            return null;
-        },
-        enumerable: false,
-        configurable: true
-    });
     /* onChanges = (() => {
         let updb = this.props.onChange;
         if (200 >= 0) {
@@ -493,27 +484,14 @@ var TooltipInput = /** @class */ (function (_super) {
         /* this.onChanges(even,value); */
     };
     TooltipInput.prototype.render = function () {
-        var _a;
         var _this = this;
-        var _b = this.props, form = _b.form, name = _b.name, valueLen = _b.valueLen, FormInputRef = _b.FormInputRef, inputType = _b.inputType, type = _b.type, formUid = _b.formUid, formItemName = _b.formItemName, onIgnoreError = _b.onIgnoreError, props = __rest(_b, ["form", "name", "valueLen", "FormInputRef", "inputType", "type", "formUid", "formItemName", "onIgnoreError"]);
-        var isShowErrorView = false;
-        if (FormInputRef && this.props.formUid) {
-            var viewStore = FormInputRef.store.get(this.props.formUid);
-            if (viewStore.computedErrorReactNodeList.has(this.props.formItemName)) {
-                var uid = viewStore.computedErrorReactNodeList.get(this.props.formItemName).uid;
-                isShowErrorView = viewStore._errorListView.has(uid);
-            }
-        }
+        var _a = this.props, form = _a.form, name = _a.name, valueLen = _a.valueLen, FormInputRef = _a.FormInputRef, inputType = _a.inputType, type = _a.type, formUid = _a.formUid, formItemName = _a.formItemName, onIgnoreError = _a.onIgnoreError, props = __rest(_a, ["form", "name", "valueLen", "FormInputRef", "inputType", "type", "formUid", "formItemName", "onIgnoreError"]);
         var getFieldDecorator = form.getFieldDecorator, getFieldsError = form.getFieldsError, setFieldsValue = form.setFieldsValue;
         var iconStyle = {};
-        isShowErrorView && (iconStyle = { marginRight: '18px' });
         var theProps = __assign({}, props);
         theProps.onChange = this.handleOnChange.bind(this);
         var maxlen = parseInt(this.props.maxLength);
-        return (React.createElement(LegionsProErrorReportShow, { code: this.props.formItemName, formUid: this.props.formUid, onIgnoreError: this.props.onIgnoreError, errorClassName: classNames((_a = {},
-                _a["tip-icon-input"] = true,
-                _a["tip-icon-right-0"] = (this.props.value && !this.props.disabled) ? true : false,
-                _a)) }, this.props.inputType === 'number' ? React.createElement(LegionsProNumericInput, __assign({}, theProps)) : React.createElement(Tooltip
+        return (this.props.inputType === 'number' ? React.createElement(LegionsProNumericInput, __assign({}, theProps)) : React.createElement(Tooltip
         /* trigger={'click'} */
         , { 
             /* trigger={'click'} */
@@ -523,7 +501,7 @@ var TooltipInput = /** @class */ (function (_super) {
                         fileName[_this.props.formItemName] = '';
                         setFieldsValue(fileName);
                         form.validateFields([_this.props.formItemName], { force: true }, function () { return void 0; });
-                    } }))) })))));
+                    } }))) }))));
     };
     return TooltipInput;
 }(React.Component));
@@ -550,13 +528,6 @@ var FormInput = /** @class */ (function (_super) {
     FormInput.prototype.onChange = function (even) {
         var value = typeof even === 'object' ? even.target.value : even;
         this.props.iFormInput.onChange && this.props.iFormInput.onChange(value);
-        if (this.FormInputRef && this.props.formUid) {
-            var viewStore = this.FormInputRef.store.get(this.props.formUid);
-            var view = viewStore.computedErrorReactNodeList.get(this.props.iAntdProps.name);
-            if (view) {
-                view.validateStatus = '';
-            }
-        }
     };
     FormInput.prototype.onPressEnter = function (even) {
         var _a = this.props, form = _a.form, iAntdProps = _a.iAntdProps, iFormInput = _a.iFormInput, children = _a.children, rules = _a.rules;
@@ -569,7 +540,7 @@ var FormInput = /** @class */ (function (_super) {
         }
         /* const el = document.querySelector(`.${this.FormInputRef.uid}`); */
         var even = e.target;
-        even.select();
+        even.select && even.select();
         this.props.iFormInput && this.props.iFormInput.onFocus && this.props.iFormInput.onFocus(e);
     };
     FormInput.prototype.onBlur = function (even) {
@@ -594,7 +565,7 @@ var FormInput = /** @class */ (function (_super) {
         var maxLength = iFormInput.maxLength ? parseInt(iFormInput.maxLength) : 50;
         var placeholder = iAntdProps.placeholder || '';
         var formItemProps = {};
-        if (colon) {
+        if (colon !== void 0) {
             formItemProps['colon'] = colon;
         }
         return (React.createElement(FormElement, { form: form, onReady: function (value) {
@@ -858,25 +829,16 @@ var FormUpload = /** @class */ (function (_super) {
 var FormItem$5 = Form.Item;
 var Option = Select.Option;
 var OptGroup = Select.OptGroup;
-var HLSelectWrapError = /** @class */ (function (_super) {
-    __extends(HLSelectWrapError, _super);
-    function HLSelectWrapError() {
+var SelectWrap = /** @class */ (function (_super) {
+    __extends(SelectWrap, _super);
+    function SelectWrap() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    HLSelectWrapError.prototype.render = function () {
+    SelectWrap.prototype.render = function () {
         var _a = this.props, formItemName = _a.formItemName, formHLSelectRef = _a.formHLSelectRef, formUid = _a.formUid, props = __rest(_a, ["formItemName", "formHLSelectRef", "formUid"]);
-        var isShowErrorView = false;
-        if (formHLSelectRef && this.props.formUid) {
-            var viewStore = formHLSelectRef.store.get(this.props.formUid);
-            if (viewStore.computedErrorReactNodeList.has(this.props.formItemName)) {
-                var uid = viewStore.computedErrorReactNodeList.get(this.props.formItemName).uid;
-                isShowErrorView = viewStore._errorListView.has(uid);
-            }
-        }
-        return (React.createElement(LegionsProErrorReportShow, { formUid: this.props.formUid, code: this.props.formItemName, errorClassName: 'tip-icon', onIgnoreError: this.props.onIgnoreError, className: isShowErrorView ? 'errorView' : '' },
-            React.createElement(LegionsProSelect, __assign({ style: { width: '100%' }, placeholder: this.props.placeholder }, props))));
+        return (React.createElement(LegionsProSelect, __assign({ style: { width: '100%' }, placeholder: this.props.placeholder }, props)));
     };
-    return HLSelectWrapError;
+    return SelectWrap;
 }(React.Component));
 var FormSelect = /** @class */ (function (_super) {
     __extends(FormSelect, _super);
@@ -949,11 +911,11 @@ var FormSelect = /** @class */ (function (_super) {
             var value = this.props.form.getFieldValue(this.props.iAntdProps.name);
             var values = this.translabelInValue(value, this.props.iFormWithSelect.options);
             if (!Array.isArray(values) && values && values['label']) {
-                if (!legionsThirdpartyPlugin.plugins.clipboard) {
+                if (!runScriptsSdk.plugins.clipboard) {
                     message.warning('Plugin is not ready to clipboard');
                 }
                 else {
-                    legionsThirdpartyPlugin.plugins.clipboard.copyText(values['label']).then(function (res) {
+                    runScriptsSdk.plugins.clipboard.copyText(values['label']).then(function (res) {
                         var el = document.querySelector("." + _this.FormHLSelectRef.uid);
                         if (el) {
                             var selectDom = el.querySelector(".ant-select-selection--single");
@@ -999,13 +961,6 @@ var FormSelect = /** @class */ (function (_super) {
         this.props.iFormWithSelect && this.props.iFormWithSelect.onSelect && this.props.iFormWithSelect.onSelect(value, option);
     };
     FormSelect.prototype.onSearch = function (value) {
-        if (this.FormHLSelectRef && this.props.formUid) {
-            var viewStore = this.FormHLSelectRef.store.get(this.props.formUid);
-            var view = viewStore.computedErrorReactNodeList.get(this.props.iAntdProps.name);
-            if (view && view.validateStatus !== '') {
-                view.validateStatus = '';
-            }
-        }
         /** 启用了远程搜索才会在搜索输入触发时调用 */
         if (this.props.formStore && this.props.formStore.localViewModel && this.props.iFormWithSelect.remote) {
             var view = this.props.formStore.localViewModel._selectView.get(this.props.iAntdProps.name);
@@ -1024,13 +979,6 @@ var FormSelect = /** @class */ (function (_super) {
     };
     FormSelect.prototype.onChange = function (even, res) {
         this.props.iFormWithSelect.onChange && this.props.iFormWithSelect.onChange(even, res);
-        if (this.FormHLSelectRef && this.props.formUid) {
-            var viewStore = this.FormHLSelectRef.store.get(this.props.formUid);
-            var view = viewStore.computedErrorReactNodeList.get(this.props.iAntdProps.name);
-            if (view) {
-                view.validateStatus = '';
-            }
-        }
         if (this.state.styleClassFocus) {
             this.setState({ styleClassFocus: '' });
         }
@@ -1056,7 +1004,7 @@ var FormSelect = /** @class */ (function (_super) {
             React.createElement(FormItem$5, __assign({}, formItemProps, { extra: iFormWithSelect.extra, className: iAntdProps.className, label: iFormWithSelect.label, labelCol: iFormWithSelect.labelCol, wrapperCol: iFormWithSelect.wrapperCol }),
                 getFieldDecorator(iAntdProps.name, {
                     rules: rules,
-                })(React.createElement(HLSelectWrapError
+                })(React.createElement(SelectWrap
                 /* size="default" */
                 , __assign({}, props, { selectAllClass: this.state.styleClassFocus, options: options, onPagingQuery: this.onPagingQuery, total: total, open: this.state.open, onIgnoreError: this.props.formStore && this.props.formStore.onIgnoreError, formUid: this.props.formUid, formHLSelectRef: this.FormHLSelectRef, formItemName: iAntdProps.name, placeholder: iAntdProps.placeholder, onClear: this.onClear, onSelect: this.onSelect.bind(this), onBlur: this.onBlur.bind(this), onSearch: this.onSearch.bind(this), onChange: this.onChange.bind(this), onFocus: this.onFocus.bind(this) }))),
                 children)));
@@ -1234,23 +1182,11 @@ var TooltipText = /** @class */ (function (_super) {
         return _super.call(this, props) || this;
     }
     TooltipText.prototype.render = function () {
-        var _a;
-        var _b = this.props, form = _b.form, FormTextRef = _b.FormTextRef, inputType = _b.inputType, props = __rest(_b, ["form", "FormTextRef", "inputType"]);
-        if (FormTextRef && this.props.formUid) {
-            var viewStore = FormTextRef.store.get(this.props.formUid);
-            if (viewStore.computedErrorReactNodeList.has(this.props.formItemName)) {
-                var uid = viewStore.computedErrorReactNodeList.get(this.props.formItemName).uid;
-                viewStore._errorListView.has(uid);
-            }
-        }
-        return (React.createElement(LegionsProErrorReportShow, { code: this.props.formItemName, formUid: this.props.formUid, errorClassName: classNames((_a = {},
-                _a["tip-icon-input"] = true,
-                _a["tip-icon-right-0"] = (this.props.value) ? true : false,
-                _a)) },
-            React.createElement(Tooltip, { trigger: 'click', title: this.props.value, placement: "topLeft", overlayStyle: { wordWrap: 'break-word' } },
-                React.createElement("span", { style: {
-                        overflow: 'hidden', width: '100%', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'block'
-                    } }, this.props.value))));
+        var _a = this.props, form = _a.form, FormTextRef = _a.FormTextRef, inputType = _a.inputType, props = __rest(_a, ["form", "FormTextRef", "inputType"]);
+        return (React.createElement(Tooltip, { trigger: 'click', title: this.props.value, placement: "topLeft", overlayStyle: { wordWrap: 'break-word' } },
+            React.createElement("span", { style: {
+                    overflow: 'hidden', width: '100%', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'block'
+                } }, this.props.value)));
     };
     return TooltipText;
 }(React.Component));
