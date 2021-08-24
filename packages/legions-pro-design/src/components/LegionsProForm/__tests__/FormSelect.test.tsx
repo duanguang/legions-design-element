@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-04-26 16:23:25
- * @LastEditTime: 2021-08-17 23:40:02
+ * @LastEditTime: 2021-08-23 23:06:45
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProForm/__tests__/FormSelect.test.tsx
@@ -101,11 +101,23 @@ describe('Form:Input',() => {
         expect(viewModel.numberText.value).toEqual('') */
         componet.unmount()
     })
+    it('Form: chanage',() => {
+        const componet = mount(<ProFormTest></ProFormTest>,{
+            wrappingComponent:App
+        })
+        const instance = componet.instance() as ProFormTest;
+        instance.formRef.methods.setFormStates<InstanceType<typeof LegionsProForm['LabelWithSelectModel']>>('text',(value) => {
+            value.iFormProps.mode='combobox'
+        })
+        componet.find(FormSelect).simulate('change',{ target: { value: '111' } });
+        console.log(componet.find(FormSelect).html());
+    })
     it("Form:input focus",() => {
         const componet = mount(<ProFormTest></ProFormTest>,{
             wrappingComponent:App
         })
+        
         componet.find('.ant-select').simulate('click')
-       console.log(componet.find(FormSelect).html());
+       
     })
 })
