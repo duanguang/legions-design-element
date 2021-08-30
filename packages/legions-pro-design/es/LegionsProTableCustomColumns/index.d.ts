@@ -35,7 +35,7 @@ export default class LegionsProTableCustomColumns extends Component<IProps, ISta
     modalRef: InstanceProModal;
     constructor(props: any);
     componentDidMount(): void;
-    get viewStore(): import("brain-store-utils").ViewModel<import("../LegionsStoreTable/ProTableView").ProTableView> & {
+    get viewStore(): import("brain-store-utils/types/create-view-model").ViewModel<import("../LegionsStoreTable/ProTableView").ProTableView> & {
         userInfo: {
             userName: string;
             userUid: string;
@@ -73,7 +73,7 @@ export default class LegionsProTableCustomColumns extends Component<IProps, ISta
         readonly computedUnShowColumns: import("../LegionsStoreTable/interface").IShowColumns[];
         readonly computedStorageShowColumnsKeys: string;
         readonly computedRenderColumns: (import("antd/lib/table/Table").TableColumnConfig<{}> & import("../LegionsStoreTable/interface").ITableColumnConfig)[];
-        readonly tableXAutoWidth: React.ReactText;
+        readonly tableXAutoWidth: string | number;
         readonly computedTotal: number;
         _filterColumns: () => void;
         _moveRightShowColumns: (Columns: string[]) => void;

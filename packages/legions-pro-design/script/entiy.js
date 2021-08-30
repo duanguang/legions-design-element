@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-10 16:14:09
- * @LastEditTime: 2021-08-24 22:16:57
+ * @LastEditTime: 2021-08-30 23:42:15
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/script/entiy.js
@@ -15,7 +15,7 @@ const array_components1 = ['LegionsModels','LegionsCore','LegionsCrossModule'
 /* 'db', */
 /* 'services' */]
 const array_componentsStore = [
-/* 'LegionsStore', */
+'LegionsStore',
 /* 'LegionsStoreConditions', */
 'LegionsStoreForm',
 /* 'LegionsStoreLayout',
@@ -77,7 +77,7 @@ const umd = [
   },
 ];
 const es = [
-  ...array_component.map((item) => {
+  ...array_componentsStore.map((item) => {
     let input = '';
     let file = '';
     if (item === 'index') {

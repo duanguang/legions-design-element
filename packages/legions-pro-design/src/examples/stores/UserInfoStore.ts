@@ -20,16 +20,16 @@ export default class UserInfoStore extends StoreBase {
     eventScopes: [User],
   };
 
-  @observable obMockList = observablePromise<MockPageListEntity>();
+  @observable obMockList = observablePromise<MockPageListEntity>(null);
 
   /**
    * 用户信息
    *
    * @memberof UserInfoStore
    */
-  @observable obUserInfo = observablePromise<UserInfoContainerEntity>();
+  @observable obUserInfo = observablePromise<UserInfoContainerEntity>(null);
 
-  @observable authEntity = observablePromise<UserInfoContainerEntity>();
+  @observable authEntity = observablePromise<UserInfoContainerEntity>(null);
   @observable exportTaskList: ExportTaskEntity[] = [];
 
   @observable system = 'scm';

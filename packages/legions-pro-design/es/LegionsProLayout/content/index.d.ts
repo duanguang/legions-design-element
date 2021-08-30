@@ -50,7 +50,15 @@ interface IState {
 }
 export default class ContentPart extends React.Component<IProps, IState> {
     history: any;
-    viewModel: import("brain-store-utils").ViewModel<ViewModels> & import("brain-store-utils").Proxify<ViewModels>;
+    viewModel: import("brain-store-utils/types/create-view-model").ViewModel<ViewModels> & {
+        iframeHeight: number;
+        dropdown: import("mobx").ObservableMap<string, {
+            visible: boolean;
+            uid: string;
+            tabkey: string;
+            isAddContextmenu: boolean;
+        }>;
+    };
     setIframe: () => void;
     constructor(props: any);
     static defaultProps: {

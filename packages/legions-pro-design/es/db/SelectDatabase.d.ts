@@ -1,6 +1,7 @@
 import { Database } from './Database';
+import Dexie from 'dexie';
 export declare class SelectDatabaseDB extends Database {
-    selectItem: any;
+    selectItem: Dexie.Table;
     /**
      *Creates an instance of SelectDatabase.
      * @param {string} name 数据库名称

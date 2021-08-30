@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { IProTableProps } from '../LegionsProTable/interface';
 import { InstanceProTable, ITableColumnConfig } from '../LegionsProTable/interface';
 import { TableColumnConfig } from '../interface/antd';
@@ -44,10 +44,10 @@ export default class LegionsProVirtualTable extends Component<IProTableProps, IS
     constructor(props: any);
     ticking: boolean;
     tranMapColumns(columns?: (TableColumnConfig<{}> & ITableColumnConfig)[]): {
-        title?: React.ReactNode;
+        title?: import("react").ReactNode;
         key: string;
         dataIndex?: string;
-        render?: (text: any, record: {}, index: number) => React.ReactNode;
+        render?: (text: any, record: {}, index: number) => import("react").ReactNode;
         filters?: {
             text: string;
             value: string;
@@ -55,15 +55,15 @@ export default class LegionsProVirtualTable extends Component<IProTableProps, IS
         }[];
         onFilter?: (value: any, record: {}) => boolean;
         filterMultiple?: boolean;
-        filterDropdown?: React.ReactNode;
+        filterDropdown?: import("react").ReactNode;
         filterDropdownVisible?: boolean;
         onFilterDropdownVisibleChange?: (visible: boolean) => void;
         sorter: boolean | ((a: any, b: any) => number);
         colSpan?: number;
-        width?: React.ReactText;
+        width?: string | number;
         className?: string;
         fixed?: boolean | "left" | "right";
-        filterIcon?: React.ReactNode;
+        filterIcon?: import("react").ReactNode;
         filteredValue?: any[];
         sortOrder?: boolean | "ascend" | "descend";
         children?: import("antd/lib/table/Column").ColumnProps<{}>[];

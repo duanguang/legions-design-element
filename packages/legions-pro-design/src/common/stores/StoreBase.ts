@@ -3,7 +3,7 @@
 import Store from 'legions/store';
 import { autorun } from 'mobx';
 // mobx.useStrict(true);
-import { StoreSpace } from 'brain-store';
+import { StaticMeta } from 'brain-store/types/api/meta';
 import { IResourceEvent } from './event/resourceEvent';
 import { schedule } from 'legions-lunar/schedule';
 import { History } from '../typings/history';
@@ -24,13 +24,12 @@ interface IContext {
   dispatch: (name: IDispatchPrams, payload: Object) => {};
   _manage: any;
 }
-export interface IStoreBaseMeta extends StoreSpace.PramsMeta {}
+export interface IStoreBaseMeta extends StaticMeta {}
 export default class StoreBase<T = {}, P = {}> extends Store {
   static meta: IStoreBaseMeta = {
     ...Store.meta,
     namespace: project.name,
   };
-  context: T & IContext;
   history: History = this.context._manage.history;
 
   /**

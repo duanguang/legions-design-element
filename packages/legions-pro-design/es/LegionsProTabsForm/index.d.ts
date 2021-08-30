@@ -60,7 +60,7 @@ export default class LegionsProTabsForm<Model> extends React.Component<IProps<Mo
     decryptionFreezeUid: string;
     timeId: number;
     constructor(props: any);
-    get storeView(): import("brain-store-utils").ViewModel<import("../LegionsStoreForm/tabsView").TabsFormView> & {
+    get storeView(): import("brain-store-utils/types/create-view-model").ViewModel<import("../LegionsStoreForm/tabsView").TabsFormView> & {
         activeTabKey: string;
         readonly _computedTabs: TabsItemView[];
         readonly size: number;

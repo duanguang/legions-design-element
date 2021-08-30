@@ -94,10 +94,7 @@ cp -r -f types/src/components/LegionsProTabsForm/* lib/LegionsProTabsForm/
 cp -r -f types/src/components/LegionsProModalForm/* es/LegionsProModalForm/
 cp -r -f types/src/components/LegionsProModalForm/* lib/LegionsProModalForm/
 
-cp -r -f types/src/components/LegionsProErrorReportShow/* es/LegionsProErrorReportShow/
-cp -r -f types/src/components/LegionsProErrorReportShow/* lib/LegionsProErrorReportShow/
-cp -r -f src/components/LegionsProErrorReportShow/style/* lib/LegionsProErrorReportShow/style/
-cp -r -f src/components/LegionsProErrorReportShow/style/* es/LegionsProErrorReportShow/style/
+
 
 cp -r -f types/src/components/LegionsProException/* es/LegionsProException/
 cp -r -f types/src/components/LegionsProException/* lib/LegionsProException/
