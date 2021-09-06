@@ -1,9 +1,11 @@
 import { ClassOf } from 'legions-lunar/types/api/typescript';
-import { request } from 'legions/request';
+declare type HeadersPrams = {
+    'Content-Type'?: 'application/json' | 'application/x-www-form-urlencoded';
+};
 interface options<Parameter, Model> {
     url: string;
     parameter: Parameter;
-    headers?: request.HeadersPrams;
+    headers?: HeadersPrams;
     /**
      *
      * 接口返回数据模型
