@@ -1,6 +1,6 @@
 import StoreBase, { IStoreBaseMeta } from '../../common/stores/StoreBase';
 import { observable, autorun, action, computed, when } from 'mobx';
-import { observablePromise, ObservableTempState } from 'legions/store-utils';
+import { observablePromise,ObservablePromiseModel, ObservableTempState } from 'legions/store-utils';
 import { MockPageListEntity } from '../models/mockListEntity';
 import { getMockListData } from '../services/message';
 import { resource } from 'legions/store';
@@ -38,7 +38,7 @@ export default class UserInfoStore extends StoreBase {
 
   @observable obUserPageList = {
     keyWords: '',
-    data: observable.map<observablePromise.PramsResult<SearchEntity>>(),
+    data: observable.map<ObservablePromiseModel>(),
   };
   @computed get uid() {
     if (this.obUserInfo.isResolved && this.obUserInfo.value.success) {

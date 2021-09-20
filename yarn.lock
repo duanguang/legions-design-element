@@ -9895,6 +9895,14 @@ legions-lunar@^0.0.7:
     legions-thirdparty-plugin "^0.0.8"
     warning "^3.0.0"
 
+legions-lunar@^0.0.8:
+  version "0.0.8"
+  resolved "https://registry.nlark.com/legions-lunar/download/legions-lunar-0.0.8.tgz#6efc94165fa7aed30b7b1af9ede216deaff990c6"
+  integrity sha1-bvyUFl+nrtMLexr57eIW3q/5kMY=
+  dependencies:
+    legions-thirdparty-plugin "^0.0.8"
+    warning "^3.0.0"
+
 legions-micro-service@^0.1.0:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/legions-micro-service/-/legions-micro-service-0.1.1.tgz#ff5a32cb60071bf41264ff410c77ab6e79c6bb6a"

@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-15 15:42:07
- * @LastEditTime: 2021-04-22 17:49:38
+ * @LastEditTime: 2021-09-20 14:32:07
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/examples/containers/proForm/model.ts
@@ -9,7 +9,7 @@
  */
 import { UploadChangeParam } from 'antd/lib/upload/interface';
 import { FormRuleProperty } from 'legions-decorator/async.validator';
-import { IBaseFormFields,HlLabeledValue } from 'legions-lunar/model';
+import { IBaseFormFields,LegionsLabeledValue } from 'legions-lunar/model';
 import { ClassOf } from 'legions-lunar/types/api/typescript';
 import { LegionsProForm } from '../../../components';
 interface IFormFieldUserRenderInput1{
@@ -81,7 +81,7 @@ export class FormFields extends LegionsProForm.ProFormFields<FormFields>{
         desc: '普通下拉',
         type:'object',
     })
-    selectedItem: IBaseFormFields<HlLabeledValue> = {
+    selectedItem: IBaseFormFields<LegionsLabeledValue> = {
         value:void 0,
     }
     @FormRuleProperty({
@@ -91,7 +91,7 @@ export class FormFields extends LegionsProForm.ProFormFields<FormFields>{
         desc: '远程下拉',
         type:'object',
     })
-    selectedItemRemote: IBaseFormFields<HlLabeledValue> = {
+    selectedItemRemote: IBaseFormFields<LegionsLabeledValue> = {
         value:void 0,
     }
     @FormRuleProperty({
@@ -101,7 +101,7 @@ export class FormFields extends LegionsProForm.ProFormFields<FormFields>{
         desc: '下拉多选',
         type:'array',
     })
-    selectedItemMultiple: IBaseFormFields<Array<HlLabeledValue>> = {
+    selectedItemMultiple: IBaseFormFields<Array<LegionsLabeledValue>> = {
         value:void 0,
     }
     @FormRuleProperty({

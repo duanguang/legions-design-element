@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-13 11:06:29
- * @LastEditTime: 2021-04-01 14:56:48
+ * @LastEditTime: 2021-09-20 14:46:58
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProTable/ProTableBaseClass.tsx
@@ -15,7 +15,7 @@ import { TableColumnConfig } from '../interface/antd';
 import { InstanceProTable, ITableColumnConfigProps } from './interface';
 import LegionsStoreTable from '../LegionsStoreTable';
 import { ClassOf } from 'legions-lunar/types/api/typescript';
-
+import {mobxVersion} from 'brain-store-utils'
 /**
  * 列表组件基类
  *
@@ -40,13 +40,13 @@ export class ProTableBaseClass<P,S,Columns = {},QueryParams = any> extends React
     constructor(props:P) { 
         super(props)
         this.columnsDataMap.observe(chan => {
-            if (mobx['useStrict']) {
+            if (mobxVersion==='v3') {
                 // @ts-ignore
                 if (this.columnsDataMap.values().length) {
                     //@ts-ignore
                     this.columnsData = toJS(this.columnsDataMap.values())
                 }
-            } else if (mobx['configure']) { 
+            } else if (mobxVersion==='v4') { 
                 const values:ITableColumnConfigProps<Columns>[] = [];
                 this.columnsDataMap.forEach((item, key) => {
                   values.push(item);

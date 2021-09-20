@@ -26,7 +26,7 @@ import LegionsProDragger from '../LegionsProDragger';
 import get from 'lodash/get'
 import { ValidateCallback } from 'antd/lib/form/Form';
 import { LabelWithCheckboxModel } from './FormCheckbox';
-import { BaseFormFields, HlLabeledValue } from 'legions-lunar/model';
+import { BaseFormFields, LegionsLabeledValue } from 'legions-lunar/model';
 import { legionsPlugins,LegionsPluginsExecute,LoggerManager } from 'legions-lunar/legion.plugin.sdk';
 import { formClasses,ProFormFields,ProFormUtils,size } from './ProFormUtils';
 import { cloneDeep } from 'lodash'
@@ -322,7 +322,7 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
                 },
                 getQuerySelectOption: (name: string,optionKey: string) => {
                     const selectView = this.storeLocalView._selectView.get(name)
-                    let optionItem = new HlLabeledValue();
+                    let optionItem = new LegionsLabeledValue();
                     if (selectView && selectView.currValue) {
                         for (let i = 1; i <= selectView.currValue.data.size; i++) {
                              //@ts-ignore
