@@ -33,6 +33,7 @@
     "@types/enzyme":"^3.10.9",
     "@commitlint/cli": "^7.3.2",
     "@commitlint/config-conventional": "^7.3.1",
+    "conventional-changelog-cli":"^2.1.1",
     "@types/node": "^10.0.0",
     "@types/react": "^16.9.35",
     "@types/react-dom": "^0.14.22",
@@ -90,13 +91,11 @@
     "start": "rimraf _site && mkdir _site &&  cross-env NODE_ENV=development bisheng start -c ./site/bisheng.config.js",
     "build:b": "cross-env PACKAGE=browser lrpc rpc -c",
     "build:es": "cross-env PACKAGE=es lrpc rpc -c",
-    "build:main": "node build/build.main.js",
     "copy:ts": "sh script/create.sh",
-    "start:react15": "cd examples/react15 && yarn dev",
     "dev": "brain-cli dev",
     "build:all": "brain-cli build test --apps=examples",
     "dll": "brain-cli dll",
-    "release": "bash build/release.sh"
+    "changelog": "bash script/changelog.sh"
   },
   "gitHead": "1e80f0ebb53edb8e9ecaa46efa41e0442e9d1716"
 }
