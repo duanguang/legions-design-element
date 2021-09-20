@@ -127,18 +127,18 @@ export declare class LegionsProForm<mapProps = {}> extends React.Component<IProF
         renderNodeQueue: import("../LegionsStoreForm/interface").IObservableMap<string, string>;
         _errorListView: import("../LegionsStoreForm/interface").IObservableMap<string, IErrorView[]>;
         readonly computedAllElementList: string[];
-        readonly computedFormFields: (LabelWithInputModel | LabelWithInputNumberModel | LabelWithSelectModel | LabelWithDatePickerModel | LabelWithMonthPickerModel | LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel | LabelWithRadioButtonModel | LabelWithTextModel | LabelWithCascaderModel | LabelWithCheckboxModel)[];
-        readonly computedAllFormFields: (LabelWithInputModel | LabelWithInputNumberModel | LabelWithSelectModel | LabelWithDatePickerModel | LabelWithMonthPickerModel | LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel | LabelWithRadioButtonModel | LabelWithTextModel | LabelWithCascaderModel | LabelWithCheckboxModel)[];
-        readonly computedFormSize: "small" | "table" | "default";
-        updateFormSize: (size: "small" | "table" | "default") => void;
+        readonly computedFormFields: (LabelWithInputModel | LabelWithInputNumberModel | LabelWithDatePickerModel | LabelWithMonthPickerModel | LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel | LabelWithRadioButtonModel | LabelWithTextModel | LabelWithSelectModel | LabelWithCheckboxModel | LabelWithCascaderModel)[];
+        readonly computedAllFormFields: (LabelWithInputModel | LabelWithInputNumberModel | LabelWithDatePickerModel | LabelWithMonthPickerModel | LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel | LabelWithRadioButtonModel | LabelWithTextModel | LabelWithSelectModel | LabelWithCheckboxModel | LabelWithCascaderModel)[];
+        readonly computedFormSize: "default" | "small" | "table";
+        updateFormSize: (size: "default" | "small" | "table") => void;
         _addAllElementKeys: (keys: string) => void;
-        getFormItemField: <T extends LabelWithInputModel | LabelWithInputNumberModel | LabelWithSelectModel | LabelWithDatePickerModel | LabelWithMonthPickerModel | LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel | LabelWithRadioButtonModel | LabelWithTextModel | LabelWithCascaderModel | LabelWithCheckboxModel>(key: string) => {
+        getFormItemField: <T extends LabelWithInputModel | LabelWithInputNumberModel | LabelWithDatePickerModel | LabelWithMonthPickerModel | LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel | LabelWithRadioButtonModel | LabelWithTextModel | LabelWithSelectModel | LabelWithCheckboxModel | LabelWithCascaderModel>(key: string) => {
             value: T;
             type: "normal" | "custom";
         };
         removeFormItem: (key: string) => boolean;
         clearFormItem: () => void;
-        _initFormItemField: (key: string, value: LabelWithInputModel | LabelWithInputNumberModel | LabelWithSelectModel | LabelWithDatePickerModel | LabelWithMonthPickerModel | LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel | LabelWithRadioButtonModel | LabelWithTextModel | LabelWithCascaderModel | LabelWithCheckboxModel, type?: "normal" | "custom") => void;
+        _initFormItemField: (key: string, value: LabelWithInputModel | LabelWithInputNumberModel | LabelWithDatePickerModel | LabelWithMonthPickerModel | LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel | LabelWithRadioButtonModel | LabelWithTextModel | LabelWithSelectModel | LabelWithCheckboxModel | LabelWithCascaderModel, type?: "normal" | "custom") => void;
     } & import("../LegionsStoreForm/proFormStore").IOtherView;
     render(): JSX.Element;
 }

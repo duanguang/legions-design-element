@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.8-beta.1
+  *  legions-pro-design v0.0.8-beta.2
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -18,7 +18,7 @@ import './style/index.less';
 import { debounce } from 'legions-utils-tool/debounce';
 import { toJS, runInAction } from 'mobx';
 import LegionsProDragger from '../LegionsProDragger';
-import { BaseFormFields, HlLabeledValue } from 'legions-lunar/model';
+import { BaseFormFields, LegionsLabeledValue } from 'legions-lunar/model';
 import { LoggerManager } from 'legions-lunar/legion.plugin.sdk';
 import { getInjector } from 'legions/store';
 import { createFormRule } from 'legions-decorator/async.validator';
@@ -1838,7 +1838,7 @@ var ProForm = /** @class */ (function (_super) {
                 },
                 getQuerySelectOption: function (name, optionKey) {
                     var selectView = _this.storeLocalView._selectView.get(name);
-                    var optionItem = new HlLabeledValue();
+                    var optionItem = new LegionsLabeledValue();
                     if (selectView && selectView.currValue) {
                         for (var i = 1; i <= selectView.currValue.data.size; i++) {
                             //@ts-ignore

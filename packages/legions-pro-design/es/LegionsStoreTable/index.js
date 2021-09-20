@@ -1,15 +1,16 @@
 /**
-  *  legions-pro-design v0.0.7-beta.17
+  *  legions-pro-design v0.0.8-beta.2
   * (c) 2021 duanguang
   * @license MIT
   */
 import LegionsStore from '../LegionsStore';
-import { observable, action, StoreModules } from 'legions/store';
+import { observable as observable$1, action as action$1, StoreModules } from 'legions/store';
 import { observablePromise, observableViewModel } from 'legions/store-utils';
 import { shortHash } from 'legions-lunar/object-hash';
-import { isObservableArray, computed, runInAction, useStrict, configure } from 'mobx';
+import { isObservableArray, observable, computed, action, runInAction } from 'mobx';
 import LegionsModels from '../LegionsModels';
 import { editTableColumns, queryTableColumns } from '../services';
+import { mobxVersion } from 'brain-store-utils';
 import LegionsCore from '../LegionsCore';
 import { cloneDeep } from 'lodash';
 
@@ -32,11 +33,13 @@ PERFORMANCE OF THIS SOFTWARE.
 var extendStatics = function(d, b) {
     extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
     return extendStatics(d, b);
 };
 
 function __extends(d, b) {
+    if (typeof b !== "function" && b !== null)
+        throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
     extendStatics(d, b);
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -262,7 +265,7 @@ var ProTableView = /** @class */ (function () {
         this._uniqueKey = '';
         this.bodyExternalContainer.observe(function (chan) {
             runInAction(function () {
-                if (useStrict) {
+                if (mobxVersion === 'v4') {
                     // @ts-ignore
                     if (_this.bodyExternalContainer.values().length) {
                         // @ts-ignore
@@ -277,7 +280,7 @@ var ProTableView = /** @class */ (function () {
                         _this.bodyExternalHeight = total.height;
                     }
                 }
-                else if (configure) {
+                else if (mobxVersion === 'v3') {
                     var values_1 = [];
                     _this.bodyExternalContainer.forEach(function (item, key) {
                         values_1.push(item);
@@ -984,9 +987,9 @@ var ProTableLocalView = /** @class */ (function () {
         /**
          *
          * 表格接口数据
-         * @memberof HLTableLocalView
+         * @memberof ProTableLocalView
          */
-        this.obState = observablePromise();
+        this.obState = observablePromise(null);
         this._obStateMap = observable.map();
         /** 查询数据状态
          *
@@ -1041,7 +1044,12 @@ var ProTableLocalView = /** @class */ (function () {
                 }
                 var headers = {};
                 if (autoQuery.token) {
-                    headers = { 'api-cookie': autoQuery.token };
+                    if (typeof autoQuery.token === 'string') {
+                        headers = { 'api-cookie': autoQuery.token };
+                    }
+                    else if (typeof autoQuery.token === 'function') {
+                        headers = { 'api-cookie': autoQuery.token() };
+                    }
                 }
                 if (autoQuery.method === 'post') {
                     return server_1.post(__assign({ url: autoQuery.ApiUrl, parameter: params, headers: __assign(__assign({}, autoQuery.options), headers) }, model));
@@ -1109,7 +1117,7 @@ var ProTableLocalView = /** @class */ (function () {
 /*
  * @Author: duanguang
  * @Date: 2020-12-26 11:35:17
- * @LastEditTime: 2021-04-01 14:54:12
+ * @LastEditTime: 2021-08-09 23:42:17
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreTable/index.ts
@@ -1125,24 +1133,24 @@ var LegionsStoreTable = /** @class */ (function (_super) {
          *
          * @memberof HLTableStore
          */
-        _this.HlTableContainer = observable.map();
-        _this.HlTableContainerModules = observable.map();
+        _this.TableContainer = observable$1.map();
+        _this.TableContainerModules = observable$1.map();
         /**
          *
          *  数据生命周期，应用重新数据前有效
          * @memberof HLTableStore
          */
-        _this.HlTableLocalStateContainer = observable.map();
+        _this.HlTableLocalStateContainer = observable$1.map();
         return _this;
     }
     LegionsStoreTable.prototype.add = function (uid, modulesName, timeuid) {
-        /* this.HlTableContainer.set(uid,observableViewModel<ProTableView>(new ProTableView())) */
+        /* this.TableContainer.set(uid,observableViewModel<ProTableView>(new ProTableView())) */
         var view = new ProTableView(modulesName, timeuid, this.userInfo);
         this.addContainerModules(modulesName);
-        this.HlTableContainer.set(uid, observableViewModel(view));
+        this.TableContainer.set(uid, observableViewModel(view));
     };
     LegionsStoreTable.prototype.init = function (uid, options) {
-        var store = this.HlTableContainer.get(uid);
+        var store = this.TableContainer.get(uid);
         store.pageIndex = options.pageIndex || 1;
         store.pageSize = options.pageSize || 20;
         if (options.isAdaptiveHeight !== void 0) {
@@ -1150,18 +1158,18 @@ var LegionsStoreTable = /** @class */ (function (_super) {
         }
     };
     LegionsStoreTable.prototype.delete = function (uid) {
-        this.HlTableContainer.delete(uid);
+        this.TableContainer.delete(uid);
     };
     LegionsStoreTable.prototype.deleteTableModules = function (modulesName) {
-        this.HlTableContainerModules.delete(modulesName);
+        this.TableContainerModules.delete(modulesName);
     };
     LegionsStoreTable.prototype.get = function (uid) {
-        return this.HlTableContainer.get(uid);
+        return this.TableContainer.get(uid);
     };
     LegionsStoreTable.prototype.addContainerModules = function (modulesName) {
         if (modulesName) {
-            if (!this.HlTableContainerModules.has(modulesName)) {
-                this.HlTableContainerModules.set(modulesName, "" + shortHash(modulesName));
+            if (!this.TableContainerModules.has(modulesName)) {
+                this.TableContainerModules.set(modulesName, "" + shortHash(modulesName));
             }
         }
     };
@@ -1185,67 +1193,67 @@ var LegionsStoreTable = /** @class */ (function (_super) {
     LegionsStoreTable.meta = __assign({}, LegionsStore.StoreBase.meta);
     LegionsStoreTable.pageListEntity = PageListEntity;
     __decorate([
-        observable,
+        observable$1,
         __metadata("design:type", Object)
-    ], LegionsStoreTable.prototype, "HlTableContainer", void 0);
+    ], LegionsStoreTable.prototype, "TableContainer", void 0);
     __decorate([
-        observable,
+        observable$1,
         __metadata("design:type", Object)
-    ], LegionsStoreTable.prototype, "HlTableContainerModules", void 0);
+    ], LegionsStoreTable.prototype, "TableContainerModules", void 0);
     __decorate([
-        observable,
+        observable$1,
         __metadata("design:type", Object)
     ], LegionsStoreTable.prototype, "HlTableLocalStateContainer", void 0);
     __decorate([
-        action,
+        action$1,
         __metadata("design:type", Function),
         __metadata("design:paramtypes", [String, String, String]),
         __metadata("design:returntype", void 0)
     ], LegionsStoreTable.prototype, "add", null);
     __decorate([
-        action,
+        action$1,
         __metadata("design:type", Function),
         __metadata("design:paramtypes", [String, ProTableView]),
         __metadata("design:returntype", void 0)
     ], LegionsStoreTable.prototype, "init", null);
     __decorate([
-        action,
+        action$1,
         __metadata("design:type", Function),
         __metadata("design:paramtypes", [String]),
         __metadata("design:returntype", void 0)
     ], LegionsStoreTable.prototype, "delete", null);
     __decorate([
-        action,
+        action$1,
         __metadata("design:type", Function),
         __metadata("design:paramtypes", [String]),
         __metadata("design:returntype", void 0)
     ], LegionsStoreTable.prototype, "deleteTableModules", null);
     __decorate([
-        action,
+        action$1,
         __metadata("design:type", Function),
         __metadata("design:paramtypes", [String]),
         __metadata("design:returntype", void 0)
     ], LegionsStoreTable.prototype, "get", null);
     __decorate([
-        action,
+        action$1,
         __metadata("design:type", Function),
         __metadata("design:paramtypes", [String]),
         __metadata("design:returntype", void 0)
     ], LegionsStoreTable.prototype, "addContainerModules", null);
     __decorate([
-        action,
+        action$1,
         __metadata("design:type", Function),
         __metadata("design:paramtypes", [String]),
         __metadata("design:returntype", void 0)
     ], LegionsStoreTable.prototype, "_addLocalState", null);
     __decorate([
-        action,
+        action$1,
         __metadata("design:type", Function),
         __metadata("design:paramtypes", [String]),
         __metadata("design:returntype", void 0)
     ], LegionsStoreTable.prototype, "_deleteLocalState", null);
     __decorate([
-        action,
+        action$1,
         __metadata("design:type", Function),
         __metadata("design:paramtypes", [String]),
         __metadata("design:returntype", void 0)

@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-10 16:14:09
- * @LastEditTime: 2021-09-06 23:58:14
+ * @LastEditTime: 2021-09-20 16:01:20
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/script/entiy.js
@@ -15,12 +15,12 @@ const array_components1 = ['LegionsModels','LegionsCore','LegionsCrossModule',
 'db',
 'services']
 const array_componentsStore = [
-'LegionsStore',
+/* 'LegionsStore', */
 /* 'LegionsStoreConditions', */
-'LegionsStoreForm',
+/* 'LegionsStoreForm', */
 /* 'LegionsStoreLayout',
 'LegionsStoreModal', */
-/*   'LegionsStoreTable', */
+  'LegionsStoreTable',
   /* 'services', */
 ]
 const array_component = [
@@ -30,7 +30,7 @@ const array_component = [
 'LegionsProDragger', */
 /* 'LegionsProException',
  'LegionsProIframe', */
-/* 'LegionsProForm', */
+'LegionsProForm',
  /* 'LegionsProInput',
   'LegionsProLayout',
 'LegionsProLineOverflow',
@@ -50,7 +50,7 @@ const array_component = [
 'LegionsProTextArea',
 'LegionsProUEditor',
   'LegionsProUpload', */
-'LegionsProVirtualTable',
+/* 'LegionsProVirtualTable', */
   /* 'LgeionsProVirtualList', */
 ]
 const browser = [
@@ -77,7 +77,7 @@ const umd = [
   },
 ];
 const es = [
-  ...array_components1.map((item) => {
+  ...array_component.map((item) => {
     let input = '';
     let file = '';
     if (item === 'index') {
