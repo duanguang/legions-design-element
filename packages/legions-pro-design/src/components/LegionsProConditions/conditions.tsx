@@ -29,7 +29,7 @@ import { shortHash } from 'legions-lunar/object-hash';
 import ReactDOM,{ findDOMNode } from "react-dom";
 import { debounce } from 'legions-utils-tool/debounce'
 import { cloneDeep } from 'lodash'
-import { HlLabeledValue } from 'legions-lunar/model';
+import { LegionsLabeledValue } from 'legions-lunar/model';
 import { IFieldsState,InstanceQueryConditions,IQueryDateProps,IQueryProps,IQueryRangePickerProps,IQuerySelectProps,IQueryTextAreaProps,IQueryTextProps,ISelectProps } from './interface';
 import { ConditionCheckBoxModel,ConditionDateModel,ConditionGroupCheckBoxModel,ConditionRadioButtonModel,ConditionRangePickerModel,ConditionSearchModel,ConditionSelectModel,ConditionTextAreaModel,ConditionTextModel,ConditionTextNumberModel,IProConditions,ProConditions } from './ProConditionsUtils';
 import { isArray } from 'legions-utils-tool/type.validation';
@@ -195,7 +195,7 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
                     const selectConfigs = this.props.query.filter((item) => item instanceof ConditionSelectModel);
                     const index = selectConfigs.findIndex((item) => item.containerProps.name === name);
                     let newData = [] as Array<ISelectProps>
-                    let optionItem = new HlLabeledValue();
+                    let optionItem = new LegionsLabeledValue();
                     if (index > -1) {
                         const item = selectConfigs[index].conditionsProps as IQuerySelectProps;
                         newData = item.options as Array<ISelectProps>
