@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-10 16:14:09
- * @LastEditTime: 2021-09-20 16:01:20
+ * @LastEditTime: 2021-09-28 23:43:35
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/script/entiy.js
@@ -10,49 +10,7 @@
 
 const path = require('path');
 const resolves = _path => path.join(process.cwd(),_path);
-const array_components = ['index']
-const array_components1 = ['LegionsModels','LegionsCore','LegionsCrossModule',
-'db',
-'services']
-const array_componentsStore = [
-/* 'LegionsStore', */
-/* 'LegionsStoreConditions', */
-/* 'LegionsStoreForm', */
-/* 'LegionsStoreLayout',
-'LegionsStoreModal', */
-  'LegionsStoreTable',
-  /* 'services', */
-]
-const array_component = [
-/*   'LegionsProBaiduMap',
-'LegionsProBreadcrumb',
-'LegionsProDataImport',
-'LegionsProDragger', */
-/* 'LegionsProException',
- 'LegionsProIframe', */
-'LegionsProForm',
- /* 'LegionsProInput',
-  'LegionsProLayout',
-'LegionsProLineOverflow',
-'LegionsProModal',
-'LegionsProNumericInput', */
-/* 'LegionsProPageContainer',
-  'LegionsProPrint', */
- /*  'LegionsProQrCode',
-'LegionsProConditions',
-  'LegionsProScrawl',
-  'LegionsProSelect',
-  'LegionsProTable', */
- /* 'LegionsProTableCustomColumns',
-  'LegionsProTableForm', */
-  /* 'LegionsProTabsForm',
-'LegionsProModalForm',
-'LegionsProTextArea',
-'LegionsProUEditor',
-  'LegionsProUpload', */
-/* 'LegionsProVirtualTable', */
-  /* 'LgeionsProVirtualList', */
-]
+const buildType = process.env.buildType;
 const browser = [
   {
     name: 'iifeprod',
