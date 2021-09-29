@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.8-beta.1
+  *  legions-pro-design v0.0.8
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -14,7 +14,7 @@ import { shortHash } from 'legions-lunar/object-hash';
 import { findDOMNode } from 'react-dom';
 import { debounce } from 'legions-utils-tool/debounce';
 import { cloneDeep } from 'lodash';
-import { HlLabeledValue } from 'legions-lunar/model';
+import { LegionsLabeledValue } from 'legions-lunar/model';
 import { getInjector } from 'legions/store';
 import { isArray } from 'legions-utils-tool/type.validation';
 import LegionsProDragger from '../LegionsProDragger';
@@ -360,7 +360,7 @@ var LegionsProConditions = /** @class */ (function (_super) {
                     var selectConfigs = _this.props.query.filter(function (item) { return item instanceof ConditionSelectModel; });
                     var index = selectConfigs.findIndex(function (item) { return item.containerProps.name === name; });
                     var newData = [];
-                    var optionItem = new HlLabeledValue();
+                    var optionItem = new LegionsLabeledValue();
                     if (index > -1) {
                         var item = selectConfigs[index].conditionsProps;
                         newData = item.options;

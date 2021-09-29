@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-10 16:14:09
- * @LastEditTime: 2021-09-28 23:43:35
+ * @LastEditTime: 2021-09-29 23:41:58
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/script/entiy.js
@@ -11,6 +11,7 @@
 const path = require('path');
 const resolves = _path => path.join(process.cwd(),_path);
 const buildType = process.env.buildType;
+const { BUILD_TYPE} =require('./constants/component')
 const browser = [
   {
     name: 'iifeprod',
@@ -35,7 +36,7 @@ const umd = [
   },
 ];
 const es = [
-  ...array_component.map((item) => {
+  ...BUILD_TYPE[buildType].map((item) => {
     let input = '';
     let file = '';
     if (item === 'index') {

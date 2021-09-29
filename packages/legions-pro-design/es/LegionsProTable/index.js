@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.8-beta.1
+  *  legions-pro-design v0.0.8
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -16,11 +16,12 @@ import { debounce } from 'legions-utils-tool/debounce';
 import moment from 'moment';
 import LegionsProTableCustomColumns from '../LegionsProTableCustomColumns';
 import LegionsProLineOverflow from '../LegionsProLineOverflow';
-import { useStrict, toJS, configure, isObservable, runInAction } from 'mobx';
+import { toJS, isObservable, runInAction } from 'mobx';
 import { runScriptsSdk } from 'legions-thirdparty-plugin';
 import { LoggerManager } from 'legions-lunar/legion.plugin.sdk';
 import { cloneDeep } from 'lodash';
 import { observable, action } from 'legions/store';
+import { mobxVersion } from 'brain-store-utils';
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -204,14 +205,14 @@ var ProTableBaseClass = /** @class */ (function (_super) {
             _this.tableRef.methods.openCustomColumns();
         };
         _this.columnsDataMap.observe(function (chan) {
-            if (useStrict) {
+            if (mobxVersion === 'v3') {
                 // @ts-ignore
                 if (_this.columnsDataMap.values().length) {
                     //@ts-ignore
                     _this.columnsData = toJS(_this.columnsDataMap.values());
                 }
             }
-            else if (configure) {
+            else if (mobxVersion === 'v4') {
                 var values_1 = [];
                 _this.columnsDataMap.forEach(function (item, key) {
                     values_1.push(item);
