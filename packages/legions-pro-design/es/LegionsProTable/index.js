@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.7-beta.19
+  *  legions-pro-design v0.0.8
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -16,11 +16,12 @@ import { debounce } from 'legions-utils-tool/debounce';
 import moment from 'moment';
 import LegionsProTableCustomColumns from '../LegionsProTableCustomColumns';
 import LegionsProLineOverflow from '../LegionsProLineOverflow';
-import { useStrict, toJS, configure, isObservable, runInAction } from 'mobx';
-import { legionsThirdpartyPlugin } from 'legions-thirdparty-plugin';
+import { toJS, isObservable, runInAction } from 'mobx';
+import { runScriptsSdk } from 'legions-thirdparty-plugin';
 import { LoggerManager } from 'legions-lunar/legion.plugin.sdk';
 import { cloneDeep } from 'lodash';
 import { observable, action } from 'legions/store';
+import { mobxVersion } from 'brain-store-utils';
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -41,11 +42,13 @@ PERFORMANCE OF THIS SOFTWARE.
 var extendStatics = function(d, b) {
     extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
     return extendStatics(d, b);
 };
 
 function __extends(d, b) {
+    if (typeof b !== "function" && b !== null)
+        throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
     extendStatics(d, b);
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -140,6 +143,7 @@ function __read(o, n) {
     return ar;
 }
 
+/** @deprecated */
 function __spread() {
     for (var ar = [], i = 0; i < arguments.length; i++)
         ar = ar.concat(__read(arguments[i]));
@@ -201,14 +205,14 @@ var ProTableBaseClass = /** @class */ (function (_super) {
             _this.tableRef.methods.openCustomColumns();
         };
         _this.columnsDataMap.observe(function (chan) {
-            if (useStrict) {
+            if (mobxVersion === 'v3') {
                 // @ts-ignore
                 if (_this.columnsDataMap.values().length) {
                     //@ts-ignore
                     _this.columnsData = toJS(_this.columnsDataMap.values());
                 }
             }
-            else if (configure) {
+            else if (mobxVersion === 'v4') {
                 var values_1 = [];
                 _this.columnsDataMap.forEach(function (item, key) {
                     values_1.push(item);
@@ -385,8 +389,8 @@ var LegionsProTable = /** @class */ (function (_super) {
                             data: newData,
                             total: data.total,
                         });
-                        _this.props.store.HlTableContainer.get(uid)._renderData = newData;
-                        _this.props.store.HlTableContainer.get(uid).setTotal(data.total);
+                        _this.props.store.TableContainer.get(uid)._renderData = newData;
+                        _this.props.store.TableContainer.get(uid).setTotal(data.total);
                     }
                 });
                 _this.consoleLog('watchData', { uid: uid });
@@ -448,7 +452,7 @@ var LegionsProTable = /** @class */ (function (_super) {
             };
         };
         _this.uid = _this.uuid;
-        if (_this.props.store.HlTableContainer.has(_this.freezeuid)) {
+        if (_this.props.store.TableContainer.has(_this.freezeuid)) {
             _this.timeId = new Date().getTime();
             _this.uid = _this.uuid;
         }
@@ -464,7 +468,7 @@ var LegionsProTable = /** @class */ (function (_super) {
             if (!_this.props.store.HlTableLocalStateContainer.has(_this.freezeuid)) {
                 _this.props.store._addLocalState(_this.freezeuid);
             }
-            if (!_this.props.store.HlTableContainer.has(_this.freezeuid)) {
+            if (!_this.props.store.TableContainer.has(_this.freezeuid)) {
                 _this.props.store.add(_this.freezeuid, _this.props.tableModulesName, _this.uid);
             }
             var isShowLoading = false;
@@ -489,14 +493,14 @@ var LegionsProTable = /** @class */ (function (_super) {
     LegionsProTable_1 = LegionsProTable;
     Object.defineProperty(LegionsProTable.prototype, "uuid", {
         get: function () {
-            return "table" + this.props.store.HlTableContainer.size + shortHash("" + this.timeId + this.props.store.HlTableContainer.size);
+            return "table" + this.props.store.TableContainer.size + shortHash("" + this.timeId + this.props.store.TableContainer.size);
         },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(LegionsProTable.prototype, "getViewStore", {
         get: function () {
-            return this.props.store.HlTableContainer.get(this.freezeuid);
+            return this.props.store.TableContainer.get(this.freezeuid);
         },
         enumerable: false,
         configurable: true
@@ -575,7 +579,7 @@ var LegionsProTable = /** @class */ (function (_super) {
      */
     LegionsProTable.prototype.exportCsv = function (prams) {
         if (prams === void 0) { prams = {}; }
-        if (!legionsThirdpartyPlugin.plugins.excel) {
+        if (!runScriptsSdk.plugins.xlsx) {
             message.warning('Plugin is not ready to excel, Please install at the entrance(legionsThirdpartyPlugin.use({name:"excel",url:"xxxx"}))');
             return;
         }
@@ -598,7 +602,7 @@ var LegionsProTable = /** @class */ (function (_super) {
             }
         }
         var newColumns = columns.filter(function (item) { return item.isExport !== false; });
-        legionsThirdpartyPlugin.plugins.excel.exportJsonToExcel({ data: datas, columns: newColumns, filename: prams.filename, autoWidth: true });
+        runScriptsSdk.plugins.xlsx.exportJsonToExcel({ data: datas, columns: newColumns, filename: prams.filename, autoWidth: true });
     };
     //@ts-ignore
     LegionsProTable.prototype.tranMapColumns = function (columns) {
@@ -702,11 +706,11 @@ var LegionsProTable = /** @class */ (function (_super) {
                 }
             }
         });
-    };
-    LegionsProTable.prototype.componentWillMount = function () {
         if (this.props.autoQuery) {
             this.subscription = this.props.store.schedule([this.log.bind(this, this.freezeuid)]);
         }
+    };
+    LegionsProTable.prototype.componentWillMount = function () {
         this.consoleLog('componentWillMount');
         /* this.subscription.unsubscribe() */
     };
@@ -924,7 +928,7 @@ var LegionsProTable = /** @class */ (function (_super) {
         var table = document.querySelector("." + this.uid);
         if (table) {
             var tableThead = table.querySelector('.ant-table-thead');
-            var store = this.props.store.HlTableContainer.get(this.freezeuid);
+            var store = this.props.store.TableContainer.get(this.freezeuid);
             var tr = findDOMNode(tableThead.querySelector('tr'));
             if (tableThead && tr) {
                 if (store.bodyExternalContainer.get(this.tableThead) && tr.clientHeight !== store.bodyExternalContainer.get(this.tableThead).height) { // 当存在时，对比两次数据变化，不一致，在重新set
@@ -946,7 +950,7 @@ var LegionsProTable = /** @class */ (function (_super) {
         var table = document.querySelector("." + this.uid);
         if (table) {
             var tabletBody = table.querySelector('.ant-table-tbody');
-            var store = this.props.store.HlTableContainer.get(this.freezeuid);
+            var store = this.props.store.TableContainer.get(this.freezeuid);
             if (tabletBody && store.tableBodyDomClientHeight !== findDOMNode(tabletBody).clientHeight) {
                 store.tableBodyDomClientHeight = findDOMNode(tabletBody).clientHeight;
             }

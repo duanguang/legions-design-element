@@ -1,9 +1,9 @@
 /**
-  *  legions-pro-design v0.0.7
+  *  legions-pro-design v0.0.8-beta.2
   * (c) 2021 duanguang
   * @license MIT
   */
-import { legionsThirdpartyPlugin } from 'legions-thirdparty-plugin';
+import { runScriptsSdk } from 'legions-thirdparty-plugin';
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -24,11 +24,13 @@ PERFORMANCE OF THIS SOFTWARE.
 var extendStatics = function(d, b) {
     extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
     return extendStatics(d, b);
 };
 
 function __extends(d, b) {
+    if (typeof b !== "function" && b !== null)
+        throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
     extendStatics(d, b);
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -81,11 +83,11 @@ var Database = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (!!legionsThirdpartyPlugin.plugins.dexie) return [3 /*break*/, 1];
-                        legionsThirdpartyPlugin.subscribe('dexie', function () { return __awaiter(_this, void 0, void 0, function () {
+                        if (!!runScriptsSdk.plugins.dexie) return [3 /*break*/, 1];
+                        runScriptsSdk.subscribe('dexie', function () { return __awaiter(_this, void 0, void 0, function () {
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
-                                    case 0: return [4 /*yield*/, legionsThirdpartyPlugin.plugins.dexie.registerInstanceDexie('formUiStore', key, [
+                                    case 0: return [4 /*yield*/, runScriptsSdk.plugins.dexie.registerInstanceDexie('formUiStore', key, [
                                             {
                                                 selectData: '++id,[modulesKeys+pageIndex+keywords],modulesKeys,keywords,pageIndex,value,total',
                                             },
@@ -97,7 +99,7 @@ var Database = /** @class */ (function () {
                             });
                         }); });
                         return [3 /*break*/, 3];
-                    case 1: return [4 /*yield*/, legionsThirdpartyPlugin.plugins.dexie.registerInstanceDexie('formUiStore', key, [
+                    case 1: return [4 /*yield*/, runScriptsSdk.plugins.dexie.registerInstanceDexie('formUiStore', key, [
                             {
                                 selectData: '++id,[modulesKeys+pageIndex+keywords],modulesKeys,keywords,pageIndex,value,total',
                             },
@@ -113,9 +115,6 @@ var Database = /** @class */ (function () {
     return Database;
 }());
 
-//
-// Declare Database
-//
 var SelectDatabaseDB = /** @class */ (function (_super) {
     __extends(SelectDatabaseDB, _super);
     /**
@@ -126,16 +125,16 @@ var SelectDatabaseDB = /** @class */ (function (_super) {
      */
     function SelectDatabaseDB(tableName) {
         var _this = _super.call(this) || this;
-        if (!legionsThirdpartyPlugin.plugins.dexie) {
-            legionsThirdpartyPlugin.subscribe('dexie', function () {
-                var db = legionsThirdpartyPlugin.plugins.dexie.getInstanceDexie(tableName);
+        if (!runScriptsSdk.plugins.dexie) {
+            runScriptsSdk.subscribe('dexie', function () {
+                var db = runScriptsSdk.plugins.dexie.getInstanceDexie(tableName);
                 if (db && db.db) {
                     _this.selectItem = db.db.table('selectData');
                 }
             });
         }
         else {
-            var db = legionsThirdpartyPlugin.plugins.dexie.getInstanceDexie(tableName);
+            var db = runScriptsSdk.plugins.dexie.getInstanceDexie(tableName);
             if (db && db.db) {
                 _this.selectItem = db.db.table('selectData');
             }

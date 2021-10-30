@@ -1,5 +1,5 @@
+import { ViewModel } from 'brain-store-utils/types/create-view-model';
 import { ModalView } from './modalView';
-import { ViewModel } from 'brain-store-utils';
 export interface IResizable {
     /**
      *

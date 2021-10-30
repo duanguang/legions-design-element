@@ -1,9 +1,9 @@
 /** @format */
 import LegionsStore from '../LegionsStore';
 import { IStoreBaseMeta } from '../LegionsStore/interface';
-import { ViewModel } from 'brain-store-utils';
 import { ObservableMap } from 'mobx';
 import { ConditionView } from './conditionView';
+import { ViewModel } from 'brain-store-utils/types/create-view-model';
 declare type Proxify<T> = {
     [P in keyof T]: T[P];
 };

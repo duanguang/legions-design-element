@@ -1,11 +1,7 @@
 /** @format */
 import Store from 'legions/store';
-import { StoreSpace } from 'brain-store';
+import { StaticMeta } from 'brain-store/types/api/meta';
 import { History } from '../typings/history';
-interface IDispatchPrams {
-    name: string;
-    scope: string;
-}
 export interface ISchedule {
     /**
      * 取消数据订阅
@@ -14,15 +10,10 @@ export interface ISchedule {
      */
     unsubscribe: () => void | Function;
 }
-interface IContext {
-    dispatch: (name: IDispatchPrams, payload: Object) => {};
-    _manage: any;
-}
-export interface IStoreBaseMeta extends StoreSpace.PramsMeta {
+export interface IStoreBaseMeta extends StaticMeta {
 }
 export default class StoreBase<T = {}, P = {}> extends Store {
     static meta: IStoreBaseMeta;
-    context: T & IContext;
     history: History;
     /**
      *
@@ -33,4 +24,3 @@ export default class StoreBase<T = {}, P = {}> extends Store {
      */
     schedule(...funcs: Array<any>): ISchedule;
 }
-export {};

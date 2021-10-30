@@ -1,13 +1,13 @@
-import { observablePromise } from 'legions/store-utils';
+import { observablePromise, ObservablePromiseModel } from 'legions/store-utils';
 import { ISelectDatabaseDB } from '../../db/interface';
 import { ObservableMap } from 'mobx';
-import { ViewModel } from 'brain-store-utils';
 import { IAntdSelectOption } from '../../interface/antd';
 import LegionsStoreForm from '..';
 import { HLFormLocalView, HlFormView, IOtherView } from '../proFormStore';
 import { LabelWithDatePickerModel, LabelWithSelectModel, LabelWithInputModel, LabelWithInputNumberModel, LabelWithMonthPickerModel, LabelWithRadioButtonModel, LabelWithRangePickerModel, LabelWithSwitchModel, LabelWithTextModel, LabelWithUploadModel, LabelWithDatePickerPartialModel, LabelWithInputPartialModel, LabelWithInputNumberPartialModel, LabelWithMonthPickerPartialModel, LabelWithRadioButtonPartialModel, LabelWithRangePickerPartialModel, LabelWithSwitchPartialModel, LabelWithTextPartialModel, LabelWithUploadPartialModel, LabelWithCheckboxModel, LabelWithCascaderModel } from '../../LegionsProForm/interface';
 import LegionsModels from '../../LegionsModels';
 import { TabsFormView, TabsItemView } from '../tabsView';
+import { ViewModel } from 'brain-store-utils/types/create-view-model';
 export interface IErrorView {
     /**
      * 只读
@@ -187,7 +187,7 @@ export interface ISelectAutoQuery<Model = {}> {
      * 当外部数据不确定时，此时我们需要一个适配器转换从接口中取到的数据，用于绑定下拉选项
      * @memberof ISelectAutoQuery
      */
-    transform: (value: observablePromise.PramsResult<InstanceType<typeof LegionsModels.SelectKeyValue>>) => {
+    transform: (value: ObservablePromiseModel<InstanceType<typeof LegionsModels.SelectKeyValue>>) => {
         total: number;
         data: IAntdSelectOption[];
     };
@@ -203,7 +203,7 @@ export interface ISelectAutoQuery<Model = {}> {
 }
 export interface ISelectOptions {
     keywords: string;
-    obData: ObservableMap<observablePromise.PramsResult<any>>;
+    obData: ObservableMap<ReturnType<typeof observablePromise>>;
 }
 export interface IObservableMap<K, V> extends ObservableMap<K, V> {
 }

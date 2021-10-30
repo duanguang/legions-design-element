@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-29 10:18:01
- * @LastEditTime: 2021-03-16 14:48:27
+ * @LastEditTime: 2021-08-09 23:02:48
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreForm/proFormStore.ts
@@ -13,7 +13,7 @@ import LegionsStore from '../LegionsStore';
 import {IStoreBaseMeta} from '../LegionsStore/interface';
 import { observable, action, StoreModules } from 'legions/store';
 import { observableViewModel, observablePromise } from 'legions/store-utils';
-import { ViewModel } from 'brain-store-utils';
+import {  ViewModel } from 'brain-store-utils/types/create-view-model';
 import {
     WrappedFormUtils,
     IAntdRule,
@@ -94,15 +94,7 @@ export class HlFormView {
    * @memberof HlFormView
    */
   @observable private _allElementList = [];
-  /**
-   *
-   * 错误信息组件节点集合
-   * @memberof HlFormView
-   */
-  @observable _errorReactNodeList: IObservableMap<
-    string,
-    ViewModel<ErrorViewModel> & Proxify<ErrorViewModel>
-  > = observable.map();
+
 
   /**
    *
@@ -114,15 +106,7 @@ export class HlFormView {
     IErrorView[]
   > = observable.map();
 
-  /**
-   * 错误信息组件节点集合 只读
-   *
-   * @returns
-   * @memberof HlFormView
-   */
-  @computed get computedErrorReactNodeList(): HlFormView['_errorReactNodeList'] {
-    return this._errorReactNodeList;
-  }
+
 
   @computed get computedAllElementList(): string[] {
     return this._allElementList;
@@ -151,22 +135,7 @@ export class HlFormView {
       }
       return value
   }
-  /**
-   * 获取全部错误信息
-   *
-   * @readonly
-   * @memberof HlFormView
-   */
-  @computed get computedErrorListView() {
-    const keys = this._errorListView.keys();
-    const data: Array<IErrorView> = [];
-    for (let item of keys) {
-      this._errorListView.get(item).map(entity => {
-        data.push(entity);
-      });
-    }
-    return data;
-  }
+  
 
   /**
    * 表单展示风格 舒适,迷你,紧凑
@@ -189,87 +158,7 @@ export class HlFormView {
       }
     })
   }
-  /**
-   *  添加错误信息和组件元素的关联关系，可通过组件name查出错误信息组件UID
-   *
-   * @param {string} componentCode 组件元素名称 对应iAntdProps.name值 唯一，不然会出现问题
-   * @param {string} errorUid // 错误信息组件生成的唯一uid
-   * @memberof HlFormView
-   */
-  @action _collectErrorReactNode(componentCode: string, errorUid: string) {
-    let errorViewModel = new ErrorViewModel();
-    errorViewModel.uid = errorUid;
-    this._errorReactNodeList.set(
-      componentCode,
-      observableViewModel<ErrorViewModel>(errorViewModel)
-    );
-  }
-  /**
-   * 设置错误信息，通过错误信息组件UID作为数据的主键
-   *
-   * @param {string} componentCode 组件元素名称 对应iAntdProps.name值 唯一，不然会出现问题
-   * @param {string} [errorListView] 错误信息
-   * @memberof HlFormView
-   */
-  @action setErrorErrorReactNodeList(
-    componentCode: string,
-    errorListView: Array<IErrorView>
-  ) {
-    if (this.computedErrorReactNodeList.has(componentCode)) {
-      /*  const canBeSubmit = errorListView.filter((item) => item.type === 'canBeSubmit')
-             const has = canBeSubmit.every((item) => item.status === 1) */
-      /* if (!has) {
-             this.computedErrorReactNodeList.get(componentCode).validateStatus ='error'
-         } */
-      errorListView.forEach(item => {
-        if (item.status !== 1) {
-          this.computedErrorReactNodeList.get(componentCode).validateStatus =
-            'error';
-        }
-      });
-      this._errorListView.set(
-        this.computedErrorReactNodeList.get(componentCode).uid,
-        errorListView
-      );
-    }
-  }
 
-  /**
-   *
-   * 忽略错误信息
-   * @param {string} componentCode 组件元素name
-   * @param {number} id 组件元素唯一id 对应errorListView的key
-   * @memberof HlFormView
-   */
-  @action handleIgnore(componentCode: string, id: number) {
-    if (this._errorReactNodeList.get(componentCode)) {
-      const uid = this._errorReactNodeList.get(componentCode).uid;
-      if (this._errorListView.get(uid)) {
-        const canBeSubmit = this._errorListView
-          .get(uid)
-          .filter(item => item.type === 'canBeSubmit' && item.key === id);
-        const AllcanBeSubmit = this._errorListView
-          .get(uid)
-          .every(item => item.type === 'canBeSubmit');
-        const entity = canBeSubmit.find(
-          items => items.componentCode === componentCode
-        );
-        const view = this.computedErrorReactNodeList.get(componentCode);
-
-        if (entity && entity.status === 2) {
-          entity.status = 1;
-          const has = this._errorListView
-            .get(uid)
-            .every(item => item.status === 1);
-          if (AllcanBeSubmit && has) {
-            view.validateStatus = '';
-          } else {
-            view.validateStatus = 'error';
-          }
-        }
-      }
-    }
-  }
   /**
    *
    * 收集组件钩子keys
@@ -431,7 +320,7 @@ export class HLFormLocalView {
         keywords: '',
         // @ts-ignore
         obData: observable.map<
-          observablePromise.PramsResult<any>
+        ReturnType<typeof observablePromise>
         >(),
       },
     ]);
@@ -646,7 +535,7 @@ export class HLFormLocalView {
             keywords: keyWords,
             // @ts-ignore
             obData: observable.map<
-              observablePromise.PramsResult<any>
+            ReturnType<typeof observablePromise>
             >(),
           });
           this._selectOptions.set(name, data);
@@ -716,7 +605,7 @@ export class HLFormLocalView {
             keyWords: keyWords,
             // @ts-ignore
             data: observable.map<
-              observablePromise.PramsResult<any>
+            ReturnType<typeof observablePromise>
             >(),
           },{});
           for (let i = 1; i <= item.obData.size; i++) {

@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.7-beta.19
+  *  legions-pro-design v0.0.8-beta.1
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -33,11 +33,13 @@ PERFORMANCE OF THIS SOFTWARE.
 var extendStatics = function(d, b) {
     extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
     return extendStatics(d, b);
 };
 
 function __extends(d, b) {
+    if (typeof b !== "function" && b !== null)
+        throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
     extendStatics(d, b);
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -426,12 +428,6 @@ var HlFormView = /** @class */ (function () {
         this._allElementList = [];
         /**
          *
-         * 错误信息组件节点集合
-         * @memberof HlFormView
-         */
-        this._errorReactNodeList = observable$1.map();
-        /**
-         *
          * 所有组件错误信息
          * @memberof HlFormView
          */
@@ -439,19 +435,6 @@ var HlFormView = /** @class */ (function () {
         this.formfields.observe(function (chan) {
         });
     }
-    Object.defineProperty(HlFormView.prototype, "computedErrorReactNodeList", {
-        /**
-         * 错误信息组件节点集合 只读
-         *
-         * @returns
-         * @memberof HlFormView
-         */
-        get: function () {
-            return this._errorReactNodeList;
-        },
-        enumerable: false,
-        configurable: true
-    });
     Object.defineProperty(HlFormView.prototype, "computedAllElementList", {
         get: function () {
             return this._allElementList;
@@ -522,37 +505,6 @@ var HlFormView = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
-    Object.defineProperty(HlFormView.prototype, "computedErrorListView", {
-        /**
-         * 获取全部错误信息
-         *
-         * @readonly
-         * @memberof HlFormView
-         */
-        get: function () {
-            var e_4, _a;
-            var keys = this._errorListView.keys();
-            var data = [];
-            try {
-                for (var keys_1 = __values(keys), keys_1_1 = keys_1.next(); !keys_1_1.done; keys_1_1 = keys_1.next()) {
-                    var item = keys_1_1.value;
-                    this._errorListView.get(item).map(function (entity) {
-                        data.push(entity);
-                    });
-                }
-            }
-            catch (e_4_1) { e_4 = { error: e_4_1 }; }
-            finally {
-                try {
-                    if (keys_1_1 && !keys_1_1.done && (_a = keys_1.return)) _a.call(keys_1);
-                }
-                finally { if (e_4) throw e_4.error; }
-            }
-            return data;
-        },
-        enumerable: false,
-        configurable: true
-    });
     Object.defineProperty(HlFormView.prototype, "computedFormSize", {
         /**
          * 表单展示风格 舒适,迷你,紧凑
@@ -576,76 +528,6 @@ var HlFormView = /** @class */ (function () {
                 _this.renderNodeQueue.set(name, name);
             }
         });
-    };
-    /**
-     *  添加错误信息和组件元素的关联关系，可通过组件name查出错误信息组件UID
-     *
-     * @param {string} componentCode 组件元素名称 对应iAntdProps.name值 唯一，不然会出现问题
-     * @param {string} errorUid // 错误信息组件生成的唯一uid
-     * @memberof HlFormView
-     */
-    HlFormView.prototype._collectErrorReactNode = function (componentCode, errorUid) {
-        var errorViewModel = new ErrorViewModel();
-        errorViewModel.uid = errorUid;
-        this._errorReactNodeList.set(componentCode, observableViewModel(errorViewModel));
-    };
-    /**
-     * 设置错误信息，通过错误信息组件UID作为数据的主键
-     *
-     * @param {string} componentCode 组件元素名称 对应iAntdProps.name值 唯一，不然会出现问题
-     * @param {string} [errorListView] 错误信息
-     * @memberof HlFormView
-     */
-    HlFormView.prototype.setErrorErrorReactNodeList = function (componentCode, errorListView) {
-        var _this = this;
-        if (this.computedErrorReactNodeList.has(componentCode)) {
-            /*  const canBeSubmit = errorListView.filter((item) => item.type === 'canBeSubmit')
-                   const has = canBeSubmit.every((item) => item.status === 1) */
-            /* if (!has) {
-                   this.computedErrorReactNodeList.get(componentCode).validateStatus ='error'
-               } */
-            errorListView.forEach(function (item) {
-                if (item.status !== 1) {
-                    _this.computedErrorReactNodeList.get(componentCode).validateStatus =
-                        'error';
-                }
-            });
-            this._errorListView.set(this.computedErrorReactNodeList.get(componentCode).uid, errorListView);
-        }
-    };
-    /**
-     *
-     * 忽略错误信息
-     * @param {string} componentCode 组件元素name
-     * @param {number} id 组件元素唯一id 对应errorListView的key
-     * @memberof HlFormView
-     */
-    HlFormView.prototype.handleIgnore = function (componentCode, id) {
-        if (this._errorReactNodeList.get(componentCode)) {
-            var uid = this._errorReactNodeList.get(componentCode).uid;
-            if (this._errorListView.get(uid)) {
-                var canBeSubmit = this._errorListView
-                    .get(uid)
-                    .filter(function (item) { return item.type === 'canBeSubmit' && item.key === id; });
-                var AllcanBeSubmit = this._errorListView
-                    .get(uid)
-                    .every(function (item) { return item.type === 'canBeSubmit'; });
-                var entity = canBeSubmit.find(function (items) { return items.componentCode === componentCode; });
-                var view = this.computedErrorReactNodeList.get(componentCode);
-                if (entity && entity.status === 2) {
-                    entity.status = 1;
-                    var has = this._errorListView
-                        .get(uid)
-                        .every(function (item) { return item.status === 1; });
-                    if (AllcanBeSubmit && has) {
-                        view.validateStatus = '';
-                    }
-                    else {
-                        view.validateStatus = 'error';
-                    }
-                }
-            }
-        }
     };
     /**
      *
@@ -749,16 +631,7 @@ var HlFormView = /** @class */ (function () {
     __decorate([
         observable$1,
         __metadata("design:type", Object)
-    ], HlFormView.prototype, "_errorReactNodeList", void 0);
-    __decorate([
-        observable$1,
-        __metadata("design:type", Object)
     ], HlFormView.prototype, "_errorListView", void 0);
-    __decorate([
-        computed,
-        __metadata("design:type", Object),
-        __metadata("design:paramtypes", [])
-    ], HlFormView.prototype, "computedErrorReactNodeList", null);
     __decorate([
         computed,
         __metadata("design:type", Array),
@@ -778,11 +651,6 @@ var HlFormView = /** @class */ (function () {
         computed,
         __metadata("design:type", Object),
         __metadata("design:paramtypes", [])
-    ], HlFormView.prototype, "computedErrorListView", null);
-    __decorate([
-        computed,
-        __metadata("design:type", Object),
-        __metadata("design:paramtypes", [])
     ], HlFormView.prototype, "computedFormSize", null);
     __decorate([
         action$1,
@@ -790,24 +658,6 @@ var HlFormView = /** @class */ (function () {
         __metadata("design:paramtypes", [String]),
         __metadata("design:returntype", void 0)
     ], HlFormView.prototype, "updateFormSize", null);
-    __decorate([
-        action$1,
-        __metadata("design:type", Function),
-        __metadata("design:paramtypes", [String, String]),
-        __metadata("design:returntype", void 0)
-    ], HlFormView.prototype, "_collectErrorReactNode", null);
-    __decorate([
-        action$1,
-        __metadata("design:type", Function),
-        __metadata("design:paramtypes", [String, Array]),
-        __metadata("design:returntype", void 0)
-    ], HlFormView.prototype, "setErrorErrorReactNodeList", null);
-    __decorate([
-        action$1,
-        __metadata("design:type", Function),
-        __metadata("design:paramtypes", [String, Number]),
-        __metadata("design:returntype", void 0)
-    ], HlFormView.prototype, "handleIgnore", null);
     __decorate([
         action$1,
         __metadata("design:type", Function),
@@ -1348,7 +1198,7 @@ var ProFormStore = /** @class */ (function (_super) {
      * @memberof AbstractForm
      */
     ProFormStore.prototype.nextElement = function (formElementUid, formUid, nextElementName) {
-        var e_5, _a;
+        var e_4, _a;
         var store = this.get(formUid);
         if (store && store.enableEnterSwitch) {
             /*  const elementListKeys = store.elementList.keys() */
@@ -1359,12 +1209,12 @@ var ProFormStore = /** @class */ (function (_super) {
                     elementListKeys_1.push(item);
                 }
             }
-            catch (e_5_1) { e_5 = { error: e_5_1 }; }
+            catch (e_4_1) { e_4 = { error: e_4_1 }; }
             finally {
                 try {
                     if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
                 }
-                finally { if (e_5) throw e_5.error; }
+                finally { if (e_4) throw e_4.error; }
             }
             /**  解决日期组件回车被阻止冒泡，导致回车键没法切换到下一个元素*/
             elementListKeys_1.map(function (item, index) {

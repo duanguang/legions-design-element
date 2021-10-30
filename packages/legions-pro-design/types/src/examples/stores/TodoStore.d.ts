@@ -1,5 +1,4 @@
 import StoreBase, { IStoreBaseMeta } from '../../common/stores/StoreBase';
-import { observablePromise } from 'legions/store-utils';
 import { MockContainerEntity } from '../models/mockEntity';
 interface IContext {
 }
@@ -11,7 +10,10 @@ export interface ITriggerEventPrams {
 }
 export default class TodoStore extends StoreBase<IContext> {
     static meta: IStoreBaseMeta;
-    obMockData: observablePromise.PramsResult<MockContainerEntity>;
+    obMockData: import("legions/store-utils").ObservablePromiseModel<MockContainerEntity>;
+    test: {
+        name: string;
+    };
     constructor(context: any);
     watch: () => void;
     getMockData(): void;

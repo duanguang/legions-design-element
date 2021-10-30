@@ -1,7 +1,6 @@
 import { ObservableMap } from 'mobx';
-import { observablePromise } from 'legions/store-utils';
-import { ViewModel } from 'brain-store-utils';
-import { HeadersPrams } from 'legions/fetch';
+import { ObservablePromiseModel } from 'legions/store-utils';
+import { ViewModel } from 'brain-store-utils/types/create-view-model';
 import { IAntdSelectOption } from '../../interface/antd';
 import { ConditionView } from '../conditionView';
 import LegionsModels from '../../LegionsModels';
@@ -14,8 +13,11 @@ export interface IObservableMap<K, V> extends ObservableMap<V> {
 }
 export interface ISelectOptions {
     keywords?: string;
-    obData: observablePromise.PramsResult<any>;
+    obData: ObservablePromiseModel<any>;
 }
+declare type HeadersPrams = {
+    'Content-Type'?: 'application/json' | 'application/x-www-form-urlencoded';
+};
 export interface ISelectAutoQuery<Model = {}> {
     /**
      * 查询参数
@@ -81,7 +83,7 @@ export interface ISelectAutoQuery<Model = {}> {
      * 当外部数据不确定时，此时我们需要一个适配器转换从接口中取到的数据，用于绑定下拉选项
      * @memberof ISelectAutoQuery
      */
-    transform: (value: observablePromise.PramsResult<InstanceType<typeof LegionsModels.SelectKeyValue>>) => {
+    transform: (value: ObservablePromiseModel<InstanceType<typeof LegionsModels.SelectKeyValue>>) => {
         total: number;
         data: IAntdSelectOption[];
     };

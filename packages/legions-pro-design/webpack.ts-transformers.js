@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-05-30 21:04:12
- * @LastEditTime: 2021-07-20 00:02:24
+ * @LastEditTime: 2021-08-09 22:44:50
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/webpack.ts-transformers.js
@@ -28,7 +28,6 @@ const getCustomTransformers = () => ({ before: [createTransformer([
       { name: 'LegionsProTabsForm', props: 'uniqueUid' },
       { name: 'LegionsProTabsForm', props: 'uniqueUid' },
       { name: 'LegionsProConditions', props: 'uniqueUid' },
-      { name: 'HLDataImport', props: 'uniqueUid' },
     ],
   }),] });
 // 4. export getCustomTransformers

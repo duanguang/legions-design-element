@@ -1,0 +1,1287 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Form:Input Form: clear input 1`] = `
+initialize {
+  "0": Node {
+    "attribs": Object {
+      "class": "ant-form ant-form-horizontal legions-pro-form formc6bb5b94951c43a57e1a1ec4135c7ccd",
+    },
+    "children": Array [
+      Node {
+        "attribs": Object {
+          "class": "ant-row-flex",
+        },
+        "children": Array [
+          Node {
+            "attribs": Object {
+              "class": "ant-col-12",
+              "data-id": "text",
+              "style": "display: block;",
+            },
+            "children": Array [
+              Node {
+                "attribs": Object {
+                  "class": "ant-row elementtext5125ecec8040b78be676b40c31835901",
+                },
+                "children": Array [
+                  Node {
+                    "attribs": Object {
+                      "class": "ant-row ant-form-item ant-form-item-no-colon                form-item-small form-item-row-height",
+                    },
+                    "children": Array [
+                      Node {
+                        "attribs": Object {
+                          "class": "ant-col-5 ant-form-item-label",
+                        },
+                        "children": Array [
+                          Node {
+                            "attribs": Object {
+                              "class": "ant-form-item-required",
+                              "for": "text",
+                              "title": "文本框",
+                            },
+                            "children": Array [
+                              Node {
+                                "data": "文本框",
+                                "next": null,
+                                "parent": [Circular],
+                                "prev": null,
+                                "type": "text",
+                              },
+                            ],
+                            "name": "label",
+                            "namespace": "http://www.w3.org/1999/xhtml",
+                            "next": null,
+                            "parent": [Circular],
+                            "prev": null,
+                            "type": "tag",
+                            "x-attribsNamespace": Object {
+                              "class": undefined,
+                              "for": undefined,
+                              "title": undefined,
+                            },
+                            "x-attribsPrefix": Object {
+                              "class": undefined,
+                              "for": undefined,
+                              "title": undefined,
+                            },
+                          },
+                        ],
+                        "name": "div",
+                        "namespace": "http://www.w3.org/1999/xhtml",
+                        "next": Node {
+                          "attribs": Object {
+                            "class": "ant-col-7 ant-form-item-control-wrapper",
+                          },
+                          "children": Array [
+                            Node {
+                              "attribs": Object {
+                                "class": "ant-form-item-control has-success",
+                              },
+                              "children": Array [
+                                Node {
+                                  "attribs": Object {
+                                    "class": "ant-input-affix-wrapper",
+                                  },
+                                  "children": Array [
+                                    Node {
+                                      "attribs": Object {
+                                        "class": "ant-input ant-input-sm ant-input-disabled",
+                                        "data-__meta": "[object Object]",
+                                        "disabled": "",
+                                        "id": "text",
+                                        "maxlength": "50",
+                                        "placeholder": "",
+                                        "type": "text",
+                                        "value": "清除内容",
+                                      },
+                                      "children": Array [],
+                                      "name": "input",
+                                      "namespace": "http://www.w3.org/1999/xhtml",
+                                      "next": Node {
+                                        "attribs": Object {
+                                          "class": "ant-input-suffix",
+                                        },
+                                        "children": Array [
+                                          Node {
+                                            "attribs": Object {},
+                                            "children": Array [],
+                                            "name": "div",
+                                            "namespace": "http://www.w3.org/1999/xhtml",
+                                            "next": null,
+                                            "parent": [Circular],
+                                            "prev": null,
+                                            "type": "tag",
+                                            "x-attribsNamespace": Object {},
+                                            "x-attribsPrefix": Object {},
+                                          },
+                                        ],
+                                        "name": "span",
+                                        "namespace": "http://www.w3.org/1999/xhtml",
+                                        "next": null,
+                                        "parent": [Circular],
+                                        "prev": [Circular],
+                                        "type": "tag",
+                                        "x-attribsNamespace": Object {
+                                          "class": undefined,
+                                        },
+                                        "x-attribsPrefix": Object {
+                                          "class": undefined,
+                                        },
+                                      },
+                                      "parent": [Circular],
+                                      "prev": null,
+                                      "type": "tag",
+                                      "x-attribsNamespace": Object {
+                                        "class": undefined,
+                                        "data-__meta": undefined,
+                                        "disabled": undefined,
+                                        "id": undefined,
+                                        "maxlength": undefined,
+                                        "placeholder": undefined,
+                                        "type": undefined,
+                                        "value": undefined,
+                                      },
+                                      "x-attribsPrefix": Object {
+                                        "class": undefined,
+                                        "data-__meta": undefined,
+                                        "disabled": undefined,
+                                        "id": undefined,
+                                        "maxlength": undefined,
+                                        "placeholder": undefined,
+                                        "type": undefined,
+                                        "value": undefined,
+                                      },
+                                    },
+                                    Node {
+                                      "attribs": Object {
+                                        "class": "ant-input-suffix",
+                                      },
+                                      "children": Array [
+                                        Node {
+                                          "attribs": Object {},
+                                          "children": Array [],
+                                          "name": "div",
+                                          "namespace": "http://www.w3.org/1999/xhtml",
+                                          "next": null,
+                                          "parent": [Circular],
+                                          "prev": null,
+                                          "type": "tag",
+                                          "x-attribsNamespace": Object {},
+                                          "x-attribsPrefix": Object {},
+                                        },
+                                      ],
+                                      "name": "span",
+                                      "namespace": "http://www.w3.org/1999/xhtml",
+                                      "next": null,
+                                      "parent": [Circular],
+                                      "prev": Node {
+                                        "attribs": Object {
+                                          "class": "ant-input ant-input-sm ant-input-disabled",
+                                          "data-__meta": "[object Object]",
+                                          "disabled": "",
+                                          "id": "text",
+                                          "maxlength": "50",
+                                          "placeholder": "",
+                                          "type": "text",
+                                          "value": "清除内容",
+                                        },
+                                        "children": Array [],
+                                        "name": "input",
+                                        "namespace": "http://www.w3.org/1999/xhtml",
+                                        "next": [Circular],
+                                        "parent": [Circular],
+                                        "prev": null,
+                                        "type": "tag",
+                                        "x-attribsNamespace": Object {
+                                          "class": undefined,
+                                          "data-__meta": undefined,
+                                          "disabled": undefined,
+                                          "id": undefined,
+                                          "maxlength": undefined,
+                                          "placeholder": undefined,
+                                          "type": undefined,
+                                          "value": undefined,
+                                        },
+                                        "x-attribsPrefix": Object {
+                                          "class": undefined,
+                                          "data-__meta": undefined,
+                                          "disabled": undefined,
+                                          "id": undefined,
+                                          "maxlength": undefined,
+                                          "placeholder": undefined,
+                                          "type": undefined,
+                                          "value": undefined,
+                                        },
+                                      },
+                                      "type": "tag",
+                                      "x-attribsNamespace": Object {
+                                        "class": undefined,
+                                      },
+                                      "x-attribsPrefix": Object {
+                                        "class": undefined,
+                                      },
+                                    },
+                                  ],
+                                  "name": "span",
+                                  "namespace": "http://www.w3.org/1999/xhtml",
+                                  "next": null,
+                                  "parent": [Circular],
+                                  "prev": null,
+                                  "type": "tag",
+                                  "x-attribsNamespace": Object {
+                                    "class": undefined,
+                                  },
+                                  "x-attribsPrefix": Object {
+                                    "class": undefined,
+                                  },
+                                },
+                              ],
+                              "name": "div",
+                              "namespace": "http://www.w3.org/1999/xhtml",
+                              "next": null,
+                              "parent": [Circular],
+                              "prev": null,
+                              "type": "tag",
+                              "x-attribsNamespace": Object {
+                                "class": undefined,
+                              },
+                              "x-attribsPrefix": Object {
+                                "class": undefined,
+                              },
+                            },
+                          ],
+                          "name": "div",
+                          "namespace": "http://www.w3.org/1999/xhtml",
+                          "next": null,
+                          "parent": [Circular],
+                          "prev": [Circular],
+                          "type": "tag",
+                          "x-attribsNamespace": Object {
+                            "class": undefined,
+                          },
+                          "x-attribsPrefix": Object {
+                            "class": undefined,
+                          },
+                        },
+                        "parent": [Circular],
+                        "prev": null,
+                        "type": "tag",
+                        "x-attribsNamespace": Object {
+                          "class": undefined,
+                        },
+                        "x-attribsPrefix": Object {
+                          "class": undefined,
+                        },
+                      },
+                      Node {
+                        "attribs": Object {
+                          "class": "ant-col-7 ant-form-item-control-wrapper",
+                        },
+                        "children": Array [
+                          Node {
+                            "attribs": Object {
+                              "class": "ant-form-item-control has-success",
+                            },
+                            "children": Array [
+                              Node {
+                                "attribs": Object {
+                                  "class": "ant-input-affix-wrapper",
+                                },
+                                "children": Array [
+                                  Node {
+                                    "attribs": Object {
+                                      "class": "ant-input ant-input-sm ant-input-disabled",
+                                      "data-__meta": "[object Object]",
+                                      "disabled": "",
+                                      "id": "text",
+                                      "maxlength": "50",
+                                      "placeholder": "",
+                                      "type": "text",
+                                      "value": "清除内容",
+                                    },
+                                    "children": Array [],
+                                    "name": "input",
+                                    "namespace": "http://www.w3.org/1999/xhtml",
+                                    "next": Node {
+                                      "attribs": Object {
+                                        "class": "ant-input-suffix",
+                                      },
+                                      "children": Array [
+                                        Node {
+                                          "attribs": Object {},
+                                          "children": Array [],
+                                          "name": "div",
+                                          "namespace": "http://www.w3.org/1999/xhtml",
+                                          "next": null,
+                                          "parent": [Circular],
+                                          "prev": null,
+                                          "type": "tag",
+                                          "x-attribsNamespace": Object {},
+                                          "x-attribsPrefix": Object {},
+                                        },
+                                      ],
+                                      "name": "span",
+                                      "namespace": "http://www.w3.org/1999/xhtml",
+                                      "next": null,
+                                      "parent": [Circular],
+                                      "prev": [Circular],
+                                      "type": "tag",
+                                      "x-attribsNamespace": Object {
+                                        "class": undefined,
+                                      },
+                                      "x-attribsPrefix": Object {
+                                        "class": undefined,
+                                      },
+                                    },
+                                    "parent": [Circular],
+                                    "prev": null,
+                                    "type": "tag",
+                                    "x-attribsNamespace": Object {
+                                      "class": undefined,
+                                      "data-__meta": undefined,
+                                      "disabled": undefined,
+                                      "id": undefined,
+                                      "maxlength": undefined,
+                                      "placeholder": undefined,
+                                      "type": undefined,
+                                      "value": undefined,
+                                    },
+                                    "x-attribsPrefix": Object {
+                                      "class": undefined,
+                                      "data-__meta": undefined,
+                                      "disabled": undefined,
+                                      "id": undefined,
+                                      "maxlength": undefined,
+                                      "placeholder": undefined,
+                                      "type": undefined,
+                                      "value": undefined,
+                                    },
+                                  },
+                                  Node {
+                                    "attribs": Object {
+                                      "class": "ant-input-suffix",
+                                    },
+                                    "children": Array [
+                                      Node {
+                                        "attribs": Object {},
+                                        "children": Array [],
+                                        "name": "div",
+                                        "namespace": "http://www.w3.org/1999/xhtml",
+                                        "next": null,
+                                        "parent": [Circular],
+                                        "prev": null,
+                                        "type": "tag",
+                                        "x-attribsNamespace": Object {},
+                                        "x-attribsPrefix": Object {},
+                                      },
+                                    ],
+                                    "name": "span",
+                                    "namespace": "http://www.w3.org/1999/xhtml",
+                                    "next": null,
+                                    "parent": [Circular],
+                                    "prev": Node {
+                                      "attribs": Object {
+                                        "class": "ant-input ant-input-sm ant-input-disabled",
+                                        "data-__meta": "[object Object]",
+                                        "disabled": "",
+                                        "id": "text",
+                                        "maxlength": "50",
+                                        "placeholder": "",
+                                        "type": "text",
+                                        "value": "清除内容",
+                                      },
+                                      "children": Array [],
+                                      "name": "input",
+                                      "namespace": "http://www.w3.org/1999/xhtml",
+                                      "next": [Circular],
+                                      "parent": [Circular],
+                                      "prev": null,
+                                      "type": "tag",
+                                      "x-attribsNamespace": Object {
+                                        "class": undefined,
+                                        "data-__meta": undefined,
+                                        "disabled": undefined,
+                                        "id": undefined,
+                                        "maxlength": undefined,
+                                        "placeholder": undefined,
+                                        "type": undefined,
+                                        "value": undefined,
+                                      },
+                                      "x-attribsPrefix": Object {
+                                        "class": undefined,
+                                        "data-__meta": undefined,
+                                        "disabled": undefined,
+                                        "id": undefined,
+                                        "maxlength": undefined,
+                                        "placeholder": undefined,
+                                        "type": undefined,
+                                        "value": undefined,
+                                      },
+                                    },
+                                    "type": "tag",
+                                    "x-attribsNamespace": Object {
+                                      "class": undefined,
+                                    },
+                                    "x-attribsPrefix": Object {
+                                      "class": undefined,
+                                    },
+                                  },
+                                ],
+                                "name": "span",
+                                "namespace": "http://www.w3.org/1999/xhtml",
+                                "next": null,
+                                "parent": [Circular],
+                                "prev": null,
+                                "type": "tag",
+                                "x-attribsNamespace": Object {
+                                  "class": undefined,
+                                },
+                                "x-attribsPrefix": Object {
+                                  "class": undefined,
+                                },
+                              },
+                            ],
+                            "name": "div",
+                            "namespace": "http://www.w3.org/1999/xhtml",
+                            "next": null,
+                            "parent": [Circular],
+                            "prev": null,
+                            "type": "tag",
+                            "x-attribsNamespace": Object {
+                              "class": undefined,
+                            },
+                            "x-attribsPrefix": Object {
+                              "class": undefined,
+                            },
+                          },
+                        ],
+                        "name": "div",
+                        "namespace": "http://www.w3.org/1999/xhtml",
+                        "next": null,
+                        "parent": [Circular],
+                        "prev": Node {
+                          "attribs": Object {
+                            "class": "ant-col-5 ant-form-item-label",
+                          },
+                          "children": Array [
+                            Node {
+                              "attribs": Object {
+                                "class": "ant-form-item-required",
+                                "for": "text",
+                                "title": "文本框",
+                              },
+                              "children": Array [
+                                Node {
+                                  "data": "文本框",
+                                  "next": null,
+                                  "parent": [Circular],
+                                  "prev": null,
+                                  "type": "text",
+                                },
+                              ],
+                              "name": "label",
+                              "namespace": "http://www.w3.org/1999/xhtml",
+                              "next": null,
+                              "parent": [Circular],
+                              "prev": null,
+                              "type": "tag",
+                              "x-attribsNamespace": Object {
+                                "class": undefined,
+                                "for": undefined,
+                                "title": undefined,
+                              },
+                              "x-attribsPrefix": Object {
+                                "class": undefined,
+                                "for": undefined,
+                                "title": undefined,
+                              },
+                            },
+                          ],
+                          "name": "div",
+                          "namespace": "http://www.w3.org/1999/xhtml",
+                          "next": [Circular],
+                          "parent": [Circular],
+                          "prev": null,
+                          "type": "tag",
+                          "x-attribsNamespace": Object {
+                            "class": undefined,
+                          },
+                          "x-attribsPrefix": Object {
+                            "class": undefined,
+                          },
+                        },
+                        "type": "tag",
+                        "x-attribsNamespace": Object {
+                          "class": undefined,
+                        },
+                        "x-attribsPrefix": Object {
+                          "class": undefined,
+                        },
+                      },
+                    ],
+                    "name": "div",
+                    "namespace": "http://www.w3.org/1999/xhtml",
+                    "next": null,
+                    "parent": [Circular],
+                    "prev": null,
+                    "type": "tag",
+                    "x-attribsNamespace": Object {
+                      "class": undefined,
+                    },
+                    "x-attribsPrefix": Object {
+                      "class": undefined,
+                    },
+                  },
+                ],
+                "name": "div",
+                "namespace": "http://www.w3.org/1999/xhtml",
+                "next": null,
+                "parent": [Circular],
+                "prev": null,
+                "type": "tag",
+                "x-attribsNamespace": Object {
+                  "class": undefined,
+                },
+                "x-attribsPrefix": Object {
+                  "class": undefined,
+                },
+              },
+            ],
+            "name": "div",
+            "namespace": "http://www.w3.org/1999/xhtml",
+            "next": null,
+            "parent": [Circular],
+            "prev": null,
+            "type": "tag",
+            "x-attribsNamespace": Object {
+              "class": undefined,
+              "data-id": undefined,
+              "style": undefined,
+            },
+            "x-attribsPrefix": Object {
+              "class": undefined,
+              "data-id": undefined,
+              "style": undefined,
+            },
+          },
+        ],
+        "name": "div",
+        "namespace": "http://www.w3.org/1999/xhtml",
+        "next": null,
+        "parent": [Circular],
+        "prev": null,
+        "type": "tag",
+        "x-attribsNamespace": Object {
+          "class": undefined,
+        },
+        "x-attribsPrefix": Object {
+          "class": undefined,
+        },
+      },
+    ],
+    "name": "form",
+    "namespace": "http://www.w3.org/1999/xhtml",
+    "next": null,
+    "parent": Node {
+      "children": Array [
+        [Circular],
+      ],
+      "name": "root",
+      "next": null,
+      "parent": null,
+      "prev": null,
+      "type": "root",
+    },
+    "prev": null,
+    "type": "tag",
+    "x-attribsNamespace": Object {
+      "class": undefined,
+    },
+    "x-attribsPrefix": Object {
+      "class": undefined,
+    },
+  },
+  "_root": [Circular],
+  "length": 1,
+  "options": Object {
+    "decodeEntities": true,
+    "xml": false,
+  },
+}
+`;
+
+exports[`Form:Input Form: clear input 2`] = `
+initialize {
+  "0": Node {
+    "attribs": Object {
+      "class": "ant-form ant-form-horizontal legions-pro-form formc6bb5b94951c43a57e1a1ec4135c7ccd",
+    },
+    "children": Array [
+      Node {
+        "attribs": Object {
+          "class": "ant-row-flex",
+        },
+        "children": Array [
+          Node {
+            "attribs": Object {
+              "class": "ant-col-12",
+              "data-id": "text",
+              "style": "display: block;",
+            },
+            "children": Array [
+              Node {
+                "attribs": Object {
+                  "class": "ant-row elementtext650f8595dd0a7e30914f7c817ffec8aa",
+                },
+                "children": Array [
+                  Node {
+                    "attribs": Object {
+                      "class": "ant-row ant-form-item ant-form-item-no-colon                  form-item-small form-item-row-height",
+                    },
+                    "children": Array [
+                      Node {
+                        "attribs": Object {
+                          "class": "ant-col-5 ant-form-item-label",
+                        },
+                        "children": Array [
+                          Node {
+                            "attribs": Object {
+                              "class": "ant-form-item-required",
+                              "for": "text",
+                              "title": "文本框",
+                            },
+                            "children": Array [
+                              Node {
+                                "data": "文本框",
+                                "next": null,
+                                "parent": [Circular],
+                                "prev": null,
+                                "type": "text",
+                              },
+                            ],
+                            "name": "label",
+                            "namespace": "http://www.w3.org/1999/xhtml",
+                            "next": null,
+                            "parent": [Circular],
+                            "prev": null,
+                            "type": "tag",
+                            "x-attribsNamespace": Object {
+                              "class": undefined,
+                              "for": undefined,
+                              "title": undefined,
+                            },
+                            "x-attribsPrefix": Object {
+                              "class": undefined,
+                              "for": undefined,
+                              "title": undefined,
+                            },
+                          },
+                        ],
+                        "name": "div",
+                        "namespace": "http://www.w3.org/1999/xhtml",
+                        "next": Node {
+                          "attribs": Object {
+                            "class": "ant-col-7 ant-form-item-control-wrapper",
+                          },
+                          "children": Array [
+                            Node {
+                              "attribs": Object {
+                                "class": "ant-form-item-control has-success",
+                              },
+                              "children": Array [
+                                Node {
+                                  "attribs": Object {
+                                    "class": "ant-input-affix-wrapper",
+                                  },
+                                  "children": Array [
+                                    Node {
+                                      "attribs": Object {
+                                        "class": "ant-input ant-input-sm",
+                                        "data-__meta": "[object Object]",
+                                        "id": "text",
+                                        "maxlength": "50",
+                                        "placeholder": "",
+                                        "type": "text",
+                                        "value": "清除内容",
+                                      },
+                                      "children": Array [],
+                                      "name": "input",
+                                      "namespace": "http://www.w3.org/1999/xhtml",
+                                      "next": Node {
+                                        "attribs": Object {
+                                          "class": "ant-input-suffix",
+                                        },
+                                        "children": Array [
+                                          Node {
+                                            "attribs": Object {},
+                                            "children": Array [
+                                              Node {
+                                                "attribs": Object {
+                                                  "class": "anticon anticon-close-circle",
+                                                },
+                                                "children": Array [],
+                                                "name": "i",
+                                                "namespace": "http://www.w3.org/1999/xhtml",
+                                                "next": null,
+                                                "parent": [Circular],
+                                                "prev": null,
+                                                "type": "tag",
+                                                "x-attribsNamespace": Object {
+                                                  "class": undefined,
+                                                },
+                                                "x-attribsPrefix": Object {
+                                                  "class": undefined,
+                                                },
+                                              },
+                                            ],
+                                            "name": "div",
+                                            "namespace": "http://www.w3.org/1999/xhtml",
+                                            "next": null,
+                                            "parent": [Circular],
+                                            "prev": null,
+                                            "type": "tag",
+                                            "x-attribsNamespace": Object {},
+                                            "x-attribsPrefix": Object {},
+                                          },
+                                        ],
+                                        "name": "span",
+                                        "namespace": "http://www.w3.org/1999/xhtml",
+                                        "next": null,
+                                        "parent": [Circular],
+                                        "prev": [Circular],
+                                        "type": "tag",
+                                        "x-attribsNamespace": Object {
+                                          "class": undefined,
+                                        },
+                                        "x-attribsPrefix": Object {
+                                          "class": undefined,
+                                        },
+                                      },
+                                      "parent": [Circular],
+                                      "prev": null,
+                                      "type": "tag",
+                                      "x-attribsNamespace": Object {
+                                        "class": undefined,
+                                        "data-__meta": undefined,
+                                        "id": undefined,
+                                        "maxlength": undefined,
+                                        "placeholder": undefined,
+                                        "type": undefined,
+                                        "value": undefined,
+                                      },
+                                      "x-attribsPrefix": Object {
+                                        "class": undefined,
+                                        "data-__meta": undefined,
+                                        "id": undefined,
+                                        "maxlength": undefined,
+                                        "placeholder": undefined,
+                                        "type": undefined,
+                                        "value": undefined,
+                                      },
+                                    },
+                                    Node {
+                                      "attribs": Object {
+                                        "class": "ant-input-suffix",
+                                      },
+                                      "children": Array [
+                                        Node {
+                                          "attribs": Object {},
+                                          "children": Array [
+                                            Node {
+                                              "attribs": Object {
+                                                "class": "anticon anticon-close-circle",
+                                              },
+                                              "children": Array [],
+                                              "name": "i",
+                                              "namespace": "http://www.w3.org/1999/xhtml",
+                                              "next": null,
+                                              "parent": [Circular],
+                                              "prev": null,
+                                              "type": "tag",
+                                              "x-attribsNamespace": Object {
+                                                "class": undefined,
+                                              },
+                                              "x-attribsPrefix": Object {
+                                                "class": undefined,
+                                              },
+                                            },
+                                          ],
+                                          "name": "div",
+                                          "namespace": "http://www.w3.org/1999/xhtml",
+                                          "next": null,
+                                          "parent": [Circular],
+                                          "prev": null,
+                                          "type": "tag",
+                                          "x-attribsNamespace": Object {},
+                                          "x-attribsPrefix": Object {},
+                                        },
+                                      ],
+                                      "name": "span",
+                                      "namespace": "http://www.w3.org/1999/xhtml",
+                                      "next": null,
+                                      "parent": [Circular],
+                                      "prev": Node {
+                                        "attribs": Object {
+                                          "class": "ant-input ant-input-sm",
+                                          "data-__meta": "[object Object]",
+                                          "id": "text",
+                                          "maxlength": "50",
+                                          "placeholder": "",
+                                          "type": "text",
+                                          "value": "清除内容",
+                                        },
+                                        "children": Array [],
+                                        "name": "input",
+                                        "namespace": "http://www.w3.org/1999/xhtml",
+                                        "next": [Circular],
+                                        "parent": [Circular],
+                                        "prev": null,
+                                        "type": "tag",
+                                        "x-attribsNamespace": Object {
+                                          "class": undefined,
+                                          "data-__meta": undefined,
+                                          "id": undefined,
+                                          "maxlength": undefined,
+                                          "placeholder": undefined,
+                                          "type": undefined,
+                                          "value": undefined,
+                                        },
+                                        "x-attribsPrefix": Object {
+                                          "class": undefined,
+                                          "data-__meta": undefined,
+                                          "id": undefined,
+                                          "maxlength": undefined,
+                                          "placeholder": undefined,
+                                          "type": undefined,
+                                          "value": undefined,
+                                        },
+                                      },
+                                      "type": "tag",
+                                      "x-attribsNamespace": Object {
+                                        "class": undefined,
+                                      },
+                                      "x-attribsPrefix": Object {
+                                        "class": undefined,
+                                      },
+                                    },
+                                  ],
+                                  "name": "span",
+                                  "namespace": "http://www.w3.org/1999/xhtml",
+                                  "next": null,
+                                  "parent": [Circular],
+                                  "prev": null,
+                                  "type": "tag",
+                                  "x-attribsNamespace": Object {
+                                    "class": undefined,
+                                  },
+                                  "x-attribsPrefix": Object {
+                                    "class": undefined,
+                                  },
+                                },
+                              ],
+                              "name": "div",
+                              "namespace": "http://www.w3.org/1999/xhtml",
+                              "next": null,
+                              "parent": [Circular],
+                              "prev": null,
+                              "type": "tag",
+                              "x-attribsNamespace": Object {
+                                "class": undefined,
+                              },
+                              "x-attribsPrefix": Object {
+                                "class": undefined,
+                              },
+                            },
+                          ],
+                          "name": "div",
+                          "namespace": "http://www.w3.org/1999/xhtml",
+                          "next": null,
+                          "parent": [Circular],
+                          "prev": [Circular],
+                          "type": "tag",
+                          "x-attribsNamespace": Object {
+                            "class": undefined,
+                          },
+                          "x-attribsPrefix": Object {
+                            "class": undefined,
+                          },
+                        },
+                        "parent": [Circular],
+                        "prev": null,
+                        "type": "tag",
+                        "x-attribsNamespace": Object {
+                          "class": undefined,
+                        },
+                        "x-attribsPrefix": Object {
+                          "class": undefined,
+                        },
+                      },
+                      Node {
+                        "attribs": Object {
+                          "class": "ant-col-7 ant-form-item-control-wrapper",
+                        },
+                        "children": Array [
+                          Node {
+                            "attribs": Object {
+                              "class": "ant-form-item-control has-success",
+                            },
+                            "children": Array [
+                              Node {
+                                "attribs": Object {
+                                  "class": "ant-input-affix-wrapper",
+                                },
+                                "children": Array [
+                                  Node {
+                                    "attribs": Object {
+                                      "class": "ant-input ant-input-sm",
+                                      "data-__meta": "[object Object]",
+                                      "id": "text",
+                                      "maxlength": "50",
+                                      "placeholder": "",
+                                      "type": "text",
+                                      "value": "清除内容",
+                                    },
+                                    "children": Array [],
+                                    "name": "input",
+                                    "namespace": "http://www.w3.org/1999/xhtml",
+                                    "next": Node {
+                                      "attribs": Object {
+                                        "class": "ant-input-suffix",
+                                      },
+                                      "children": Array [
+                                        Node {
+                                          "attribs": Object {},
+                                          "children": Array [
+                                            Node {
+                                              "attribs": Object {
+                                                "class": "anticon anticon-close-circle",
+                                              },
+                                              "children": Array [],
+                                              "name": "i",
+                                              "namespace": "http://www.w3.org/1999/xhtml",
+                                              "next": null,
+                                              "parent": [Circular],
+                                              "prev": null,
+                                              "type": "tag",
+                                              "x-attribsNamespace": Object {
+                                                "class": undefined,
+                                              },
+                                              "x-attribsPrefix": Object {
+                                                "class": undefined,
+                                              },
+                                            },
+                                          ],
+                                          "name": "div",
+                                          "namespace": "http://www.w3.org/1999/xhtml",
+                                          "next": null,
+                                          "parent": [Circular],
+                                          "prev": null,
+                                          "type": "tag",
+                                          "x-attribsNamespace": Object {},
+                                          "x-attribsPrefix": Object {},
+                                        },
+                                      ],
+                                      "name": "span",
+                                      "namespace": "http://www.w3.org/1999/xhtml",
+                                      "next": null,
+                                      "parent": [Circular],
+                                      "prev": [Circular],
+                                      "type": "tag",
+                                      "x-attribsNamespace": Object {
+                                        "class": undefined,
+                                      },
+                                      "x-attribsPrefix": Object {
+                                        "class": undefined,
+                                      },
+                                    },
+                                    "parent": [Circular],
+                                    "prev": null,
+                                    "type": "tag",
+                                    "x-attribsNamespace": Object {
+                                      "class": undefined,
+                                      "data-__meta": undefined,
+                                      "id": undefined,
+                                      "maxlength": undefined,
+                                      "placeholder": undefined,
+                                      "type": undefined,
+                                      "value": undefined,
+                                    },
+                                    "x-attribsPrefix": Object {
+                                      "class": undefined,
+                                      "data-__meta": undefined,
+                                      "id": undefined,
+                                      "maxlength": undefined,
+                                      "placeholder": undefined,
+                                      "type": undefined,
+                                      "value": undefined,
+                                    },
+                                  },
+                                  Node {
+                                    "attribs": Object {
+                                      "class": "ant-input-suffix",
+                                    },
+                                    "children": Array [
+                                      Node {
+                                        "attribs": Object {},
+                                        "children": Array [
+                                          Node {
+                                            "attribs": Object {
+                                              "class": "anticon anticon-close-circle",
+                                            },
+                                            "children": Array [],
+                                            "name": "i",
+                                            "namespace": "http://www.w3.org/1999/xhtml",
+                                            "next": null,
+                                            "parent": [Circular],
+                                            "prev": null,
+                                            "type": "tag",
+                                            "x-attribsNamespace": Object {
+                                              "class": undefined,
+                                            },
+                                            "x-attribsPrefix": Object {
+                                              "class": undefined,
+                                            },
+                                          },
+                                        ],
+                                        "name": "div",
+                                        "namespace": "http://www.w3.org/1999/xhtml",
+                                        "next": null,
+                                        "parent": [Circular],
+                                        "prev": null,
+                                        "type": "tag",
+                                        "x-attribsNamespace": Object {},
+                                        "x-attribsPrefix": Object {},
+                                      },
+                                    ],
+                                    "name": "span",
+                                    "namespace": "http://www.w3.org/1999/xhtml",
+                                    "next": null,
+                                    "parent": [Circular],
+                                    "prev": Node {
+                                      "attribs": Object {
+                                        "class": "ant-input ant-input-sm",
+                                        "data-__meta": "[object Object]",
+                                        "id": "text",
+                                        "maxlength": "50",
+                                        "placeholder": "",
+                                        "type": "text",
+                                        "value": "清除内容",
+                                      },
+                                      "children": Array [],
+                                      "name": "input",
+                                      "namespace": "http://www.w3.org/1999/xhtml",
+                                      "next": [Circular],
+                                      "parent": [Circular],
+                                      "prev": null,
+                                      "type": "tag",
+                                      "x-attribsNamespace": Object {
+                                        "class": undefined,
+                                        "data-__meta": undefined,
+                                        "id": undefined,
+                                        "maxlength": undefined,
+                                        "placeholder": undefined,
+                                        "type": undefined,
+                                        "value": undefined,
+                                      },
+                                      "x-attribsPrefix": Object {
+                                        "class": undefined,
+                                        "data-__meta": undefined,
+                                        "id": undefined,
+                                        "maxlength": undefined,
+                                        "placeholder": undefined,
+                                        "type": undefined,
+                                        "value": undefined,
+                                      },
+                                    },
+                                    "type": "tag",
+                                    "x-attribsNamespace": Object {
+                                      "class": undefined,
+                                    },
+                                    "x-attribsPrefix": Object {
+                                      "class": undefined,
+                                    },
+                                  },
+                                ],
+                                "name": "span",
+                                "namespace": "http://www.w3.org/1999/xhtml",
+                                "next": null,
+                                "parent": [Circular],
+                                "prev": null,
+                                "type": "tag",
+                                "x-attribsNamespace": Object {
+                                  "class": undefined,
+                                },
+                                "x-attribsPrefix": Object {
+                                  "class": undefined,
+                                },
+                              },
+                            ],
+                            "name": "div",
+                            "namespace": "http://www.w3.org/1999/xhtml",
+                            "next": null,
+                            "parent": [Circular],
+                            "prev": null,
+                            "type": "tag",
+                            "x-attribsNamespace": Object {
+                              "class": undefined,
+                            },
+                            "x-attribsPrefix": Object {
+                              "class": undefined,
+                            },
+                          },
+                        ],
+                        "name": "div",
+                        "namespace": "http://www.w3.org/1999/xhtml",
+                        "next": null,
+                        "parent": [Circular],
+                        "prev": Node {
+                          "attribs": Object {
+                            "class": "ant-col-5 ant-form-item-label",
+                          },
+                          "children": Array [
+                            Node {
+                              "attribs": Object {
+                                "class": "ant-form-item-required",
+                                "for": "text",
+                                "title": "文本框",
+                              },
+                              "children": Array [
+                                Node {
+                                  "data": "文本框",
+                                  "next": null,
+                                  "parent": [Circular],
+                                  "prev": null,
+                                  "type": "text",
+                                },
+                              ],
+                              "name": "label",
+                              "namespace": "http://www.w3.org/1999/xhtml",
+                              "next": null,
+                              "parent": [Circular],
+                              "prev": null,
+                              "type": "tag",
+                              "x-attribsNamespace": Object {
+                                "class": undefined,
+                                "for": undefined,
+                                "title": undefined,
+                              },
+                              "x-attribsPrefix": Object {
+                                "class": undefined,
+                                "for": undefined,
+                                "title": undefined,
+                              },
+                            },
+                          ],
+                          "name": "div",
+                          "namespace": "http://www.w3.org/1999/xhtml",
+                          "next": [Circular],
+                          "parent": [Circular],
+                          "prev": null,
+                          "type": "tag",
+                          "x-attribsNamespace": Object {
+                            "class": undefined,
+                          },
+                          "x-attribsPrefix": Object {
+                            "class": undefined,
+                          },
+                        },
+                        "type": "tag",
+                        "x-attribsNamespace": Object {
+                          "class": undefined,
+                        },
+                        "x-attribsPrefix": Object {
+                          "class": undefined,
+                        },
+                      },
+                    ],
+                    "name": "div",
+                    "namespace": "http://www.w3.org/1999/xhtml",
+                    "next": null,
+                    "parent": [Circular],
+                    "prev": null,
+                    "type": "tag",
+                    "x-attribsNamespace": Object {
+                      "class": undefined,
+                    },
+                    "x-attribsPrefix": Object {
+                      "class": undefined,
+                    },
+                  },
+                ],
+                "name": "div",
+                "namespace": "http://www.w3.org/1999/xhtml",
+                "next": null,
+                "parent": [Circular],
+                "prev": null,
+                "type": "tag",
+                "x-attribsNamespace": Object {
+                  "class": undefined,
+                },
+                "x-attribsPrefix": Object {
+                  "class": undefined,
+                },
+              },
+            ],
+            "name": "div",
+            "namespace": "http://www.w3.org/1999/xhtml",
+            "next": null,
+            "parent": [Circular],
+            "prev": null,
+            "type": "tag",
+            "x-attribsNamespace": Object {
+              "class": undefined,
+              "data-id": undefined,
+              "style": undefined,
+            },
+            "x-attribsPrefix": Object {
+              "class": undefined,
+              "data-id": undefined,
+              "style": undefined,
+            },
+          },
+        ],
+        "name": "div",
+        "namespace": "http://www.w3.org/1999/xhtml",
+        "next": null,
+        "parent": [Circular],
+        "prev": null,
+        "type": "tag",
+        "x-attribsNamespace": Object {
+          "class": undefined,
+        },
+        "x-attribsPrefix": Object {
+          "class": undefined,
+        },
+      },
+    ],
+    "name": "form",
+    "namespace": "http://www.w3.org/1999/xhtml",
+    "next": null,
+    "parent": Node {
+      "children": Array [
+        [Circular],
+      ],
+      "name": "root",
+      "next": null,
+      "parent": null,
+      "prev": null,
+      "type": "root",
+    },
+    "prev": null,
+    "type": "tag",
+    "x-attribsNamespace": Object {
+      "class": undefined,
+    },
+    "x-attribsPrefix": Object {
+      "class": undefined,
+    },
+  },
+  "_root": [Circular],
+  "length": 1,
+  "options": Object {
+    "decodeEntities": true,
+    "xml": false,
+  },
+}
+`;

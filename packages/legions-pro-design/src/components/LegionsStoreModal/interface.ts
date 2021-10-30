@@ -1,15 +1,15 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-26 17:55:13
- * @LastEditTime: 2020-12-26 17:58:40
+ * @LastEditTime: 2021-08-09 23:33:04
  * @LastEditors: duanguang
  * @Description:
- * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/store/pro.modal/interface.ts
+ * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreModal/interface.ts
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
 
+import { ViewModel } from 'brain-store-utils/types/create-view-model';
 import { ModalView } from './modalView';
-import { ViewModel } from 'brain-store-utils';
 export interface IResizable {
   /**
    *

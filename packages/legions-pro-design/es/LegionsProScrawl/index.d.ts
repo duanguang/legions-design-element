@@ -142,7 +142,35 @@ export default class LegionsProScrawl extends React.Component<IProps> {
     path: Object;
     d: any[];
     moving: boolean;
-    viewMoDel: import("brain-store-utils").ViewModel<ViewModel> & import("brain-store-utils").Proxify<ViewModel>;
+    viewMoDel: import("brain-store-utils/types/create-view-model").ViewModel<ViewModel> & {
+        chochooseColor: "black" | "blue" | "green" | "red" | "violet" | "yellow";
+        brushColor: {
+            stroke: string;
+            "stroke-width": number;
+            opacity: number;
+        };
+        visible: boolean;
+        redoQueue: [];
+        readonly colorStyle: {
+            className: string;
+            value: string;
+        } | {
+            className: string;
+            value: string;
+        } | {
+            className: string;
+            value: string;
+        } | {
+            className: string;
+            value: string;
+        } | {
+            className: string;
+            value: string;
+        } | {
+            className: string;
+            value: string;
+        };
+    };
     constructor(props: any);
     static defaultProps: {
         width: number;

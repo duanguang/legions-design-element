@@ -3,7 +3,7 @@ import { IProSelectProps, LabeledValue } from '../LegionsProSelect/interface';
 import AbstractForm from './AbstractForm';
 import { InstanceFormElement } from './interface/formElement';
 import { IFormSelectProps, IFormSelectWrapError, IFormWithSelectProps } from './interface/select';
-export declare class HLSelectWrapError extends React.Component<IFormSelectProps & IProSelectProps & IFormSelectWrapError> {
+export declare class SelectWrap extends React.Component<IFormSelectProps & IProSelectProps & IFormSelectWrapError> {
     render(): JSX.Element;
 }
 interface IState {

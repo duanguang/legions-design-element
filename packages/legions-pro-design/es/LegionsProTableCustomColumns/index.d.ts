@@ -35,7 +35,7 @@ export default class LegionsProTableCustomColumns extends Component<IProps, ISta
     modalRef: InstanceProModal;
     constructor(props: any);
     componentDidMount(): void;
-    get viewStore(): import("brain-store-utils").ViewModel<import("../LegionsStoreTable/ProTableView").ProTableView> & {
+    get viewStore(): import("brain-store-utils/types/create-view-model").ViewModel<import("../LegionsStoreTable/ProTableView").ProTableView> & {
         userInfo: {
             userName: string;
             userUid: string;
@@ -47,7 +47,7 @@ export default class LegionsProTableCustomColumns extends Component<IProps, ISta
         pageSize: number;
         selectedRowKeys: string[] | number[];
         _expandRow?: string;
-        _type?: "checkbox" | "radio";
+        _type?: "radio" | "checkbox";
         _rowSelectionClickType?: "radio" | "check";
         columns?: (import("antd/lib/table/Table").TableColumnConfig<{}> & import("../LegionsStoreTable/interface").ITableColumnConfig)[];
         _obTableListCustom: import("../LegionsModels/pro.table.model").TableColumnsContainerEntity;

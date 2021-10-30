@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.7-beta.19
+  *  legions-pro-design v0.0.8
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -10,7 +10,7 @@ import { computed } from 'mobx';
 import LegionsCore from '../LegionsCore';
 import { cloneDeep } from 'lodash';
 import LegionsModels from '../LegionsModels';
-import { legionsThirdpartyPlugin } from 'legions-thirdparty-plugin';
+import { runScriptsSdk } from 'legions-thirdparty-plugin';
 import { getStorageItem, setStorageItems } from 'legions-utils-tool/storage';
 
 /*! *****************************************************************************
@@ -32,11 +32,13 @@ PERFORMANCE OF THIS SOFTWARE.
 var extendStatics = function(d, b) {
     extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
     return extendStatics(d, b);
 };
 
 function __extends(d, b) {
+    if (typeof b !== "function" && b !== null)
+        throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
     extendStatics(d, b);
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -91,7 +93,7 @@ function __values(o) {
 /*
  * @Author: duanguang
  * @Date: 2021-01-07 16:49:31
- * @LastEditTime: 2021-04-14 14:56:16
+ * @LastEditTime: 2021-09-28 00:17:00
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreConditions/conditionView.ts
@@ -253,7 +255,7 @@ var ConditionView = /** @class */ (function () {
             }
         });
         if (options && options.isCache) {
-            if (!legionsThirdpartyPlugin.plugins.dexie) {
+            if (!runScriptsSdk.plugins.dexie) {
                 setStorageItems(this.uid, JSON.stringify(caches));
             }
         }
@@ -444,7 +446,7 @@ var ConditionView = /** @class */ (function () {
 /*
  * @Author: duanguang
  * @Date: 2020-12-29 16:44:16
- * @LastEditTime: 2021-03-02 18:53:01
+ * @LastEditTime: 2021-08-09 23:31:08
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreConditions/index.ts

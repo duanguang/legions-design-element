@@ -14,7 +14,6 @@ import { getStringLen } from 'legions-utils-tool/format.string'
 import LegionsProNumericInput from '../LegionsProNumericInput';
 import FormElement from './FormElement';
 import {InstanceFormElement} from './interface/formElement'
-import LegionsProErrorReportShow from '../LegionsProErrorReportShow'
 const FormItem = Form.Item;
 const { TextArea } = Input;
 import classNames from 'classnames';
@@ -84,12 +83,6 @@ export class TooltipInput extends React.Component<ITooltipInputProps,{}>{
         super(props)
         
     }
-    get store() {
-        if (this.props.FormInputRef && this.props.formUid) {
-            return this.props.FormInputRef.store.get(this.props.formUid)
-        }
-        return null
-    }
     /* onChanges = (() => {
         let updb = this.props.onChange;
         if (200 >= 0) {
@@ -114,33 +107,15 @@ export class TooltipInput extends React.Component<ITooltipInputProps,{}>{
     };
     render() {
         const { form,name,valueLen,FormInputRef,inputType,type,formUid,formItemName,onIgnoreError,...props } = this.props;
-        let isShowErrorView = false;
-        if (FormInputRef && this.props.formUid) {
-            const viewStore = FormInputRef.store.get(this.props.formUid)
-            if (viewStore.computedErrorReactNodeList.has(this.props.formItemName)) {
-                const uid = viewStore.computedErrorReactNodeList.get(this.props.formItemName).uid
-                isShowErrorView = viewStore._errorListView.has(uid)
-            }
-        }
         const { getFieldDecorator,getFieldsError,setFieldsValue } = form;
         let iconStyle = {}
-        isShowErrorView && (iconStyle = { marginRight: '18px' })
         const theProps = {
             ...props,
         };
         theProps.onChange = this.handleOnChange.bind(this);
         const maxlen = parseInt(this.props.maxLength)
         return (
-            <LegionsProErrorReportShow
-                code={this.props.formItemName}
-                formUid={this.props.formUid}
-                onIgnoreError={this.props.onIgnoreError}
-                errorClassName={
-                classNames({
-                    [`tip-icon-input`]: true,
-                    [`tip-icon-right-0`]: (this.props.value && !this.props.disabled) ? true : false,
-                })}>
-                {this.props.inputType === 'number' ? <LegionsProNumericInput
+            this.props.inputType === 'number' ? <LegionsProNumericInput
                     {...theProps}></LegionsProNumericInput> : <Tooltip
                         /* trigger={'click'} */
                         mouseEnterDelay={1}
@@ -164,8 +139,7 @@ export class TooltipInput extends React.Component<ITooltipInputProps,{}>{
 
                                 </div>
                             )} />
-                    </Tooltip>}
-            </LegionsProErrorReportShow>
+                    </Tooltip>
         )
     }
 }
@@ -186,13 +160,6 @@ export default class FormInput extends AbstractForm<IFormWithInputProps>{
     onChange(even) {
         const value = typeof even === 'object' ? even.target.value : even;
         this.props.iFormInput.onChange && this.props.iFormInput.onChange(value)
-        if (this.FormInputRef && this.props.formUid) {
-            const viewStore = this.FormInputRef.store.get(this.props.formUid)
-            const view = viewStore.computedErrorReactNodeList.get(this.props.iAntdProps.name)
-            if (view) {
-                view.validateStatus = ''
-            }
-        }
     }
     onPressEnter(even) {
         const { form,iAntdProps,iFormInput,children,rules } = this.props;
@@ -205,7 +172,7 @@ export default class FormInput extends AbstractForm<IFormWithInputProps>{
         }
         /* const el = document.querySelector(`.${this.FormInputRef.uid}`); */
         const even = e.target
-        even.select()
+        even.select&&even.select()
         this.props.iFormInput && this.props.iFormInput.onFocus && this.props.iFormInput.onFocus(e)
     }
     onBlur(even) {
@@ -229,7 +196,7 @@ export default class FormInput extends AbstractForm<IFormWithInputProps>{
         const maxLength = iFormInput.maxLength ? parseInt(iFormInput.maxLength) : 50
         const placeholder = iAntdProps.placeholder || ''
         let formItemProps = {};
-        if (colon) {
+        if (colon!==void 0) {
             formItemProps['colon'] = colon;
         }
         return (

@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-14 16:26:10
- * @LastEditTime: 2021-03-04 14:27:30
+ * @LastEditTime: 2021-09-06 23:56:46
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsCore/legionsFetch.ts
@@ -9,7 +9,9 @@
  */
 import { ClassOf } from 'legions-lunar/types/api/typescript';
 import { get,post,legionFetch } from 'legions/fetch';
-import { request } from 'legions/request';
+type HeadersPrams = {
+    'Content-Type'?: 'application/json' | 'application/x-www-form-urlencoded'
+}
 let legionFetchInstance = legionFetch.create();
 legionFetchInstance.register({ 
     request: (configs) => { 
@@ -21,7 +23,7 @@ legionFetchInstance.register({
 interface options<Parameter, Model> {
     url: string;
     parameter: Parameter;
-    headers?: request.HeadersPrams;
+    headers?: HeadersPrams;
 
     /**
      *
@@ -40,7 +42,7 @@ interface options<Parameter, Model> {
     }
 }
 export class LegionsFetch{
-    private setHeaders(url: string, option?: request.HeadersPrams) {
+    private setHeaders(url: string, option?: HeadersPrams) {
         let options = {
             headers: {
                 'api-target': url,

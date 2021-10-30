@@ -1,20 +1,19 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-07 17:17:41
- * @LastEditTime: 2021-04-14 14:57:58
+ * @LastEditTime: 2021-08-09 23:57:16
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreTable/interface/index.ts
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
 import { ObservableMap } from 'mobx';
-import { observableViewModel,observablePromise } from 'legions/store-utils';
-import { ViewModel } from 'brain-store-utils';
+import { observableViewModel,observablePromise, ObservablePromiseModel } from 'legions/store-utils';
 import { ProTableView } from '../ProTableView';
 import { ProTableLocalView } from '../ProTableLocalView';
 import { PageListEntity } from '../pageListEntity';
-import { request } from 'legions/request';
 import { ClassOf } from 'legions-lunar/types/api/typescript';
+import { ViewModel } from 'brain-store-utils/types/create-view-model';
 export interface ITableColumnConfig {
   /** 当传入的title不为string类型时，可传label作为checkbox的label展示 */
   label?: string;
@@ -69,7 +68,7 @@ export interface ITableAutoQuery<Model = {}> {
    * @type {(HeadersPrams & Object)}
    * @memberof IAutoQuery
    */
-  options?: HeadersPrams & { [key: string]: string }&request.HeadersPrams;
+  options?: HeadersPrams & { [key: string]: string };
 
   /** 映射数据至===>result */
   mappingEntity: (that: PageListEntity<Model>,responseData: any) => void;
@@ -87,7 +86,7 @@ export interface ITableAutoQuery<Model = {}> {
    * @memberof IAutoQuery
    */
   transform: (
-    value: observablePromise.PramsResult<PageListEntity<Model>>
+    value: ObservablePromiseModel<PageListEntity<Model>>
   ) => {
     total: number;
     data: Array<any>;

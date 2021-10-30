@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-29 16:44:16
- * @LastEditTime: 2021-03-02 18:53:01
+ * @LastEditTime: 2021-08-09 23:31:08
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreConditions/index.ts
@@ -13,9 +13,9 @@ import LegionsStore from '../LegionsStore';
 import {IStoreBaseMeta} from '../LegionsStore/interface';
 import { observable, action, StoreModules } from 'legions/store';
 import { observableViewModel, observablePromise } from 'legions/store-utils';
-import { ViewModel } from 'brain-store-utils';
 import { computed,ObservableMap } from 'mobx';
 import { ConditionView } from './conditionView';
+import { ViewModel } from 'brain-store-utils/types/create-view-model';
 type Proxify<T> = { [P in keyof T]: T[P] };
 
 @StoreModules
