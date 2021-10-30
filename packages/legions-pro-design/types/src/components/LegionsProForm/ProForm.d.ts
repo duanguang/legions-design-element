@@ -120,37 +120,25 @@ export declare class LegionsProForm<mapProps = {}> extends React.Component<IProF
     /** 未加密的freezeUid 值 */
     decryptionFreezeUid: string;
     constructor(props: any);
-    get storeView(): import("brain-store-utils").ViewModel<import("../LegionsStoreForm/proFormStore").HlFormView> & {
+    get storeView(): import("brain-store-utils/types/create-view-model").ViewModel<import("../LegionsStoreForm/proFormStore").HlFormView> & {
         _elementList: import("../LegionsStoreForm/interface").IObservableMap<string, IElementList>;
         focusUid: string;
         enableEnterSwitch: boolean;
         renderNodeQueue: import("../LegionsStoreForm/interface").IObservableMap<string, string>;
-        _errorReactNodeList: import("../LegionsStoreForm/interface").IObservableMap<string, import("brain-store-utils").ViewModel<import("../LegionsStoreForm/proFormStore").ErrorViewModel> & {
-            uid: string;
-            validateStatus: "" | "error";
-        }>;
         _errorListView: import("../LegionsStoreForm/interface").IObservableMap<string, IErrorView[]>;
-        readonly computedErrorReactNodeList: import("../LegionsStoreForm/interface").IObservableMap<string, import("brain-store-utils").ViewModel<import("../LegionsStoreForm/proFormStore").ErrorViewModel> & {
-            uid: string;
-            validateStatus: "" | "error";
-        }>;
         readonly computedAllElementList: string[];
-        readonly computedFormFields: (LabelWithInputModel | LabelWithInputNumberModel | LabelWithDatePickerModel | LabelWithMonthPickerModel | LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel | LabelWithRadioButtonModel | LabelWithTextModel | LabelWithSelectModel | LabelWithCheckboxModel | LabelWithCascaderModel)[];
-        readonly computedAllFormFields: (LabelWithInputModel | LabelWithInputNumberModel | LabelWithDatePickerModel | LabelWithMonthPickerModel | LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel | LabelWithRadioButtonModel | LabelWithTextModel | LabelWithSelectModel | LabelWithCheckboxModel | LabelWithCascaderModel)[];
-        readonly computedErrorListView: IErrorView[];
+        readonly computedFormFields: (LabelWithInputModel | LabelWithInputNumberModel | LabelWithSelectModel | LabelWithDatePickerModel | LabelWithMonthPickerModel | LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel | LabelWithRadioButtonModel | LabelWithTextModel | LabelWithCascaderModel | LabelWithCheckboxModel)[];
+        readonly computedAllFormFields: (LabelWithInputModel | LabelWithInputNumberModel | LabelWithSelectModel | LabelWithDatePickerModel | LabelWithMonthPickerModel | LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel | LabelWithRadioButtonModel | LabelWithTextModel | LabelWithCascaderModel | LabelWithCheckboxModel)[];
         readonly computedFormSize: "default" | "small" | "table";
         updateFormSize: (size: "default" | "small" | "table") => void;
-        _collectErrorReactNode: (componentCode: string, errorUid: string) => void;
-        setErrorErrorReactNodeList: (componentCode: string, errorListView: IErrorView[]) => void;
-        handleIgnore: (componentCode: string, id: number) => void;
         _addAllElementKeys: (keys: string) => void;
-        getFormItemField: <T extends LabelWithInputModel | LabelWithInputNumberModel | LabelWithDatePickerModel | LabelWithMonthPickerModel | LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel | LabelWithRadioButtonModel | LabelWithTextModel | LabelWithSelectModel | LabelWithCheckboxModel | LabelWithCascaderModel>(key: string) => {
+        getFormItemField: <T extends LabelWithInputModel | LabelWithInputNumberModel | LabelWithSelectModel | LabelWithDatePickerModel | LabelWithMonthPickerModel | LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel | LabelWithRadioButtonModel | LabelWithTextModel | LabelWithCascaderModel | LabelWithCheckboxModel>(key: string) => {
             value: T;
             type: "normal" | "custom";
         };
         removeFormItem: (key: string) => boolean;
         clearFormItem: () => void;
-        _initFormItemField: (key: string, value: LabelWithInputModel | LabelWithInputNumberModel | LabelWithDatePickerModel | LabelWithMonthPickerModel | LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel | LabelWithRadioButtonModel | LabelWithTextModel | LabelWithSelectModel | LabelWithCheckboxModel | LabelWithCascaderModel, type?: "normal" | "custom") => void;
+        _initFormItemField: (key: string, value: LabelWithInputModel | LabelWithInputNumberModel | LabelWithSelectModel | LabelWithDatePickerModel | LabelWithMonthPickerModel | LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel | LabelWithRadioButtonModel | LabelWithTextModel | LabelWithCascaderModel | LabelWithCheckboxModel, type?: "normal" | "custom") => void;
     } & import("../LegionsStoreForm/proFormStore").IOtherView;
     render(): JSX.Element;
 }

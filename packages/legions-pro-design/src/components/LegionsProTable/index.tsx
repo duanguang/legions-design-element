@@ -26,7 +26,7 @@ import throttle from 'lodash.throttle';
 import { InstanceProModal } from '../LegionsProModal/interface';
 import { observable,runInAction,toJS,isObservable } from 'mobx'
 import { observableViewModel } from 'legions/store-utils'
-import { legionsThirdpartyPlugin } from 'legions-thirdparty-plugin';
+import { runScriptsSdk } from 'legions-thirdparty-plugin';
 import { legionsPlugins,LoggerManager } from 'legions-lunar/legion.plugin.sdk';
 import { cloneDeep } from 'lodash';
 import { InstanceProTable } from './interface';
@@ -82,8 +82,8 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
                         data: newData,
                         total:data.total,
                     });
-                    this.props.store.HlTableContainer.get(uid)._renderData = newData;
-                    this.props.store.HlTableContainer.get(uid).setTotal(data.total)
+                    this.props.store.TableContainer.get(uid)._renderData = newData;
+                    this.props.store.TableContainer.get(uid).setTotal(data.total)
                 }
             })
             this.consoleLog('watchData',{ uid });
@@ -140,7 +140,7 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
     constructor(props) {
         super(props)
         this.uid = this.uuid;
-        if (this.props.store.HlTableContainer.has(this.freezeuid)) {
+        if (this.props.store.TableContainer.has(this.freezeuid)) {
             this.timeId = new Date().getTime()
             this.uid = this.uuid;
         }
@@ -156,7 +156,7 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
             if (!this.props.store.HlTableLocalStateContainer.has(this.freezeuid)) {
                 this.props.store._addLocalState(this.freezeuid)
             }
-            if (!this.props.store.HlTableContainer.has(this.freezeuid)) {
+            if (!this.props.store.TableContainer.has(this.freezeuid)) {
                 this.props.store.add(this.freezeuid,this.props.tableModulesName,this.uid)
             }
             let isShowLoading = false;
@@ -179,10 +179,10 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
         this.consoleLog('constructor');
     }
     get uuid() {
-        return `table${this.props.store.HlTableContainer.size}${shortHash(`${this.timeId}${this.props.store.HlTableContainer.size}`)}`
+        return `table${this.props.store.TableContainer.size}${shortHash(`${this.timeId}${this.props.store.TableContainer.size}`)}`
     }
     get getViewStore() {
-        return this.props.store.HlTableContainer.get(this.freezeuid)
+        return this.props.store.TableContainer.get(this.freezeuid)
     }
     get getLocalViewStore() {
         return this.props.store.HlTableLocalStateContainer.get(this.freezeuid)
@@ -264,7 +264,7 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
      * @memberof HLTable
      */
     exportCsv(prams: Partial<IExportCsv> = {}) {
-        if (!legionsThirdpartyPlugin.plugins.excel) {
+        if (!runScriptsSdk.plugins.xlsx) {
             message.warning('Plugin is not ready to excel, Please install at the entrance(legionsThirdpartyPlugin.use({name:"excel",url:"xxxx"}))');
             return;
         }
@@ -286,7 +286,7 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
             }
         }
         let newColumns = columns.filter((item) => { return item.isExport !== false });
-        legionsThirdpartyPlugin.plugins.excel.exportJsonToExcel({ data: datas,columns: newColumns,filename: prams.filename,autoWidth: true })
+        runScriptsSdk.plugins.xlsx.exportJsonToExcel({ data: datas,columns: newColumns,filename: prams.filename,autoWidth: true })
     }
     //@ts-ignore
     tranMapColumns(columns: (TableColumnConfig<{}> & ITableColumnConfig)[] = this.props.columns) {
@@ -603,7 +603,7 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
         const table = document.querySelector(`.${this.uid}`);
         if (table) {
             const tableThead = table.querySelector('.ant-table-thead')
-            const store = this.props.store.HlTableContainer.get(this.freezeuid)
+            const store = this.props.store.TableContainer.get(this.freezeuid)
             const tr = findDOMNode(tableThead.querySelector('tr'))
             if (tableThead && tr) {
                 if (store.bodyExternalContainer.get(this.tableThead) && tr.clientHeight !== store.bodyExternalContainer.get(this.tableThead).height) {// 当存在时，对比两次数据变化，不一致，在重新set
@@ -626,7 +626,7 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
         const table = document.querySelector(`.${this.uid}`);
         if (table) {
             const tabletBody = table.querySelector('.ant-table-tbody')
-            const store = this.props.store.HlTableContainer.get(this.freezeuid)
+            const store = this.props.store.TableContainer.get(this.freezeuid)
             if (tabletBody && store.tableBodyDomClientHeight !== findDOMNode(tabletBody).clientHeight) {
                 store.tableBodyDomClientHeight = findDOMNode(tabletBody).clientHeight
             }

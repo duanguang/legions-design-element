@@ -1,9 +1,9 @@
-import { legionsThirdpartyPlugin } from 'legions-thirdparty-plugin';
+import { runScriptsSdk } from 'legions-thirdparty-plugin';
 export class Database {
   static async initTable(key: string) {
-    if (!legionsThirdpartyPlugin.plugins.dexie) {
-      legionsThirdpartyPlugin.subscribe('dexie', async () => {
-        await legionsThirdpartyPlugin.plugins.dexie.registerInstanceDexie<{}>(
+    if (!runScriptsSdk.plugins.dexie) {
+      runScriptsSdk.subscribe('dexie', async () => {
+        await runScriptsSdk.plugins.dexie.registerInstanceDexie<{}>(
           'formUiStore',
           key,
           [
@@ -15,7 +15,7 @@ export class Database {
         );
       });
     } else {
-      await legionsThirdpartyPlugin.plugins.dexie.registerInstanceDexie<{}>(
+      await runScriptsSdk.plugins.dexie.registerInstanceDexie<{}>(
         'formUiStore',
         key,
         [

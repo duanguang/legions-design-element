@@ -1,14 +1,14 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-29 10:09:16
- * @LastEditTime: 2021-03-05 15:46:25
+ * @LastEditTime: 2021-08-24 22:03:26
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProForm/interface/select.ts
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
 import { IProSelectProps,LabeledValue } from '../../LegionsProSelect/interface';
-import { observablePromise } from 'legions/store-utils'
+import {  ObservablePromiseModel } from 'legions/store-utils'
 import {
     WrappedFormUtils,
     InputProps,
@@ -21,9 +21,11 @@ import {
 import { InstanceFormElement } from './formElement';
 import { IErrorView,InstanceProForm } from './form';
 import LegionsModels from '../../LegionsModels'
-import { request } from 'legions/request';
 type HeadersPrams = {
     'Content-Type'?: 'application/json' | 'application/x-www-form-urlencoded'
+    dataType?: 'json';
+    processData?: boolean;
+    [propName: string]: any;
 }
 //@ts-ignore
 export interface IFormSelectProps extends IProSelectProps,IAntdFormItemProps {
@@ -106,7 +108,7 @@ export interface ISelectAutoQuery<Model = {}> {
      * @type {(HeadersPrams & Object)}
      * @memberof ISelectAutoQuery
      */
-    options?: HeadersPrams & { [key: string]: string }&request.HeadersPrams;
+    options?: HeadersPrams & { [key: string]: string }
 
     /**
      * 转换服务端数据
@@ -121,7 +123,7 @@ export interface ISelectAutoQuery<Model = {}> {
      * 当外部数据不确定时，此时我们需要一个适配器转换从接口中取到的数据，用于绑定下拉选项
      * @memberof ISelectAutoQuery
      */
-    transform: (value: observablePromise.PramsResult<InstanceType<typeof LegionsModels.SelectKeyValue>>) => { total: number,data: IAntdSelectOption[] }
+    transform: (value: ObservablePromiseModel<InstanceType<typeof LegionsModels.SelectKeyValue>>) => { total: number,data: IAntdSelectOption[] }
     /**
      *
      * 授权信息令牌

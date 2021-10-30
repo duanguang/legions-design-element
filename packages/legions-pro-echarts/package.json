@@ -16,7 +16,7 @@
   "dependencies": {
     "legions-utils-tool": "^0.0.11",
     "legions": "^1.1.2",
-    "legions-thirdparty-plugin": "^0.0.8",
+    "legions-thirdparty-plugin": "^0.0.9",
     "legions-lunar": "^0.0.7",
     "legions-decorator": "^0.0.6",
     "legions-control-container": "^0.0.5",

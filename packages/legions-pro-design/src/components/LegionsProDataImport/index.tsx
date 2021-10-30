@@ -7,17 +7,18 @@ import { Button,Col,Icon,Row,message } from 'antd';
 import { ColumnProps } from 'antd/lib/table/Column';
 import { download } from 'legions-utils-tool/download'
 import { observer } from 'legions/store-react';
-import { observableViewModel, ViewModel } from 'brain-store-utils';
+import { observableViewModel,} from 'brain-store-utils';
 import { observable, toJS } from 'mobx';
 import React from 'react';
 import { UploadChangeParam,UploadFile,UploadFileStatus } from '../interface/antd';
-import { legionsThirdpartyPlugin } from 'legions-thirdparty-plugin';
+import { runScriptsSdk } from 'legions-thirdparty-plugin';
 import { OpenConfirm } from 'legions-lunar/antd-toolkit';
 import LegionsProTable from '../LegionsProTable';
 import {IProTableProps} from '../LegionsProTable/interface';
 import LegionsProUpload from '../LegionsProUpload';
 import {IProUploadProps} from '../LegionsProUpload/interface'
 import './style/index.less';
+import { ViewModel } from 'brain-store-utils/types/create-view-model';
 
 type Proxify<T> = {
     [P in keyof T]: T[P]
@@ -256,13 +257,13 @@ export default class LegionsProDataImport<TableRow = {},Model = {}> extends Reac
     }
     /** 导出错误数据 */
     handleExport = () => {
-        if (!legionsThirdpartyPlugin.plugins.excel) {
+        if (!runScriptsSdk.plugins.xlsx) {
             message.warning('Plugin is not ready to excel, Please install at the entrance(legionsThirdpartyPlugin.use({name:"excel",url:"xxxx"}))');
             return;
         }
         const { errorFileColumns,tableProps } = this.props;
         const colums = errorFileColumns.length > 0 ? errorFileColumns : tableProps.columns;
-        legionsThirdpartyPlugin.plugins.excel.exportJsonToExcel({
+        runScriptsSdk.plugins.xlsx.exportJsonToExcel({
             data: this.errorList,
             //@ts-ignore
             columns: colums && colums.filter((item) => {

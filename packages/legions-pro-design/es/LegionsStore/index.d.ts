@@ -5,9 +5,9 @@ declare function getStore<T extends InstanceType<typeof StoreBase>>(store: Class
 declare const LegionsStore: {
     StoreBase: typeof StoreBase;
     UiStoreBase: typeof UiStoreBase;
-    CollapsedResource: import("brain-store").IResource;
-    MenuPanesStorageResource: import("brain-store").IResource;
-    BreadCrumbsResourceEven: import("brain-store").IResource;
+    CollapsedResource: import("brain-store/types/api/resourceEvent").IResource;
+    MenuPanesStorageResource: import("brain-store/types/api/resourceEvent").IResource;
+    BreadCrumbsResourceEven: import("brain-store/types/api/resourceEvent").IResource;
     project: {
         name: string;
     };

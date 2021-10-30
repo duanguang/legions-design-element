@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-07 16:23:39
- * @LastEditTime: 2021-03-02 18:12:09
+ * @LastEditTime: 2021-08-09 23:30:10
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStore/interface/index.ts
@@ -9,8 +9,8 @@
  */
 import { IRouter } from '../../interface/router';
 import LegionsModels from '../../LegionsModels';
-import { StoreSpace } from 'brain-store';
-export interface IStoreBaseMeta extends StoreSpace.PramsMeta {}
+import { StaticMeta } from 'brain-store/types/api/meta';
+export interface IStoreBaseMeta extends StaticMeta {}
 export interface IResourceEvent<T> {
   /**
    * 事件名称

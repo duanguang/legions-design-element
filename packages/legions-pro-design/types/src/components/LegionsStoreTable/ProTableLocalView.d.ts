@@ -1,13 +1,12 @@
-import { observablePromise } from 'legions/store-utils';
 import { ITableAutoQuery } from './interface';
 import { PageListEntity } from './pageListEntity';
 export declare class ProTableLocalView {
     /**
      *
      * 表格接口数据
-     * @memberof HLTableLocalView
+     * @memberof ProTableLocalView
      */
-    obState: observablePromise.PramsResult<PageListEntity<any>>;
+    obState: import("legions/store-utils").ObservablePromiseModel<PageListEntity<any>>;
     _obStateMap: import("mobx").ObservableMap<string, {
         data: any[];
         total: number;

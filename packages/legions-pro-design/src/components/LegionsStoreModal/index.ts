@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-04 16:30:32
- * @LastEditTime: 2021-03-02 18:53:17
+ * @LastEditTime: 2021-08-09 23:32:34
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreModal/index.ts
@@ -11,9 +11,9 @@ import LegionsStore from '../LegionsStore';
 import {IStoreBaseMeta} from '../LegionsStore/interface';
 import { observable, action, StoreModules } from 'legions/store';
 import { observableViewModel } from 'legions/store-utils';
-import { ViewModel } from 'brain-store-utils';
 import { ModalView } from './modalView';
 import { Proxify } from './interface';
+import { ViewModel } from 'brain-store-utils/types/create-view-model';
 
 
 

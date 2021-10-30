@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.4
+  *  legions-pro-design v0.0.8-beta.2
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -28,11 +28,13 @@ PERFORMANCE OF THIS SOFTWARE.
 var extendStatics = function(d, b) {
     extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
     return extendStatics(d, b);
 };
 
 function __extends(d, b) {
+    if (typeof b !== "function" && b !== null)
+        throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
     extendStatics(d, b);
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -63,7 +65,7 @@ function __metadata(metadataKey, metadataValue) {
 /*
  * @Author: duanguang
  * @Date: 2021-01-04 11:17:55
- * @LastEditTime: 2021-03-03 16:34:46
+ * @LastEditTime: 2021-04-02 12:08:53
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsCrossModule/globalStateEven.ts
@@ -119,7 +121,10 @@ function subscribeLegionsProGlobal(callback) {
                 }
                 if (count_1 > 60) {
                     count_1 = 0;
-                    console.error('获取全局数据超时,可能没找到，请检查全局是否存在!');
+                    console.groupCollapsed('获取全局数据超时,失败原因如下:');
+                    console.error('可能没找到，请检查全局是否存在LegionsProGlobal!');
+                    console.error('可能跨域，请检查模块间是否允许跨域');
+                    console.groupEnd();
                     clearInterval(timeid_1);
                 }
             }, 400);
@@ -219,6 +224,7 @@ var WorkerGlobalStateStore = /** @class */ (function (_super) {
             eventScopes: options.eventScopes,
         });
     };
+    /** 监听广播数据(主要用于基座跟子应用不在同一个容器，比如iframe) */
     WorkerGlobalStateStore.prototype.listeningGlobalStateChange = function (options) {
         var _this = this;
         this.subscribeLegionsProGlobal(function (values) {
@@ -290,7 +296,7 @@ var WorkerGlobalStateStore = /** @class */ (function (_super) {
 /*
  * @Author: duanguang
  * @Date: 2021-03-03 16:30:27
- * @LastEditTime: 2021-03-03 16:35:23
+ * @LastEditTime: 2021-03-04 15:40:12
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsCrossModule/index.ts

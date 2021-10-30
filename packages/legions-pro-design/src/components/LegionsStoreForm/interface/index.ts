@@ -1,9 +1,8 @@
 
-import { observableViewModel, observablePromise } from 'legions/store-utils';
+import { observableViewModel, observablePromise, ObservablePromiseModel } from 'legions/store-utils';
 
 import { ISelectDatabaseDB } from '../../db/interface';
 import { ObservableMap } from 'mobx';
-import { ViewModel } from 'brain-store-utils';
 import {
   IAntdSelectOption,
 } from '../../interface/antd';
@@ -21,7 +20,7 @@ import {
 } from '../../LegionsProForm/interface'
 import LegionsModels from '../../LegionsModels'
 import { TabsFormView, TabsItemView } from '../tabsView';
-import { IMapEntry } from 'mobx/lib/types/observablemap';
+import { ViewModel } from 'brain-store-utils/types/create-view-model';
 export interface IErrorView {
   /**
    * 只读
@@ -77,15 +76,7 @@ export interface IErrorView {
   componentLabel?: string;
 }
 export {ISelectDatabaseDB}
-/*
- * @Author: duanguang
- * @Date: 2020-12-29 10:33:54
- * @LastEditTime: 2020-12-29 10:40:08
- * @LastEditors: duanguang
- * @Description:
- * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/store/interface/form.ts
- * @「扫去窗上的尘埃，才可以看到窗外的美景。」
- */
+
 export interface InstanceFormElement {
   store: InstanceType<typeof LegionsStoreForm>;
   uid: string;
@@ -228,7 +219,7 @@ export interface ISelectAutoQuery<Model = {}> {
    * @memberof ISelectAutoQuery
    */
   transform: (
-    value: observablePromise.PramsResult<InstanceType<typeof LegionsModels.SelectKeyValue>>
+    value: ObservablePromiseModel<InstanceType<typeof LegionsModels.SelectKeyValue>>
   ) => { total: number; data: IAntdSelectOption[] };
   /**
    *
@@ -243,7 +234,7 @@ export interface ISelectAutoQuery<Model = {}> {
 export interface ISelectOptions {
   keywords: string;
   // @ts-ignore
-  obData: ObservableMap<observablePromise.PramsResult<any>>;
+  obData: ObservableMap<ReturnType<typeof observablePromise>>;
 }
 // @ts-ignore
 export interface IObservableMap<K, V> extends ObservableMap<K, V> {}

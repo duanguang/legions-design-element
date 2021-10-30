@@ -1,17 +1,21 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-19 17:47:07
- * @LastEditTime: 2021-01-19 17:47:58
+ * @LastEditTime: 2021-08-11 23:49:03
  * @LastEditors: duanguang
  * @Description: 
- * @FilePath: /legions-design-element/packages/legions-pro-design/components/legionsproform/model.ts
+ * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProForm/demoTest/model.ts
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
-import { LegionsProForm, LegionsProPageContainer } from 'legions-pro-design';
+import LegionsProForm from '../';
 import { UploadChangeParam } from 'antd/lib/upload/interface';
 import { FormRuleProperty } from 'legions-decorator/async.validator';
 import { IBaseFormFields,HlLabeledValue } from 'legions-lunar/model';
-import { ClassOf } from 'legions-lunar/types/api/typescript';
+interface IFormFieldUserRenderInput1{
+    currency: string,
+    /** 只读 */
+    number:number
+}
 export class FormFields extends LegionsProForm.ProFormFields<FormFields>{
     @FormRuleProperty({
 		required: true,
@@ -63,7 +67,6 @@ export class FormFields extends LegionsProForm.ProFormFields<FormFields>{
     numbers: IBaseFormFields<number> = {
         value:void 0,
     }
-    
     @FormRuleProperty({
         required: true,
         name: 'selectedItem',
@@ -84,7 +87,6 @@ export class FormFields extends LegionsProForm.ProFormFields<FormFields>{
     selectedItemRemote: IBaseFormFields<HlLabeledValue> = {
         value:void 0,
     }
-
     @FormRuleProperty({
         required: true,
         name: 'selectedItemMultiple',
@@ -95,7 +97,6 @@ export class FormFields extends LegionsProForm.ProFormFields<FormFields>{
     selectedItemMultiple: IBaseFormFields<Array<HlLabeledValue>> = {
         value:void 0,
     }
-    
     @FormRuleProperty({
         required: true,
         name: 'upload',
@@ -166,7 +167,8 @@ export class FormFields extends LegionsProForm.ProFormFields<FormFields>{
         error: '价格只能是数字',
         desc: '价格',
         type:'string',
-        validator:(value:string,error,callback)=>{ // 自定义验证规则
+        validator: (value: string,error,callback,props) => { // 自定义验证规则
+            console.log(props,'props');
             const regex=/^[1-9]\d*$/; // 自定义验证规则
             if(!(regex.test(value.toString()))){
                 callback(new Error('价格请输入数字'));
@@ -178,6 +180,17 @@ export class FormFields extends LegionsProForm.ProFormFields<FormFields>{
     })
     price:IBaseFormFields<string>= {
         value: '',
+        ignore: true,
+        }
+    @FormRuleProperty({
+        required: true,
+        name: 'cascader',
+        error: '级联',
+        desc: '级联',
+        type:'array',
+    })
+    cascader:IBaseFormFields<string[]>= {
+        value: void 0,
         ignore: true,
     }
     constructor(form?: FormFields) {

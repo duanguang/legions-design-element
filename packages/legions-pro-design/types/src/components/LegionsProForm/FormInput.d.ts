@@ -61,75 +61,31 @@ interface ITooltipInputProps extends InputProps, TextAreaProps, TooltipProps, IF
 }
 export declare class TooltipInput extends React.Component<ITooltipInputProps, {}> {
     constructor(props: any);
-    get store(): import("brain-store-utils").ViewModel<import("../LegionsStoreForm/proFormStore").HlFormView> & {
-        _elementList: import("../LegionsStoreForm/interface").IObservableMap<string, import("../LegionsStoreForm/interface").IElementList>;
-        focusUid: string;
-        enableEnterSwitch: boolean;
-        renderNodeQueue: import("../LegionsStoreForm/interface").IObservableMap<string, string>;
-        _errorReactNodeList: import("../LegionsStoreForm/interface").IObservableMap<string, import("brain-store-utils").ViewModel<import("../LegionsStoreForm/proFormStore").ErrorViewModel> & {
-            uid: string;
-            validateStatus: "" | "error";
-        }>;
-        _errorListView: import("../LegionsStoreForm/interface").IObservableMap<string, IErrorView[]>;
-        readonly computedErrorReactNodeList: import("../LegionsStoreForm/interface").IObservableMap<string, import("brain-store-utils").ViewModel<import("../LegionsStoreForm/proFormStore").ErrorViewModel> & {
-            uid: string;
-            validateStatus: "" | "error";
-        }>;
-        readonly computedAllElementList: string[];
-        readonly computedFormFields: (LabelWithInputModel | import("./FormInputNumber").LabelWithInputNumberModel | import("./FormDatePicker").LabelWithDatePickerModel | import("./FormMonthPicker").LabelWithMonthPickerModel | import("./FormRangePicker").LabelWithRangePickerModel | import("./FormUpload").LabelWithUploadModel | import("./FormSwitch").LabelWithSwitchModel | import("./FormRadioButton").LabelWithRadioButtonModel | import("./FormText").LabelWithTextModel | import("./interface").LabelWithSelectModel | import("./FormCheckbox").LabelWithCheckboxModel | import("./FormCascader").LabelWithCascaderModel)[];
-        readonly computedAllFormFields: (LabelWithInputModel | import("./FormInputNumber").LabelWithInputNumberModel | import("./FormDatePicker").LabelWithDatePickerModel | import("./FormMonthPicker").LabelWithMonthPickerModel | import("./FormRangePicker").LabelWithRangePickerModel | import("./FormUpload").LabelWithUploadModel | import("./FormSwitch").LabelWithSwitchModel | import("./FormRadioButton").LabelWithRadioButtonModel | import("./FormText").LabelWithTextModel | import("./interface").LabelWithSelectModel | import("./FormCheckbox").LabelWithCheckboxModel | import("./FormCascader").LabelWithCascaderModel)[];
-        readonly computedErrorListView: IErrorView[];
-        readonly computedFormSize: "default" | "small" | "table";
-        updateFormSize: (size: "default" | "small" | "table") => void;
-        _collectErrorReactNode: (componentCode: string, errorUid: string) => void;
-        setErrorErrorReactNodeList: (componentCode: string, errorListView: IErrorView[]) => void;
-        handleIgnore: (componentCode: string, id: number) => void;
-        _addAllElementKeys: (keys: string) => void;
-        getFormItemField: <T extends LabelWithInputModel | import("./FormInputNumber").LabelWithInputNumberModel | import("./FormDatePicker").LabelWithDatePickerModel | import("./FormMonthPicker").LabelWithMonthPickerModel | import("./FormRangePicker").LabelWithRangePickerModel | import("./FormUpload").LabelWithUploadModel | import("./FormSwitch").LabelWithSwitchModel | import("./FormRadioButton").LabelWithRadioButtonModel | import("./FormText").LabelWithTextModel | import("./interface").LabelWithSelectModel | import("./FormCheckbox").LabelWithCheckboxModel | import("./FormCascader").LabelWithCascaderModel>(key: string) => {
-            value: T;
-            type: "normal" | "custom";
-        };
-        removeFormItem: (key: string) => boolean;
-        clearFormItem: () => void;
-        _initFormItemField: (key: string, value: LabelWithInputModel | import("./FormInputNumber").LabelWithInputNumberModel | import("./FormDatePicker").LabelWithDatePickerModel | import("./FormMonthPicker").LabelWithMonthPickerModel | import("./FormRangePicker").LabelWithRangePickerModel | import("./FormUpload").LabelWithUploadModel | import("./FormSwitch").LabelWithSwitchModel | import("./FormRadioButton").LabelWithRadioButtonModel | import("./FormText").LabelWithTextModel | import("./interface").LabelWithSelectModel | import("./FormCheckbox").LabelWithCheckboxModel | import("./FormCascader").LabelWithCascaderModel, type?: "normal" | "custom") => void;
-    } & import("../LegionsStoreForm/proFormStore").IOtherView;
     handleOnChange(even: any): void;
     render(): JSX.Element;
 }
 export default class FormInput extends AbstractForm<IFormWithInputProps> {
     FormInputRef: InstanceFormElement;
     constructor(props: any);
-    get store(): import("brain-store-utils").ViewModel<import("../LegionsStoreForm/proFormStore").HlFormView> & {
+    get store(): import("brain-store-utils/types/create-view-model").ViewModel<import("../LegionsStoreForm/proFormStore").HlFormView> & {
         _elementList: import("../LegionsStoreForm/interface").IObservableMap<string, import("../LegionsStoreForm/interface").IElementList>;
         focusUid: string;
         enableEnterSwitch: boolean;
         renderNodeQueue: import("../LegionsStoreForm/interface").IObservableMap<string, string>;
-        _errorReactNodeList: import("../LegionsStoreForm/interface").IObservableMap<string, import("brain-store-utils").ViewModel<import("../LegionsStoreForm/proFormStore").ErrorViewModel> & {
-            uid: string;
-            validateStatus: "" | "error";
-        }>;
         _errorListView: import("../LegionsStoreForm/interface").IObservableMap<string, IErrorView[]>;
-        readonly computedErrorReactNodeList: import("../LegionsStoreForm/interface").IObservableMap<string, import("brain-store-utils").ViewModel<import("../LegionsStoreForm/proFormStore").ErrorViewModel> & {
-            uid: string;
-            validateStatus: "" | "error";
-        }>;
         readonly computedAllElementList: string[];
-        readonly computedFormFields: (LabelWithInputModel | import("./FormInputNumber").LabelWithInputNumberModel | import("./FormDatePicker").LabelWithDatePickerModel | import("./FormMonthPicker").LabelWithMonthPickerModel | import("./FormRangePicker").LabelWithRangePickerModel | import("./FormUpload").LabelWithUploadModel | import("./FormSwitch").LabelWithSwitchModel | import("./FormRadioButton").LabelWithRadioButtonModel | import("./FormText").LabelWithTextModel | import("./interface").LabelWithSelectModel | import("./FormCheckbox").LabelWithCheckboxModel | import("./FormCascader").LabelWithCascaderModel)[];
-        readonly computedAllFormFields: (LabelWithInputModel | import("./FormInputNumber").LabelWithInputNumberModel | import("./FormDatePicker").LabelWithDatePickerModel | import("./FormMonthPicker").LabelWithMonthPickerModel | import("./FormRangePicker").LabelWithRangePickerModel | import("./FormUpload").LabelWithUploadModel | import("./FormSwitch").LabelWithSwitchModel | import("./FormRadioButton").LabelWithRadioButtonModel | import("./FormText").LabelWithTextModel | import("./interface").LabelWithSelectModel | import("./FormCheckbox").LabelWithCheckboxModel | import("./FormCascader").LabelWithCascaderModel)[];
-        readonly computedErrorListView: IErrorView[];
+        readonly computedFormFields: (LabelWithInputModel | import("./FormInputNumber").LabelWithInputNumberModel | import("./interface").LabelWithSelectModel | import("./FormDatePicker").LabelWithDatePickerModel | import("./FormMonthPicker").LabelWithMonthPickerModel | import("./FormRangePicker").LabelWithRangePickerModel | import("./FormUpload").LabelWithUploadModel | import("./FormSwitch").LabelWithSwitchModel | import("./FormRadioButton").LabelWithRadioButtonModel | import("./FormText").LabelWithTextModel | import("./FormCascader").LabelWithCascaderModel | import("./FormCheckbox").LabelWithCheckboxModel)[];
+        readonly computedAllFormFields: (LabelWithInputModel | import("./FormInputNumber").LabelWithInputNumberModel | import("./interface").LabelWithSelectModel | import("./FormDatePicker").LabelWithDatePickerModel | import("./FormMonthPicker").LabelWithMonthPickerModel | import("./FormRangePicker").LabelWithRangePickerModel | import("./FormUpload").LabelWithUploadModel | import("./FormSwitch").LabelWithSwitchModel | import("./FormRadioButton").LabelWithRadioButtonModel | import("./FormText").LabelWithTextModel | import("./FormCascader").LabelWithCascaderModel | import("./FormCheckbox").LabelWithCheckboxModel)[];
         readonly computedFormSize: "default" | "small" | "table";
         updateFormSize: (size: "default" | "small" | "table") => void;
-        _collectErrorReactNode: (componentCode: string, errorUid: string) => void;
-        setErrorErrorReactNodeList: (componentCode: string, errorListView: IErrorView[]) => void;
-        handleIgnore: (componentCode: string, id: number) => void;
         _addAllElementKeys: (keys: string) => void;
-        getFormItemField: <T extends LabelWithInputModel | import("./FormInputNumber").LabelWithInputNumberModel | import("./FormDatePicker").LabelWithDatePickerModel | import("./FormMonthPicker").LabelWithMonthPickerModel | import("./FormRangePicker").LabelWithRangePickerModel | import("./FormUpload").LabelWithUploadModel | import("./FormSwitch").LabelWithSwitchModel | import("./FormRadioButton").LabelWithRadioButtonModel | import("./FormText").LabelWithTextModel | import("./interface").LabelWithSelectModel | import("./FormCheckbox").LabelWithCheckboxModel | import("./FormCascader").LabelWithCascaderModel>(key: string) => {
+        getFormItemField: <T extends LabelWithInputModel | import("./FormInputNumber").LabelWithInputNumberModel | import("./interface").LabelWithSelectModel | import("./FormDatePicker").LabelWithDatePickerModel | import("./FormMonthPicker").LabelWithMonthPickerModel | import("./FormRangePicker").LabelWithRangePickerModel | import("./FormUpload").LabelWithUploadModel | import("./FormSwitch").LabelWithSwitchModel | import("./FormRadioButton").LabelWithRadioButtonModel | import("./FormText").LabelWithTextModel | import("./FormCascader").LabelWithCascaderModel | import("./FormCheckbox").LabelWithCheckboxModel>(key: string) => {
             value: T;
             type: "normal" | "custom";
         };
         removeFormItem: (key: string) => boolean;
         clearFormItem: () => void;
-        _initFormItemField: (key: string, value: LabelWithInputModel | import("./FormInputNumber").LabelWithInputNumberModel | import("./FormDatePicker").LabelWithDatePickerModel | import("./FormMonthPicker").LabelWithMonthPickerModel | import("./FormRangePicker").LabelWithRangePickerModel | import("./FormUpload").LabelWithUploadModel | import("./FormSwitch").LabelWithSwitchModel | import("./FormRadioButton").LabelWithRadioButtonModel | import("./FormText").LabelWithTextModel | import("./interface").LabelWithSelectModel | import("./FormCheckbox").LabelWithCheckboxModel | import("./FormCascader").LabelWithCascaderModel, type?: "normal" | "custom") => void;
+        _initFormItemField: (key: string, value: LabelWithInputModel | import("./FormInputNumber").LabelWithInputNumberModel | import("./interface").LabelWithSelectModel | import("./FormDatePicker").LabelWithDatePickerModel | import("./FormMonthPicker").LabelWithMonthPickerModel | import("./FormRangePicker").LabelWithRangePickerModel | import("./FormUpload").LabelWithUploadModel | import("./FormSwitch").LabelWithSwitchModel | import("./FormRadioButton").LabelWithRadioButtonModel | import("./FormText").LabelWithTextModel | import("./FormCascader").LabelWithCascaderModel | import("./FormCheckbox").LabelWithCheckboxModel, type?: "normal" | "custom") => void;
     } & import("../LegionsStoreForm/proFormStore").IOtherView;
     componentDidMount(): void;
     onChange(even: any): void;

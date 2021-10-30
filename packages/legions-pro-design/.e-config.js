@@ -119,24 +119,8 @@ module.exports = function (configs) {
               path.join(process.cwd(), 'node_modules/legions-mobx-decorator'),
               /*  path.join(process.cwd(), 'node_modules/legions-lunar'), */
               path.join(process.cwd(), 'node_modules/legions-micro-service'),
-
-              /* path.join(nodeModulesPath, 'legions'),
-              path.join(nodeModulesPath, 'brains'),
-              path.join(nodeModulesPath, 'brain-store'),
-              path.join(nodeModulesPath, 'brain-store-react'), */
-              /* path.join(nodeModulesPath, 'brain-store-utils'), */
             ];
-            console.log(loaders);
           }
-          /* loaders.push({
-            test: /\.(jsx|js)?$/,
-            include: [
-              path.join(process.cwd(), 'node_modules/legions-mobx-decorator'),
-              path.join(process.cwd(), 'node_modules/legions-lunar'),
-              path.join(process.cwd(), 'node_modules/legions-micro-service'),
-            ],
-            loader: 'happypack/loader?id=js',
-          }); */
         }
         if (loaderType === 'TsLoader' && projectType === 'ts') {
           if (loaders.length) {
@@ -146,14 +130,6 @@ module.exports = function (configs) {
               /* path.join(process.cwd(), 'node_modules/legions-lunar'), */
             ];
           }
-          /*  loaders.push({
-            test: /\.(ts|tsx)$/,
-            include: [
-              path.join(process.cwd(), 'node_modules/legions-mobx-decorator'),
-              path.join(process.cwd(), 'node_modules/legions-lunar'),
-            ],
-            loader: 'happypack/loader?id=ts',
-          }); */
         }
         if (loaderType === 'StyleLoader' && transform) {
           const newLoaders = [
