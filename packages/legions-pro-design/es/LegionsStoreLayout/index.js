@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.3
+  *  legions-pro-design v0.0.8
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -32,11 +32,13 @@ PERFORMANCE OF THIS SOFTWARE.
 var extendStatics = function(d, b) {
     extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
     return extendStatics(d, b);
 };
 
 function __extends(d, b) {
+    if (typeof b !== "function" && b !== null)
+        throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
     extendStatics(d, b);
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -67,7 +69,7 @@ function __metadata(metadataKey, metadataValue) {
 /*
  * @Author: duanguang
  * @Date: 2020-12-31 15:04:38
- * @LastEditTime: 2021-03-02 18:43:38
+ * @LastEditTime: 2021-10-31 22:22:36
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreLayout/ProxySanbox.ts
@@ -85,18 +87,15 @@ var SanboxTabActionMode;
 })(SanboxTabActionMode || (SanboxTabActionMode = {}));
 var ProxySanbox = /** @class */ (function () {
     function ProxySanbox(history) {
-        this.routerSanboxOpenMode = 'inSideActiveTab';
         this.microSanboxApp = new Map();
         /** 记录各个页签最后一次访问路径 */
         this.microSanboxRoute = new Map();
         //@ts-ignore
         this.history = null;
+        this.isEnabledTabs = false;
         this.history = history;
     }
     ProxySanbox.prototype.registerMicroApps = function (mountPane) {
-        /*  if (this.routerSanboxOpenMode !== 'newOpenactiveTab') {
-          return;
-        } */
         if (this.microSanboxApp.has(mountPane.sandbox.appName)) {
             return;
         }
@@ -125,44 +124,45 @@ var ProxySanbox = /** @class */ (function () {
                 return err;
             });
         };
-        this.routerSanboxOpenMode = 'inSideActiveTab';
         var appid = this.createMicroAppId(mountPane);
         this.microSanboxApp.set(mountPane.sandbox.appName, {
             getStatus: app.getStatus,
             appName: mountPane.sandbox.appName,
-            routers: new Map().set(routerPath, {
-                openMode: this.routerSanboxOpenMode,
-                router: routerPath,
-            }),
             entry: mountPane.sandbox.appEntiy,
             app: app,
             mount: mount,
             unmount: unmount,
-            container: new Map().set("" + appid, {
+            root: {
                 /* status: 'mount', */
                 rootid: mountPane.sandbox.appName,
                 wrapid: mountPane.sandbox.appRootId,
-                inactiveRootId: '',
-                inactiveWrapid: '',
-                lastActiveRouter: routerPath,
-                routers: [routerPath],
-            }),
-            activityRouter: routerPath,
+            },
         });
     };
     ProxySanbox.prototype.mountSanboxMicroApp = function (mountPane) {
         if (mountPane.loadingMode === 'sandbox') {
             var path = this.microSanboxRoute.get(mountPane.key) ||
                 this.getRouterPath(mountPane);
-            this.history.replace(path);
+            if (this.isEnabledTabs) {
+                this.history.replace(path); // 如果启动了页签模式，则切换路由使用替换模式，防止回退导致路由错乱
+            }
+            else {
+                this.history.push(path);
+            }
         }
     };
     ProxySanbox.prototype.unmountSanboxMicroApp = function (unmoutPane, mountPane) {
         if (unmoutPane.loadingMode === 'sandbox') {
-            this.history.replace('/');
+            if (this.isEnabledTabs) {
+                this.history.replace('/');
+            }
+            else {
+                this.history.push('/');
+            }
         }
     };
     ProxySanbox.prototype.switchTabPaneSanboxMicroApp = function (unmoutPane, mountPane, type) {
+        var sanboxRenderList = document.querySelectorAll("div[data-mode=sanbox-tabs-render]");
         /** 新增页签时，初始化页面路径 */
         if (type === SanboxTabActionMode.add &&
             mountPane &&
@@ -172,17 +172,27 @@ var ProxySanbox = /** @class */ (function () {
         /** 切换页签时，记录页签的最后一次访问路径 */
         if (unmoutPane && unmoutPane.loadingMode === 'sandbox') {
             this.microSanboxRoute.set(unmoutPane.key, window.location.hash.replace('#', ''));
+            sanboxRenderList.forEach(function (item) {
+                if (unmoutPane.sandbox.appName === item.id) {
+                    item['style']['display'] = 'none';
+                }
+            });
         }
-        /** 只要是沙箱的页面，在离开时都执行卸载 */
+        /** 沙箱页面离开时，并且下一个进入的页面是iframe，卸载沙箱页面回到根路径  */
         if (unmoutPane &&
             unmoutPane.loadingMode === 'sandbox' &&
             mountPane &&
-            mountPane.loadingMode !== 'sandbox') {
+            mountPane.loadingMode === 'iframe') {
             this.unmountSanboxMicroApp(unmoutPane, mountPane);
         }
         /** 只要是沙箱的页面，在进入时都执行装载 */
         if (mountPane && mountPane.loadingMode === 'sandbox') {
             this.mountSanboxMicroApp(mountPane);
+            sanboxRenderList.forEach(function (item) {
+                if (mountPane.sandbox.appName === item.id) {
+                    item['style']['display'] = 'block';
+                }
+            });
         }
     };
     ProxySanbox.prototype.getRouterPath = function (pane) {
@@ -731,7 +741,7 @@ var MenuViewStore = /** @class */ (function () {
 /*
  * @Author: duanguang
  * @Date: 2020-12-31 10:34:43
- * @LastEditTime: 2021-03-02 18:45:14
+ * @LastEditTime: 2021-08-09 23:32:06
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreLayout/MenuStore.ts
@@ -745,7 +755,7 @@ var MenuStore = /** @class */ (function (_super) {
         _this.viewModel = observableViewModel(new MenuViewStore());
         /** 菜单展开选项值集合 */
         _this.openKeys = getStorageItem(LegionsCore.StorageKeysDataSet.OPENKEYS_STORAGE_KEY, []);
-        _this.obMenuList = observablePromise();
+        _this.obMenuList = observablePromise(null);
         /** 选中菜单项数据 */
         _this.selectedKeys = getStorageItem(LegionsCore.StorageKeysDataSet.SELECTED_STORAGE_KEY, []);
         /**一级菜单节点数据*/

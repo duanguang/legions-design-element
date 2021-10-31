@@ -91,21 +91,20 @@ export class LayoutContentUtils {
     src = newPane.params ? LayoutContentUtils.transHttpUrlByObj(src,newPane.params) : src
     /* const proxySanbox = that.props.store.proxySanbox; */
     //@ts-ignore'
-    if (RegExChk(validatorType.url,src)) {
-      if (newPane.loadingMode === 'iframe') {
-        return LayoutContentUtils.renderTabPaneIframe(newPane,that,src)
-      }
-      else if (newPane.loadingMode === 'sandbox') {
-        LayoutContentUtils.masterGlobalStateStore.setGlobalState({
-          user: that.props.userEntity,
-          methods: {
-            openTabPane: LayoutContentUtils.masterGlobalStateStore.openTabPane,
-            removeTablePane: LayoutContentUtils.masterGlobalStateStore.removeTablePane,
-          },
-          menuList: LayoutContentUtils.masterGlobalStateStore.menuList,
-        },LayoutContentUtils.masterGlobalStateStore.masterEventScopes.userEvent.created)
-        return LayoutContentUtils.renderProxySanboxDom(newPane,that,src,that.props.store.proxySanbox);
-      }
+
+    if (newPane.loadingMode === 'iframe' && RegExChk(validatorType.url,src)) {
+      return LayoutContentUtils.renderTabPaneIframe(newPane,that,src)
+    }
+    else if (newPane.loadingMode === 'sandbox') {
+      LayoutContentUtils.masterGlobalStateStore.setGlobalState({
+        user: that.props.userEntity,
+        methods: {
+          openTabPane: LayoutContentUtils.masterGlobalStateStore.openTabPane,
+          removeTablePane: LayoutContentUtils.masterGlobalStateStore.removeTablePane,
+        },
+        menuList: LayoutContentUtils.masterGlobalStateStore.menuList,
+      },LayoutContentUtils.masterGlobalStateStore.masterEventScopes.userEvent.created)
+      return LayoutContentUtils.renderProxySanboxDom(newPane,that,src,that.props.store.proxySanbox);
     }
     else {
       return LayoutContentUtils.renderTabPaneRouterComponent(newPane,that,src)
@@ -118,12 +117,12 @@ export class LayoutContentUtils {
     that.props.store.viewUIModel.updateTimestamp(pane.key.toString(),tabPanesTimestamp)
     if (pane.loadingMode === 'iframe') {
       let url = LayoutContentUtils.transHttpUrl(src,tabPanesTimestamp)
-      
+
       return (
         <LegionsProIframe
           url={url}
           ref={`iframeContainer${pane.key}`}
-          height="100%"
+          height="100vh"
           display="initial"
           position="relative"
           styles={{ border: "none",minHeight: `${that.viewModel.iframeHeight}` }}
@@ -193,8 +192,8 @@ export class LayoutContentUtils {
   static renderTabPaneRouterComponent(pane: IPanes,that: ContentPart,src: string) {
     NProgress.done();
     const curPane = that.props.store.panes.find((i) => i.key === that.props.store.activeKey)
-     /** 只渲染当前活跃的页签，其他页面不渲染，避免路由跳转时触发多份实例导致显示异常 */
-     if (that.props.router.length && curPane.path === pane.path) {
+    /** 只渲染当前活跃的页签，其他页面不渲染，避免路由跳转时触发多份实例导致显示异常 */
+    if (that.props.router.length && curPane.path === pane.path) {
       /** 路径统一取location.hash进行匹配 */
       const path = window.location.hash.replace('#','').split('?')[0]
       let item = that.props.router.find((e) => pathToRegexp(e.path).test(path))
@@ -204,87 +203,14 @@ export class LayoutContentUtils {
     }
   }
 
-  static renderProxySanboxDom(pane: IPanes,that: ContentPart,src: string,proxySanbox: InstanceType<typeof LegionsStoreLayout.ProxySanbox> ) {
+  static renderProxySanboxDom(pane: IPanes,that: ContentPart,src: string,proxySanbox: InstanceType<typeof LegionsStoreLayout.ProxySanbox>) {
     if (pane.loadingMode === 'sandbox') {
       return null;
     }
   }
-  static loadMicroApp(pane: IPanes,that: ContentPart,proxySanbox: InstanceType<typeof LegionsStoreLayout.ProxySanbox>) {
-    if (pane && pane.loadingMode === 'sandbox') {
-      let routerPath = proxySanbox.getRouterPath(pane);
-      const appid = proxySanbox.createMicroAppId(pane)
-      const keys = `${pane.sandbox.appName}-${appid}`
-      let target = document.querySelector(`div[data-id=${keys}-legions]`);
-      if (!that.props.isEnabledTabs) {
-        target = document.querySelector(`#micro-app-legions`);
-      }
-
-      if (!proxySanbox.microSanboxApp.has(pane.sandbox.appName)) {
-        if (target) {
-          let dataApp = target.getAttribute('data-app')
-          if (!that.props.isEnabledTabs) {
-            dataApp = pane.sandbox.appName;
-          }
-          const oldcontainer = document.querySelector(`#${dataApp}`)
-          if (oldcontainer) {
-            oldcontainer.remove();
-          }
-          const container = document.createElement('div');
-          container.setAttribute('id',`${dataApp}`);
-          target.appendChild(container)
-          if (proxySanbox.routerSanboxOpenMode === 'inSideActiveTab') {
-            proxySanbox.routerSanboxOpenMode = 'newOpenactiveTab';
-          }
-          proxySanbox.registerMicroApps(pane);
-        }
-      } else {
-        if (target) {
-          let dataApp = target.getAttribute('data-app')
-          if (!that.props.isEnabledTabs) {
-            dataApp = pane.sandbox.appName;
-          }
-          const microSanboxApp = proxySanbox.microSanboxApp.get(dataApp)
-          if (microSanboxApp.getStatus() !== 'MOUNTING') {
-            const oldcontainer = document.querySelector(`#${dataApp}`)
-            if (oldcontainer) {
-              oldcontainer.remove();
-            }
-            const container = document.createElement('div');
-            container.setAttribute('id',`${dataApp}`);
-            target.appendChild(container)
-            microSanboxApp.mount()
-            microSanboxApp.app.mountPromise.then(() => {
-              if (proxySanbox.routerSanboxOpenMode === 'newOpenactiveTab') {
-                proxySanbox.routerSanboxOpenMode = 'inSideActiveTab';
-              }
-            })
-            const hash = window.location.hash.replace('#','')
-            const containerId = appid
-            if (hash !== routerPath && hash && microSanboxApp.container.has(containerId)) {
-              microSanboxApp.container.get(containerId).lastActiveRouter = hash;
-              if (Array.isArray(microSanboxApp.container.get(containerId)['routers'])) {
-                const _index = microSanboxApp.container.get(containerId)['routers'].findIndex((item) => item === hash)
-                if (_index < 0) {
-                  microSanboxApp.container.get(containerId)['routers'].push(hash)
-                }
-              }
-            }
-            if (!microSanboxApp.container.has(containerId)) {
-              microSanboxApp.container.set(containerId,{
-                rootid: pane.sandbox.appName,
-                wrapid: pane.sandbox.appRootId,
-                lastActiveRouter: routerPath,
-                routers: [routerPath]
-              })
-            }
-            microSanboxApp.activityRouter = routerPath;
-          }
-        }
-      }
-    }
-  }
   /** 沙箱单实例加载方式 */
-  static loadMicroApp2(pane: IPanes,that: ContentPart,proxySanbox: InstanceType<typeof LegionsStoreLayout.ProxySanbox>) {
+  static loadMicroApp(pane: IPanes,that: ContentPart,proxySanbox: InstanceType<typeof LegionsStoreLayout.ProxySanbox>) {
+    proxySanbox.isEnabledTabs = that.props.isEnabledTabs
     /** 空判跳过 */
     if (!pane) {
       return
@@ -293,8 +219,14 @@ export class LayoutContentUtils {
     if (pane && pane.loadingMode !== 'sandbox') {
       return
     }
+    const appid = proxySanbox.createMicroAppId(pane)
+    const activeSanboxId = `${pane.sandbox.appName}-${appid}-legions`
     /** tab容器直接作为沙箱实例的容器 */
-    const sandboxWrap = document.querySelector('.legions-pro-layout .ant-tabs-content');
+    let sandboxWrap = document.querySelector(`.legions-pro-layout .ant-tabs-content`);
+    if (!that.props.isEnabledTabs) {
+      sandboxWrap = document.querySelector(`.legions-pro-layout #micro-app-legions`);
+    }
+    /* const sandboxWrap = document.querySelector(`div[data-id=${activeSanboxId}]`); */
     /** 容器空判 */
     if (!sandboxWrap) {
       return
@@ -304,6 +236,10 @@ export class LayoutContentUtils {
       let dataApp = pane.sandbox.appName
       const container = document.createElement('div');
       container.setAttribute('id',`${dataApp}`);
+      container.setAttribute('data-id',`${activeSanboxId}`);
+      container.setAttribute('data-mode',`sanbox-tabs-render`);
+      const height = that.viewModel.contentHeight;
+      container.setAttribute('style',`min-height:${height}px`);
       sandboxWrap.appendChild(container)
       proxySanbox.registerMicroApps(pane);
     }
