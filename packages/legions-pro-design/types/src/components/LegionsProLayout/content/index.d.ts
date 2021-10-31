@@ -39,6 +39,7 @@ interface IProps extends IUserInfo {
 }
 declare class ViewModels {
     iframeHeight: number;
+    contentHeight: number;
     dropdown: import("mobx").ObservableMap<string, {
         visible: boolean;
         uid: string;
@@ -52,6 +53,7 @@ export default class ContentPart extends React.Component<IProps, IState> {
     history: any;
     viewModel: import("brain-store-utils/types/create-view-model").ViewModel<ViewModels> & {
         iframeHeight: number;
+        contentHeight: number;
         dropdown: import("mobx").ObservableMap<string, {
             visible: boolean;
             uid: string;
@@ -67,6 +69,7 @@ export default class ContentPart extends React.Component<IProps, IState> {
     componentDidMount(): void;
     componentWillUnmount(): void;
     componentDidUpdate(): void;
+    updateConentMinHeight(): void;
     /** 添加页签悬浮窗 */
     addContextmenu(): void;
     /** 移除全部页签悬浮窗 */

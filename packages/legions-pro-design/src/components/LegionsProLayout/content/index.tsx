@@ -62,6 +62,7 @@ interface IProps extends IUserInfo {
 }
 class ViewModels {
   @observable iframeHeight = 500
+  @observable contentHeight = 500
   @observable dropdown = observable.map<string,{ visible: boolean,uid: string,tabkey: string,isAddContextmenu: boolean }>()
 }
 interface IState{
@@ -72,21 +73,21 @@ export default class ContentPart extends React.Component<IProps,IState> {
   history = this.props.store.context._manage.history;
   viewModel = observableViewModel<ViewModels>(new ViewModels())
   setIframe = debounce(() => {
-    this.viewModel.iframeHeight = document.body.clientHeight - 98;
+    this.updateConentMinHeight();
   },1000)
   constructor(props) {
     super(props);
-    const height = this.props.isEnabledTabs ? 98 : 128;
-    this.viewModel.iframeHeight = document.body.clientHeight - height;
   }
   static defaultProps = {
     fixedLayoutPosition: 'fixedSider',
   }
   componentDidMount() {
+    this.updateConentMinHeight()
     window.addEventListener('resize',() => {
       this.setIframe()
     })
     this.props.isEnabledTabs && this.addContextmenu()
+    window.onhashchange=function(){}
   }
   componentWillUnmount() {
     this.removeAllContextmenu()
@@ -94,7 +95,22 @@ export default class ContentPart extends React.Component<IProps,IState> {
   componentDidUpdate() {
     this.props.isEnabledTabs && this.addContextmenu()
     const pane = this.props.store.panes.find((item) => item.key === this.props.store.activeKey);
-    LayoutContentUtils.loadMicroApp2(pane,this,this.props.store.proxySanbox);
+    LayoutContentUtils.loadMicroApp(pane,this,this.props.store.proxySanbox);
+    this.updateConentMinHeight()
+  }
+  updateConentMinHeight() {
+    const headerDoms = document.getElementsByClassName('ant-pro-fixed-header')
+    const tabsBarDoms = document.getElementsByClassName('ant-tabs-bar')
+    let headerHeight = 50;
+    let tabsBarHeight = 31;
+    if (headerDoms.length) {
+      headerHeight = headerDoms[0].clientHeight||50;
+    }
+    if (tabsBarDoms.length) {
+      tabsBarHeight = tabsBarDoms[0].clientHeight||31;
+    }
+    this.viewModel.contentHeight = document.body.clientHeight - headerHeight - tabsBarHeight
+    this.viewModel.iframeHeight= this.viewModel.contentHeight
   }
   /** 添加页签悬浮窗 */
   addContextmenu() {
