@@ -1,7 +1,7 @@
 import React from 'react';
 import LegionsStore from '../LegionsStore';
 import { IStoreBaseMeta } from '../LegionsStore/interface';
-import { ViewModel } from 'brain-store-utils';
+import { ViewModel } from 'brain-store-utils/types/create-view-model';
 import { WrappedFormUtils, IAntdSelectOption } from '../interface/antd';
 import { ObservableMap } from 'mobx';
 import { IElementList, IErrorView, ISelectAutoQuery, ISelectOptions, IObservableMap, IProFormFields } from './interface';
@@ -47,23 +47,10 @@ export declare class HlFormView {
     private _allElementList;
     /**
      *
-     * 错误信息组件节点集合
-     * @memberof HlFormView
-     */
-    _errorReactNodeList: IObservableMap<string, ViewModel<ErrorViewModel> & Proxify<ErrorViewModel>>;
-    /**
-     *
      * 所有组件错误信息
      * @memberof HlFormView
      */
     _errorListView: IObservableMap<string, IErrorView[]>;
-    /**
-     * 错误信息组件节点集合 只读
-     *
-     * @returns
-     * @memberof HlFormView
-     */
-    get computedErrorReactNodeList(): HlFormView['_errorReactNodeList'];
     get computedAllElementList(): string[];
     /** 表单元素配置项
      * 渲染formItem
@@ -74,13 +61,6 @@ export declare class HlFormView {
      */
     get computedAllFormFields(): IProFormFields['componentModel'][];
     /**
-     * 获取全部错误信息
-     *
-     * @readonly
-     * @memberof HlFormView
-     */
-    get computedErrorListView(): IErrorView[];
-    /**
      * 表单展示风格 舒适,迷你,紧凑
      *
      * @readonly
@@ -89,30 +69,6 @@ export declare class HlFormView {
     get computedFormSize(): "small" | "table" | "default";
     /** 修改表单尺寸 */
     updateFormSize(size: 'default' | 'small' | 'table'): void;
-    /**
-     *  添加错误信息和组件元素的关联关系，可通过组件name查出错误信息组件UID
-     *
-     * @param {string} componentCode 组件元素名称 对应iAntdProps.name值 唯一，不然会出现问题
-     * @param {string} errorUid // 错误信息组件生成的唯一uid
-     * @memberof HlFormView
-     */
-    _collectErrorReactNode(componentCode: string, errorUid: string): void;
-    /**
-     * 设置错误信息，通过错误信息组件UID作为数据的主键
-     *
-     * @param {string} componentCode 组件元素名称 对应iAntdProps.name值 唯一，不然会出现问题
-     * @param {string} [errorListView] 错误信息
-     * @memberof HlFormView
-     */
-    setErrorErrorReactNodeList(componentCode: string, errorListView: Array<IErrorView>): void;
-    /**
-     *
-     * 忽略错误信息
-     * @param {string} componentCode 组件元素name
-     * @param {number} id 组件元素唯一id 对应errorListView的key
-     * @memberof HlFormView
-     */
-    handleIgnore(componentCode: string, id: number): void;
     /**
      *
      * 收集组件钩子keys

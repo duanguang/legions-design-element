@@ -4,7 +4,6 @@ import { WrappedFormUtils,IAntdProps,IAntdFormItemProps,IAntdRule,TextAreaProps 
 import AbstractForm from './AbstractForm';
 import FormElement from './FormElement';
 import { InstanceFormElement } from './interface/formElement';
-import LegionsProErrorReportShow from '../LegionsProErrorReportShow'
 const FormItem = Form.Item;
 import classNames from 'classnames';
 import { TooltipProps } from 'antd/lib/tooltip'
@@ -55,25 +54,10 @@ export class TooltipText extends React.Component<TooltipProps & IForm>{
     render() {
         const { form,FormTextRef,inputType,...props } = this.props;
         let isShowErrorView = false;
-        if (FormTextRef && this.props.formUid) {
-            const viewStore = FormTextRef.store.get(this.props.formUid)
-            if (viewStore.computedErrorReactNodeList.has(this.props.formItemName)) {
-                const uid = viewStore.computedErrorReactNodeList.get(this.props.formItemName).uid
-                isShowErrorView = viewStore._errorListView.has(uid)
-            }
-        }
         let iconStyle = {}
         isShowErrorView && (iconStyle = { marginRight: '18px' })
         return (
-            <LegionsProErrorReportShow
-                code={this.props.formItemName}
-                formUid={this.props.formUid}
-                errorClassName={
-                    classNames({
-                        [`tip-icon-input`]: true,
-                        [`tip-icon-right-0`]: (this.props.value) ? true : false,
-                    })}>
-                <Tooltip
+            <Tooltip
                     trigger={'click'}
                     title={this.props.value}
                     placement="topLeft"
@@ -83,7 +67,6 @@ export class TooltipText extends React.Component<TooltipProps & IForm>{
                         overflow: 'hidden',width: '100%',textOverflow: 'ellipsis',whiteSpace: 'nowrap',display: 'block'
                     }}>{this.props.value}</span>
                 </Tooltip>
-            </LegionsProErrorReportShow>
         )
     }
 }

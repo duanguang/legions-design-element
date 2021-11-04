@@ -35,7 +35,7 @@ export default class LegionsProTableCustomColumns extends Component<IProps, ISta
     modalRef: InstanceProModal;
     constructor(props: any);
     componentDidMount(): void;
-    get viewStore(): import("brain-store-utils").ViewModel<import("../LegionsStoreTable/ProTableView").ProTableView> & {
+    get viewStore(): import("brain-store-utils/types/create-view-model").ViewModel<import("../LegionsStoreTable/ProTableView").ProTableView> & {
         userInfo: {
             userName: string;
             userUid: string;

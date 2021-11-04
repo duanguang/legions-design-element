@@ -1,5 +1,5 @@
 import { UploadChangeParam } from 'antd/lib/upload/interface';
-import { IBaseFormFields, HlLabeledValue } from 'legions-lunar/model';
+import { IBaseFormFields, LegionsLabeledValue } from 'legions-lunar/model';
 import { LegionsProForm } from '../../../components';
 interface IFormFieldUserRenderInput1 {
     currency: string;
@@ -13,9 +13,9 @@ export declare class FormFields extends LegionsProForm.ProFormFields<FormFields>
     password: IBaseFormFields<string>;
     numberText: IBaseFormFields<string>;
     numbers: IBaseFormFields<number>;
-    selectedItem: IBaseFormFields<HlLabeledValue>;
-    selectedItemRemote: IBaseFormFields<HlLabeledValue>;
-    selectedItemMultiple: IBaseFormFields<Array<HlLabeledValue>>;
+    selectedItem: IBaseFormFields<LegionsLabeledValue>;
+    selectedItemRemote: IBaseFormFields<LegionsLabeledValue>;
+    selectedItemMultiple: IBaseFormFields<Array<LegionsLabeledValue>>;
     upload: IBaseFormFields<UploadChangeParam>;
     customRenderInput1: IBaseFormFields<string>;
     /**

@@ -14,7 +14,12 @@
   "typings": "es/index.d.ts",
   "peerDependencies": {},
   "dependencies": {
-    "antd": "^2.7.4",
+    "legions-utils-tool": "^0.0.11",
+    "legions": "^1.1.2",
+    "legions-thirdparty-plugin": "^0.0.9",
+    "legions-lunar": "^0.0.7",
+    "legions-decorator": "^0.0.6",
+    "legions-control-container": "^0.0.5",
     "size-sensor": "^1.0.0",
     "echarts": "^5.0.0",
     "echarts-gl": "^2.0.0",
@@ -28,7 +33,7 @@
     "@types/node": "^10.0.0",
     "@types/react": "^16.9.35",
     "@types/react-dom": "^0.14.22",
-    "brain-cli": "^1.0.8-alpha.5",
+    "antd": "^2.7.4",
     "bezier-easing": "^2.0.3",
 
     "legions-utils-tool": "^0.0.10",

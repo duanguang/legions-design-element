@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.7-beta.7
+  *  legions-pro-design v0.0.8-beta.1
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -9,7 +9,7 @@ import { observer } from 'legions/store-react';
 import { observableViewModel } from 'brain-store-utils';
 import { observable, toJS } from 'mobx';
 import React from 'react';
-import { legionsThirdpartyPlugin } from 'legions-thirdparty-plugin';
+import { runScriptsSdk } from 'legions-thirdparty-plugin';
 import { OpenConfirm } from 'legions-lunar/antd-toolkit';
 import LegionsProTable from '../LegionsProTable';
 import LegionsProUpload from '../LegionsProUpload';
@@ -34,11 +34,13 @@ PERFORMANCE OF THIS SOFTWARE.
 var extendStatics = function(d, b) {
     extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
     return extendStatics(d, b);
 };
 
 function __extends(d, b) {
+    if (typeof b !== "function" && b !== null)
+        throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
     extendStatics(d, b);
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -284,13 +286,13 @@ var LegionsProDataImport = /** @class */ (function (_super) {
         };
         /** 导出错误数据 */
         _this.handleExport = function () {
-            if (!legionsThirdpartyPlugin.plugins.excel) {
+            if (!runScriptsSdk.plugins.xlsx) {
                 message.warning('Plugin is not ready to excel, Please install at the entrance(legionsThirdpartyPlugin.use({name:"excel",url:"xxxx"}))');
                 return;
             }
             var _a = _this.props, errorFileColumns = _a.errorFileColumns, tableProps = _a.tableProps;
             var colums = errorFileColumns.length > 0 ? errorFileColumns : tableProps.columns;
-            legionsThirdpartyPlugin.plugins.excel.exportJsonToExcel({
+            runScriptsSdk.plugins.xlsx.exportJsonToExcel({
                 data: _this.errorList,
                 //@ts-ignore
                 columns: colums && colums.filter(function (item) {

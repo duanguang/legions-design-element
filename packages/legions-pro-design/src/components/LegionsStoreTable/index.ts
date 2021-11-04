@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-26 11:35:17
- * @LastEditTime: 2021-04-01 14:54:12
+ * @LastEditTime: 2021-08-09 23:42:17
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreTable/index.ts
@@ -18,13 +18,13 @@ import ReactDOM from 'react-dom';
 } from 'react-dom'; */
 import { observable, action, StoreModules } from 'legions/store';
 import { observableViewModel, observablePromise } from 'legions/store-utils';
-import { ViewModel } from 'brain-store-utils';
 import { shortHash } from 'legions-lunar/object-hash';
 import { ProTableView } from './ProTableView';
 import { ProTableLocalView } from './ProTableLocalView';
 import {IStoreBaseMeta} from '../LegionsStore/interface';
 import { ObservableMap } from 'mobx';
 import { PageListEntity } from './pageListEntity';
+import { ViewModel } from 'brain-store-utils/types/create-view-model';
 
 type Proxify<T> = {
   [P in keyof T]: T[P];
@@ -50,10 +50,10 @@ export default class LegionsStoreTable extends LegionsStore.StoreBase {
    *
    * @memberof HLTableStore
    */
-  @observable HlTableContainer = observable.map<string,
+  @observable TableContainer = observable.map<string,
     ViewModel<ProTableView> & Proxify<ProTableView>
   >();
-  @observable HlTableContainerModules = observable.map<string>();
+  @observable TableContainerModules = observable.map<string>();
 
   /**
    *
@@ -64,13 +64,13 @@ export default class LegionsStoreTable extends LegionsStore.StoreBase {
     ViewModel<ProTableLocalView> & Proxify<ProTableLocalView>
   >();
   @action add(uid: string, modulesName: string, timeuid: string) {
-    /* this.HlTableContainer.set(uid,observableViewModel<ProTableView>(new ProTableView())) */
+    /* this.TableContainer.set(uid,observableViewModel<ProTableView>(new ProTableView())) */
     const view = new ProTableView(modulesName, timeuid,this.userInfo);
     this.addContainerModules(modulesName);
-    this.HlTableContainer.set(uid, observableViewModel<ProTableView>(view));
+    this.TableContainer.set(uid, observableViewModel<ProTableView>(view));
   }
   @action init(uid: string, options: ProTableView) {
-    const store = this.HlTableContainer.get(uid);
+    const store = this.TableContainer.get(uid);
     store.pageIndex = options.pageIndex || 1;
     store.pageSize = options.pageSize || 20;
     if (options.isAdaptiveHeight !== void 0) {
@@ -78,18 +78,18 @@ export default class LegionsStoreTable extends LegionsStore.StoreBase {
     }
   }
   @action delete(uid: string) {
-    this.HlTableContainer.delete(uid);
+    this.TableContainer.delete(uid);
   }
   @action deleteTableModules(modulesName: string) {
-    this.HlTableContainerModules.delete(modulesName);
+    this.TableContainerModules.delete(modulesName);
   }
   @action get(uid: string) {
-    return this.HlTableContainer.get(uid);
+    return this.TableContainer.get(uid);
   }
   @action addContainerModules(modulesName: string) {
     if (modulesName) {
-      if (!this.HlTableContainerModules.has(modulesName)) {
-        this.HlTableContainerModules.set(
+      if (!this.TableContainerModules.has(modulesName)) {
+        this.TableContainerModules.set(
           modulesName,
           `${shortHash(modulesName)}`
         );

@@ -1,13 +1,13 @@
 /*
  * @Author: duanguang
  * @Date: 2021-03-02 14:19:18
- * @LastEditTime: 2021-03-03 15:19:10
+ * @LastEditTime: 2021-07-09 23:50:32
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/examples/services/menuService.ts
  * 「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
-import { get, post } from 'legions/request';
+import { get, post } from 'legions/fetch';
 import { HttpConfig, setHeaders, getSystem } from '../constants/httpConfig';
 import { ContainerEntity } from '../models/common/baseEntity';
 import { message } from 'antd';

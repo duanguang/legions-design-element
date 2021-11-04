@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-09 15:43:49
- * @LastEditTime: 2021-04-27 10:45:59
+ * @LastEditTime: 2021-08-12 23:18:08
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/jest.config.js
@@ -18,12 +18,18 @@ module.exports = {
   // 对 ts tsx 文件使用 ts-jest 进行运行测试
   transform: {
     '.(ts|tsx)': 'ts-jest',
-    'legions-lunar': 'ts-jest',
-    "lodash":'ts-jest',
+    'legions-lunar/object-hash': 'babel-jest',
+    "lodash": 'ts-jest',
   },
-  transformIgnorePatterns:['node_modules/(?!legions-lunar)'],
+  transformIgnorePatterns: [
+   /*  'node_modules/(?!legions/store-react)', */
+    'node_modules/(?!(brain-store-react|legions-lunar|legions))',
+  ],
+  moduleDirectories: [
+    'node_modules',
+],
   // 测试环境
-  testEnvironment: 'node',
+  testEnvironment: 'jest-environment-jsdom-fourteen',
   // 测试文件匹配
   testRegex: '(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$',
   collectCoverage: true,
@@ -38,7 +44,7 @@ module.exports = {
       statements: 95,
     }, */
   },
-  "testEnvironment": "jsdom",
+  /* "testEnvironment": "jsdom", */
   "setupFiles": [
     "./script/setup.ts",
     "jest-canvas-mock",
@@ -47,6 +53,10 @@ module.exports = {
   globals: {
     'ts-jest': {
       diagnostics: false,
+      "tsConfig": '<rootDir>/tsconfig.json',
+      astTransformers: [
+        '<rootDir>/ts-jest-integration'
+      ],
     },
   },
 };

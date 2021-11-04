@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-26 11:23:17
- * @LastEditTime: 2021-03-02 18:13:18
+ * @LastEditTime: 2021-08-09 23:27:48
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStore/StoreBase.ts
@@ -13,7 +13,7 @@ import Store from 'legions/store';
 // mobx.useStrict(true);
 import { project } from './resourceEvent';
 import { ISchedule } from './interface';
-import { schedule } from 'legions-lunar/schedule';
+import { schedule  } from 'legions-lunar/schedule';
 import { History } from '../interface/history';
 import { IStoreBaseMeta } from './interface';
 interface IDispatchPrams {
@@ -42,7 +42,7 @@ export default class StoreBase<T = {}, P = {}> extends Store {
    * @returns {Array<Function>}
    * @memberof StoreBase
    */
-  schedule(...funcs: Array<any>): ISchedule {
+   schedule(...funcs: Array<any>): ISchedule {
     return schedule(...funcs);
   }
 }

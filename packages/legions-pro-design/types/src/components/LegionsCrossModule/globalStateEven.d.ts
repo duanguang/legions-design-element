@@ -30,6 +30,6 @@ declare function subscribeLegionsProGlobal(callback: (value: {
     appId: string;
 }) => void): void;
 export declare const masterEventScopes: {
-    userEvent: import("brain-store").IResource;
+    userEvent: import("brain-store/types/api/resourceEvent").IResource;
 };
 export { IframePostMessage, subscribeLegionsProGlobal };

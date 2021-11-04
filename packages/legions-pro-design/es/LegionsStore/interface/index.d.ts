@@ -1,7 +1,7 @@
 import { IRouter } from '../../interface/router';
 import LegionsModels from '../../LegionsModels';
-import { StoreSpace } from 'brain-store';
-export interface IStoreBaseMeta extends StoreSpace.PramsMeta {
+import { StaticMeta } from 'brain-store/types/api/meta';
+export interface IStoreBaseMeta extends StaticMeta {
 }
 export interface IResourceEvent<T> {
     /**

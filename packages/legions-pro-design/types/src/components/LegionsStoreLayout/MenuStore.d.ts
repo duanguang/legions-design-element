@@ -1,7 +1,6 @@
 /** @format */
 import LegionsStore from '../LegionsStore';
 import { IStoreBaseMeta } from '../LegionsStore/interface';
-import { observablePromise } from 'legions/store-utils';
 import LegionsModels from '../LegionsModels';
 import TabPaneViewStore from './TabPaneStore';
 import { IResourceEvent, ITriggerEventPrams } from '../LegionsStore/interface';
@@ -16,10 +15,25 @@ export default class MenuStore extends LegionsStore.StoreBase<IContext> {
     private menuList;
     constructor(context: any);
     /** 菜单组件涉及到数据Model */
-    viewModel: import("brain-store-utils").ViewModel<MenuViewStore> & import("brain-store-utils").Proxify<MenuViewStore>;
+    viewModel: import("brain-store-utils/types/create-view-model").ViewModel<MenuViewStore> & {
+        logoWidth: number;
+        skin: string;
+        SkinList: import("./interface").ISkinModel;
+        collapsed: boolean;
+        fixedSiderMenu: boolean;
+        fixedHeader: boolean;
+        getSkinInfos: () => {
+            color: string;
+            skin: string;
+            logoSkin: string;
+            theme: "dark" | "light";
+            width: number;
+            collapsedWidth: number;
+        };
+    };
     /** 菜单展开选项值集合 */
     openKeys: string[];
-    obMenuList: observablePromise.PramsResult<import("../LegionsModels/pro.menu.model").MenuContainerEntity>;
+    obMenuList: import("legions/store-utils").ObservablePromiseModel<import("../LegionsModels/pro.menu.model").MenuContainerEntity>;
     /** 选中菜单项数据 */
     selectedKeys: any[];
     /**一级菜单节点数据*/

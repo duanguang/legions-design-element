@@ -8,14 +8,19 @@ import { HttpConfig } from '../../constants/httpConfig';
 import { InstanceProForm } from '../../../components/LegionsProForm/interface'
 import { FormFields } from './model';
 import { ClassOf } from 'legions-lunar/types/api/typescript';
-interface IProps { }
+import TodoStore from 'examples/stores/TodoStore';
+interface IProps {
+    todoStore:TodoStore
+ }
 interface IState {
     visible: boolean;
     disabled: boolean;
     xssValue: string;
 }
-
-/* @observer */
+@bind({
+    todoStore:TodoStore
+})
+@observer
 export class ProForm extends React.Component<IProps,IState> {
     formRef: InstanceProForm
     constructor(props: IProps) {
@@ -25,6 +30,7 @@ export class ProForm extends React.Component<IProps,IState> {
             disabled: false,
             xssValue:'',
         }
+        console.log(this.props.todoStore,'todoStore:TodoStore');
     }
     arr = this.createConfig()
     componentDidMount() {
@@ -48,7 +54,8 @@ export class ProForm extends React.Component<IProps,IState> {
                     this.setState({
                         xssValue:value.text.value
                     })
-                }
+                },
+                colon:false
             },
             rules: rules.text
         });

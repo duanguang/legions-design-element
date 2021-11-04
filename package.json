@@ -6,8 +6,11 @@
     "packages/*"
   ],
   "dependencies": {
+    "tslib": "^2.3.0",
+    "brain-store-utils":"^0.2.0"
   },
   "devDependencies": {
-    "lerna": "^3.22.1"
+    "brain-cli": "^1.1.1",
+    "import-lazy": "^2.1.0"
   }
 }

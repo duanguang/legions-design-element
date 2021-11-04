@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.7-beta.3
+  *  legions-pro-design v0.0.8-beta.1
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -25,11 +25,13 @@ PERFORMANCE OF THIS SOFTWARE.
 var extendStatics = function(d, b) {
     extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
     return extendStatics(d, b);
 };
 
 function __extends(d, b) {
+    if (typeof b !== "function" && b !== null)
+        throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
     extendStatics(d, b);
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -63,6 +65,7 @@ function __read(o, n) {
     return ar;
 }
 
+/** @deprecated */
 function __spread() {
     for (var ar = [], i = 0; i < arguments.length; i++)
         ar = ar.concat(__read(arguments[i]));
@@ -83,7 +86,7 @@ var project = {
 /*
  * @Author: duanguang
  * @Date: 2020-12-26 11:23:17
- * @LastEditTime: 2021-03-02 18:13:18
+ * @LastEditTime: 2021-08-09 23:27:48
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStore/StoreBase.ts

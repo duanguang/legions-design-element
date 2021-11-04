@@ -1,10 +1,9 @@
 import { ObservableMap } from 'mobx';
-import { observablePromise } from 'legions/store-utils';
-import { ViewModel } from 'brain-store-utils';
+import { ObservablePromiseModel } from 'legions/store-utils';
 import { ProTableView } from '../ProTableView';
 import { ProTableLocalView } from '../ProTableLocalView';
 import { PageListEntity } from '../pageListEntity';
-import { request } from 'legions/request';
+import { ViewModel } from 'brain-store-utils/types/create-view-model';
 export interface ITableColumnConfig {
     /** 当传入的title不为string类型时，可传label作为checkbox的label展示 */
     label?: string;
@@ -59,7 +58,7 @@ export interface ITableAutoQuery<Model = {}> {
      */
     options?: HeadersPrams & {
         [key: string]: string;
-    } & request.HeadersPrams;
+    };
     /** 映射数据至===>result */
     mappingEntity: (that: PageListEntity<Model>, responseData: any) => void;
     /**
@@ -74,7 +73,7 @@ export interface ITableAutoQuery<Model = {}> {
      *
      * @memberof IAutoQuery
      */
-    transform: (value: observablePromise.PramsResult<PageListEntity<Model>>) => {
+    transform: (value: ObservablePromiseModel<PageListEntity<Model>>) => {
         total: number;
         data: Array<any>;
     };

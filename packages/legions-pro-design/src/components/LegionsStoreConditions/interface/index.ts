@@ -1,16 +1,15 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-07 16:49:15
- * @LastEditTime: 2021-04-14 14:53:23
+ * @LastEditTime: 2021-08-09 23:59:37
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreConditions/interface/index.ts
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
 import { ObservableMap } from 'mobx';
-import { observableViewModel,observablePromise } from 'legions/store-utils';
-import { ViewModel } from 'brain-store-utils';
-import { HeadersPrams } from 'legions/fetch';
+import { observableViewModel,ObservablePromiseModel } from 'legions/store-utils';
+import { ViewModel } from 'brain-store-utils/types/create-view-model';
 import { IAntdSelectOption } from '../../interface/antd';
 import { ConditionView } from '../conditionView';
 import LegionsModels from '../../LegionsModels'
@@ -21,9 +20,11 @@ export interface IObservableMap<K,V> extends ObservableMap<V>{ }
 export interface ISelectOptions{
     keywords?: string,
     // @ts-ignore
-    obData:observablePromise.PramsResult<any>
+    obData:ObservablePromiseModel<any>
 }
-
+type HeadersPrams = {
+    'Content-Type'?: 'application/json' | 'application/x-www-form-urlencoded';
+  };
 export interface ISelectAutoQuery<Model={}>{
     
     /**
@@ -95,7 +96,7 @@ export interface ISelectAutoQuery<Model={}>{
      * 当外部数据不确定时，此时我们需要一个适配器转换从接口中取到的数据，用于绑定下拉选项
      * @memberof ISelectAutoQuery
      */
-    transform:(value:observablePromise.PramsResult<InstanceType<typeof LegionsModels.SelectKeyValue>>)=>{total:number,data:IAntdSelectOption[]}
+    transform:(value:ObservablePromiseModel<InstanceType<typeof LegionsModels.SelectKeyValue>>)=>{total:number,data:IAntdSelectOption[]}
     /**
      *
      * 授权信息令牌

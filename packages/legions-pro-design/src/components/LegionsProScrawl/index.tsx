@@ -12,7 +12,7 @@ const redoSrc = 'https://gitee.com/duanguang/figure-bed/raw/master/oss/redo.png'
 const redo1Src = 'https://gitee.com/duanguang/figure-bed/raw/master/oss/redo-1.png';
 const undoSrc = 'https://gitee.com/duanguang/figure-bed/raw/master/oss/undo1.png';
 const PickcolorSrc = 'https://gitee.com/duanguang/figure-bed/raw/master/oss/Pickcolor.png';
-import { legionsThirdpartyPlugin } from 'legions-thirdparty-plugin';
+import { runScriptsSdk } from 'legions-thirdparty-plugin';
 const ua = navigator.userAgent.toLowerCase();
 const isMobile = /iphone|ipad|ipod|Android/.test(ua);
 interface IAttrs {
@@ -237,7 +237,7 @@ export default class LegionsProScrawl extends React.Component<IProps>{
         }
     }
     handleToImage() {
-        if (!legionsThirdpartyPlugin.plugins.html2canvas) {
+        if (!runScriptsSdk.plugins.html2canvas) {
             message.warning('Plugin is not ready to excel, Please install at the entrance(legionsThirdpartyPlugin.use({name:"html2canvas",url:"xxxx"}))');
             return;
         }
@@ -245,7 +245,7 @@ export default class LegionsProScrawl extends React.Component<IProps>{
         if (this.props.onRenderhtml2canvas) {
             body = this.props.onRenderhtml2canvas()
         }
-        legionsThirdpartyPlugin.plugins.html2canvas.html2canvas(body,this.props.html2canvasOptions).then((canvas) => {
+        runScriptsSdk.plugins.html2canvas.html2canvas(body,this.props.html2canvasOptions).then((canvas) => {
             /* canvas.id = 'screenshotCanvas';
             document.body.appendChild(canvas);
             const can = document.getElementById("screenshotCanvas");

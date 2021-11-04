@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.7-beta.18
+  *  legions-pro-design v0.0.8
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -14,7 +14,7 @@ import { shortHash } from 'legions-lunar/object-hash';
 import { findDOMNode } from 'react-dom';
 import { debounce } from 'legions-utils-tool/debounce';
 import { cloneDeep } from 'lodash';
-import { HlLabeledValue } from 'legions-lunar/model';
+import { LegionsLabeledValue } from 'legions-lunar/model';
 import { getInjector } from 'legions/store';
 import { isArray } from 'legions-utils-tool/type.validation';
 import LegionsProDragger from '../LegionsProDragger';
@@ -38,11 +38,13 @@ PERFORMANCE OF THIS SOFTWARE.
 var extendStatics = function(d, b) {
     extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
     return extendStatics(d, b);
 };
 
 function __extends(d, b) {
+    if (typeof b !== "function" && b !== null)
+        throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
     extendStatics(d, b);
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -99,6 +101,7 @@ function __read(o, n) {
     return ar;
 }
 
+/** @deprecated */
 function __spread() {
     for (var ar = [], i = 0; i < arguments.length; i++)
         ar = ar.concat(__read(arguments[i]));
@@ -357,7 +360,7 @@ var LegionsProConditions = /** @class */ (function (_super) {
                     var selectConfigs = _this.props.query.filter(function (item) { return item instanceof ConditionSelectModel; });
                     var index = selectConfigs.findIndex(function (item) { return item.containerProps.name === name; });
                     var newData = [];
-                    var optionItem = new HlLabeledValue();
+                    var optionItem = new LegionsLabeledValue();
                     if (index > -1) {
                         var item = selectConfigs[index].conditionsProps;
                         newData = item.options;

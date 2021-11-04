@@ -14,7 +14,10 @@ export default class TabPaneViewStore extends LegionsStore.StoreBase {
      * 组件UI数据
      * @memberof TabPaneViewStore
      */
-    viewUIModel: import("brain-store-utils").ViewModel<TabPaneUIView> & import("brain-store-utils").Proxify<TabPaneUIView>;
+    viewUIModel: import("brain-store-utils/types/create-view-model").ViewModel<TabPaneUIView> & {
+        tabPanesTimestamp: import("mobx").ObservableMap<string, any>;
+        updateTimestamp: (panesKey: string, timeStamp?: number) => void;
+    };
     /**
      * 用于同步菜单栏是否收缩状态
      *

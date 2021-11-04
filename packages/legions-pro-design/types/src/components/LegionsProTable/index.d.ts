@@ -70,7 +70,7 @@ export default class LegionsProTable<TableRow = {}, Model = {}> extends React.Co
     static ProTableBaseClass: typeof ProTableBaseClass;
     constructor(props: any);
     get uuid(): string;
-    get getViewStore(): import("brain-store-utils").ViewModel<import("../LegionsStoreTable/ProTableView").ProTableView> & {
+    get getViewStore(): import("brain-store-utils/types/create-view-model").ViewModel<import("../LegionsStoreTable/ProTableView").ProTableView> & {
         userInfo: {
             userName: string;
             userUid: string;
@@ -124,8 +124,8 @@ export default class LegionsProTable<TableRow = {}, Model = {}> extends React.Co
         updateOpenRowChange: (isOpenRowChange: boolean) => void;
         updateOpenRowSelection: (isOpenRowSelection: boolean) => void;
     };
-    get getLocalViewStore(): import("brain-store-utils").ViewModel<import("../LegionsStoreTable/ProTableLocalView").ProTableLocalView> & {
-        obState: import("brain-store-utils").observablePromise.PramsResult<import("../LegionsStoreTable/pageListEntity").PageListEntity<any>>;
+    get getLocalViewStore(): import("brain-store-utils/types/create-view-model").ViewModel<import("../LegionsStoreTable/ProTableLocalView").ProTableLocalView> & {
+        obState: import("legions/store-utils").ObservablePromiseModel<import("../LegionsStoreTable/pageListEntity").PageListEntity<any>>;
         _obStateMap: import("mobx").ObservableMap<string, {
             data: any[];
             total: number;

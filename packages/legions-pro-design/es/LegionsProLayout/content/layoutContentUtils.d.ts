@@ -15,7 +15,6 @@ export declare class LayoutContentUtils {
     static renderTabPaneIframe(pane: IPanes, that: ContentPart, src: string): JSX.Element;
     static renderTabPaneRouterComponent(pane: IPanes, that: ContentPart, src: string): React.CElement<{}, React.Component<{}, any, any>>;
     static renderProxySanboxDom(pane: IPanes, that: ContentPart, src: string, proxySanbox: InstanceType<typeof LegionsStoreLayout.ProxySanbox>): any;
-    static loadMicroApp(pane: IPanes, that: ContentPart, proxySanbox: InstanceType<typeof LegionsStoreLayout.ProxySanbox>): void;
     /** 沙箱单实例加载方式 */
-    static loadMicroApp2(pane: IPanes, that: ContentPart, proxySanbox: InstanceType<typeof LegionsStoreLayout.ProxySanbox>): void;
+    static loadMicroApp(pane: IPanes, that: ContentPart, proxySanbox: InstanceType<typeof LegionsStoreLayout.ProxySanbox>): void;
 }

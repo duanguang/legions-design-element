@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.4
+  *  legions-pro-design v0.0.8
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -47,11 +47,13 @@ PERFORMANCE OF THIS SOFTWARE.
 var extendStatics = function(d, b) {
     extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
     return extendStatics(d, b);
 };
 
 function __extends(d, b) {
+    if (typeof b !== "function" && b !== null)
+        throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
     extendStatics(d, b);
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -108,6 +110,7 @@ function __read(o, n) {
     return ar;
 }
 
+/** @deprecated */
 function __spread() {
     for (var ar = [], i = 0; i < arguments.length; i++)
         ar = ar.concat(__read(arguments[i]));
@@ -194,21 +197,19 @@ var LayoutContentUtils = /** @class */ (function () {
         src = newPane.params ? LayoutContentUtils.transHttpUrlByObj(src, newPane.params) : src;
         /* const proxySanbox = that.props.store.proxySanbox; */
         //@ts-ignore'
-        if (RegExChk(validatorType.url, src)) {
-            if (newPane.loadingMode === 'iframe') {
-                return LayoutContentUtils.renderTabPaneIframe(newPane, that, src);
-            }
-            else if (newPane.loadingMode === 'sandbox') {
-                LayoutContentUtils.masterGlobalStateStore.setGlobalState({
-                    user: that.props.userEntity,
-                    methods: {
-                        openTabPane: LayoutContentUtils.masterGlobalStateStore.openTabPane,
-                        removeTablePane: LayoutContentUtils.masterGlobalStateStore.removeTablePane,
-                    },
-                    menuList: LayoutContentUtils.masterGlobalStateStore.menuList,
-                }, LayoutContentUtils.masterGlobalStateStore.masterEventScopes.userEvent.created);
-                return LayoutContentUtils.renderProxySanboxDom(newPane, that, src, that.props.store.proxySanbox);
-            }
+        if (newPane.loadingMode === 'iframe' && RegExChk(validatorType.url, src)) {
+            return LayoutContentUtils.renderTabPaneIframe(newPane, that, src);
+        }
+        else if (newPane.loadingMode === 'sandbox') {
+            LayoutContentUtils.masterGlobalStateStore.setGlobalState({
+                user: that.props.userEntity,
+                methods: {
+                    openTabPane: LayoutContentUtils.masterGlobalStateStore.openTabPane,
+                    removeTablePane: LayoutContentUtils.masterGlobalStateStore.removeTablePane,
+                },
+                menuList: LayoutContentUtils.masterGlobalStateStore.menuList,
+            }, LayoutContentUtils.masterGlobalStateStore.masterEventScopes.userEvent.created);
+            return LayoutContentUtils.renderProxySanboxDom(newPane, that, src, that.props.store.proxySanbox);
         }
         else {
             return LayoutContentUtils.renderTabPaneRouterComponent(newPane, that, src);
@@ -221,7 +222,7 @@ var LayoutContentUtils = /** @class */ (function () {
         that.props.store.viewUIModel.updateTimestamp(pane.key.toString(), tabPanesTimestamp);
         if (pane.loadingMode === 'iframe') {
             var url = LayoutContentUtils.transHttpUrl(src, tabPanesTimestamp);
-            return (React.createElement(LegionsProIframe, { url: url, ref: "iframeContainer" + pane.key, height: "100%", display: "initial", position: "relative", styles: { border: "none", minHeight: "" + that.viewModel.iframeHeight }, id: "ReactIframe", name: pane.key, allowFullScreen: true, onFirstLoaded: function () {
+            return (React.createElement(LegionsProIframe, { url: url, ref: "iframeContainer" + pane.key, height: "100vh", display: "initial", position: "relative", styles: { border: "none", minHeight: "" + that.viewModel.iframeHeight }, id: "ReactIframe", name: pane.key, allowFullScreen: true, onFirstLoaded: function () {
                     var value = { pane: pane, iframe: document.querySelector("iframe[name=\"" + pane.key + "\"]") };
                     var dispath = function (LegionsProGlobal) {
                         if (!LegionsProGlobal) {
@@ -292,82 +293,9 @@ var LayoutContentUtils = /** @class */ (function () {
             return null;
         }
     };
-    LayoutContentUtils.loadMicroApp = function (pane, that, proxySanbox) {
-        if (pane && pane.loadingMode === 'sandbox') {
-            var routerPath = proxySanbox.getRouterPath(pane);
-            var appid = proxySanbox.createMicroAppId(pane);
-            var keys = pane.sandbox.appName + "-" + appid;
-            var target = document.querySelector("div[data-id=" + keys + "-legions]");
-            if (!that.props.isEnabledTabs) {
-                target = document.querySelector("#micro-app-legions");
-            }
-            if (!proxySanbox.microSanboxApp.has(pane.sandbox.appName)) {
-                if (target) {
-                    var dataApp = target.getAttribute('data-app');
-                    if (!that.props.isEnabledTabs) {
-                        dataApp = pane.sandbox.appName;
-                    }
-                    var oldcontainer = document.querySelector("#" + dataApp);
-                    if (oldcontainer) {
-                        oldcontainer.remove();
-                    }
-                    var container = document.createElement('div');
-                    container.setAttribute('id', "" + dataApp);
-                    target.appendChild(container);
-                    if (proxySanbox.routerSanboxOpenMode === 'inSideActiveTab') {
-                        proxySanbox.routerSanboxOpenMode = 'newOpenactiveTab';
-                    }
-                    proxySanbox.registerMicroApps(pane);
-                }
-            }
-            else {
-                if (target) {
-                    var dataApp = target.getAttribute('data-app');
-                    if (!that.props.isEnabledTabs) {
-                        dataApp = pane.sandbox.appName;
-                    }
-                    var microSanboxApp = proxySanbox.microSanboxApp.get(dataApp);
-                    if (microSanboxApp.getStatus() !== 'MOUNTING') {
-                        var oldcontainer = document.querySelector("#" + dataApp);
-                        if (oldcontainer) {
-                            oldcontainer.remove();
-                        }
-                        var container = document.createElement('div');
-                        container.setAttribute('id', "" + dataApp);
-                        target.appendChild(container);
-                        microSanboxApp.mount();
-                        microSanboxApp.app.mountPromise.then(function () {
-                            if (proxySanbox.routerSanboxOpenMode === 'newOpenactiveTab') {
-                                proxySanbox.routerSanboxOpenMode = 'inSideActiveTab';
-                            }
-                        });
-                        var hash_1 = window.location.hash.replace('#', '');
-                        var containerId = appid;
-                        if (hash_1 !== routerPath && hash_1 && microSanboxApp.container.has(containerId)) {
-                            microSanboxApp.container.get(containerId).lastActiveRouter = hash_1;
-                            if (Array.isArray(microSanboxApp.container.get(containerId)['routers'])) {
-                                var _index = microSanboxApp.container.get(containerId)['routers'].findIndex(function (item) { return item === hash_1; });
-                                if (_index < 0) {
-                                    microSanboxApp.container.get(containerId)['routers'].push(hash_1);
-                                }
-                            }
-                        }
-                        if (!microSanboxApp.container.has(containerId)) {
-                            microSanboxApp.container.set(containerId, {
-                                rootid: pane.sandbox.appName,
-                                wrapid: pane.sandbox.appRootId,
-                                lastActiveRouter: routerPath,
-                                routers: [routerPath]
-                            });
-                        }
-                        microSanboxApp.activityRouter = routerPath;
-                    }
-                }
-            }
-        }
-    };
     /** 沙箱单实例加载方式 */
-    LayoutContentUtils.loadMicroApp2 = function (pane, that, proxySanbox) {
+    LayoutContentUtils.loadMicroApp = function (pane, that, proxySanbox) {
+        proxySanbox.isEnabledTabs = that.props.isEnabledTabs;
         /** 空判跳过 */
         if (!pane) {
             return;
@@ -376,8 +304,14 @@ var LayoutContentUtils = /** @class */ (function () {
         if (pane && pane.loadingMode !== 'sandbox') {
             return;
         }
+        var appid = proxySanbox.createMicroAppId(pane);
+        var activeSanboxId = pane.sandbox.appName + "-" + appid + "-legions";
         /** tab容器直接作为沙箱实例的容器 */
-        var sandboxWrap = document.querySelector('.legions-pro-layout .ant-tabs-content');
+        var sandboxWrap = document.querySelector(".legions-pro-layout .ant-tabs-content");
+        if (!that.props.isEnabledTabs) {
+            sandboxWrap = document.querySelector(".legions-pro-layout #micro-app-legions");
+        }
+        /* const sandboxWrap = document.querySelector(`div[data-id=${activeSanboxId}]`); */
         /** 容器空判 */
         if (!sandboxWrap) {
             return;
@@ -387,6 +321,10 @@ var LayoutContentUtils = /** @class */ (function () {
             var dataApp = pane.sandbox.appName;
             var container = document.createElement('div');
             container.setAttribute('id', "" + dataApp);
+            container.setAttribute('data-id', "" + activeSanboxId);
+            container.setAttribute('data-mode', "sanbox-tabs-render");
+            var height = that.viewModel.contentHeight;
+            container.setAttribute('style', "min-height:" + height + "px");
             sandboxWrap.appendChild(container);
             proxySanbox.registerMicroApps(pane);
         }
@@ -403,12 +341,17 @@ var TabPane = Tabs.TabPane;
 var ViewModels = /** @class */ (function () {
     function ViewModels() {
         this.iframeHeight = 500;
+        this.contentHeight = 500;
         this.dropdown = observable.map();
     }
     __decorate([
         observable,
         __metadata("design:type", Object)
     ], ViewModels.prototype, "iframeHeight", void 0);
+    __decorate([
+        observable,
+        __metadata("design:type", Object)
+    ], ViewModels.prototype, "contentHeight", void 0);
     __decorate([
         observable,
         __metadata("design:type", Object)
@@ -422,7 +365,7 @@ var ContentPart = /** @class */ (function (_super) {
         _this.history = _this.props.store.context._manage.history;
         _this.viewModel = observableViewModel(new ViewModels());
         _this.setIframe = debounce(function () {
-            _this.viewModel.iframeHeight = document.body.clientHeight - 98;
+            _this.updateConentMinHeight();
         }, 1000);
         /**
          * 修改页签活动状态
@@ -435,8 +378,8 @@ var ContentPart = /** @class */ (function (_super) {
             var pane = store.panes.find(function (item) { return item.key === activeKey; });
             var oldpane = store.panes.find(function (item) { return item.key === store.activeKey; });
             store.setActiveKey(activeKey);
-            _this.props.menuStore.triggerSetBreadCrumbsEven(_this.props.router);
             store.proxySanbox.switchTabPaneSanboxMicroApp(oldpane, pane);
+            _this.props.menuStore.triggerSetBreadCrumbsEven(_this.props.router);
         };
         /**
          *
@@ -465,16 +408,16 @@ var ContentPart = /** @class */ (function (_super) {
             _this.props.menuStore.triggerSetBreadCrumbsEven();
             store.proxySanbox.switchTabPaneSanboxMicroApp(oldpane, pane);
         };
-        var height = _this.props.isEnabledTabs ? 98 : 128;
-        _this.viewModel.iframeHeight = document.body.clientHeight - height;
         return _this;
     }
     ContentPart.prototype.componentDidMount = function () {
         var _this = this;
+        this.updateConentMinHeight();
         window.addEventListener('resize', function () {
             _this.setIframe();
         });
         this.props.isEnabledTabs && this.addContextmenu();
+        window.onhashchange = function () { };
     };
     ContentPart.prototype.componentWillUnmount = function () {
         this.removeAllContextmenu();
@@ -483,7 +426,22 @@ var ContentPart = /** @class */ (function (_super) {
         var _this = this;
         this.props.isEnabledTabs && this.addContextmenu();
         var pane = this.props.store.panes.find(function (item) { return item.key === _this.props.store.activeKey; });
-        LayoutContentUtils.loadMicroApp2(pane, this, this.props.store.proxySanbox);
+        LayoutContentUtils.loadMicroApp(pane, this, this.props.store.proxySanbox);
+        this.updateConentMinHeight();
+    };
+    ContentPart.prototype.updateConentMinHeight = function () {
+        var headerDoms = document.getElementsByClassName('ant-pro-fixed-header');
+        var tabsBarDoms = document.getElementsByClassName('ant-tabs-bar');
+        var headerHeight = 50;
+        var tabsBarHeight = 31;
+        if (headerDoms.length) {
+            headerHeight = headerDoms[0].clientHeight || 50;
+        }
+        if (tabsBarDoms.length) {
+            tabsBarHeight = tabsBarDoms[0].clientHeight || 31;
+        }
+        this.viewModel.contentHeight = document.body.clientHeight - headerHeight - tabsBarHeight;
+        this.viewModel.iframeHeight = this.viewModel.contentHeight;
     };
     /** 添加页签悬浮窗 */
     ContentPart.prototype.addContextmenu = function () {

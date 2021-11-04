@@ -76,7 +76,7 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
     uid: string;
     queryPrams: {};
     constructor(props: any);
-    get viewStore(): import("brain-store-utils").ViewModel<import("../LegionsStoreConditions/conditionView").ConditionView<unknown>> & {
+    get viewStore(): import("brain-store-utils/types/create-view-model").ViewModel<import("../LegionsStoreConditions/conditionView").ConditionView<unknown>> & {
         tranQuery: unknown;
         domHeight: number;
         widthContainer: number;

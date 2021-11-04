@@ -1,11 +1,11 @@
 /**
-  *  legions-pro-design v0.0.3
+  *  legions-pro-design v0.0.8-beta.1
   * (c) 2021 duanguang
   * @license MIT
   */
 import { Upload, message, Spin, Button, Icon, Col, Progress, Row } from 'antd';
 import React from 'react';
-import { legionsThirdpartyPlugin } from 'legions-thirdparty-plugin';
+import { runScriptsSdk } from 'legions-thirdparty-plugin';
 import { NProgress } from 'legions-nprogress';
 import './style/index.less';
 import { isNullUndefined } from 'legions-utils-tool/type.validation';
@@ -29,11 +29,13 @@ PERFORMANCE OF THIS SOFTWARE.
 var extendStatics = function(d, b) {
     extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
     return extendStatics(d, b);
 };
 
 function __extends(d, b) {
+    if (typeof b !== "function" && b !== null)
+        throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
     extendStatics(d, b);
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -79,6 +81,7 @@ function __read(o, n) {
     return ar;
 }
 
+/** @deprecated */
 function __spread() {
     for (var ar = [], i = 0; i < arguments.length; i++)
         ar = ar.concat(__read(arguments[i]));
@@ -254,13 +257,13 @@ var LegionsProUpload = /** @class */ (function (_super) {
             _this.props.onError && _this.props.onError({ file: file, fileList: fileList }, e);
         };
         reader.onload = function (e) {
-            if (!legionsThirdpartyPlugin.plugins.excel) {
+            if (!runScriptsSdk.plugins.xlsx) {
                 message.warning('Plugin is not ready to excel, Please install at the entrance(legionsThirdpartyPlugin.use({name:"excel",url:"xxxx"}))');
                 return;
             }
             // @ts-ignore
             var data = e.target.result;
-            var _a = legionsThirdpartyPlugin.plugins.excel.read(data, 'array'), header = _a.header, results = _a.results;
+            var _a = runScriptsSdk.plugins.xlsx.read(data, 'array'), header = _a.header, results = _a.results;
             NProgress.done();
             _this.setState({
                 uploadLoading: false,

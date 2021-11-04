@@ -1,19 +1,21 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-07 17:16:35
- * @LastEditTime: 2021-03-02 18:48:19
+ * @LastEditTime: 2021-09-20 14:45:09
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreTable/ProTableView.ts
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
-import { observable, action, StoreModules } from 'legions/store';
+import {  StoreModules } from 'legions/store';
 import {
   computed,
   autorun,
   runInAction,
   isComputed,
   ObservableMap,
+  observable,
+  action,
   isObservableArray,
 } from 'mobx';
 import * as mobx from 'mobx';
@@ -27,6 +29,7 @@ import {
   IObservableMap,
 } from './interface';
 import { TableColumnConfig } from '../interface/antd';
+import {mobxVersion} from 'brain-store-utils'
 export class ProTableView {
   @observable userInfo: {
     userName: string;
@@ -37,7 +40,7 @@ export class ProTableView {
   constructor(modulesName?: string, uid?: string, user?) {
     this.bodyExternalContainer.observe(chan => {
       runInAction(() => {
-        if (mobx['useStrict']) {
+        if (mobxVersion==='v4') {
           // @ts-ignore
           if (this.bodyExternalContainer.values().length) {
             // @ts-ignore
@@ -51,7 +54,7 @@ export class ProTableView {
               });
             this.bodyExternalHeight = total.height;
           }
-        } else if (mobx['configure']) {
+        } else if (mobxVersion==='v3') {
           const values: { height: number }[] = [];
           this.bodyExternalContainer.forEach((item, key) => {
             values.push(item);
