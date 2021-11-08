@@ -1,14 +1,14 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-29 10:26:57
- * @LastEditTime: 2021-04-20 15:13:35
+ * @LastEditTime: 2021-11-09 00:01:06
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProForm/interface/form.ts
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
 import { ValidateCallback } from 'antd/lib/form/Form';
-import { HlLabeledValue } from 'legions-lunar/model';
+import { LegionsLabeledValue } from 'legions-lunar/model';
 import  {
   ILocalViewModelHlFormStore,
   IViewModelHlFormStore,
@@ -112,7 +112,7 @@ interface IMethods {
   getQuerySelectOption?: (
     /** 下拉组件name值，对应container.component.JsonProperty.name */ name: string,
     /** 下拉选项key值*/ optionKey: string
-  ) => { readonly option: HlLabeledValue };
+  ) => { readonly option: LegionsLabeledValue };
 
   setFormStates: <T extends IProFormFields['componentModel']>(name: string,callback: (state: T) => void) => void;
 
@@ -121,6 +121,8 @@ interface IMethods {
 
   /** 清空表单选项 */
   clearFormItem: () => void;
+
+  formFieldsToData:()=>any
 }
 export interface IFormState {
   /**

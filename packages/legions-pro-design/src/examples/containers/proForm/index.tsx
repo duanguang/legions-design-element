@@ -6,7 +6,7 @@ import { observablePromise } from 'legions/store-utils';
 import { observable } from 'legions/store';
 import { HttpConfig } from '../../constants/httpConfig';
 import { InstanceProForm } from '../../../components/LegionsProForm/interface'
-import { FormFields } from './model';
+import { FormFields,FormFields1 } from './model';
 import { ClassOf } from 'legions-lunar/types/api/typescript';
 import TodoStore from 'examples/stores/TodoStore';
 interface IProps {
@@ -51,9 +51,9 @@ export class ProForm extends React.Component<IProps,IState> {
                 onChange: (even) => {
                     const value = this.formRef.viewModel.InputDataModel as FormFields;
                     console.log(value,even,'value');
-                    this.setState({
+                    /* this.setState({
                         xssValue:value.text.value
-                    })
+                    }) */
                 },
                 colon:false
             },
@@ -539,20 +539,18 @@ export class ProForm extends React.Component<IProps,IState> {
             content={
                 <LegionsProForm
                     <FormFields>
-                    InputDataModel={FormFields}
+                    InputDataModel={FormFields1}
                     onReady={(form,ref) => {
                         this.formRef = Object.assign(ref,{ that: this });
                         this.formRef.viewModel.enableEnterSwitch = true;
                     }}
                     isDragSort
-                    mapPropsToFields={(props) => {
-                        console.log('mapPropsToFields');
-                        return new FormFields(props)
-                    }}
+                    /* mapPropsToFields={(props) => {
+                        console.log('mapPropsToFields',props);
+                        return props
+                    }} */
                     onFieldsChange={(props,formFields) => {
                         console.log('onFieldsChange',formFields,this.formRef.viewModel.InputDataModel);
-                        this.formRef.store.updateFormInputData(this.formRef.uid,formFields)
-                       
                     }}
                     size="small"
                     controls={this.createConfig()}

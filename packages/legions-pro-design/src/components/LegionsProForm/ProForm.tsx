@@ -62,14 +62,14 @@ export interface IProFormProps<mapProps = {}> {
      *
      * @memberof IProps
      */
-    mapPropsToFields: (props: mapProps) => any
+    mapPropsToFields?: (props: mapProps) => any
 
     /**
      * 当 Form.Item 子节点的值发生改变时触发，可以把对应的值转存到 mobx store or redux store
      *
      * @memberof IHLFormProps
      */
-    onFieldsChange: (props: mapProps,fields) => void
+    onFieldsChange?: (props: mapProps,fields) => void
 
     /**
      *任一表单域的值发生改变时的回调
@@ -185,7 +185,8 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
         }
         this.storeView.updateFormSize(this.props.size);
         this.initFromState();
-        this.consoleLog('hlFormContainer-constructor');
+        // @ts-ignore
+        this.consoleLog('legionsProForm-constructor');
     }
     watcher = (n) => {
         console.log(this.storeView.InputDataModel,'InputDataModel')
@@ -976,9 +977,26 @@ const debounceOnFieldsChange = debounce((props,changedFields) => {
 },200)
 const CustomizedForm = Form.create({
     mapPropsToFields: (props: IProFormProps) => {
-        return props.mapPropsToFields(props)
+        let originFormModel = {}
+        if (typeof props.InputDataModel === 'function') {
+            // @ts-ignore
+            originFormModel = new props.InputDataModel(props)
+            Object.keys(props).forEach(function (item) {
+                if (originFormModel.hasOwnProperty(item)) {
+                    originFormModel[item] = {
+                        ...props[item],
+                         value: props[item]?props[item].value:void 0,
+                    }
+                }
+            });
+        }
+        if (!props.mapPropsToFields) {
+            return {...props,...originFormModel}
+        }
+        return props.mapPropsToFields({...props,...originFormModel})
     },
     onFieldsChange: (props: IProFormProps,changedFields) => {
+        props.store.updateFormInputData(props['uid'],changedFields)
         return props.onFieldsChange(props,changedFields);
         /* return debounceOnFieldsChange(props,changedFields) */
     },

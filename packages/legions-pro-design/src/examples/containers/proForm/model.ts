@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-15 15:42:07
- * @LastEditTime: 2021-09-20 14:32:07
+ * @LastEditTime: 2021-11-08 23:30:52
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/examples/containers/proForm/model.ts
@@ -21,6 +21,20 @@ export function create():IFormFieldUserRenderInput1 {
     return {
         currency:'string',
     number:1
+    }
+}
+export class FormFields1 extends LegionsProForm.ProFormFields<FormFields1>{
+    @FormRuleProperty({
+		required: true,
+		name: 'text',
+		error: '文本框',
+		desc: '文本框',
+		type:'string',
+	})
+	text: string =void 0
+    
+    constructor(form?: FormFields) {
+        super()
     }
 }
 export class FormFields extends LegionsProForm.ProFormFields<FormFields>{
