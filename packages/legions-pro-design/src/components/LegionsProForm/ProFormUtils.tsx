@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-08 15:19:23
- * @LastEditTime: 2021-04-22 17:41:19
+ * @LastEditTime: 2021-11-09 23:46:57
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProForm/ProFormUtils.tsx
@@ -15,7 +15,7 @@ import {
     WrappedFormUtils,
     ColProps
 } from '../interface/antd';
-import { IFormCheckboxProps, IFormDatePickerProps, IFormInputNumberProps, IFormInputProps, IFormMonthPickerProps, IFormRadioButtonProps, IFormRangePickerProps, IFormRenderProps, IFormSelectProps, IFormState, IFormSwitchProps, IFormTextProps, IFormUploadProps, InstanceProForm, LabelWithCheckboxModel, LabelWithDatePickerModel, LabelWithSelectModel, LabelWithInputModel, LabelWithInputNumberModel, LabelWithMonthPickerModel, LabelWithRadioButtonModel, LabelWithRangePickerModel, LabelWithRenderModel, LabelWithSwitchModel, LabelWithTextModel, LabelWithUploadModel, LabelWithCascaderModel } from './interface';
+import { IFormCheckboxProps,IFormDatePickerProps,IFormInputNumberProps,IFormInputProps,IFormMonthPickerProps,IFormRadioButtonProps,IFormRangePickerProps,IFormRenderProps,IFormSelectProps,IFormState,IFormSwitchProps,IFormTextProps,IFormUploadProps,InstanceProForm,LabelWithCheckboxModel,LabelWithDatePickerModel,LabelWithSelectModel,LabelWithInputModel,LabelWithInputNumberModel,LabelWithMonthPickerModel,LabelWithRadioButtonModel,LabelWithRangePickerModel,LabelWithRenderModel,LabelWithSwitchModel,LabelWithTextModel,LabelWithUploadModel,LabelWithCascaderModel } from './interface';
 import FormInput from './FormInput';
 import FormInputNumber from './FormInputNumber';
 import FormSelect from './FormSelect';
@@ -26,12 +26,11 @@ import FormUpload from './FormUpload';
 import FormSwitch from './FormSwitch';
 import FormRadioButton from './FormRadioButton';
 import FormText from './FormText';
-import { BaseFormFields } from 'legions-lunar/model';
 import { ClassOf } from 'legions-lunar/types/api/typescript';
-import { createFormRule } from 'legions-decorator/async.validator'; 
+import { createFormRule,getFormProperty } from 'legions-decorator/async.validator';
 import { shortHash } from 'legions-lunar/object-hash';
 import FormCheckbox from './FormCheckbox';
-import FormCascader, { IFormCascaderProps } from './FormCascader';
+import FormCascader,{ IFormCascaderProps } from './FormCascader';
 interface IRenderComponentParams<T> {
 
     /**
@@ -66,7 +65,7 @@ interface IRenderComponentParams<T> {
 interface IProFormUtils {
     componentModel: LabelWithInputModel | LabelWithInputNumberModel | LabelWithDatePickerModel | LabelWithMonthPickerModel |
     LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel |
-    LabelWithRadioButtonModel | LabelWithTextModel | LabelWithSelectModel | LabelWithCheckboxModel|LabelWithCascaderModel
+    LabelWithRadioButtonModel | LabelWithTextModel | LabelWithSelectModel | LabelWithCheckboxModel | LabelWithCascaderModel
 }
 export const size = {
     'default': {
@@ -78,10 +77,10 @@ export const size = {
     }
 }
 export const formClasses = {
-     itemRowHeight : `form-item-row-height`,
-     tableError :'table-error',
+    itemRowHeight: `form-item-row-height`,
+    tableError: 'table-error',
     tableNotEror: 'table-not-error',
-    itemDefaultError:'form-item-default-error',
+    itemDefaultError: 'form-item-default-error',
 }
 export class ProFormUtils<Store,global = {}>{
     static LabelWithInputNumberModel = LabelWithInputNumberModel;
@@ -157,24 +156,24 @@ export class ProFormUtils<Store,global = {}>{
             //console.warn(`【${key}】:Configuration information, will be covered`)
         }
     }
-    private initFromState(key: string,formRef: InstanceProForm,iFormItemProps:IProFormUtils['componentModel']) {
+    private initFromState(key: string,formRef: InstanceProForm,iFormItemProps: IProFormUtils['componentModel']) {
         if (formRef && key) {
             const storeView = formRef.store.get(formRef.uid);
             storeView._initFormItemField(key,iFormItemProps,'custom')
         }
     }
-    private createUid(name:string) {
+    private createUid(name: string) {
         const timeId = new Date().getTime()
-         const uid = `${name}-${shortHash(`${timeId}${name}`)}`
-         return uid;
-     }
-     private transformAntdProps(props: IAntdProps) {
-         const id = props.id;
-         if (!this[id]) {
-             return {...props,uuid:this.createUid(id)}
-         }
-         return this[id]['iAntdProps'];
-     }
+        const uid = `${name}-${shortHash(`${timeId}${name}`)}`
+        return uid;
+    }
+    private transformAntdProps(props: IAntdProps) {
+        const id = props.id;
+        if (!this[id]) {
+            return { ...props,uuid: this.createUid(id) }
+        }
+        return this[id]['iAntdProps'];
+    }
     renderSelectConfig(options: IRenderComponentParams<IFormSelectProps>): LabelWithSelectModel {
         this.chkRenderConfig(options.iAntdProps.id)
         this[options.iAntdProps.id] = new LabelWithSelectModel(this.transformAntdProps(options.iAntdProps),options.iFormProps,options.rules || [])
@@ -262,7 +261,7 @@ export class ProFormUtils<Store,global = {}>{
             if (item) {
                 control = item.value
             }
-           
+
             const formSize = storeView.computedFormSize;
             const hasError = ProFormUtils.isFormHasError(form.getFieldsError)
             const error = form.getFieldError(control.iAntdProps.id)
@@ -283,10 +282,10 @@ export class ProFormUtils<Store,global = {}>{
                 control.iAntdProps.className = `${control.iAntdProps.className || ''} ${size[formSize].formItemLayOut} ${hasError ? '' : size[formSize].formItemLayOut} ${error ? formClasses.itemDefaultError : ''}` /**  表单间距调小*/
             }
         }
-        
-        
+
+
         /* console.log(control,'controlcus'); */
-        if (control.iFormProps.visible===false) {
+        if (control.iFormProps.visible === false) {
             return null;
         }
         if (control instanceof LabelWithInputModel) {
@@ -467,13 +466,95 @@ export class ProFormUtils<Store,global = {}>{
 type IFormRules<FormRules> = {
     [P in keyof FormRules]: IAntdRule[];
 }
-export class ProFormFields<T> extends BaseFormFields{
+export class ProFormFields {
     constructor() {
-        super();
+
     }
     /** 初始化表单规则 */
-   static initFormRules<Form,P>(FormFields: ClassOf<Form>,props: P):IFormRules<Form> {
-    //@ts-ignore
-       return createFormRule(FormFields,new FormFields(),{props})
+    static initFormRules<Form,P>(FormFields: ClassOf<Form>,props: P): IFormRules<Form> {
+        //@ts-ignore
+        return createFormRule(FormFields,new FormFields(),{ props })
     }
+    /**
+  *
+  * 服务端数据同步到表单实体模型
+  *
+  * @static
+  * @template Form
+  * @template ResData
+  * @param {Form} formFields 表单实体模型
+  * @param {ResData} data 服务端实体模型
+  * @memberof BaseFormFields
+  */
+    static dataToFormFields<Form,ResData = Form>(
+        formFields: Form,
+        data: ResData
+    ): Form {
+        // @ts-ignore
+        const obj: Form = {};
+        Object.keys(formFields).forEach(key => {
+            // @ts-ignore
+            const meta = getFormProperty<Form>(formFields,key)
+            const RequestParamKey = meta.requestParamKey || key;
+            if (
+                meta['beforeDataToFormFields'] &&
+                typeof meta['beforeDataToFormFields'] === 'function'
+            ) {
+                obj[key] = {
+                    value: meta['beforeDataToFormFields'](
+                        data[RequestParamKey],
+                        data
+                    ),
+                };
+            } else {
+                obj[key] = { value: data[RequestParamKey] };
+            }
+        });
+        return obj;
+    }
+    /**
+   * 表单UI数据同步到表单接口
+   *
+   *
+   * @static
+   * @template Form 表单实体模型
+   * @template FormPrams 表单接口参数结构
+   * @param {Form} formFields 前端UI表单实体模型
+   * @param {Form} values 映射的数据源
+   * @returns {FormPrams} 返回数据结构
+   * @memberof 
+   */
+  static formFieldsToData<Form, FormPrams>(
+    formFields: Function,
+    values?: Form
+  ): FormPrams {
+    // @ts-ignore
+    const obj: FormPrams = {};
+    let model = formFields;
+    let value = formFields;
+    if (typeof model === 'function') {
+      // @ts-ignore
+      model = new formFields();
+      // @ts-ignore
+      value = values || {};
+    }
+    Object.keys(model).forEach(key => {
+      const RequestParamKey = model[key]['requestParamKey'] || key;
+      if (model[key]['ignore'] === true) {
+        return;
+      }
+      if (
+        model[key]['submitBeforeTransform'] &&
+        typeof model[key]['submitBeforeTransform'] === 'function'
+      ) {
+        obj[RequestParamKey] = model[key]['submitBeforeTransform'](
+          value[key].value,
+          value
+        );
+      } else {
+        obj[RequestParamKey] = value[key].value || '';
+      }
+    });
+    return obj;
+  }
 }

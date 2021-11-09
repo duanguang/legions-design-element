@@ -10109,10 +10109,10 @@ legions-control-container@^0.0.5:
   dependencies:
     reflect-metadata "^0.1.13"
 
-legions-decorator@^0.0.6:
-  version "0.0.6"
-  resolved "https://registry.nlark.com/legions-decorator/download/legions-decorator-0.0.6.tgz#3f9a98333d6457a2f35896727c298f4e422bddc0"
-  integrity sha1-P5qYMz1kV6LzWJZyfCmPTkIr3cA=
+legions-decorator@^0.0.8:
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/legions-decorator/-/legions-decorator-0.0.8.tgz#c535974f4373079003f6986302af4ef5b023c3c1"
+  integrity sha512-RMPhx++nyo+pORbUCxM1dF6rJ17Crf04QjdVXxmWdClsvvBh23b8t5vcUSQw+WciPBy0cRg8333/ikti8RKs4g==
   dependencies:
     legions-utils-tool "^0.0.11"
     reflect-metadata "^0.1.13"

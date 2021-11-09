@@ -9,6 +9,7 @@ import { InstanceProForm } from '../../../components/LegionsProForm/interface'
 import { FormFields,FormFields1 } from './model';
 import { ClassOf } from 'legions-lunar/types/api/typescript';
 import TodoStore from 'examples/stores/TodoStore';
+import { getFormMetaProperty } from 'legions-decorator/async.validator';
 interface IProps {
     todoStore:TodoStore
  }
@@ -39,7 +40,7 @@ export class ProForm extends React.Component<IProps,IState> {
     createConfig() {
         const rules = FormFields.initFormRules<FormFields,{that:ProForm}>(FormFields,{that:this})
         const formUtils = new LegionsProForm.ProFormUtils();
-        
+        console.log(getFormMetaProperty<FormFields1>(new FormFields1(),'text'))
         formUtils.renderInputConfig({
             iAntdProps: formUtils.createAntdProps('text',1,),
             iFormProps: {

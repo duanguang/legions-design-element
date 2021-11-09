@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-29 10:26:57
- * @LastEditTime: 2021-11-09 00:01:06
+ * @LastEditTime: 2021-11-09 21:49:51
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProForm/interface/form.ts
@@ -121,8 +121,6 @@ interface IMethods {
 
   /** 清空表单选项 */
   clearFormItem: () => void;
-
-  formFieldsToData:()=>any
 }
 export interface IFormState {
   /**

@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-29 10:18:01
- * @LastEditTime: 2021-11-08 23:45:17
+ * @LastEditTime: 2021-11-09 22:40:56
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreForm/proFormStore.ts
@@ -849,7 +849,6 @@ export default class ProFormStore extends LegionsStore.StoreBase {
           ...view.InputDataModel,
           ...formFields,
         }
-        console.log(view.InputDataModel,'InputDataModel')
         Object.keys(props).forEach(function (item) {
           if (originFormModel.hasOwnProperty(item)) {
               originFormModel[item] = {
