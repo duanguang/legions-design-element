@@ -6,7 +6,7 @@ import { observablePromise } from 'legions/store-utils';
 import { observable } from 'legions/store';
 import { HttpConfig } from '../../constants/httpConfig';
 import { InstanceProForm } from '../../../components/LegionsProForm/interface'
-import { FormFields,FormFields1 } from './model';
+import { FormFields } from './model';
 import { ClassOf } from 'legions-lunar/types/api/typescript';
 import TodoStore from 'examples/stores/TodoStore';
 import { getFormMetaProperty } from 'legions-decorator/async.validator';
@@ -40,7 +40,6 @@ export class ProForm extends React.Component<IProps,IState> {
     createConfig() {
         const rules = FormFields.initFormRules<FormFields,{that:ProForm}>(FormFields,{that:this})
         const formUtils = new LegionsProForm.ProFormUtils();
-        console.log(getFormMetaProperty<FormFields1>(new FormFields1(),'text'))
         formUtils.renderInputConfig({
             iAntdProps: formUtils.createAntdProps('text',1,),
             iFormProps: {
@@ -454,7 +453,9 @@ export class ProForm extends React.Component<IProps,IState> {
                         })
                     }}>设置为多选</Button>
                     <Button onClick={() => {
-                        this.formRef.store.updateFormInputData(this.formRef.uid,{text:{value:'222'}})
+                        const value = LegionsProForm.ProFormFields.dataToFormFields(FormFields,{ ss: 'xxx' })
+                        console.log(value,'valuevaluevalue')
+                        this.formRef.store.updateFormInputData(this.formRef.uid,value)
                     }}>文本框赋值</Button>
                     <Button onClick={() => {
                         this.formRef.methods.clearFormItem();
@@ -540,7 +541,7 @@ export class ProForm extends React.Component<IProps,IState> {
             content={
                 <LegionsProForm
                     <FormFields>
-                    InputDataModel={FormFields1}
+                    InputDataModel={FormFields}
                     onReady={(form,ref) => {
                         this.formRef = Object.assign(ref,{ that: this });
                         this.formRef.viewModel.enableEnterSwitch = true;
@@ -552,6 +553,7 @@ export class ProForm extends React.Component<IProps,IState> {
                     }} */
                     onFieldsChange={(props,formFields) => {
                         console.log('onFieldsChange',formFields,this.formRef.viewModel.InputDataModel);
+                        console.log('onFieldsChange1',this.formRef.viewModel.targetFormModelData);
                     }}
                     size="small"
                     controls={this.createConfig()}

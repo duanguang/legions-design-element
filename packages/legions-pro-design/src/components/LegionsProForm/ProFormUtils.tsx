@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-08 15:19:23
- * @LastEditTime: 2021-11-09 23:46:57
+ * @LastEditTime: 2021-11-11 00:11:08
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProForm/ProFormUtils.tsx
@@ -27,7 +27,7 @@ import FormSwitch from './FormSwitch';
 import FormRadioButton from './FormRadioButton';
 import FormText from './FormText';
 import { ClassOf } from 'legions-lunar/types/api/typescript';
-import { createFormRule,getFormProperty } from 'legions-decorator/async.validator';
+import { createFormRule,getFormMetaProperty } from 'legions-decorator/async.validator';
 import { shortHash } from 'legions-lunar/object-hash';
 import FormCheckbox from './FormCheckbox';
 import FormCascader,{ IFormCascaderProps } from './FormCascader';
@@ -486,28 +486,32 @@ export class ProFormFields {
   * @param {ResData} data 服务端实体模型
   * @memberof BaseFormFields
   */
-    static dataToFormFields<Form,ResData = Form>(
-        formFields: Form,
-        data: ResData
-    ): Form {
+    static dataToFormFields<Form>(
+        formFields: Form|ClassOf<Form>,
+        data: any,
+    ): any {
         // @ts-ignore
         const obj: Form = {};
-        Object.keys(formFields).forEach(key => {
+        let model = formFields
+        if (typeof formFields === 'function') {
             // @ts-ignore
-            const meta = getFormProperty<Form>(formFields,key)
-            const RequestParamKey = meta.requestParamKey || key;
+            model=new formFields()
+        }
+        Object.keys(model).forEach(key => {
+            // @ts-ignore
+            const meta = getFormMetaProperty<Form>(model,key)
+            const RequestParamKey = meta&&meta.requestParamKey || key;
+            
             if (
-                meta['beforeDataToFormFields'] &&
+                meta&&meta['beforeDataToFormFields'] &&
                 typeof meta['beforeDataToFormFields'] === 'function'
             ) {
-                obj[key] = {
-                    value: meta['beforeDataToFormFields'](
-                        data[RequestParamKey],
-                        data
-                    ),
-                };
+                obj[key] = meta['beforeDataToFormFields'](
+                    data[RequestParamKey],
+                    data
+                );
             } else {
-                obj[key] = { value: data[RequestParamKey] };
+                obj[key] = data[RequestParamKey];
             }
         });
         return obj;

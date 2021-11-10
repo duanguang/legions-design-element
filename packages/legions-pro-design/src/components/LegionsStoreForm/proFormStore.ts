@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-29 10:18:01
- * @LastEditTime: 2021-11-09 22:40:56
+ * @LastEditTime: 2021-11-11 00:02:56
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreForm/proFormStore.ts
@@ -28,6 +28,7 @@ import { SelectDatabaseDB } from '../db';
 import LegionsModels from '../LegionsModels';
 import { merge } from 'lodash';
 import { TabsFormView } from './tabsView';
+import { isObject } from 'legions-utils-tool/type.validation';
 /* import { DexieUtils } from '../utils/dexie'; */
 
 type Proxify<T> = {
@@ -230,12 +231,15 @@ export interface IOtherView {
   form: WrappedFormUtils;
 
   /**
-   *表单输入信息数据模型
+   *表单输入信息数据模型,原antd表单数据结构体 xx:{value:'xxx'}
    *
    * @type {Object}
    * @memberof IOtherView
    */
   InputDataModel?: Object;
+
+  /** 对InputDataModel 数据进行转换成正常的数据结构体 */
+  targetFormModelData?:any
 
   /**
    * 表单输入数据类实例模型
@@ -713,6 +717,7 @@ export default class ProFormStore extends LegionsStore.StoreBase {
             formView = observable(formView); */
       formView = extendObservable(formView, {
         InputDataModel: new options.InputDataModel(),
+        targetFormModelData:new options.InputDataModel(),
       });
     }
     this.HLFormContainer.set(
@@ -845,9 +850,19 @@ export default class ProFormStore extends LegionsStore.StoreBase {
       if (typeof view.InputDataModelClass === 'function') {
         // @ts-ignore
         const originFormModel = new view.InputDataModelClass()
+        let newFormFields = {}
+        Object.keys(formFields).map((key) => {
+          if (isObject(formFields[key])&&formFields[key].hasOwnProperty('value')) {
+            newFormFields[key]=formFields[key]
+          } else {
+            newFormFields[key] = {
+              value:formFields[key]
+            }
+          }
+        })
         const props = {
           ...view.InputDataModel,
-          ...formFields,
+          ...newFormFields,
         }
         Object.keys(props).forEach(function (item) {
           if (originFormModel.hasOwnProperty(item)) {
@@ -856,7 +871,7 @@ export default class ProFormStore extends LegionsStore.StoreBase {
                    value: props[item]?props[item].value:void 0,
               }
           }
-      });
+        });
         // @ts-ignore
         view.InputDataModel = originFormModel;
       } else {
@@ -865,6 +880,10 @@ export default class ProFormStore extends LegionsStore.StoreBase {
           ...formFields,
         }
       }
+      console.log('ssss',view.InputDataModel)
+      Object.keys(view.InputDataModel).map((key) => {
+        view.targetFormModelData[key]=view.InputDataModel[key].value
+      })
       Object.keys(formFields).map((key) => {
         if (!view.renderNodeQueue.has(key)) {
           view.renderNodeQueue.set(key,key)
