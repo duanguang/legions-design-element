@@ -11,15 +11,15 @@ import { ClassOf } from 'legions-lunar/types/api/typescript';
 import TodoStore from 'examples/stores/TodoStore';
 import { getFormMetaProperty } from 'legions-decorator/async.validator';
 interface IProps {
-    todoStore:TodoStore
- }
+    todoStore: TodoStore
+}
 interface IState {
     visible: boolean;
     disabled: boolean;
     xssValue: string;
 }
 @bind({
-    todoStore:TodoStore
+    todoStore: TodoStore
 })
 @observer
 export class ProForm extends React.Component<IProps,IState> {
@@ -29,16 +29,16 @@ export class ProForm extends React.Component<IProps,IState> {
         this.state = {
             visible: true,
             disabled: false,
-            xssValue:'',
+            xssValue: '',
         }
         console.log(this.props.todoStore,'todoStore:TodoStore');
     }
     arr = this.createConfig()
     componentDidMount() {
-    /* this.formRef.viewModel.setFormState('price',{visible:false}) */
+        /* this.formRef.viewModel.setFormState('price',{visible:false}) */
     }
     createConfig() {
-        const rules = FormFields.initFormRules<FormFields,{that:ProForm}>(FormFields,{that:this})
+        const rules = FormFields.initFormRules<FormFields,{ that: ProForm }>(FormFields,{ that: this })
         const formUtils = new LegionsProForm.ProFormUtils();
         formUtils.renderInputConfig({
             iAntdProps: formUtils.createAntdProps('text',1,),
@@ -47,7 +47,7 @@ export class ProForm extends React.Component<IProps,IState> {
                 maxLength: '50',
                 type: 'text',
                 /* visible:false, */
-            /* disabled: true, */
+                /* disabled: true, */
                 onChange: (even) => {
                     const value = this.formRef.viewModel.InputDataModel as FormFields;
                     console.log(value,even,'value');
@@ -55,7 +55,7 @@ export class ProForm extends React.Component<IProps,IState> {
                         xssValue:value.text.value
                     }) */
                 },
-                colon:false
+                colon: false
             },
             rules: rules.text
         });
@@ -104,7 +104,7 @@ export class ProForm extends React.Component<IProps,IState> {
                     label: '订单1',
                     key: '1',
                     extendedField: '222',
-                   /*  disabled: true, */
+                    /*  disabled: true, */
                 },
                 {
                     value: '工单',
@@ -194,7 +194,7 @@ export class ProForm extends React.Component<IProps,IState> {
                     },
                 ],
                 maxTagCount: 2,
-               /*  labelInValue: true, */
+                /*  labelInValue: true, */
                 mode: 'multiple',
             },
             rules: rules.selectedItemMultiple,
@@ -231,29 +231,29 @@ export class ProForm extends React.Component<IProps,IState> {
             iAntdProps: formUtils.createAntdProps('cascader',2,'级联'),
             iFormProps: {
                 ...formUtils.createLayout('级联',5,7),
-                options:[{
+                options: [{
                     value: 'zhejiang',
                     label: '浙江',
                     children: [{
-                      value: 'hangzhou',
-                      label: '杭州',
-                      children: [{
-                        value: 'xihu',
-                        label: 'West Lake',
-                      }],
+                        value: 'hangzhou',
+                        label: '杭州',
+                        children: [{
+                            value: 'xihu',
+                            label: 'West Lake',
+                        }],
                     }],
-                  }, {
+                },{
                     value: 'jiangsu',
                     label: 'Jiangsu',
                     children: [{
-                      value: 'nanjing',
-                      label: 'Nanjing',
-                      children: [{
-                        value: 'zhonghuamen',
-                        label: 'Zhong Hua Men',
-                      }],
+                        value: 'nanjing',
+                        label: 'Nanjing',
+                        children: [{
+                            value: 'zhonghuamen',
+                            label: 'Zhong Hua Men',
+                        }],
                     }],
-                    }],
+                }],
                 onChange: (value,selectedOptions) => {
                     console.log(selectedOptions,'selectedOptions');
                 }
@@ -335,20 +335,20 @@ export class ProForm extends React.Component<IProps,IState> {
                 <Row>
                     <Button type="primary" htmlType="submit" onClick={() => {
                         const item = this.formRef.viewModel.getFormItemField('text');
-                        if (item&&item.value) {
+                        if (item && item.value) {
                             /* this.setState({
                                 visible: !visibleText
                             }) */
                             this.formRef.methods.setFormStates('text',(value) => {
-                                value.iFormProps.visible=false
+                                value.iFormProps.visible = false
                             })
                         }
 
-                    }}>{ '隐藏文本框'}</Button>
+                    }}>{'隐藏文本框'}</Button>
 
                     <Button style={{ marginLeft: '10px' }} type="primary" htmlType="submit" onClick={() => {
                         const item = this.formRef.viewModel.getFormItemField('text');
-                        if (item&&item.value) {
+                        if (item && item.value) {
                             this.formRef.methods.setFormStates('text',(value) => {
                                 value.iFormProps.visible = true;
                             })
@@ -379,7 +379,7 @@ export class ProForm extends React.Component<IProps,IState> {
 
                     <Button type="primary" htmlType="submit" onClick={() => {
                         const item = this.formRef.viewModel.getFormItemField('price');
-                        if (item&&item.value) {
+                        if (item && item.value) {
 
                             let visible = item.value.iFormProps.visible;
                             if (visible === void 0) {
@@ -437,7 +437,7 @@ export class ProForm extends React.Component<IProps,IState> {
                             }
                             if (!disabled) {
                                 this.formRef.methods.setFormStates<InstanceType<typeof LegionsProForm.LabelWithInputModel>>('price',(value) => {
-                                    value.iFormProps.disabled=true
+                                    value.iFormProps.disabled = true
                                 })
                             }
 
@@ -448,15 +448,20 @@ export class ProForm extends React.Component<IProps,IState> {
                         this.formRef.viewModel.updateFormSize('table')
                     }}>表单尺寸</Button>
                     <Button onClick={() => {
-                        this.formRef.methods.setFormStates<InstanceType<typeof LegionsProForm['LabelWithSelectModel']>>('selectedItem',(value)=>{
+                        this.formRef.methods.setFormStates<InstanceType<typeof LegionsProForm['LabelWithSelectModel']>>('selectedItem',(value) => {
                             value.iFormProps.mode = 'multiple';
                         })
                     }}>设置为多选</Button>
                     <Button onClick={() => {
-                        const value = LegionsProForm.ProFormFields.dataToFormFields(FormFields,{ ss: 'xxx' })
+                        const value = LegionsProForm.ProFormFields.responseBodyToFormFields(FormFields,{ text: 'xxx' })
                         console.log(value,'valuevaluevalue')
                         this.formRef.store.updateFormInputData(this.formRef.uid,value)
                     }}>文本框赋值</Button>
+                    <Button onClick={() => {
+                        const value = LegionsProForm.ProFormFields.formFieldsToRepuestBody<FormFields>(this.formRef.viewModel.targetFormModelData)
+                        console.log(value,'formFieldsToRepuestBody')
+
+                    }}>表单数据同步到接口数据</Button>
                     <Button onClick={() => {
                         this.formRef.methods.clearFormItem();
                     }}>清空表单项</Button>
@@ -559,15 +564,15 @@ export class ProForm extends React.Component<IProps,IState> {
                     controls={this.createConfig()}
                     colCount={2}
                     group={[{
-                        name:'文本输入',
+                        name: '文本输入',
                         id: 1,
                         active: true,
-                        isFolding:true,
+                        isFolding: true,
                     },{
-                        name:'下拉框',
+                        name: '下拉框',
                         id: 2,
                         active: true,
-                        isFolding:true,
+                        isFolding: true,
                     }]}
                 ></LegionsProForm>
             }

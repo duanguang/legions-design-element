@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-15 15:42:07
- * @LastEditTime: 2021-11-11 00:00:22
+ * @LastEditTime: 2021-11-11 23:13:52
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/examples/containers/proForm/model.ts
@@ -31,7 +31,12 @@ export class FormFields extends LegionsProForm.ProFormFields {
         error: '文本框',
         desc: '文本框',
         type: 'string',
-        requestParamKey:'ss'
+        beforeDataToFormFields: (value,data) => {
+            return value
+        },
+        submitBeforeTransform: (value,data) => {
+            return `ss${value}`
+        }
     })
     text: string=void 0
     @FormRuleProperty({

@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-08 15:19:23
- * @LastEditTime: 2021-11-11 00:11:08
+ * @LastEditTime: 2021-11-11 23:12:32
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProForm/ProFormUtils.tsx
@@ -477,88 +477,82 @@ export class ProFormFields {
     }
     /**
   *
-  * 服务端数据同步到表单实体模型
+  * 服务端数据同步到表单数据
   *
   * @static
   * @template Form
-  * @template ResData
-  * @param {Form} formFields 表单实体模型
-  * @param {ResData} data 服务端实体模型
-  * @memberof BaseFormFields
+  * @template 
+  * @param {Form} formFields 表单实体
+  * @param {any} data 服务端数据
   */
-    static dataToFormFields<Form>(
-        formFields: Form|ClassOf<Form>,
+    static responseBodyToFormFields<Form>(
+        formFields: Form | ClassOf<Form>,
         data: any,
-    ): any {
+    ): Form {
         // @ts-ignore
-        const obj: Form = {};
+        const result: Form = {};
         let model = formFields
         if (typeof formFields === 'function') {
             // @ts-ignore
-            model=new formFields()
+            model = new formFields()
         }
         Object.keys(model).forEach(key => {
             // @ts-ignore
             const meta = getFormMetaProperty<Form>(model,key)
-            const RequestParamKey = meta&&meta.requestParamKey || key;
-            
+            const requestKey = meta && meta.requestKey || key;
             if (
-                meta&&meta['beforeDataToFormFields'] &&
+                meta && meta['beforeDataToFormFields'] &&
                 typeof meta['beforeDataToFormFields'] === 'function'
             ) {
-                obj[key] = meta['beforeDataToFormFields'](
-                    data[RequestParamKey],
+                result[key] = meta['beforeDataToFormFields'](
+                    data[requestKey],
                     data
                 );
             } else {
-                obj[key] = data[RequestParamKey];
+                result[key] = data[requestKey];
             }
         });
-        return obj;
+        return result;
     }
     /**
-   * 表单UI数据同步到表单接口
+   * 表单数据生成表单服务端接口可用数据
    *
    *
    * @static
    * @template Form 表单实体模型
-   * @template FormPrams 表单接口参数结构
-   * @param {Form} formFields 前端UI表单实体模型
-   * @param {Form} values 映射的数据源
-   * @returns {FormPrams} 返回数据结构
+   * @template RepuestBody 表单提交接口所需接口数据
+   * @param {Form} values 表单数据
+   * @returns {RepuestBody} 
    * @memberof 
    */
-  static formFieldsToData<Form, FormPrams>(
-    formFields: Function,
-    values?: Form
-  ): FormPrams {
-    // @ts-ignore
-    const obj: FormPrams = {};
-    let model = formFields;
-    let value = formFields;
-    if (typeof model === 'function') {
-      // @ts-ignore
-      model = new formFields();
-      // @ts-ignore
-      value = values || {};
+    static formFieldsToRepuestBody<Form,RepuestBody=Form>(
+        values: Form
+    ): RepuestBody {
+        // @ts-ignore
+        const result: RepuestBody = {};
+        Object.keys(values).forEach(key => {
+            // @ts-ignore
+            const meta = getFormMetaProperty<Form>(values,key)
+            const requestKey = meta && meta.requestKey || key;
+            let ignore = false;
+            if (meta && meta.hasOwnProperty('ignore')) {
+                ignore = meta.ignore
+            }
+            if (ignore === true) {
+                return;
+            }
+            if (
+                meta && meta['submitBeforeTransform'] &&
+                typeof meta['submitBeforeTransform'] === 'function'
+            ) {
+                result[requestKey] = meta['submitBeforeTransform'](
+                    values[key],
+                    values
+                );
+            } else {
+                result[requestKey] = values[key] || '';
+            }
+        });
+        return result;
     }
-    Object.keys(model).forEach(key => {
-      const RequestParamKey = model[key]['requestParamKey'] || key;
-      if (model[key]['ignore'] === true) {
-        return;
-      }
-      if (
-        model[key]['submitBeforeTransform'] &&
-        typeof model[key]['submitBeforeTransform'] === 'function'
-      ) {
-        obj[RequestParamKey] = model[key]['submitBeforeTransform'](
-          value[key].value,
-          value
-        );
-      } else {
-        obj[RequestParamKey] = value[key].value || '';
-      }
-    });
-    return obj;
-  }
 }
