@@ -10118,6 +10118,15 @@ legions-decorator@^0.0.8:
     reflect-metadata "^0.1.13"
     warning "^3.0.0"
 
+legions-decorator@^0.0.9:
+  version "0.0.9"
+  resolved "http://localhost:4873/legions-decorator/-/legions-decorator-0.0.9.tgz#9978276730a0e6eaaf3e723a1d5505ab711b040d"
+  integrity sha512-xiBYogodttL81wvufnqIt3fmh3/nhWWc7+xcK3BKEvrfXJz4zx+UHtsR+kFzVuxynsenOXO/FPv+GQPkUW3msA==
+  dependencies:
+    legions-utils-tool "^0.0.11"
+    reflect-metadata "^0.1.13"
+    warning "^3.0.0"
+
 legions-fetch@^0.0.2:
   version "0.0.2"
   resolved "https://registry.nlark.com/legions-fetch/download/legions-fetch-0.0.2.tgz#333d61eb642961452801c9c59bb95e408e465526"
@@ -10133,20 +10142,13 @@ legions-import-html-entry@^0.0.5:
   dependencies:
     whatwg-fetch "^3.4.1"
 
-legions-lunar@^0.0.7:
-  version "0.0.7"
-  resolved "https://registry.nlark.com/legions-lunar/download/legions-lunar-0.0.7.tgz#7b695db7fa2637c223cdbb8da35077ff43346f79"
-  integrity sha1-e2ldt/omN8IjzbuNo1B3/0M0b3k=
+legions-lunar@^0.0.9:
+  version "0.0.9"
+  resolved "http://localhost:4873/legions-lunar/-/legions-lunar-0.0.9.tgz#10e00fe277c2ef6aa77844a291559d037e7967c7"
+  integrity sha512-1M/FFN5h66gP8D99PARiP4J073gmgZ82bCni/E/Wl1CFe+ee2JP8k+N62KOKf0M1KZTkWVp600Kemn6bcT+fqg==
   dependencies:
-    legions-thirdparty-plugin "^0.0.8"
-    warning "^3.0.0"
-
-legions-lunar@^0.0.8:
-  version "0.0.8"
-  resolved "https://registry.nlark.com/legions-lunar/download/legions-lunar-0.0.8.tgz#6efc94165fa7aed30b7b1af9ede216deaff990c6"
-  integrity sha1-bvyUFl+nrtMLexr57eIW3q/5kMY=
-  dependencies:
-    legions-thirdparty-plugin "^0.0.8"
+    legions-thirdparty-plugin "^0.0.9"
+    legions-utils-tool "^0.0.11"
     warning "^3.0.0"
 
 legions-micro-service@^0.1.0:
@@ -10201,11 +10203,6 @@ legions-socket@^0.0.2:
   integrity sha1-NQw0LiiCbt1JIliRjGxOv9c2KzA=
   dependencies:
     socket.io-client "^2.2.0"
-
-legions-thirdparty-plugin@^0.0.8:
-  version "0.0.8"
-  resolved "https://registry.npm.taobao.org/legions-thirdparty-plugin/download/legions-thirdparty-plugin-0.0.8.tgz#b5a683c58fc6d0bd2a8a155015ad9a2e4ec277e4"
-  integrity sha1-taaDxY/G0L0qihVQFa2aLk7Cd+Q=
 
 legions-thirdparty-plugin@^0.0.9:
   version "0.0.9"
