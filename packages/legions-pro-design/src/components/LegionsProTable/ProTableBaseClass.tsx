@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-13 11:06:29
- * @LastEditTime: 2021-09-20 14:46:58
+ * @LastEditTime: 2021-11-16 23:50:04
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProTable/ProTableBaseClass.tsx
@@ -14,7 +14,6 @@ import * as mobx from 'mobx';
 import { TableColumnConfig } from '../interface/antd';
 import { InstanceProTable, ITableColumnConfigProps } from './interface';
 import LegionsStoreTable from '../LegionsStoreTable';
-import { ClassOf } from 'legions-lunar/types/api/typescript';
 import {mobxVersion} from 'brain-store-utils'
 /**
  * 列表组件基类

@@ -15,7 +15,6 @@ import { inject } from 'legions/store';
 import { IPanes } from '../../LegionsStoreLayout/interface';
 import { IRouter } from '../../interface/router';
 import { IUserInfo,ILegionsPluginDataOrigin } from '../../interface';
-import { ClassOf } from 'legions-lunar/types/api/typescript';
 interface IProps extends IUserInfo,MenuProps {
   store?: InstanceType<typeof LegionsStoreLayout.MenuStore>
   logo: string,

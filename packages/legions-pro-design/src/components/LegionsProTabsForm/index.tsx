@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-28 15:58:15
- * @LastEditTime: 2021-03-09 10:33:48
+ * @LastEditTime: 2021-11-16 23:58:34
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProTabsForm/index.tsx
@@ -14,7 +14,7 @@ import React from 'react';
 import { shortHash } from 'legions-lunar/object-hash';
 import LegionsProForm from '../LegionsProForm';
 import { IProFormFields, IProTabsFormAddTabsMap, ITabsFormItem } from '../LegionsStoreForm/interface';
-import { ClassOf } from 'legions-lunar/types/api/typescript';
+import { ClassOf } from 'legions-lunar/api/typescript';
 import { IGroup,InstanceProForm } from '../LegionsProForm/interface';
 import { TabPaneProps, TabsProps } from 'antd/lib/tabs';
 import { Weaken } from '../interface';

@@ -26,8 +26,8 @@ import LegionsProDragger from '../LegionsProDragger';
 import get from 'lodash/get'
 import { ValidateCallback } from 'antd/lib/form/Form';
 import { LabelWithCheckboxModel } from './FormCheckbox';
-import { BaseFormFields, LegionsLabeledValue } from 'legions-lunar/model';
-import { legionsPlugins,LegionsPluginsExecute,LoggerManager } from 'legions-lunar/legion.plugin.sdk';
+import { LegionsLabeledValue } from 'legions-lunar/model';
+import { LoggerManager } from 'legions-lunar/dw.report';
 import { formClasses,ProFormFields,ProFormUtils,size } from './ProFormUtils';
 import { cloneDeep } from 'lodash'
 import { LabelWithCascaderModel } from './FormCascader';
@@ -212,8 +212,7 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
         }
         LoggerManager.consoleLog({
             type,
-            logConent,
-            methodsName: 'onHLFormCycle',
+            logConent:JSON.stringify(logConent),
         })
     }
     logger(type: Parameters<ProForm['consoleLog']>[0],logObj?: Object) {
@@ -1022,7 +1021,6 @@ export class LegionsProForm<mapProps = {}> extends React.Component<IProFormProps
     static LabelWithTextModel = LabelWithTextModel;
     static LabelWithInputModel = LabelWithInputModel;
     static LabelWithCascaderModel = LabelWithCascaderModel;
-    static BaseFormFields = BaseFormFields
     static ProFormFields = ProFormFields
     /** 根据时间戳生成，每次初始化表单组件都会产生新的值*/
     uid = ''

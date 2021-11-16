@@ -6,7 +6,6 @@ import { observablePromise } from 'legions/store-utils';
 import { observable } from 'legions/store';
 import { HttpConfig } from '../../constants/httpConfig';
 import { FormFields } from '../proForm/model';
-import { ClassOf } from 'legions-lunar/types/api/typescript';
 import { InstanceLegionsModalForm } from '../../../components/LegionsProModalForm/interface'
 interface IProps { }
 interface IState {

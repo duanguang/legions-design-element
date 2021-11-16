@@ -57,7 +57,7 @@ export default class ProSelectDemo extends Component<IProps,IState> {
         const time = 2000;
         new Promise((resolve) => {
             setTimeout(() => {
-                resolve();
+                resolve(0);
             },time)
         }).then(() => {
             this.setState({ pageSelelctList: this.data })

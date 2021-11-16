@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-08 15:19:23
- * @LastEditTime: 2021-11-11 23:12:32
+ * @LastEditTime: 2021-11-16 23:42:55
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProForm/ProFormUtils.tsx
@@ -26,7 +26,7 @@ import FormUpload from './FormUpload';
 import FormSwitch from './FormSwitch';
 import FormRadioButton from './FormRadioButton';
 import FormText from './FormText';
-import { ClassOf } from 'legions-lunar/types/api/typescript';
+import { ClassOf } from 'legions-lunar/api/typescript';
 import { createFormRule,getFormMetaProperty } from 'legions-decorator/async.validator';
 import { shortHash } from 'legions-lunar/object-hash';
 import FormCheckbox from './FormCheckbox';

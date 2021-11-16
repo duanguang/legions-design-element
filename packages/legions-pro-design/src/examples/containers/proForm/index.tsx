@@ -7,7 +7,6 @@ import { observable } from 'legions/store';
 import { HttpConfig } from '../../constants/httpConfig';
 import { InstanceProForm } from '../../../components/LegionsProForm/interface'
 import { FormFields } from './model';
-import { ClassOf } from 'legions-lunar/types/api/typescript';
 import TodoStore from 'examples/stores/TodoStore';
 import { getFormMetaProperty } from 'legions-decorator/async.validator';
 interface IProps {

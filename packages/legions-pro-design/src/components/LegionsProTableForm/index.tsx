@@ -7,7 +7,6 @@
  */
 import { debounce } from 'legions-utils-tool/debounce';
 import React from 'react';
-import { BaseFormFields } from 'legions-lunar/model';
 import LegionsProTable from '../LegionsProTable';
 import {
     TableFormColumnsType,IAntdRule
@@ -314,7 +313,7 @@ export default class LegionsProTableForm<T = {},F = {}> extends LegionsProForm.C
                         })
                     }}
                     mapPropsToFields={(props) => {
-                        return new BaseFormFields.initMapPropsToFields({...props,...this.listToFormData(this.dataSourcesCache)})
+                        // return new BaseFormFields.initMapPropsToFields({...props,...this.listToFormData(this.dataSourcesCache)})
                     }}
                     onFieldsChange={((props,fields) => {
                         this.formRef.store.updateFormInputData(this.formRef.uid,fields);

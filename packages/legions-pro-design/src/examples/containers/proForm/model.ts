@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-15 15:42:07
- * @LastEditTime: 2021-11-11 23:13:52
+ * @LastEditTime: 2021-11-17 00:00:04
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/examples/containers/proForm/model.ts
@@ -9,8 +9,7 @@
  */
 import { UploadChangeParam } from 'antd/lib/upload/interface';
 import { FormRuleProperty } from 'legions-decorator/async.validator';
-import { IBaseFormFields,LegionsLabeledValue } from 'legions-lunar/model';
-import { ClassOf } from 'legions-lunar/types/api/typescript';
+import { LegionsLabeledValue } from 'legions-lunar/model';
 import { LegionsProForm } from '../../../components';
 interface IFormFieldUserRenderInput1 {
     currency: string,

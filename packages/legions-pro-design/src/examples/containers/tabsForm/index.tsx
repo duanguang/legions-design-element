@@ -7,7 +7,6 @@ import { observable } from 'legions/store';
 import { HttpConfig } from '../../constants/httpConfig';
 import { InstanceProForm } from '../../../components/LegionsProForm/interface'
 import { FormFields } from '../proForm/model';
-import { ClassOf } from 'legions-lunar/types/api/typescript';
 import LegionsProTabsForm from 'components/LegionsProTabsForm';
 import { InstanceTabsForm } from 'components/LegionsProTabsForm/interface';
 interface IProps { }

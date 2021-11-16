@@ -1,13 +1,13 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-14 16:26:10
- * @LastEditTime: 2021-09-06 23:56:46
+ * @LastEditTime: 2021-11-16 23:45:51
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsCore/legionsFetch.ts
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
-import { ClassOf } from 'legions-lunar/types/api/typescript';
+import { ClassOf } from 'legions-lunar/api/typescript';
 import { get,post,legionFetch } from 'legions/fetch';
 type HeadersPrams = {
     'Content-Type'?: 'application/json' | 'application/x-www-form-urlencoded'

@@ -27,7 +27,7 @@ import { InstanceProModal } from '../LegionsProModal/interface';
 import { observable,runInAction,toJS,isObservable } from 'mobx'
 import { observableViewModel } from 'legions/store-utils'
 import { runScriptsSdk } from 'legions-thirdparty-plugin';
-import { legionsPlugins,LoggerManager } from 'legions-lunar/legion.plugin.sdk';
+import { LoggerManager } from 'legions-lunar/dw.report';
 import { cloneDeep } from 'lodash';
 import { InstanceProTable } from './interface';
 import { ProTableBaseClass } from './ProTableBaseClass';
@@ -200,7 +200,6 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
             //@ts-ignore
             type:`LegionsProTable-${type}`,
             logConent,
-            methodsName: 'onHLTableCycle',
         })
 
     }
