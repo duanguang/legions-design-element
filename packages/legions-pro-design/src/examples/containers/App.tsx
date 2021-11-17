@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-03-02 14:19:18
- * @LastEditTime: 2021-07-20 00:15:56
+ * @LastEditTime: 2021-11-17 21:43:26
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/examples/containers/App.tsx
@@ -45,6 +45,7 @@ export default class App extends React.Component {
 
                {/*  <Route path="/table" component={ProTable}></Route>
                 <Route path="/table-form" component={ProTableForm}></Route> */}
+                   <Route path="/table-form" component={ProTableForm}></Route>
                     <Route path="/form" component={ProForm}></Route>
                     <Route path="/table" component={ProTable}></Route>
                 {/* <Route path="/tform" component={ProTabsForm}></Route>

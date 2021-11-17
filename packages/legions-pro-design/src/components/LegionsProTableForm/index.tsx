@@ -109,14 +109,15 @@ export default class LegionsProTableForm<T = {},F = {}> extends LegionsProForm.C
 
     constructor(props: ProTableFormProps<T,F>) {
         super(props);
-
+        const data=this.tranformData(cloneDeep(toJS(this.props.proTableConfig.dataSource)))
+        this.dataSourcesCache = data
         this.state = {
-            data: this.tranformData(cloneDeep(toJS(this.props.proTableConfig.dataSource))),
+            data ,
             recordEditData: new Map(),
             formConfigs:[],
         }
     }
-    updateRecordEditData = (record: Object) => {
+    updateRecordEditData = (record: ITableColumnConfigProps) => {
         const data = this.dataSourcesCache;
         const index = data.findIndex((item) => {
             return get(item,this.uniqueKey) === get(record,this.uniqueKey)
@@ -159,14 +160,14 @@ export default class LegionsProTableForm<T = {},F = {}> extends LegionsProForm.C
     }
     tranformData(data: T[],isRecordEdit:boolean = false) {
         return data.map((item,index) => {
-            const hlTableFormItem = {};
+            const TableFormItem = {};
             if (!has(item,this.uniqueKey)) {
-                hlTableFormItem[this.uniqueKey] = `${shortHash(new Date().getTime())}${index}`
+                TableFormItem[this.uniqueKey] = `${shortHash(new Date().getTime())}${index}`
             }
             return {
                 isRecordEdit: isRecordEdit,
                 ...item,
-                ...hlTableFormItem,
+                ...TableFormItem,
             }
         })
     }
@@ -289,6 +290,7 @@ export default class LegionsProTableForm<T = {},F = {}> extends LegionsProForm.C
 
     render() {
         const { style,className,proFormConfig } = this.props;
+        console.log('render tab form')
         return (
             <div style={style} className={`ProTableForm  legions-pro-tableForm ${className}`}>
                 <LegionsProForm<F>
@@ -313,10 +315,12 @@ export default class LegionsProTableForm<T = {},F = {}> extends LegionsProForm.C
                         })
                     }}
                     mapPropsToFields={(props) => {
-                        // return new BaseFormFields.initMapPropsToFields({...props,...this.listToFormData(this.dataSourcesCache)})
+                        const newProps = { ...props,...this.listToFormData(this.dataSourcesCache) }
+                        console.log(newProps,'mapPropsToFieldsmapPropsToFields')
+                        return newProps
                     }}
                     onFieldsChange={((props,fields) => {
-                        this.formRef.store.updateFormInputData(this.formRef.uid,fields);
+                        console.log('2222')
                         this.props.onChange(cloneDeep(this.formDataToList(this.dataSourcesCache,fields)));
                         proFormConfig.onFieldsChange && proFormConfig.onFieldsChange(props,fields)
                     }) as () => void}

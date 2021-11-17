@@ -7,7 +7,6 @@ import { observable } from 'legions/store';
 import { HttpConfig } from '../../constants/httpConfig';
 import { InstanceProForm } from '../../../components/LegionsProForm/interface'
 import { TableFormDemoField } from './model';
-import { ClassOf } from 'legions-lunar/types/api/typescript';
 import moment from 'moment';
 import { toJS } from 'mobx';
 import { cloneDeep } from 'lodash'
@@ -102,6 +101,7 @@ export class ProTableForm extends LegionsProTable.ProTableBaseClass<IProps,IStat
             const index = record['index'];
             return <div>
                 <Button type="primary" onClick={() => {
+                    console.log(record['isRecordEdit'],'record[]')
                     if (record['isRecordEdit']) {
                         console.log('tableColumns');
                         this.formRef.viewModel.form.validateFields((error) => {
@@ -220,7 +220,7 @@ export class ProTableForm extends LegionsProTable.ProTableBaseClass<IProps,IStat
                     }}
                     proTableConfig={{
                         columns: this.columnsData,
-                        dataSource: cloneDeep([...this.viewModel.list]),
+                        dataSource: this.viewModel.list,
                         uniqueKey: 'index',
 
                     }}

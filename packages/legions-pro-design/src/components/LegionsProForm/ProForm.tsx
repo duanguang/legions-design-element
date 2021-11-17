@@ -212,7 +212,7 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
         }
         LoggerManager.consoleLog({
             type,
-            logConent:JSON.stringify(logConent),
+            logConent:logConent,
         })
     }
     logger(type: Parameters<ProForm['consoleLog']>[0],logObj?: Object) {
@@ -995,6 +995,7 @@ const CustomizedForm = Form.create({
         return props.mapPropsToFields({...props,...originFormModel})
     },
     onFieldsChange: (props: IProFormProps,changedFields) => {
+        console.log(changedFields,'changedFields')
         props.store.updateFormInputData(props['uid'],changedFields)
         return props.onFieldsChange(props,changedFields);
         /* return debounceOnFieldsChange(props,changedFields) */

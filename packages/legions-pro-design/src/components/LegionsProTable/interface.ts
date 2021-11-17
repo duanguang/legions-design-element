@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-26 17:07:34
- * @LastEditTime: 2021-03-04 10:10:37
+ * @LastEditTime: 2021-11-17 22:45:04
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProTable/interface.ts
@@ -38,6 +38,7 @@ export interface ITableColumnConfig {
   isExport?: boolean;
   /** 表格表单项类型 */
   /* formItemType?:TableFormColumnsType */
+
 }
 
 /**
@@ -50,8 +51,9 @@ export interface ITableColumnConfig {
  * @template T
  */
 export interface ITableColumnConfigProps<T = {}>
-  extends TableColumnConfig<T>,
-    ITableColumnConfig {}
+  extends TableColumnConfig<T&IProTableFormColumnConfigGenProps>,
+  ITableColumnConfig {
+  }
 
 export interface IExportCsv {
   /**
@@ -400,3 +402,15 @@ export interface ICustomColumnsConfig{
   /** 从服务端查询自定义列信息接口地址 */
   queryApi: string;
 }
+export interface IProTableFormColumnConfigGenProps{
+  /** 表格行状态
+   * 
+   * true 编辑状态
+   * 
+   * false 非编辑状态
+   */
+  readonly isRecordEdit?: boolean;
+  /** 表格行key */
+  readonly legionsTableFormItemKey?: string;
+}
+export interface IProTableFormColumnConfigProps<T> extends ITableColumnConfigProps<T & IProTableFormColumnConfigGenProps>{}

@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-29 10:18:01
- * @LastEditTime: 2021-11-11 00:02:56
+ * @LastEditTime: 2021-11-17 23:45:23
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreForm/proFormStore.ts
@@ -880,7 +880,9 @@ export default class ProFormStore extends LegionsStore.StoreBase {
           ...formFields,
         }
       }
-      console.log('ssss',view.InputDataModel)
+      if (!view.InputDataModelClass) {
+        view.targetFormModelData={}
+      }
       Object.keys(view.InputDataModel).map((key) => {
         view.targetFormModelData[key]=view.InputDataModel[key].value
       })
