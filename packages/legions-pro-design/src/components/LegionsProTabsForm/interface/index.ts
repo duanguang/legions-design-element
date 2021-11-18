@@ -1,13 +1,12 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-29 10:57:31
- * @LastEditTime: 2021-03-09 10:20:51
+ * @LastEditTime: 2021-11-18 23:41:17
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProTabsForm/interface/index.ts
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
-import { ClassOf } from 'legions-lunar/types/api/typescript';
 import  {
     IProTabsFormAddTabsMap,
     ITabsFormViewModelStore,
@@ -54,7 +53,7 @@ export interface InstanceTabsForm<Model> {
 }
 interface IMethods<Model> {
     validateFields: () => boolean;
-    submit: (callback?: (value: (Model)[]) => void) => void;
+    submit: (success: (value: (Model)[]) => void,error?:()=>void) => void;
     getFormFields: (key: string) => Model;
     /** 添加表单按钮事件 */
     onTabAdd: (options?:IProTabsFormAddTabsMap['options']) => string;

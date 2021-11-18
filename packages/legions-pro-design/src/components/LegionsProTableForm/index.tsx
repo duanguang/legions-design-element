@@ -84,8 +84,6 @@ type IFormRules<FormRules> = {
 }
 interface IState<T = {}> {
     data: T[];
-    recordEditData: Map<string,boolean>;
-    formConfigs:Array<IProFormFields['componentModel']>
 }
 export default class LegionsProTableForm<T = {},F = {}> extends LegionsProForm.CreateForm<ProTableFormProps<T,F>,IState<T>>{
     static defaultProps = new ProTableFormProps() as Object;
@@ -98,7 +96,6 @@ export default class LegionsProTableForm<T = {},F = {}> extends LegionsProForm.C
     recordCache = new Map();
     /** 表单实体 */
     formRef: InstanceProForm = null;
-    rules: IFormRules<any> = null;
     
     /** 行唯一id */
     get uniqueKey() {
@@ -113,8 +110,6 @@ export default class LegionsProTableForm<T = {},F = {}> extends LegionsProForm.C
         this.dataSourcesCache = data
         this.state = {
             data ,
-            recordEditData: new Map(),
-            formConfigs:[],
         }
     }
     updateRecordEditData = (record: ITableColumnConfigProps) => {
@@ -174,6 +169,14 @@ export default class LegionsProTableForm<T = {},F = {}> extends LegionsProForm.C
     componentWillReceiveProps(nextProps: ProTableFormProps<T,F>) {
         const { proTableConfig: { dataSource = [] } } = this.props;
         const { proTableConfig: { dataSource: nextData = [] } } = nextProps;
+        if (nextData !== dataSource) {
+            this.dataSourcesCache = nextData;
+            this.setState({
+                data:nextData
+            },()=>{
+                this.props.onChange && this.props.onChange(this.state.data)
+            })
+        }
         /** 列表长度变化时，清空缓存 */
         if (dataSource.length !== nextData.length) {
             this.fieldsOtherCache.clear()

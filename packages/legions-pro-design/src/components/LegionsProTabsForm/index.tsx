@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-28 15:58:15
- * @LastEditTime: 2021-11-16 23:58:34
+ * @LastEditTime: 2021-11-18 23:52:21
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProTabsForm/index.tsx
@@ -109,7 +109,7 @@ export default class LegionsProTabsForm<Model> extends React.Component<IProps<Mo
                     /*   */
                     return this.validateFields();
                 },
-                submit: (callback?) => {
+                submit: (success,error) => {
                     if (!this.validateFields()) {
                         const values:Array<ITabsFormItem> =[]
                         for (let item of this.storeView.entries) {
@@ -121,9 +121,11 @@ export default class LegionsProTabsForm<Model> extends React.Component<IProps<Mo
                         
                         values.map((item) => {
                             //@ts-ignore
-                            model.push(item.tabsItemView.formInstance.viewModel.InputDataModel)
+                            model.push(item.tabsItemView.formInstance.viewModel.targetFormModelData)
                         })
-                        callback&&callback(model);
+                        success&&success(model);
+                    } else {
+                        error&&error()
                     }
                 },
                 onTabAdd: (options?:IProTabsFormAddTabsMap['options']) => {
@@ -134,7 +136,7 @@ export default class LegionsProTabsForm<Model> extends React.Component<IProps<Mo
                 getFormFields: (key: string) => {
                     const item = this.storeView.getTabs(key);
                     if (item) {
-                        return item.formInstance.viewModel.InputDataModel as Model;
+                        return item.formInstance.viewModel.targetFormModelData as Model;
                     }
                     return null;
                 }
@@ -168,16 +170,6 @@ export default class LegionsProTabsForm<Model> extends React.Component<IProps<Mo
             size={size}
             colCount={colCount}
             InputDataModel={InputDataModel}
-            mapPropsToFields={(props: Model) => {
-                if (tab && tab.formInstance) {
-                    return new InputDataModel(tab.formInstance.viewModel.InputDataModel) 
-                }
-                return new InputDataModel(props)
-            }}
-            onFieldsChange={(_,fields: Partial<Model>) => {
-                tab.formInstance.store.updateFormInputData(tab.formInstance.uid,fields)
-                
-            }}
             onReady={(_,formInstance?: InstanceProForm) => {
                 tab.formInstance = { ...formInstance,that: this };
             }}
@@ -219,7 +211,6 @@ export default class LegionsProTabsForm<Model> extends React.Component<IProps<Mo
     }
     render() {
         const { tabsProps = {},tabPaneProps = {} as ITabPaneProps,onBeforeTabPaneRender } = this.props;
-        console.log(this.storeView.activeTabKey,'this.storeView.activeTabKey');
         return <React.Fragment>
             <Tabs
                 hideAdd

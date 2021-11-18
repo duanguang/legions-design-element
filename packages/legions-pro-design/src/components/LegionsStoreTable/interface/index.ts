@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-07 17:17:41
- * @LastEditTime: 2021-08-09 23:57:16
+ * @LastEditTime: 2021-11-18 23:57:24
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreTable/interface/index.ts
@@ -12,7 +12,6 @@ import { observableViewModel,observablePromise, ObservablePromiseModel } from 'l
 import { ProTableView } from '../ProTableView';
 import { ProTableLocalView } from '../ProTableLocalView';
 import { PageListEntity } from '../pageListEntity';
-import { ClassOf } from 'legions-lunar/types/api/typescript';
 import { ViewModel } from 'brain-store-utils/types/create-view-model';
 export interface ITableColumnConfig {
   /** 当传入的title不为string类型时，可传label作为checkbox的label展示 */

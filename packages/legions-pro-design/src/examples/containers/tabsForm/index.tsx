@@ -169,7 +169,7 @@ export class ProTabsForm extends React.Component<IProps,IState> {
             formUtils.getFormConfig('numberText'),
             formUtils.getFormConfig('numbers'),
             formUtils.getFormConfig('selectedItem'),
-            formUtils.getFormConfig('selectedItemRemote'),
+            // formUtils.getFormConfig('selectedItemRemote'),
             /* formUtils.getFormConfig('textarea'), */
             /* formUtils.getFormConfig('password'),
             formUtils.getFormConfig('numberText'),
@@ -201,7 +201,7 @@ export class ProTabsForm extends React.Component<IProps,IState> {
                     <Button style={{ marginLeft: '10px' }} type="primary" htmlType="submit" onClick={() => {
                         const item = this.formRef.viewModel.getTabs(this.formRef.viewModel.activeTabKey)
                         console.log(this.formRef.viewModel.activeTabKey);
-                      item.formInstance.store.updateFormInputData(item.formInstance.uid,{text:{value:'222'}})
+                      item.formInstance.store.updateFormInputData(item.formInstance.uid,{text:'222'})
                     }}>赋值</Button>
                     <LegionsProTabsForm
                         <FormFields>
@@ -210,7 +210,6 @@ export class ProTabsForm extends React.Component<IProps,IState> {
                         tabPaneProps={
                             {
                                 tab: (key,index) => {
-                                    console.log(key);
                                     return <div>销售订单{index+1}</div>
                                 }
                             }

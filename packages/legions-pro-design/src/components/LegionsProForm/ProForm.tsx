@@ -249,7 +249,7 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
     validateFields(...options) {
         let callback: ValidateCallback = null;
         const newCallback = (callbacks: ValidateCallback) => (error,values) => {
-            this.logger('hlFormContainer-validateFields',{ error,values,traceId: this.traceId })
+            this.logger('LegionsProForm-validateFields',{ error,values,traceId: this.traceId })
             callbacks(error,values)
         }
 
@@ -358,7 +358,7 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
                 view.form.validateFields(callback)
             }
         })
-        this.consoleLog('hlFormContainer-componentWillMount')
+        this.consoleLog('legionsProForm-componentWillMount')
         /* document.addEventListener('keydown',this.handleKeyDown.bind(this)) */
     }
     componentDidMount() {
@@ -367,7 +367,7 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
             el.addEventListener('keydown',this.handleKeyDown.bind(this));
         }
         this.controlsLen = this.props.controls.length;
-        this.consoleLog('hlFormContainer-componentDidMount');
+        this.consoleLog('legionsProForm-componentDidMount');
     }
     componentWillReceiveProps(nextProps: IProFormProps) {
         if (nextProps.size !== this.props.size) {
@@ -376,7 +376,7 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
         if (this.props.group !== nextProps.group) {
             this.initGroup(nextProps.group);
         }
-        this.consoleLog('hlFormContainer-componentWillReceiveProps');
+        this.consoleLog('legionsProForm-componentWillReceiveProps');
     }
     componentWillUnmount() {
         if (!this.props['uniqueUid']) {
@@ -386,7 +386,7 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
         if (el) {
             el.removeEventListener('keydown',this.handleKeyDown.bind(this))
         }
-        this.consoleLog('hlFormContainer-componentWillUnmount');
+        this.consoleLog('legionsProForm-componentWillUnmount');
         /* document.removeEventListener('keydown',this.handleKeyDown.bind(this)) */
     }
 
@@ -995,9 +995,9 @@ const CustomizedForm = Form.create({
         return props.mapPropsToFields({...props,...originFormModel})
     },
     onFieldsChange: (props: IProFormProps,changedFields) => {
-        console.log(changedFields,'changedFields')
+        console.log(changedFields,'changedFields',props['uid'])
         props.store.updateFormInputData(props['uid'],changedFields)
-        return props.onFieldsChange(props,changedFields);
+        return props.onFieldsChange&&props.onFieldsChange(props,changedFields);
         /* return debounceOnFieldsChange(props,changedFields) */
     },
     onValuesChange(props: IProFormProps,values) {
