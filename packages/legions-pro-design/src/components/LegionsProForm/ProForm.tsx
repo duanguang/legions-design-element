@@ -31,6 +31,7 @@ import { LoggerManager } from 'legions-lunar/dw.report';
 import { formClasses,ProFormFields,ProFormUtils,size } from './ProFormUtils';
 import { cloneDeep } from 'lodash'
 import { LabelWithCascaderModel } from './FormCascader';
+import { isObject } from 'legions-utils-tool/type.validation';
 const baseCls = `legions-pro-form`
 export interface IProFormProps<mapProps = {}> {
     form?: WrappedFormUtils,
@@ -980,11 +981,15 @@ const CustomizedForm = Form.create({
         if (typeof props.InputDataModel === 'function') {
             // @ts-ignore
             originFormModel = new props.InputDataModel(props)
+            
             Object.keys(props).forEach(function (item) {
                 if (originFormModel.hasOwnProperty(item)) {
-                    originFormModel[item] = {
-                        ...props[item],
-                         value: props[item]?props[item].value:void 0,
+                    if (isObject(props[item]) && props[item].hasOwnProperty('value')) {
+                        originFormModel[item] =props[item]
+                    } else {
+                        originFormModel[item] = {
+                            value:props[item]
+                        }
                     }
                 }
             });
@@ -995,7 +1000,6 @@ const CustomizedForm = Form.create({
         return props.mapPropsToFields({...props,...originFormModel})
     },
     onFieldsChange: (props: IProFormProps,changedFields) => {
-        console.log(changedFields,'changedFields',props['uid'])
         props.store.updateFormInputData(props['uid'],changedFields)
         return props.onFieldsChange&&props.onFieldsChange(props,changedFields);
         /* return debounceOnFieldsChange(props,changedFields) */

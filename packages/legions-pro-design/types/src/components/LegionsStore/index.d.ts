@@ -1,6 +1,6 @@
 import { default as StoreBase } from './StoreBase';
 import { default as UiStoreBase } from './UiStoreBase';
-import { ClassOf } from 'legions-lunar/types/api/typescript';
+import { ClassOf } from 'legions-lunar/api/typescript';
 declare function getStore<T extends InstanceType<typeof StoreBase>>(store: ClassOf<T>): T;
 declare const LegionsStore: {
     StoreBase: typeof StoreBase;

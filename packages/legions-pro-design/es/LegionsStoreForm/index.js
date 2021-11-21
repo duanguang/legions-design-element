@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.8-beta.1
+  *  legions-pro-design v0.0.9
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -13,6 +13,7 @@ import { cloneDeep } from 'lodash';
 import { SelectDatabaseDB } from '../db';
 import LegionsModels from '../LegionsModels';
 import { shortHash } from 'legions-lunar/object-hash';
+import { isObject } from 'legions-utils-tool/type.validation';
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -1144,6 +1145,7 @@ var ProFormStore = /** @class */ (function (_super) {
                   formView = observable(formView); */
             formView = extendObservable(formView, {
                 InputDataModel: new options.InputDataModel(),
+                targetFormModelData: new options.InputDataModel(),
             });
         }
         this.HLFormContainer.set(uid, Object.assign(observableViewModel(formView), otherView));
@@ -1269,11 +1271,36 @@ var ProFormStore = /** @class */ (function (_super) {
         if (view) {
             if (typeof view.InputDataModelClass === 'function') {
                 // @ts-ignore
-                view.InputDataModel = new view.InputDataModelClass(__assign(__assign({}, view.InputDataModel), formFields));
+                var originFormModel_1 = new view.InputDataModelClass();
+                var newFormFields_1 = {};
+                Object.keys(formFields).map(function (key) {
+                    if (isObject(formFields[key]) && formFields[key].hasOwnProperty('value')) {
+                        newFormFields_1[key] = formFields[key];
+                    }
+                    else {
+                        newFormFields_1[key] = {
+                            value: formFields[key]
+                        };
+                    }
+                });
+                var props_1 = __assign(__assign({}, view.InputDataModel), newFormFields_1);
+                Object.keys(props_1).forEach(function (item) {
+                    if (originFormModel_1.hasOwnProperty(item)) {
+                        originFormModel_1[item] = __assign(__assign({}, props_1[item]), { value: props_1[item] ? props_1[item].value : void 0 });
+                    }
+                });
+                // @ts-ignore
+                view.InputDataModel = originFormModel_1;
             }
             else {
                 view.InputDataModel = __assign(__assign({}, view.InputDataModel), formFields);
             }
+            if (!view.InputDataModelClass) {
+                view.targetFormModelData = {};
+            }
+            Object.keys(view.InputDataModel).map(function (key) {
+                view.targetFormModelData[key] = view.InputDataModel[key].value;
+            });
             Object.keys(formFields).map(function (key) {
                 if (!view.renderNodeQueue.has(key)) {
                     view.renderNodeQueue.set(key, key);

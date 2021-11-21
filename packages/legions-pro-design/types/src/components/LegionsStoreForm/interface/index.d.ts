@@ -173,7 +173,9 @@ export interface ISelectAutoQuery<Model = {}> {
      * @type {(HeadersPrams & Object)}
      * @memberof ISelectAutoQuery
      */
-    options?: HeadersPrams & Object;
+    options?: HeadersPrams & {
+        [key: string]: string;
+    };
     /**
        * 转换服务端数据
        *

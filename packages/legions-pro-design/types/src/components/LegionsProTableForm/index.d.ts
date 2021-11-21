@@ -1,7 +1,7 @@
 import React from 'react';
-import { IAntdRule, WrappedFormUtils } from '../interface/antd';
+import { WrappedFormUtils } from '../interface/antd';
 import { Weaken } from '../interface';
-import { IProTableProps } from '../LegionsProTable/interface';
+import { IProTableProps, ITableColumnConfigProps } from '../LegionsProTable/interface';
 import LegionsProForm from '../LegionsProForm';
 import { InstanceProForm } from '../LegionsProForm/interface';
 import { IProFormProps } from '../LegionsProForm/ProForm';
@@ -58,13 +58,8 @@ export declare class ProTableFormProps<T = {}, F = {}> {
      */
     onChange?: (dataList: T[]) => void;
 }
-declare type IFormRules<FormRules> = {
-    [P in keyof FormRules]: IAntdRule[];
-};
 interface IState<T = {}> {
     data: T[];
-    recordEditData: Map<string, boolean>;
-    formConfigs: Array<IProFormFields['componentModel']>;
 }
 export default class LegionsProTableForm<T = {}, F = {}> extends LegionsProForm.CreateForm<ProTableFormProps<T, F>, IState<T>> {
     static defaultProps: Object;
@@ -76,11 +71,10 @@ export default class LegionsProTableForm<T = {}, F = {}> extends LegionsProForm.
     recordCache: Map<any, any>;
     /** 表单实体 */
     formRef: InstanceProForm;
-    rules: IFormRules<any>;
     /** 行唯一id */
     get uniqueKey(): string;
     constructor(props: ProTableFormProps<T, F>);
-    updateRecordEditData: (record: Object) => void;
+    updateRecordEditData: (record: ITableColumnConfigProps) => void;
     /** 添加行数据 */
     addEditRecord: (record: T, isRecordEdit?: boolean) => void;
     /** 删除行数据 */

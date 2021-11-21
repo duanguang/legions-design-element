@@ -66,7 +66,7 @@ export declare class HlFormView {
      * @readonly
      * @memberof HlFormView
      */
-    get computedFormSize(): "small" | "table" | "default";
+    get computedFormSize(): "default" | "small" | "table";
     /** 修改表单尺寸 */
     updateFormSize(size: 'default' | 'small' | 'table'): void;
     /**
@@ -91,12 +91,14 @@ export declare class HlFormView {
 export interface IOtherView {
     form: WrappedFormUtils;
     /**
-     *表单输入信息数据模型
+     *表单输入信息数据模型,原antd表单数据结构体 xx:{value:'xxx'}
      *
      * @type {Object}
      * @memberof IOtherView
      */
     InputDataModel?: Object;
+    /** 对InputDataModel 数据进行转换成正常的数据结构体 */
+    targetFormModelData?: any;
     /**
      * 表单输入数据类实例模型
      *

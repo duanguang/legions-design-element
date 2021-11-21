@@ -1,7 +1,7 @@
 import LegionsStoreForm from '../LegionsStoreForm';
 import React from 'react';
 import { IProFormFields } from '../LegionsStoreForm/interface';
-import { ClassOf } from 'legions-lunar/types/api/typescript';
+import { ClassOf } from 'legions-lunar/api/typescript';
 import { IGroup } from '../LegionsProForm/interface';
 import { TabPaneProps, TabsProps } from 'antd/lib/tabs';
 import { Weaken } from '../interface';

@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-15 15:42:07
- * @LastEditTime: 2021-11-17 00:00:04
+ * @LastEditTime: 2021-11-20 00:16:33
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/examples/containers/proForm/model.ts
@@ -16,12 +16,7 @@ interface IFormFieldUserRenderInput1 {
     /** 只读 */
     number: number
 }
-export function create(): IFormFieldUserRenderInput1 {
-    return {
-        currency: 'string',
-        number: 1
-    }
-}
+
 
 export class FormFields extends LegionsProForm.ProFormFields {
     @FormRuleProperty({
@@ -37,7 +32,7 @@ export class FormFields extends LegionsProForm.ProFormFields {
             return `ss${value}`
         }
     })
-    text: string=void 0
+    text: string='2222'
     @FormRuleProperty({
         required: true,
         name: 'textarea',
@@ -77,7 +72,8 @@ export class FormFields extends LegionsProForm.ProFormFields {
         desc: '普通下拉',
         type: 'object',
     })
-    selectedItem: LegionsLabeledValue = void 0
+    selectedItem: LegionsLabeledValue = {key:'2',
+    label: '工单1',}
     @FormRuleProperty({
         required: true,
         name: 'selectedItemRemote',

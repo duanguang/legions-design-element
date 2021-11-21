@@ -31,7 +31,7 @@ export interface ITableColumnConfig {
  * @extends {ITableColumnConfig}
  * @template T
  */
-export interface ITableColumnConfigProps<T = {}> extends TableColumnConfig<T>, ITableColumnConfig {
+export interface ITableColumnConfigProps<T = {}> extends TableColumnConfig<T & IProTableFormColumnConfigGenProps>, ITableColumnConfig {
 }
 export interface IExportCsv {
     /**
@@ -339,5 +339,18 @@ export interface ICustomColumnsConfig {
     editApi: string;
     /** 从服务端查询自定义列信息接口地址 */
     queryApi: string;
+}
+export interface IProTableFormColumnConfigGenProps {
+    /** 表格行状态
+     *
+     * true 编辑状态
+     *
+     * false 非编辑状态
+     */
+    readonly isRecordEdit?: boolean;
+    /** 表格行key */
+    readonly legionsTableFormItemKey?: string;
+}
+export interface IProTableFormColumnConfigProps<T> extends ITableColumnConfigProps<T & IProTableFormColumnConfigGenProps> {
 }
 export {};

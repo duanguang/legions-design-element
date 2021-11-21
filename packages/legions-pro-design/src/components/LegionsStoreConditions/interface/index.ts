@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-07 16:49:15
- * @LastEditTime: 2021-08-09 23:59:37
+ * @LastEditTime: 2021-11-19 23:56:50
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreConditions/interface/index.ts
@@ -81,7 +81,7 @@ export interface ISelectAutoQuery<Model={}>{
      * @type {(HeadersPrams & Object)}
      * @memberof ISelectAutoQuery
      */
-    options?: HeadersPrams & Object
+    options?: HeadersPrams & { [key: string]: string }
 /**
      * 转换服务端数据
      *

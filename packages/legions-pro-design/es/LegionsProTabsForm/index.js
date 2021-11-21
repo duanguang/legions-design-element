@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.8-beta.1
+  *  legions-pro-design v0.0.9
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -211,7 +211,7 @@ var LegionsProTabsForm = /** @class */ (function (_super) {
                     /*   */
                     return _this.validateFields();
                 },
-                submit: function (callback) {
+                submit: function (success, error) {
                     var e_2, _a;
                     if (!_this.validateFields()) {
                         var values = [];
@@ -233,9 +233,12 @@ var LegionsProTabsForm = /** @class */ (function (_super) {
                         var model_1 = [];
                         values.map(function (item) {
                             //@ts-ignore
-                            model_1.push(item.tabsItemView.formInstance.viewModel.InputDataModel);
+                            model_1.push(item.tabsItemView.formInstance.viewModel.targetFormModelData);
                         });
-                        callback && callback(model_1);
+                        success && success(model_1);
+                    }
+                    else {
+                        error && error();
                     }
                 },
                 onTabAdd: function (options) {
@@ -246,7 +249,7 @@ var LegionsProTabsForm = /** @class */ (function (_super) {
                 getFormFields: function (key) {
                     var item = _this.storeView.getTabs(key);
                     if (item) {
-                        return item.formInstance.viewModel.InputDataModel;
+                        return item.formInstance.viewModel.targetFormModelData;
                     }
                     return null;
                 }
@@ -288,21 +291,13 @@ var LegionsProTabsForm = /** @class */ (function (_super) {
     LegionsProTabsForm.prototype.renderForm = function (key, tab) {
         var _this = this;
         var _a = this.props, controls = _a.controls, InputDataModel = _a.InputDataModel, group = _a.group, size = _a.size, colCount = _a.colCount;
-        return React.createElement(LegionsProForm, { size: size, colCount: colCount, InputDataModel: InputDataModel, mapPropsToFields: function (props) {
-                if (tab && tab.formInstance) {
-                    return new InputDataModel(tab.formInstance.viewModel.InputDataModel);
-                }
-                return new InputDataModel(props);
-            }, onFieldsChange: function (_, fields) {
-                tab.formInstance.store.updateFormInputData(tab.formInstance.uid, fields);
-            }, onReady: function (_, formInstance) {
+        return React.createElement(LegionsProForm, { size: size, colCount: colCount, InputDataModel: InputDataModel, onReady: function (_, formInstance) {
                 tab.formInstance = __assign(__assign({}, formInstance), { that: _this });
             }, uniqueKeys: key, key: key, group: group, controls: controls });
     };
     LegionsProTabsForm.prototype.render = function () {
         var _this = this;
         var _a = this.props, _b = _a.tabsProps, tabsProps = _b === void 0 ? {} : _b, _c = _a.tabPaneProps, tabPaneProps = _c === void 0 ? {} : _c, onBeforeTabPaneRender = _a.onBeforeTabPaneRender;
-        console.log(this.storeView.activeTabKey, 'this.storeView.activeTabKey');
         return React.createElement(React.Fragment, null,
             React.createElement(Tabs, __assign({ hideAdd: true, type: "editable-card", animated: true, tabBarExtraContent: React.createElement(Button, { icon: "plus", type: "primary", onClick: this.handleTabAdd }, "\u6DFB\u52A0") }, tabsProps, { onChange: this.handleTabChange, onEdit: this.handleTabDelete, activeKey: this.storeView.activeTabKey }), this.storeView._computedTabs.map(function (item, index, arr) {
                 var ErrorList = item.formInstance && item.formInstance.viewModel.form.getFieldsError() || [];

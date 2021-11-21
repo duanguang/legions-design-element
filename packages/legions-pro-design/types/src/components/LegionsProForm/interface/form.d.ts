@@ -1,6 +1,6 @@
 /// <reference types="react" />
 import { ValidateCallback } from 'antd/lib/form/Form';
-import { HlLabeledValue } from 'legions-lunar/model';
+import { LegionsLabeledValue } from 'legions-lunar/model';
 import { ILocalViewModelHlFormStore, IViewModelHlFormStore, IErrorView, IProFormFields } from '../../LegionsStoreForm/interface';
 import LegionsStoreForm from '../../LegionsStoreForm';
 export type { IErrorView };
@@ -90,7 +90,7 @@ interface IMethods {
     getQuerySelectOption?: (
     /** 下拉组件name值，对应container.component.JsonProperty.name */ name: string, 
     /** 下拉选项key值*/ optionKey: string) => {
-        readonly option: HlLabeledValue;
+        readonly option: LegionsLabeledValue;
     };
     setFormStates: <T extends IProFormFields['componentModel']>(name: string, callback: (state: T) => void) => void;
     /** 添加新的表单项 */

@@ -91,12 +91,14 @@ export declare class HlFormView {
 export interface IOtherView {
     form: WrappedFormUtils;
     /**
-     *表单输入信息数据模型
+     *表单输入信息数据模型,原antd表单数据结构体 xx:{value:'xxx'}
      *
      * @type {Object}
      * @memberof IOtherView
      */
     InputDataModel?: Object;
+    /** 对InputDataModel 数据进行转换成正常的数据结构体 */
+    targetFormModelData?: any;
     /**
      * 表单输入数据类实例模型
      *

@@ -1,7 +1,7 @@
 import LegionsStoreForm from '../LegionsStoreForm';
 import React from 'react';
 import { IProFormFields } from '../LegionsStoreForm/interface';
-import { ClassOf } from 'legions-lunar/types/api/typescript';
+import { ClassOf } from 'legions-lunar/api/typescript';
 import { IGroup, InstanceProForm } from '../LegionsProForm/interface';
 import { InstanceLegionsModalForm } from './interface';
 import { ILegionsProModalProps, InstanceProModal } from '../LegionsProModal/interface';

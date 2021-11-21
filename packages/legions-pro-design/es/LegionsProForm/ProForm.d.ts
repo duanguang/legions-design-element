@@ -12,7 +12,6 @@ import { LabelWithRadioButtonModel } from './FormRadioButton';
 import { LabelWithTextModel } from './FormText';
 import { InstanceProForm } from './interface/form';
 import { LabelWithCheckboxModel } from './FormCheckbox';
-import { BaseFormFields } from 'legions-lunar/model';
 import { ProFormFields, ProFormUtils } from './ProFormUtils';
 import { LabelWithCascaderModel } from './FormCascader';
 export interface IProFormProps<mapProps = {}> {
@@ -42,13 +41,13 @@ export interface IProFormProps<mapProps = {}> {
      *
      * @memberof IProps
      */
-    mapPropsToFields: (props: mapProps) => any;
+    mapPropsToFields?: (props: mapProps) => any;
     /**
      * 当 Form.Item 子节点的值发生改变时触发，可以把对应的值转存到 mobx store or redux store
      *
      * @memberof IHLFormProps
      */
-    onFieldsChange: (props: mapProps, fields: any) => void;
+    onFieldsChange?: (props: mapProps, fields: any) => void;
     /**
      *任一表单域的值发生改变时的回调
      *
@@ -110,7 +109,6 @@ export declare class LegionsProForm<mapProps = {}> extends React.Component<IProF
     static LabelWithTextModel: typeof LabelWithTextModel;
     static LabelWithInputModel: typeof LabelWithInputModel;
     static LabelWithCascaderModel: typeof LabelWithCascaderModel;
-    static BaseFormFields: typeof BaseFormFields;
     static ProFormFields: typeof ProFormFields;
     /** 根据时间戳生成，每次初始化表单组件都会产生新的值*/
     uid: string;
@@ -129,12 +127,12 @@ export declare class LegionsProForm<mapProps = {}> extends React.Component<IProF
         readonly computedAllElementList: string[];
         readonly computedFormFields: (LabelWithInputModel | LabelWithInputNumberModel | LabelWithSelectModel | LabelWithDatePickerModel | LabelWithMonthPickerModel | LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel | LabelWithRadioButtonModel | LabelWithTextModel | LabelWithCascaderModel | LabelWithCheckboxModel)[];
         readonly computedAllFormFields: (LabelWithInputModel | LabelWithInputNumberModel | LabelWithSelectModel | LabelWithDatePickerModel | LabelWithMonthPickerModel | LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel | LabelWithRadioButtonModel | LabelWithTextModel | LabelWithCascaderModel | LabelWithCheckboxModel)[];
-        readonly computedFormSize: "small" | "table" | "default";
-        updateFormSize: (size: "small" | "table" | "default") => void;
+        readonly computedFormSize: "default" | "small" | "table";
+        updateFormSize: (size: "default" | "small" | "table") => void;
         _addAllElementKeys: (keys: string) => void;
         getFormItemField: <T extends LabelWithInputModel | LabelWithInputNumberModel | LabelWithSelectModel | LabelWithDatePickerModel | LabelWithMonthPickerModel | LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel | LabelWithRadioButtonModel | LabelWithTextModel | LabelWithCascaderModel | LabelWithCheckboxModel>(key: string) => {
             value: T;
-            type: "normal" | "custom";
+            type: "normal" | "custom"; /** 全链路监控跟踪id */
         };
         removeFormItem: (key: string) => boolean;
         clearFormItem: () => void;

@@ -1,23 +1,22 @@
 import { UploadChangeParam } from 'antd/lib/upload/interface';
-import { IBaseFormFields, LegionsLabeledValue } from 'legions-lunar/model';
+import { LegionsLabeledValue } from 'legions-lunar/model';
 import { LegionsProForm } from '../../../components';
 interface IFormFieldUserRenderInput1 {
     currency: string;
     /** 只读 */
     number: number;
 }
-export declare function create(): IFormFieldUserRenderInput1;
-export declare class FormFields extends LegionsProForm.ProFormFields<FormFields> {
-    text: IBaseFormFields<string>;
-    textarea: IBaseFormFields<string>;
-    password: IBaseFormFields<string>;
-    numberText: IBaseFormFields<string>;
-    numbers: IBaseFormFields<number>;
-    selectedItem: IBaseFormFields<LegionsLabeledValue>;
-    selectedItemRemote: IBaseFormFields<LegionsLabeledValue>;
-    selectedItemMultiple: IBaseFormFields<Array<LegionsLabeledValue>>;
-    upload: IBaseFormFields<UploadChangeParam>;
-    customRenderInput1: IBaseFormFields<string>;
+export declare class FormFields extends LegionsProForm.ProFormFields {
+    text: string;
+    textarea: string;
+    password: string;
+    numberText: string;
+    numbers: number;
+    selectedItem: LegionsLabeledValue;
+    selectedItemRemote: LegionsLabeledValue;
+    selectedItemMultiple: Array<LegionsLabeledValue>;
+    upload: UploadChangeParam;
+    customRenderInput1: string;
     /**
      * 提交到表单数据接口需要数据
      * 不存在UI表单数据实体上面
@@ -25,16 +24,15 @@ export declare class FormFields extends LegionsProForm.ProFormFields<FormFields>
      * @type {IBaseFormFields<IFormFieldUserRenderInput1,{},FormFields>}
      * @memberof FormFields
      */
-    customRender: IBaseFormFields<IFormFieldUserRenderInput1, {}, FormFields>;
+    customRender: IFormFieldUserRenderInput1;
     /**
      * 单价类型
      *
      * @type {(IBaseFormFields<IFormFieldUserRenderInput1>)}
      * @memberof FormFields
      */
-    priceType: IBaseFormFields<string>;
-    price: IBaseFormFields<string>;
-    cascader: IBaseFormFields<string[]>;
-    constructor(form?: FormFields);
+    priceType: string;
+    price: string;
+    cascader: string[];
 }
 export {};

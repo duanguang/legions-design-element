@@ -1,8 +1,7 @@
 import React from 'react';
 import { IAntdProps, IAntdRule, WrappedFormUtils, ColProps } from '../interface/antd';
 import { IFormCheckboxProps, IFormDatePickerProps, IFormInputNumberProps, IFormInputProps, IFormMonthPickerProps, IFormRadioButtonProps, IFormRangePickerProps, IFormRenderProps, IFormSelectProps, IFormSwitchProps, IFormTextProps, IFormUploadProps, InstanceProForm, LabelWithCheckboxModel, LabelWithDatePickerModel, LabelWithSelectModel, LabelWithInputModel, LabelWithInputNumberModel, LabelWithMonthPickerModel, LabelWithRadioButtonModel, LabelWithRangePickerModel, LabelWithRenderModel, LabelWithSwitchModel, LabelWithTextModel, LabelWithUploadModel, LabelWithCascaderModel } from './interface';
-import { BaseFormFields } from 'legions-lunar/model';
-import { ClassOf } from 'legions-lunar/types/api/typescript';
+import { ClassOf } from 'legions-lunar/api/typescript';
 import { IFormCascaderProps } from './FormCascader';
 interface IRenderComponentParams<T> {
     /**
@@ -127,9 +126,32 @@ export declare class ProFormUtils<Store, global = {}> {
 declare type IFormRules<FormRules> = {
     [P in keyof FormRules]: IAntdRule[];
 };
-export declare class ProFormFields<T> extends BaseFormFields {
+export declare class ProFormFields {
     constructor();
     /** 初始化表单规则 */
     static initFormRules<Form, P>(FormFields: ClassOf<Form>, props: P): IFormRules<Form>;
+    /**
+  *
+  * 服务端数据同步到表单数据
+  *
+  * @static
+  * @template Form
+  * @template
+  * @param {Form} formFields 表单实体
+  * @param {any} data 服务端数据
+  */
+    static responseBodyToFormFields<Form>(formFields: Form | ClassOf<Form>, data: any): Form;
+    /**
+   * 表单数据生成表单服务端接口可用数据
+   *
+   *
+   * @static
+   * @template Form 表单实体模型
+   * @template RepuestBody 表单提交接口所需接口数据
+   * @param {Form} values 表单数据
+   * @returns {RepuestBody}
+   * @memberof
+   */
+    static formFieldsToRepuestBody<Form, RepuestBody = Form>(values: Form): RepuestBody;
 }
 export {};

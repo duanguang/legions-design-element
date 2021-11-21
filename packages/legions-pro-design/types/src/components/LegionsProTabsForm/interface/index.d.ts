@@ -39,7 +39,7 @@ export interface InstanceTabsForm<Model> {
 }
 interface IMethods<Model> {
     validateFields: () => boolean;
-    submit: (callback?: (value: (Model)[]) => void) => void;
+    submit: (success: (value: (Model)[]) => void, error?: () => void) => void;
     getFormFields: (key: string) => Model;
     /** 添加表单按钮事件 */
     onTabAdd: (options?: IProTabsFormAddTabsMap['options']) => string;

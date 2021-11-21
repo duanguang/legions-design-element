@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-14 16:26:10
- * @LastEditTime: 2021-11-16 23:45:51
+ * @LastEditTime: 2021-11-19 23:58:34
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsCore/legionsFetch.ts
@@ -23,7 +23,7 @@ legionFetchInstance.register({
 interface options<Parameter, Model> {
     url: string;
     parameter: Parameter;
-    headers?: HeadersPrams;
+    headers?: HeadersPrams&{ [key: string]: string };
 
     /**
      *

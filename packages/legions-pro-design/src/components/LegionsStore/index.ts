@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-07 16:20:33
- * @LastEditTime: 2021-03-04 16:04:38
+ * @LastEditTime: 2021-11-20 00:25:49
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStore/index.ts
@@ -15,7 +15,7 @@ import {
     MenuPanesStorageResource,
     BreadCrumbsResourceEven,project
 } from './resourceEvent';
-import { ClassOf } from 'legions-lunar/types/api/typescript';
+import { ClassOf } from 'legions-lunar/api/typescript';
 function getStore<T extends InstanceType<typeof StoreBase>>(store: ClassOf<T>): T{
   if (typeof store === 'function' && store['meta']) {
     const stores = getInjector()
