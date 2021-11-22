@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.9
+  *  legions-pro-design v0.0.10
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -1383,7 +1383,7 @@ var CreateForm = /** @class */ (function (_super) {
 }(React.Component));
 
 /**
-  * legions-lunar v0.0.8
+  * legions-lunar v0.0.9
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -1693,7 +1693,7 @@ var BrowserMatch = {
 var LoggerManager = {
     consoleLog: function (options) {
         var logConent = options.logConent || {};
-        console.warn(`${options.type}`,logConent);
+        console.warn("" + options.type, logConent);
     },
     /** 采集数据上报到数仓 */
     report: function (options, reportApi) {

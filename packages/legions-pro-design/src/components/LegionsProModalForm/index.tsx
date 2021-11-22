@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-02-01 22:24:42
- * @LastEditTime: 2021-11-16 23:49:12
+ * @LastEditTime: 2021-11-22 22:01:10
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProModalForm/index.tsx
@@ -97,12 +97,6 @@ export default class LegionsProModalForm<Model> extends React.Component<IProps<M
                             size={size}
                             colCount={colCount}
                             InputDataModel={InputDataModel}
-                            mapPropsToFields={(props: Model) => {
-                                return new InputDataModel(props)
-                            }}
-                            onFieldsChange={(_,fields: Partial<Model>) => {
-                                this.formInstance.store.updateFormInputData(this.formInstance.uid,fields)
-                            }}
                             onReady={(_,formInstance?: InstanceProForm) => {
                                 this.formInstance = { ...formInstance,that: this };
                                 this.props.onReady && this.props.onReady({

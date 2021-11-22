@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.9
+  *  legions-pro-design v0.0.10
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -91,11 +91,7 @@ var LegionsProModalForm = /** @class */ (function (_super) {
                     });
                 } }),
                 React.createElement(React.Fragment, null,
-                    React.createElement(LegionsProForm, { size: size, colCount: colCount, InputDataModel: InputDataModel, mapPropsToFields: function (props) {
-                            return new InputDataModel(props);
-                        }, onFieldsChange: function (_, fields) {
-                            _this.formInstance.store.updateFormInputData(_this.formInstance.uid, fields);
-                        }, onReady: function (_, formInstance) {
+                    React.createElement(LegionsProForm, { size: size, colCount: colCount, InputDataModel: InputDataModel, onReady: function (_, formInstance) {
                             _this.formInstance = __assign(__assign({}, formInstance), { that: _this });
                             _this.props.onReady && _this.props.onReady({
                                 formInstance: _this.formInstance,
