@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.9
+  *  legions-pro-design v0.0.10
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -163,6 +163,7 @@ var off = (function () {
         };
     }
 })();
+var watchVisibleChange = null;
 var DrawerPositionWrap = {
     top: 'legions-pro-modal-DrawerPositionX',
     bottom: 'legions-pro-modal-DrawerPositionBottom',
@@ -230,6 +231,10 @@ var ProModal = /** @class */ (function (_super) {
                 }, 100);
             }
             _this.props.onVisibleChange && _this.props.onVisibleChange(visible);
+            if (watchVisibleChange) {
+                watchVisibleChange(visible);
+                watchVisibleChange = null;
+            }
         };
         /*** 拖拽移动 移动事件 */
         //@ts-ignore
@@ -524,7 +529,16 @@ var ProModal = /** @class */ (function (_super) {
             this.subscription = this.props.store.schedule([this.log.bind(this)]);
         }
         this.subscriptionVisible = this.props.store.schedule([this.watchVisibleChange.bind(this)]);
-        this.props.onReady && this.props.onReady({ store: this.props.store, uid: this.uid, viewModel: view });
+        this.props.onReady && this.props.onReady({
+            store: this.props.store,
+            uid: this.uid,
+            viewModel: view,
+            methods: {
+                watchVisibleChange: function (callback) {
+                    watchVisibleChange = callback;
+                }
+            }
+        });
         this.viewStore._modalType = this.props.modalType;
     };
     ProModal.prototype.componentDidMount = function () {

@@ -74,6 +74,7 @@ const off = (function () {
         };
     }
 })();
+let watchVisibleChange:(visible:boolean)=>void = null
 const DrawerPositionWrap = {
     top: 'legions-pro-modal-DrawerPositionX',
     bottom: 'legions-pro-modal-DrawerPositionBottom',
@@ -167,6 +168,10 @@ const DrawerPositionWrap = {
             },100)
         }
         this.props.onVisibleChange && this.props.onVisibleChange(visible);
+        if(watchVisibleChange){
+            watchVisibleChange(visible)
+            watchVisibleChange = null;
+        }
     }
     get getModalContentDOM() {
         if (this.getModalDOM) {
@@ -282,7 +287,16 @@ const DrawerPositionWrap = {
             this.subscription = this.props.store.schedule([this.log.bind(this)])
         }
         this.subscriptionVisible = this.props.store.schedule([this.watchVisibleChange.bind(this)])
-        this.props.onReady && this.props.onReady({ store: this.props.store,uid: this.uid,viewModel: view });
+        this.props.onReady && this.props.onReady({
+            store: this.props.store,
+            uid: this.uid,
+            viewModel: view,
+            methods: {
+                watchVisibleChange: (callback) => {
+                    watchVisibleChange = callback
+                }
+            }
+        });
         this.viewStore._modalType = this.props.modalType;
     }
     componentDidMount() {

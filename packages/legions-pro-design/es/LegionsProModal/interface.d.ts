@@ -5,6 +5,9 @@ export interface InstanceProModal {
     store: InstanceType<typeof LegionsStoreModal>;
     uid: string;
     viewModel: IViewModelModalStore;
+    methods: {
+        watchVisibleChange: (callback: (visible: boolean) => void) => void;
+    };
 }
 interface IdraggableOptions {
     minHeight?: number;

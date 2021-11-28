@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-26 17:57:29
- * @LastEditTime: 2021-03-05 15:54:17
+ * @LastEditTime: 2021-11-28 15:58:29
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProModal/interface.ts
@@ -14,7 +14,10 @@ import { ModalProps,WrappedFormUtils } from '../interface/antd';
 export interface InstanceProModal {
     store: InstanceType<typeof LegionsStoreModal>;
     uid: string;
-    viewModel: IViewModelModalStore
+    viewModel: IViewModelModalStore;
+    methods: {
+        watchVisibleChange:(callback:(visible:boolean)=>void)=>void 
+    }
 }
 interface IdraggableOptions {
     minHeight?: number;
