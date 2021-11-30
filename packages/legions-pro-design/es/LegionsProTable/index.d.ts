@@ -108,7 +108,7 @@ export default class LegionsProTable<TableRow = {}, Model = {}> extends React.Co
         readonly computedUnShowColumns: import("../LegionsStoreTable/interface").IShowColumns[];
         readonly computedStorageShowColumnsKeys: string;
         readonly computedRenderColumns: (TableColumnConfig<{}> & import("../LegionsStoreTable/interface").ITableColumnConfig)[];
-        readonly tableXAutoWidth: React.ReactText;
+        readonly tableXAutoWidth: import("react").ReactText;
         readonly computedTotal: number;
         _filterColumns: () => void;
         _moveRightShowColumns: (Columns: string[]) => void;

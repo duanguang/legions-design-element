@@ -66,7 +66,7 @@ export declare class HlFormView {
      * @readonly
      * @memberof HlFormView
      */
-    get computedFormSize(): "small" | "table" | "default";
+    get computedFormSize(): "default" | "small" | "table";
     /** 修改表单尺寸 */
     updateFormSize(size: 'default' | 'small' | 'table'): void;
     /**

@@ -901,9 +901,6 @@ var HLFormLocalView = /** @class */ (function () {
             var apiServer = function () {
                 var pageIndex = options.pageIndex, pageSize = options.pageSize, _a = options.keyWords, keyWords = _a === void 0 ? '' : _a, props = __rest(options, ["pageIndex", "pageSize", "keyWords"]);
                 var params = cloneDeep(autoQuery.params(options.pageIndex, options.pageSize, keyWords, props));
-                delete params.pageIndex;
-                delete params.pageSize;
-                delete params.defaultKeyWords;
                 if (autoQuery.requestBeforeTransformParams) {
                     params = autoQuery.requestBeforeTransformParams(__assign(__assign({}, params), { pageIndex: options.pageIndex, pageSize: options.pageSize }));
                 }

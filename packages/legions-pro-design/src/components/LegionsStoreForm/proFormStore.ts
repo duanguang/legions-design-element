@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-29 10:18:01
- * @LastEditTime: 2021-11-17 23:45:23
+ * @LastEditTime: 2021-11-30 23:29:31
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreForm/proFormStore.ts
@@ -487,9 +487,6 @@ export class HLFormLocalView {
         let params = cloneDeep(
           autoQuery.params(options.pageIndex, options.pageSize, keyWords, props)
         );
-        delete params.pageIndex;
-        delete params.pageSize;
-        delete params.defaultKeyWords;
         if (autoQuery.requestBeforeTransformParams) {
           params = autoQuery.requestBeforeTransformParams({
             ...params,
