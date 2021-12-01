@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-29 10:09:16
- * @LastEditTime: 2021-08-24 22:03:26
+ * @LastEditTime: 2021-12-01 22:29:48
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProForm/interface/select.ts
@@ -123,16 +123,7 @@ export interface ISelectAutoQuery<Model = {}> {
      * 当外部数据不确定时，此时我们需要一个适配器转换从接口中取到的数据，用于绑定下拉选项
      * @memberof ISelectAutoQuery
      */
-    transform: (value: ObservablePromiseModel<InstanceType<typeof LegionsModels.SelectKeyValue>>) => { total: number,data: IAntdSelectOption[] }
-    /**
-     *
-     * 授权信息令牌
-     * 
-     * 一般用作权限验证
-     * @type {string}
-     * @memberof ISelectAutoQuery
-     */
-    token: string
+    transform?: (value: ObservablePromiseModel<InstanceType<typeof LegionsModels.SelectKeyValue>>) => { total: number,data: IAntdSelectOption[] }
 }
 
 export interface IOptGroupProps {
