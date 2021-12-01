@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.9
+  *  legions-pro-design v0.0.10
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -150,7 +150,7 @@ function __spread() {
 }
 
 /**
-  * legions-lunar v0.0.8
+  * legions-lunar v0.0.9
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -460,7 +460,7 @@ var BrowserMatch = {
 var LoggerManager = {
     consoleLog: function (options) {
         var logConent = options.logConent || {};
-        console.warn(`${options.type}`,logConent);
+        console.warn("" + options.type, logConent);
     },
     /** 采集数据上报到数仓 */
     report: function (options, reportApi) {
@@ -841,9 +841,12 @@ var LegionsProTable = /** @class */ (function (_super) {
         configurable: true
     });
     LegionsProTable.prototype.consoleLog = function (type, logObj) {
+        if (!this.props.debugger) {
+            return;
+        }
         var obj = logObj || {};
         var logConent = __assign(__assign({ storeView: __assign({}, this.getViewStore) }, obj), { store: this.props.store, that: toJS(this), props: toJS(this.props) });
-        LoggerManager.consoleLog({
+        this.props.debugger && LoggerManager.consoleLog({
             //@ts-ignore
             type: "LegionsProTable-" + type,
             logConent: logConent,

@@ -36,7 +36,8 @@ import { isArray } from 'legions-utils-tool/type.validation';
 import { CheckboxValueType } from 'antd/lib/checkbox/Group';
 import LegionsProDragger from '../LegionsProDragger';
 import { IProDraggerOptions, IProDraggerProps } from '../LegionsProDragger/interface';
-import ButtonGroup from 'antd/lib/button/button-group';
+import { LoggerManager } from 'legions-lunar/dw.report';
+import { toJS } from 'mobx'
 const { RangePicker } = DatePicker;
 const Option = Select.Option;
 const { TextArea } = Input;
@@ -100,6 +101,7 @@ interface IProps {
     draggerProps?:IProDraggerProps
     /** 收起按钮的事件 */
     onCollapse?: (collapsed: boolean,viewEntity?: IViewQueryConditionStore) => void;
+    debugger?:boolean
 }
 interface IState {
     collapsed: boolean
@@ -162,11 +164,22 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
         defaultCollapsed:true,
     }
     consoleLog(type: string,logObj?: Object) {
-        const obj = logObj || {}
-        const name = 'LegionsConditionsDebug'
-        if (window[name] && typeof window[name] === 'function') {
-            window[name]({ store: this.viewStore,state: this.state,...obj,that: this },`name-${type}`)
+        if (!this.props.debugger) {
+            return
         }
+        const obj = logObj || {}
+        const logConent = {
+            state: this.state,
+            ...obj,
+            store: this.viewStore,
+            that: toJS(this),
+            props: toJS(this.props),
+        }
+        this.props.debugger&&LoggerManager.consoleLog({
+            //@ts-ignore
+            type:`LegionsConditions-${type}`,
+            logConent,
+        })
     }
     componentWillMount() {
         if (!this.props.store.ConditionContainer.has(this.uid)) {

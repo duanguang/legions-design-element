@@ -188,6 +188,9 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
         return this.props.store.HlTableLocalStateContainer.get(this.freezeuid)
     }
     consoleLog(type: string,logObj?: Object) {
+        if (!this.props.debugger) {
+          return
+        }
         const obj = logObj || {}
         const logConent = {
             storeView: { ...this.getViewStore },
@@ -196,7 +199,7 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
             that: toJS(this),
             props: toJS(this.props),
         }
-        LoggerManager.consoleLog({
+        this.props.debugger&&LoggerManager.consoleLog({
             //@ts-ignore
             type:`LegionsProTable-${type}`,
             logConent,

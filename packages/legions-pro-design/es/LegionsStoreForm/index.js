@@ -897,13 +897,24 @@ var HLFormLocalView = /** @class */ (function () {
             /*  const server = new HttpService({ token: autoQuery.token }); */
             var server_1 = new LegionsCore.LegionsFetch();
             var keyWords_1 = options.keyWords || '';
+            if (!autoQuery.transform) {
+                autoQuery['transform'] = function (value) {
+                    var arr = value.value ? value.value.result : [];
+                    return {
+                        data: arr.map(function (item) {
+                            return {
+                                key: item.key,
+                                value: item.value,
+                            };
+                        }),
+                        total: value.value ? value.value.total : 0,
+                    };
+                };
+            }
             //@ts-ignore
             var apiServer = function () {
                 var pageIndex = options.pageIndex, pageSize = options.pageSize, _a = options.keyWords, keyWords = _a === void 0 ? '' : _a, props = __rest(options, ["pageIndex", "pageSize", "keyWords"]);
                 var params = cloneDeep(autoQuery.params(options.pageIndex, options.pageSize, keyWords, props));
-                if (autoQuery.requestBeforeTransformParams) {
-                    params = autoQuery.requestBeforeTransformParams(__assign(__assign({}, params), { pageIndex: options.pageIndex, pageSize: options.pageSize }));
-                }
                 var model = {
                     onBeforTranform: function (value) {
                         options.callback && options.callback(value);
@@ -913,15 +924,11 @@ var HLFormLocalView = /** @class */ (function () {
                         };
                     },
                 };
-                var headers = {};
-                if (autoQuery.token) {
-                    headers = { 'api-cookie': autoQuery.token };
-                }
                 if (autoQuery.method === 'post') {
-                    return server_1.post(__assign({ url: autoQuery.ApiUrl, parameter: params, headers: __assign(__assign({}, autoQuery.options), headers), model: LegionsModels.SelectKeyValue }, model));
+                    return server_1.post(__assign({ url: autoQuery.ApiUrl, parameter: params, headers: __assign({}, autoQuery.options), model: LegionsModels.SelectKeyValue }, model));
                 }
                 else if (autoQuery.method === 'get') {
-                    return server_1.get(__assign({ url: autoQuery.ApiUrl, parameter: params, headers: __assign(__assign({}, autoQuery.options), headers), model: LegionsModels.SelectKeyValue }, model));
+                    return server_1.get(__assign({ url: autoQuery.ApiUrl, parameter: params, headers: __assign({}, autoQuery.options), model: LegionsModels.SelectKeyValue }, model));
                 }
             };
             var data = this._selectOptions.get(name); // 查询指定下拉组件数据

@@ -55,6 +55,7 @@ interface IProps {
     draggerProps?: IProDraggerProps;
     /** 收起按钮的事件 */
     onCollapse?: (collapsed: boolean, viewEntity?: IViewQueryConditionStore) => void;
+    debugger?: boolean;
 }
 interface IState {
     collapsed: boolean;

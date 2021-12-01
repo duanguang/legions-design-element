@@ -333,6 +333,7 @@ export interface IProTableProps<TableRow = {}, Model = {}> extends TableProps<Ta
         traceId: string;
         browserEnvironment: string;
     }) => void;
+    debugger?: boolean;
 }
 export interface ICustomColumnsConfig {
     /** 编辑自定义信息同步到服务端接口地址 */

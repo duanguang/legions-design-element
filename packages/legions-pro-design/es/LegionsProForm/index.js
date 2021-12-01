@@ -2115,6 +2115,9 @@ var ProForm = /** @class */ (function (_super) {
         configurable: true
     });
     ProForm.prototype.consoleLog = function (type, logObj) {
+        if (!this.props.debugger) {
+            return;
+        }
         var obj = logObj || {};
         var logConent = __assign(__assign({ localView: __assign({}, this.storeLocalView) }, obj), { store: this.props.store, that: toJS(this), props: toJS(this.props), storeView: this.storeView });
         LoggerManager.consoleLog({

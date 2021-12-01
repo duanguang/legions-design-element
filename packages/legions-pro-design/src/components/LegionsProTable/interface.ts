@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-26 17:07:34
- * @LastEditTime: 2021-11-17 22:45:04
+ * @LastEditTime: 2021-12-01 21:48:29
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProTable/interface.ts
@@ -395,6 +395,7 @@ export interface IProTableProps<TableRow = {},Model = {}> extends TableProps<Tab
       traceId: string;
       browserEnvironment: string;
   }) => void;
+  debugger?:boolean
 }
 export interface ICustomColumnsConfig{
   /** 编辑自定义信息同步到服务端接口地址 */

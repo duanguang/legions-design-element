@@ -93,6 +93,7 @@ export interface IProFormProps<mapProps = {}> {
         traceId: string;
         browserEnvironment: string;
     }) => void;
+    debugger?: boolean;
 }
 export declare class LegionsProForm<mapProps = {}> extends React.Component<IProFormProps<mapProps>> {
     static CreateForm: typeof CreateForm;
@@ -132,7 +133,7 @@ export declare class LegionsProForm<mapProps = {}> extends React.Component<IProF
         _addAllElementKeys: (keys: string) => void;
         getFormItemField: <T extends LabelWithInputModel | LabelWithInputNumberModel | LabelWithDatePickerModel | LabelWithMonthPickerModel | LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel | LabelWithRadioButtonModel | LabelWithTextModel | LabelWithSelectModel | LabelWithCheckboxModel | LabelWithCascaderModel>(key: string) => {
             value: T;
-            type: "normal" | "custom"; /** 全链路监控跟踪id */
+            type: "normal" | "custom";
         };
         removeFormItem: (key: string) => boolean;
         clearFormItem: () => void;

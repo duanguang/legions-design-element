@@ -126,6 +126,7 @@ export interface IProFormProps<mapProps = {}> {
         traceId: string;
         browserEnvironment: string;
     }) => void
+    debugger?:boolean
 }
 
 interface IState {
@@ -203,6 +204,9 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
         return this.props.store.HLFormLocalDataContainer.get(this.freezeUid)
     }
     consoleLog(type: Parameters<typeof LoggerManager['report']>[0]['type'],logObj?: Object) {
+        if (!this.props.debugger) {
+            return
+        }
         const obj = logObj || {}
         const logConent = {
             localView: { ...this.storeLocalView },...obj,

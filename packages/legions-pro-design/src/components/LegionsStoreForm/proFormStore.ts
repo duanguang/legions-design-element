@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-29 10:18:01
- * @LastEditTime: 2021-11-30 23:29:31
+ * @LastEditTime: 2021-12-01 22:12:04
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreForm/proFormStore.ts
@@ -480,20 +480,27 @@ export class HLFormLocalView {
      /*  const server = new HttpService({ token: autoQuery.token }); */
       const server = new LegionsCore.LegionsFetch();
       const keyWords = options.keyWords || '';
-      
+      if (!autoQuery.transform) {
+        autoQuery['transform'] = (value) => {
+          let arr = value.value ? value.value.result : []
+          return {
+              data: arr.map((item) => {
+                  return {
+                      key: item.key,
+                      value: item.value,
+                  }
+              }),
+              total: value.value ? value.value.total : 0,
+          }
+        }
+      }
       //@ts-ignore
       const apiServer = () => {
         const { pageIndex, pageSize, keyWords = '', ...props } = options;
         let params = cloneDeep(
           autoQuery.params(options.pageIndex, options.pageSize, keyWords, props)
         );
-        if (autoQuery.requestBeforeTransformParams) {
-          params = autoQuery.requestBeforeTransformParams({
-            ...params,
-            pageIndex: options.pageIndex,
-            pageSize: options.pageSize,
-          });
-        }
+
         let model = {
           onBeforTranform: (value) => {
             options.callback && options.callback(value);
@@ -503,15 +510,11 @@ export class HLFormLocalView {
             }
           },
         }
-        let headers = {};
-        if (autoQuery.token) {
-            headers={'api-cookie': autoQuery.token}
-        }
         if (autoQuery.method === 'post') {
           return server.post<any, any>({
             url: autoQuery.ApiUrl,
             parameter: params,
-            headers: { ...autoQuery.options,...headers },
+            headers: { ...autoQuery.options },
             model:LegionsModels.SelectKeyValue,
               ...model,
           });
@@ -519,7 +522,7 @@ export class HLFormLocalView {
           return server.get<any, any>({
             url: autoQuery.ApiUrl,
             parameter: params,
-            headers: { ...autoQuery.options,...headers },
+            headers: { ...autoQuery.options },
             model:LegionsModels.SelectKeyValue,
             ...model,
           });
