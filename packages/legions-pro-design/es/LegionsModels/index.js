@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.9
+  *  legions-pro-design v0.0.11
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -296,6 +296,7 @@ var KeyValue = /** @class */ (function () {
         this.label = void 0;
         this.title = void 0;
         this.keyValue = void 0;
+        this.extendedField = void 0;
     }
     __decorate([
         JsonProperty('key'),
@@ -317,6 +318,10 @@ var KeyValue = /** @class */ (function () {
         JsonProperty('keyValue'),
         __metadata("design:type", Object)
     ], KeyValue.prototype, "keyValue", void 0);
+    __decorate([
+        JsonProperty('extendedField'),
+        __metadata("design:type", Object)
+    ], KeyValue.prototype, "extendedField", void 0);
     return KeyValue;
 }());
 /** 下拉列表数据模型*/

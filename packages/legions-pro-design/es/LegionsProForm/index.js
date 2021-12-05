@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.10
+  *  legions-pro-design v0.0.11
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -963,11 +963,11 @@ var FormSelect = /** @class */ (function (_super) {
     FormSelect.prototype.onSearch = function (value) {
         /** 启用了远程搜索才会在搜索输入触发时调用 */
         if (this.props.formStore && this.props.formStore.localViewModel && this.props.iFormWithSelect.remote) {
-            var view = this.props.formStore.localViewModel._selectView.get(this.props.iAntdProps.name);
-            if (view && view.autoQuery) {
-                this.props.formStore.localViewModel.dispatchRequest(this.props.iAntdProps.name, view.autoQuery, {
+            var view = this.props.formStore.viewModel.getFormItemField(this.props.iAntdProps.name);
+            if (view && view.value.iFormProps.autoQuery) {
+                this.props.formStore.localViewModel.dispatchRequest(this.props.iAntdProps.name, view.value.iFormProps.autoQuery, {
                     pageIndex: 1,
-                    pageSize: view.pageSize,
+                    pageSize: view.value.iFormProps.pageSize,
                     keyWords: value,
                 });
             }
@@ -2363,9 +2363,16 @@ var ProForm = /** @class */ (function (_super) {
         }
     };
     ProForm.prototype.onSelectSearch = function (name, options) {
+        var _this = this;
         if (this.storeLocalView && this.storeLocalView._selectView.has(name)) {
-            var item = this.storeLocalView._selectView.get(name);
-            this.storeLocalView.dispatchRequest(name, item.autoQuery, __assign({ pageIndex: options.pageIndex, pageSize: item.pageSize, keyWords: options.keywords }, options));
+            var item = this.storeView.getFormItemField(name);
+            if (item) {
+                this.storeLocalView.dispatchRequest(name, item.value.iFormProps.autoQuery, __assign(__assign({ pageIndex: options.pageIndex, pageSize: item.value.iFormProps.pageSize, keyWords: options.keywords }, options), { callback: function (value) {
+                        if (!_this.storeView.renderNodeQueue.has(name)) {
+                            _this.storeView.renderNodeQueue.set(name, name);
+                        }
+                    } }));
+            }
         }
     };
     ProForm.prototype.queryElementItem = function (ElementKey) {
@@ -2678,17 +2685,6 @@ var ProForm = /** @class */ (function (_super) {
             freezeUid: this.freezeUid,
             decryptionFreezeUid: this.decryptionFreezeUid
         };
-        if (this.props.onIgnoreError) {
-            viewModel = {
-                store: this.props.store,
-                uid: this.uid,
-                viewModel: view,
-                localViewModel: localview,
-                freezeUid: this.freezeUid,
-                decryptionFreezeUid: this.decryptionFreezeUid,
-                onIgnoreError: this.props.onIgnoreError
-            };
-        }
         if (control instanceof LabelWithInputModel) {
             return _super.prototype.createFormInput.call(this, key, control, form, this.uid, viewModel);
         }

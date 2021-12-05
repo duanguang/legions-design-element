@@ -5,6 +5,7 @@ export declare class KeyValue {
     label?: any;
     title?: any;
     keyValue?: any;
+    extendedField?: any;
 }
 /** 下拉列表数据模型*/
 export declare class SelectKeyValue extends BaseEntity<KeyValue[]> {

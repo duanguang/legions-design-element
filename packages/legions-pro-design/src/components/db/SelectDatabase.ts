@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-29 10:21:54
- * @LastEditTime: 2021-08-09 23:23:03
+ * @LastEditTime: 2021-12-04 21:48:29
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/db/SelectDatabase.ts
@@ -24,6 +24,7 @@ export class SelectDatabaseDB extends Database {
     super();
     if (!runScriptsSdk.plugins.dexie) {
       runScriptsSdk.subscribe('dexie',() => {
+        // @ts-ignore
         const db = runScriptsSdk.plugins.dexie.getInstanceDexie(
           tableName
         );
@@ -32,7 +33,7 @@ export class SelectDatabaseDB extends Database {
         }
       });
     } else {
-      
+      // @ts-ignore
       const db = runScriptsSdk.plugins.dexie.getInstanceDexie(
         tableName
       );

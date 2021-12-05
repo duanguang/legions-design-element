@@ -65,12 +65,6 @@ export interface IProFormProps<mapProps = {}> {
     form: WrappedFormUtils, formRef?: InstanceProForm) => void;
     size?: 'default' | 'small' | 'table';
     /**
-     *
-     * 忽略错误信息触发
-     * @memberof IHLFormProps
-     */
-    onIgnoreError?: (item: IErrorView) => void;
-    /**
      * 改变表单主题风格时触发
      *
      * @memberof IHLFormProps

@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.10
+  *  legions-pro-design v0.0.11
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -901,12 +901,7 @@ var HLFormLocalView = /** @class */ (function () {
                 autoQuery['transform'] = function (value) {
                     var arr = value.value ? value.value.result : [];
                     return {
-                        data: arr.map(function (item) {
-                            return {
-                                key: item.key,
-                                value: item.value,
-                            };
-                        }),
+                        data: arr,
                         total: value.value ? value.value.total : 0,
                     };
                 };

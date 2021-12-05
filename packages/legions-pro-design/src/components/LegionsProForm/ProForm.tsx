@@ -91,15 +91,6 @@ export interface IProFormProps<mapProps = {}> {
         formRef?: InstanceProForm) => void;
     size?: 'default' | 'small' | 'table';
 
-
-    /**
-     *
-     * 忽略错误信息触发
-     * @memberof IHLFormProps
-     */
-    onIgnoreError?: (item: IErrorView) => void
-
-
     /**
      * 改变表单主题风格时触发
      *
@@ -461,13 +452,20 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
         keywords?: string;
     } & Object) {
         if (this.storeLocalView && this.storeLocalView._selectView.has(name)) {
-            const item = this.storeLocalView._selectView.get(name)
-            this.storeLocalView.dispatchRequest(name,item.autoQuery,{
-                pageIndex: options.pageIndex,
-                pageSize: item.pageSize,
-                keyWords: options.keywords,
-                ...options,
-            });
+            const item = this.storeView.getFormItemField<InstanceType<typeof LegionsProForm['LabelWithSelectModel']>>(name)
+            if (item) {
+                this.storeLocalView.dispatchRequest(name,item.value.iFormProps.autoQuery,{
+                    pageIndex: options.pageIndex,
+                    pageSize: item.value.iFormProps.pageSize,
+                    keyWords: options.keywords,
+                    ...options,
+                    callback: (value) => {
+                        if (!this.storeView.renderNodeQueue.has(name)) {
+                            this.storeView.renderNodeQueue.set(name,name)
+                        }
+                    }
+                });
+            }
         }
     }
 
@@ -756,17 +754,6 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
             localViewModel: localview,
             freezeUid: this.freezeUid,
             decryptionFreezeUid: this.decryptionFreezeUid
-        }
-        if (this.props.onIgnoreError) {
-            viewModel = {
-                store: this.props.store,
-                uid: this.uid,
-                viewModel: view,
-                localViewModel: localview,
-                freezeUid: this.freezeUid,
-                decryptionFreezeUid: this.decryptionFreezeUid,
-                onIgnoreError: this.props.onIgnoreError
-            }
         }
         if (control instanceof LabelWithInputModel) {
             return super.createFormInput(key,control,form,this.uid,viewModel);

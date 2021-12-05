@@ -2,7 +2,8 @@ import { runScriptsSdk } from 'legions-thirdparty-plugin';
 export class Database {
   static async initTable(key: string) {
     if (!runScriptsSdk.plugins.dexie) {
-      runScriptsSdk.subscribe('dexie', async () => {
+      runScriptsSdk.subscribe('dexie',async () => {
+        // @ts-ignore
         await runScriptsSdk.plugins.dexie.registerInstanceDexie<{}>(
           'formUiStore',
           key,
@@ -15,6 +16,7 @@ export class Database {
         );
       });
     } else {
+      // @ts-ignore
       await runScriptsSdk.plugins.dexie.registerInstanceDexie<{}>(
         'formUiStore',
         key,

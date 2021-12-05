@@ -14,7 +14,10 @@ export class KeyValue {
   title? = void 0
 
   @JsonProperty('keyValue')
-  keyValue?=void 0
+  keyValue?= void 0
+  
+  @JsonProperty('extendedField')
+  extendedField?=void 0
 } 
 /** 下拉列表数据模型*/
 export class SelectKeyValue extends BaseEntity<

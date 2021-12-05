@@ -11,7 +11,7 @@ import FormElement from './FormElement';
 import {InstanceFormElement} from './interface/formElement'
 import { on,off } from 'legions-utils-tool/dom'
 import { runScriptsSdk } from 'legions-thirdparty-plugin';
-import { IFormSelectProps, IFormSelectWrapError, IFormWithSelectProps } from './interface/select';
+import { IFormSelectProps, IFormSelectWrapError, IFormWithSelectProps, LabelWithSelectModel } from './interface/select';
 
 
 
@@ -140,11 +140,11 @@ export default class FormSelect extends AbstractForm<IFormWithSelectProps,IState
     onSearch(value: string) {
         /** 启用了远程搜索才会在搜索输入触发时调用 */
         if (this.props.formStore && this.props.formStore.localViewModel && this.props.iFormWithSelect.remote) {
-            const view = this.props.formStore.localViewModel._selectView.get(this.props.iAntdProps.name)
-            if (view && view.autoQuery) {
-                this.props.formStore.localViewModel.dispatchRequest(this.props.iAntdProps.name,view.autoQuery,{
+            const view = this.props.formStore.viewModel.getFormItemField<InstanceType<typeof LabelWithSelectModel>>(this.props.iAntdProps.name)
+            if (view && view.value.iFormProps.autoQuery) {
+                this.props.formStore.localViewModel.dispatchRequest(this.props.iAntdProps.name,view.value.iFormProps.autoQuery,{
                     pageIndex: 1,
-                    pageSize: view.pageSize,
+                    pageSize: view.value.iFormProps.pageSize,
                     keyWords: value as string,
                 })
             }

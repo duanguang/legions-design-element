@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.9
+  *  legions-pro-design v0.0.11
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -87,24 +87,30 @@ var Database = /** @class */ (function () {
                         runScriptsSdk.subscribe('dexie', function () { return __awaiter(_this, void 0, void 0, function () {
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
-                                    case 0: return [4 /*yield*/, runScriptsSdk.plugins.dexie.registerInstanceDexie('formUiStore', key, [
+                                    case 0: 
+                                    // @ts-ignore
+                                    return [4 /*yield*/, runScriptsSdk.plugins.dexie.registerInstanceDexie('formUiStore', key, [
                                             {
                                                 selectData: '++id,[modulesKeys+pageIndex+keywords],modulesKeys,keywords,pageIndex,value,total',
                                             },
                                         ])];
                                     case 1:
+                                        // @ts-ignore
                                         _a.sent();
                                         return [2 /*return*/];
                                 }
                             });
                         }); });
                         return [3 /*break*/, 3];
-                    case 1: return [4 /*yield*/, runScriptsSdk.plugins.dexie.registerInstanceDexie('formUiStore', key, [
+                    case 1: 
+                    // @ts-ignore
+                    return [4 /*yield*/, runScriptsSdk.plugins.dexie.registerInstanceDexie('formUiStore', key, [
                             {
                                 selectData: '++id,[modulesKeys+pageIndex+keywords],modulesKeys,keywords,pageIndex,value,total',
                             },
                         ])];
                     case 2:
+                        // @ts-ignore
                         _a.sent();
                         _a.label = 3;
                     case 3: return [2 /*return*/];
@@ -127,6 +133,7 @@ var SelectDatabaseDB = /** @class */ (function (_super) {
         var _this = _super.call(this) || this;
         if (!runScriptsSdk.plugins.dexie) {
             runScriptsSdk.subscribe('dexie', function () {
+                // @ts-ignore
                 var db = runScriptsSdk.plugins.dexie.getInstanceDexie(tableName);
                 if (db && db.db) {
                     _this.selectItem = db.db.table('selectData');
@@ -134,6 +141,7 @@ var SelectDatabaseDB = /** @class */ (function (_super) {
             });
         }
         else {
+            // @ts-ignore
             var db = runScriptsSdk.plugins.dexie.getInstanceDexie(tableName);
             if (db && db.db) {
                 _this.selectItem = db.db.table('selectData');

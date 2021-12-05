@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-29 10:18:01
- * @LastEditTime: 2021-12-01 22:12:04
+ * @LastEditTime: 2021-12-04 21:10:33
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreForm/proFormStore.ts
@@ -484,12 +484,7 @@ export class HLFormLocalView {
         autoQuery['transform'] = (value) => {
           let arr = value.value ? value.value.result : []
           return {
-              data: arr.map((item) => {
-                  return {
-                      key: item.key,
-                      value: item.value,
-                  }
-              }),
+              data: arr,
               total: value.value ? value.value.total : 0,
           }
         }

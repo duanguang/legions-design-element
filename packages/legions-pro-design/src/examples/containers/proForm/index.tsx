@@ -138,7 +138,6 @@ export class ProForm extends React.Component<IProps,IState> {
                     },
                     ApiUrl: 'https://gateway.hoolinks.com/api/gateway',
                     method: 'post',
-                    token: 'SESSION=ba9b7428-8300-4d56-83cd-a2ca6262ca3c;',
                     options: {
                         'api-target': 'https://qa-scm.hoolinks.com//jg/basic/cusinfo/search.json'
                     },
@@ -488,7 +487,6 @@ export class ProForm extends React.Component<IProps,IState> {
                                     },
                                     ApiUrl: 'https://gateway.hoolinks.com/api/gateway',
                                     method: 'post',
-                                    token: 'SESSION=f44dff33-3a8c-41ae-9c12-5b774febedf7;',
                                     options: {
                                         'api-target': 'https://uat-scm.hoolinks.com//jg/basic/cusinfo/search.json'
                                     },
