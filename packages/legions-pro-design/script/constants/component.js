@@ -1,15 +1,17 @@
 /*
  * @Author: duanguang
  * @Date: 2021-09-28 23:07:31
- * @LastEditTime: 2021-09-29 23:02:00
+ * @LastEditTime: 2021-12-07 23:07:04
  * @LastEditors: duanguang
  * @Description: 
- * @FilePath: /legions-design-element/packages/legions-pro-design/script/constants/component.ts
+ * @FilePath: /legions-design-element/packages/legions-pro-design/script/constants/component.js
  * 「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
 const TableComponent = ['LegionsStoreTable','LegionsProTableCustomColumns',
 'LegionsProTableForm','LegionsProTable','LegionsProVirtualTable']
-const FormComponent = ['LegionsStoreForm','LegionsProModalForm','LegionsProForm','LegionsProTabsForm']
+const FormComponent = [
+    // 'LegionsStoreForm','LegionsProModalForm','LegionsProTabsForm',
+    'LegionsProForm',]
 const ModalComponet = ['LegionsStoreModal','LegionsProModal']
 const ConditionsComponent = ['LegionsStoreConditions','LegionsProConditions']
 const GeneralComponent = ['LegionsProBreadcrumb','LegionsProInput',

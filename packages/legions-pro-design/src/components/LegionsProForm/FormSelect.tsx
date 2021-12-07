@@ -220,6 +220,17 @@ export default class FormSelect extends AbstractForm<IFormWithSelectProps,IState
                 >
                     {getFieldDecorator(iAntdProps.name,{
                         rules: rules,
+                        normalize: (value) => {
+                            if (props.labelInValue&&value) {
+                                let curr=options.find((item)=>item.key===value['key'])
+                                if (!curr) {
+                                    // @ts-ignore
+                                    curr = {}
+                                }
+                                return {...curr,...value}
+                            }
+                            return value
+                        }
                     })(
                         <SelectWrap
                             /* size="default" */

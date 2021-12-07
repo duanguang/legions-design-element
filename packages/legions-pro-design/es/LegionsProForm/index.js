@@ -1004,6 +1004,17 @@ var FormSelect = /** @class */ (function (_super) {
             React.createElement(FormItem$5, __assign({}, formItemProps, { extra: iFormWithSelect.extra, className: iAntdProps.className, label: iFormWithSelect.label, labelCol: iFormWithSelect.labelCol, wrapperCol: iFormWithSelect.wrapperCol }),
                 getFieldDecorator(iAntdProps.name, {
                     rules: rules,
+                    normalize: function (value) {
+                        if (props.labelInValue && value) {
+                            var curr = options.find(function (item) { return item.key === value['key']; });
+                            if (!curr) {
+                                // @ts-ignore
+                                curr = {};
+                            }
+                            return __assign(__assign({}, curr), value);
+                        }
+                        return value;
+                    }
                 })(React.createElement(SelectWrap
                 /* size="default" */
                 , __assign({}, props, { selectAllClass: this.state.styleClassFocus, options: options, onPagingQuery: this.onPagingQuery, total: total, open: this.state.open, onIgnoreError: this.props.formStore && this.props.formStore.onIgnoreError, formUid: this.props.formUid, formHLSelectRef: this.FormHLSelectRef, formItemName: iAntdProps.name, placeholder: iAntdProps.placeholder, onClear: this.onClear, onSelect: this.onSelect.bind(this), onBlur: this.onBlur.bind(this), onSearch: this.onSearch.bind(this), onChange: this.onChange.bind(this), onFocus: this.onFocus.bind(this) }))),
