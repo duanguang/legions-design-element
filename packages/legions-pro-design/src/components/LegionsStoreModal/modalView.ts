@@ -1,10 +1,10 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-26 17:54:09
- * @LastEditTime: 2021-02-25 10:00:46
+ * @LastEditTime: 2021-12-26 16:02:28
  * @LastEditors: duanguang
  * @Description:
- * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/store/pro.modal/modalView.ts
+ * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreModal/modalView.ts
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
 import { observable, action } from 'legions/store';
@@ -61,6 +61,9 @@ export class ModalView {
    */
   //@ts-ignore
   @observable confirmLoading: boolean = null;
+
+  /** 扩展数据，可用于存储模态框数据，使用场景，譬如模态框内容区动态控制，可以把条件存储在扩展数据体 */
+  @observable extendData: string = '';
 
   @observable _dragData: {
     /**模态框左侧边框线距离body左侧距离 */

@@ -44,6 +44,8 @@ export declare class ModalView {
      * @memberof ModalView
      */
     confirmLoading: boolean;
+    /** 扩展数据，可用于存储模态框数据，使用场景，譬如模态框内容区动态控制，可以把条件存储在扩展数据体 */
+    extendData: string;
     _dragData: {
         /**模态框左侧边框线距离body左侧距离 */
         x: number;

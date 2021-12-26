@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.10
+  *  legions-pro-design v0.0.11
   * (c) 2021 duanguang
   * @license MIT
   */
@@ -107,6 +107,8 @@ var ModalView = /** @class */ (function () {
          */
         //@ts-ignore
         this.confirmLoading = null;
+        /** 扩展数据，可用于存储模态框数据，使用场景，譬如模态框内容区动态控制，可以把条件存储在扩展数据体 */
+        this.extendData = '';
         this._dragData = {
             //@ts-ignore
             x: null,
@@ -392,6 +394,10 @@ var ModalView = /** @class */ (function () {
         observable,
         __metadata("design:type", Boolean)
     ], ModalView.prototype, "confirmLoading", void 0);
+    __decorate([
+        observable,
+        __metadata("design:type", String)
+    ], ModalView.prototype, "extendData", void 0);
     __decorate([
         observable,
         __metadata("design:type", Object)

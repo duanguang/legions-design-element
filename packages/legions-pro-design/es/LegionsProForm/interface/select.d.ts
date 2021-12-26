@@ -96,19 +96,10 @@ export interface ISelectAutoQuery<Model = {}> {
      * 当外部数据不确定时，此时我们需要一个适配器转换从接口中取到的数据，用于绑定下拉选项
      * @memberof ISelectAutoQuery
      */
-    transform: (value: ObservablePromiseModel<InstanceType<typeof LegionsModels.SelectKeyValue>>) => {
+    transform?: (value: ObservablePromiseModel<InstanceType<typeof LegionsModels.SelectKeyValue>>) => {
         total: number;
         data: IAntdSelectOption[];
     };
-    /**
-     *
-     * 授权信息令牌
-     *
-     * 一般用作权限验证
-     * @type {string}
-     * @memberof ISelectAutoQuery
-     */
-    token: string;
 }
 export interface IOptGroupProps {
     label: string | JSX.Element;
