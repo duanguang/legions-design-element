@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-29 10:18:01
- * @LastEditTime: 2021-12-04 21:10:33
+ * @LastEditTime: 2022-01-09 18:20:33
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreForm/proFormStore.ts
@@ -861,10 +861,18 @@ export default class ProFormStore extends LegionsStore.StoreBase {
         }
         Object.keys(props).forEach(function (item) {
           if (originFormModel.hasOwnProperty(item)) {
+            if (props[item]&&props[item].hasOwnProperty('value')) {
               originFormModel[item] = {
-                  ...props[item],
-                   value: props[item]?props[item].value:void 0,
+                ...props[item],
+                value: props[item].value,
               }
+            }
+            else {
+              originFormModel[item] = {
+                 value: props[item],
+              } 
+            }
+              
           }
         });
         // @ts-ignore

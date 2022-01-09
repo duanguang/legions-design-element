@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-09-28 23:07:31
- * @LastEditTime: 2021-12-07 23:07:04
+ * @LastEditTime: 2022-01-09 17:18:28
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/script/constants/component.js
@@ -10,8 +10,11 @@
 const TableComponent = ['LegionsStoreTable','LegionsProTableCustomColumns',
 'LegionsProTableForm','LegionsProTable','LegionsProVirtualTable']
 const FormComponent = [
-    // 'LegionsStoreForm','LegionsProModalForm','LegionsProTabsForm',
-    'LegionsProForm',]
+    'LegionsStoreForm',
+    // 'LegionsProModalForm',
+    // 'LegionsProTabsForm',
+    // 'LegionsProForm',
+]
 const ModalComponet = ['LegionsStoreModal','LegionsProModal']
 const ConditionsComponent = ['LegionsStoreConditions','LegionsProConditions']
 const GeneralComponent = ['LegionsProBreadcrumb','LegionsProInput',

@@ -1,6 +1,6 @@
 /**
   *  legions-pro-design v0.0.11
-  * (c) 2021 duanguang
+  * (c) 2022 duanguang
   * @license MIT
   */
 import LegionsStore from '../LegionsStore';
@@ -1285,7 +1285,14 @@ var ProFormStore = /** @class */ (function (_super) {
                 var props_1 = __assign(__assign({}, view.InputDataModel), newFormFields_1);
                 Object.keys(props_1).forEach(function (item) {
                     if (originFormModel_1.hasOwnProperty(item)) {
-                        originFormModel_1[item] = __assign(__assign({}, props_1[item]), { value: props_1[item] ? props_1[item].value : void 0 });
+                        if (props_1[item] && props_1[item].hasOwnProperty('value')) {
+                            originFormModel_1[item] = __assign(__assign({}, props_1[item]), { value: props_1[item].value });
+                        }
+                        else {
+                            originFormModel_1[item] = {
+                                value: props_1[item],
+                            };
+                        }
                     }
                 });
                 // @ts-ignore
