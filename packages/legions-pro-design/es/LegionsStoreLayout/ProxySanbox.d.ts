@@ -17,13 +17,6 @@ interface IMicroSanboxAppValue {
     app: IMount;
     mount(): Promise<null>;
     unmount(): Promise<null>;
-    /** 节点详细数据 */
-    root: {
-        /** 根节点ID */
-        rootid: string;
-        /** 渲染dom树包装节点 */
-        wrapid: string;
-    };
 }
 /** 沙箱页签活动类型 */
 export declare enum SanboxTabActionMode {

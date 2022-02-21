@@ -8,6 +8,8 @@ export interface IPanes {
     closable?: boolean;
     /** 页签内容加载方式:1：sandbox沙箱加载 2：iframe 3: React路由组件加载方式; 默认统一iframe */
     loadingMode: 'sandbox' | 'iframe' | 'routerCompeont';
+    /** 单应用路由模式,可选参数,不传默认为history */
+    router?: 'history' | 'hash';
     sandbox: {
         /** 应用名称 */
         appName: string;
@@ -17,6 +19,7 @@ export interface IPanes {
         appRootId: string;
         experimentalStyleIsolation: boolean;
         isMerge: boolean;
+        props?: any;
     };
     params?: {
         [x: string]: string;
