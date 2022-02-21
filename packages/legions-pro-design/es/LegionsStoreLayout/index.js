@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.11
+  *  legions-pro-design v0.0.14
   * (c) 2022 duanguang
   * @license MIT
   */
@@ -66,15 +66,6 @@ function __metadata(metadataKey, metadataValue) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(metadataKey, metadataValue);
 }
 
-/*
- * @Author: duanguang
- * @Date: 2020-12-31 15:04:38
- * @LastEditTime: 2022-02-21 11:05:24
- * @LastEditors: duanguang
- * @Description:
- * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreLayout/ProxySanbox.ts
- * @「扫去窗上的尘埃，才可以看到窗外的美景。」
- */
 /** 沙箱页签活动类型 */
 var SanboxTabActionMode;
 (function (SanboxTabActionMode) {
@@ -103,7 +94,7 @@ var ProxySanbox = /** @class */ (function () {
             name: mountPane.sandbox.appName,
             entry: mountPane.sandbox.appEntiy,
             container: "#" + mountPane.sandbox.appName,
-            props: mountPane.sandbox.props || {}
+            props: __assign({ history: this.history }, mountPane.sandbox.props || {})
         }, {
             sandbox: {
                 experimentalStyleIsolation: mountPane.sandbox.experimentalStyleIsolation,

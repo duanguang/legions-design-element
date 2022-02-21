@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-31 15:04:38
- * @LastEditTime: 2022-02-21 11:05:24
+ * @LastEditTime: 2022-02-21 11:42:58
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreLayout/ProxySanbox.ts
@@ -70,7 +70,7 @@ export class ProxySanbox {
         name: mountPane.sandbox.appName,
         entry: mountPane.sandbox.appEntiy,
         container: `#${mountPane.sandbox.appName}`,
-        props:mountPane.sandbox.props||{}
+        props:{history:this.history,...mountPane.sandbox.props||{}}
       },
       {
         sandbox: {
