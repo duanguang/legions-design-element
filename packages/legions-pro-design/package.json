@@ -98,7 +98,7 @@
     "build:general":"cross-env buildType=GeneralComponent  yarn build:es",
     "build:dataEntry":"cross-env buildType=DataEntryCompoent  yarn build:es",
     "build:dataDisplay":"cross-env buildType=DataDisplayTypeComponent  yarn build:es",
-    "build:layout":"cross-env buildType=LayoutComponent  yarn z:es",
+    "build:layout":"cross-env buildType=LayoutComponent  yarn build:es",
     "build:store":"cross-env buildType=StoreModules  yarn build:es",
     "build:data":"cross-env buildType=DataModules  yarn build:es",
     "build:common":"cross-env buildType=CommonModules  yarn build:es",

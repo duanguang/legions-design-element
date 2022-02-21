@@ -125,7 +125,6 @@ export default class ContentPart extends React.Component<IProps,IState> {
             if (!view.isAddContextmenu) {
               el.parentElement.parentElement.removeEventListener('contextmenu',this.handleContextmenu.bind(this,el.id))
               el.parentElement.parentElement.addEventListener('contextmenu',this.handleContextmenu.bind(this,el.id))
-              //focusUnbind(el.parentElement.parentElement,this.handleOutside.bind(this,item),styles.outSide)
               view.isAddContextmenu = true;
             }
             else {

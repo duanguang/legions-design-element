@@ -6,7 +6,6 @@ import LegionsStore from '../LegionsStore';
 import LegionsModels from '../LegionsModels';
 import { computed } from 'mobx';
 import { observableViewModel } from 'legions/store-utils';
-/** Tabs 页签打开缓存数据*/
 import LegionsCore from '../LegionsCore';
 import { RegExChk, validatorType } from 'legions-utils-tool/regex';
 import { ProxySanbox } from './ProxySanbox';
@@ -128,6 +127,20 @@ export default class TabPaneViewStore extends LegionsStore.StoreBase {
     let currMenu = menuList.find(item => item.key === defaultItem.key);
     this.updateBreadcrumbs({ keyPath: currMenu.deep }, menuList);
     if (index < 0) {
+      let sandbox = {
+        appName: '',
+        appEntiy: '',
+        appRootId: '',
+        experimentalStyleIsolation: false,
+        isMerge: true,
+      }
+      if (currMenu && currMenu.sandbox) {
+        sandbox.appName = currMenu.sandbox['appName']
+        sandbox.appEntiy = currMenu.sandbox['appEntiy']
+        sandbox.appRootId = currMenu.sandbox['appRootId']
+        sandbox.experimentalStyleIsolation = currMenu.sandbox['experimentalStyleIsolation']
+        sandbox.isMerge = currMenu.sandbox['isMerge']
+      }
       this.panes.push({
         key: defaultItem.key,
         keyPath: defaultItem.keyPath,
@@ -135,13 +148,7 @@ export default class TabPaneViewStore extends LegionsStore.StoreBase {
         title: currMenu && currMenu.title,
         activeRouter: defaultItem.path,
         loadingMode: currMenu ? currMenu['loadingMode']:'iframe',
-        sandbox: {
-          appName:(currMenu&&currMenu.sandbox)&&currMenu.sandbox['appName'],
-          appEntiy:(currMenu&&currMenu.sandbox)&&currMenu.sandbox['appEntiy'],
-          appRootId:(currMenu&&currMenu.sandbox)&&currMenu.sandbox['appRootId'],
-          experimentalStyleIsolation:(currMenu&&currMenu.sandbox)&&currMenu.sandbox['experimentalStyleIsolation'],
-          isMerge:(currMenu&&currMenu.sandbox)&&currMenu.sandbox['isMerge'],
-        },
+        sandbox,
       });
       this.viewUIModel.updateTimestamp(defaultItem.key.toString());
     } else {
@@ -165,6 +172,20 @@ export default class TabPaneViewStore extends LegionsStore.StoreBase {
     let currMenu = menuList.find(item => item.key === defaultItem.key);
     this.updateBreadcrumbs({ keyPath: currMenu.deep }, menuList);
     if (index < 0) {
+      let sandbox = {
+        appName: '',
+        appEntiy: '',
+        appRootId: '',
+        experimentalStyleIsolation: false,
+        isMerge: true,
+      }
+      if (currMenu && currMenu.sandbox) {
+        sandbox.appName = currMenu.sandbox['appName']
+        sandbox.appEntiy = currMenu.sandbox['appEntiy']
+        sandbox.appRootId = currMenu.sandbox['appRootId']
+        sandbox.experimentalStyleIsolation = currMenu.sandbox['experimentalStyleIsolation']
+        sandbox.isMerge = currMenu.sandbox['isMerge']
+      }
       this.panes.push({
         key: defaultItem.key,
         keyPath: defaultItem.keyPath,
@@ -172,13 +193,7 @@ export default class TabPaneViewStore extends LegionsStore.StoreBase {
         title: currMenu && currMenu.title,
         activeRouter: currMenu && currMenu.path,
         loadingMode: currMenu ? currMenu['loadingMode']:'iframe',
-        sandbox: {
-          appName:(currMenu&&currMenu.sandbox)&&currMenu.sandbox['appName'],
-          appEntiy:(currMenu&&currMenu.sandbox)&&currMenu.sandbox['appEntiy'],
-          appRootId: (currMenu && currMenu.sandbox) && currMenu.sandbox['appRootId'],
-          experimentalStyleIsolation:(currMenu&&currMenu.sandbox)&&currMenu.sandbox['experimentalStyleIsolation'],
-          isMerge:(currMenu&&currMenu.sandbox)&&currMenu.sandbox['isMerge'],
-        },
+        sandbox,
       });
       this.viewUIModel.updateTimestamp(defaultItem.key.toString());
       setStorageItems(LegionsCore.StorageKeysDataSet.panesStorageKeys, this.panes); //同步缓存

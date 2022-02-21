@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-31 10:38:25
- * @LastEditTime: 2021-03-02 19:14:22
+ * @LastEditTime: 2022-02-21 11:00:23
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsModels/pro.menu.model/index.ts
@@ -10,9 +10,6 @@
 import { JsonProperty } from 'json-mapper-object';
 import { IPanes } from '../../LegionsStoreLayout/interface';
 import { BaseEntity } from '../pro.base.model';
-interface ClassOf<T> {
-  new (...args: any[]): T;
-}
 export abstract class InterfaceMenuEntity {
   abstract key: string;
   abstract title: string;
@@ -22,23 +19,18 @@ export abstract class InterfaceMenuEntity {
   abstract children: Array<InterfaceMenuEntity>;
   abstract deep: Array<string>;
   abstract icon: string;
-  /* get loadingMode(): "iframe" | "sandbox" | "routerCompeont" { return 'iframe' }; */
   /** 页签或资源加载方式 */
   loadingMode: 'iframe' | 'sandbox' | 'routerCompeont';
+  /** 沙箱路由加载模式 */
+  router: 'history' | 'hash';
   /** 沙箱加载配置数据 */
   sandbox: {
     appName: string;
     appEntiy: string;
     appRootId: string;
     experimentalStyleIsolation: boolean;
+    props?:any
   };
-  /* get sandbox () {
-    return {
-      appName: '',
-      appEntiy: '',
-      appRootId: '',
-    }  
-  } */
 }
 export class MenuEntity extends InterfaceMenuEntity {
   constructor() {
@@ -100,12 +92,14 @@ export class MenuEntity extends InterfaceMenuEntity {
   readonly icon: string = '';
 
   loadingMode: 'iframe' | 'sandbox' | 'routerCompeont' = 'iframe';
+  router: 'history' | 'hash' = 'history';
   sandbox = {
     appName: '',
     appEntiy: '',
     appRootId: '',
     experimentalStyleIsolation: true,
     isMerge: false,
+    props:null,
   };
   beforeLoad?: (pane: IPanes) => IPanes;
   afterLoad?: (value: { pane: IPanes; iframe?: HTMLIFrameElement }) => void;
@@ -120,9 +114,6 @@ export interface IMenuEntity {
 export class MenuContainerEntity extends BaseEntity<
   Array<MenuEntity>
 > {
-  /* transformRows(rows, mapEntity) {
-    super.transformRows(rows, mapEntity)
-  } */
   /**
    *Creates an instance of MenuContainerEntity.
    * @param {IMenuEntity} fromJson 服务端接口数据

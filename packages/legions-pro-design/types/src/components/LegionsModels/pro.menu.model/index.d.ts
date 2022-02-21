@@ -11,12 +11,15 @@ export declare abstract class InterfaceMenuEntity {
     abstract icon: string;
     /** 页签或资源加载方式 */
     loadingMode: 'iframe' | 'sandbox' | 'routerCompeont';
+    /** 沙箱路由加载模式 */
+    router: 'history' | 'hash';
     /** 沙箱加载配置数据 */
     sandbox: {
         appName: string;
         appEntiy: string;
         appRootId: string;
         experimentalStyleIsolation: boolean;
+        props?: any;
     };
 }
 export declare class MenuEntity extends InterfaceMenuEntity {
@@ -61,12 +64,14 @@ export declare class MenuEntity extends InterfaceMenuEntity {
     readonly deep: Array<string>;
     readonly icon: string;
     loadingMode: 'iframe' | 'sandbox' | 'routerCompeont';
+    router: 'history' | 'hash';
     sandbox: {
         appName: string;
         appEntiy: string;
         appRootId: string;
         experimentalStyleIsolation: boolean;
         isMerge: boolean;
+        props: any;
     };
     beforeLoad?: (pane: IPanes) => IPanes;
     afterLoad?: (value: {

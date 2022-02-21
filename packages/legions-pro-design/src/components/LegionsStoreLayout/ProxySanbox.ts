@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-31 15:04:38
- * @LastEditTime: 2021-10-31 22:22:36
+ * @LastEditTime: 2022-02-21 11:05:24
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreLayout/ProxySanbox.ts
@@ -40,14 +40,6 @@ interface IMicroSanboxAppValue {
   app: IMount;
   mount(): Promise<null>;
   unmount(): Promise<null>;
-  /** 节点详细数据 */
-  root: {
-    /* status: 'mount' | 'unmount'; */
-    /** 根节点ID */
-    rootid: string;
-    /** 渲染dom树包装节点 */
-    wrapid: string;
-  };
 }
 /** 沙箱页签活动类型 */
 export enum SanboxTabActionMode {
@@ -60,9 +52,9 @@ export enum SanboxTabActionMode {
 }
 export class ProxySanbox {
   static SanboxTabActionMode = SanboxTabActionMode;
-  microSanboxApp = new Map<string, IMicroSanboxAppValue>();
+  microSanboxApp = new Map<string,IMicroSanboxAppValue>();
   /** 记录各个页签最后一次访问路径 */
-  microSanboxRoute = new Map<string, string>();
+  microSanboxRoute = new Map<string,string>();
   //@ts-ignore
   history: History = null;
   isEnabledTabs = false;
@@ -73,13 +65,12 @@ export class ProxySanbox {
     if (this.microSanboxApp.has(mountPane.sandbox.appName)) {
       return;
     }
-    const routerPath = this.getRouterPath(mountPane);
-
     let app = loadMicroApp(
       {
         name: mountPane.sandbox.appName,
         entry: mountPane.sandbox.appEntiy,
         container: `#${mountPane.sandbox.appName}`,
+        props:mountPane.sandbox.props||{}
       },
       {
         sandbox: {
@@ -91,31 +82,25 @@ export class ProxySanbox {
     );
     const mount = () => {
       return app.mount().catch(err => {
-        console.log('----------status----------', app.getStatus());
-        console.error('----------mount error----------', err);
+        console.log('----------status----------',app.getStatus());
+        console.error('----------mount error----------',err);
         return err;
       });
     };
     const unmount = () => {
       return app.unmount().catch(err => {
-        console.log('----------status----------', app.getStatus());
-        console.error('----------unmount error----------', err);
+        console.log('----------status----------',app.getStatus());
+        console.error('----------unmount error----------',err);
         return err;
       });
     };
-    const appid = this.createMicroAppId(mountPane);
-    this.microSanboxApp.set(mountPane.sandbox.appName, {
+    this.microSanboxApp.set(mountPane.sandbox.appName,{
       getStatus: app.getStatus,
       appName: mountPane.sandbox.appName,
       entry: mountPane.sandbox.appEntiy,
       app,
       mount,
       unmount,
-      root:  {
-        /* status: 'mount', */
-        rootid: mountPane.sandbox.appName,
-        wrapid: mountPane.sandbox.appRootId,
-      },
     });
   }
   mountSanboxMicroApp(mountPane: IPanes) {
@@ -131,7 +116,7 @@ export class ProxySanbox {
       }
     }
   }
-  unmountSanboxMicroApp(unmoutPane: IPanes, mountPane: IPanes) {
+  unmountSanboxMicroApp(unmoutPane: IPanes,mountPane: IPanes) {
     if (unmoutPane.loadingMode === 'sandbox') {
       if (this.isEnabledTabs) {
         this.history.replace('/');
@@ -156,43 +141,46 @@ export class ProxySanbox {
     }
     /** 切换页签时，记录页签的最后一次访问路径 */
     if (unmoutPane && unmoutPane.loadingMode === 'sandbox') {
+      let path = window.location.pathname.replace('#','')
+      if (unmoutPane.router === 'hash') {
+        path = window.location.hash.replace('#','')
+      }
       this.microSanboxRoute.set(
         unmoutPane.key,
-        window.location.hash.replace('#', '')
+        path
       );
       sanboxRenderList.forEach((item) => {
         if (unmoutPane.sandbox.appName === item.id) {
-          item['style']['display']='none'
+          item['style']['display'] = 'none'
         }
       })
-    }
-    /** 沙箱页面离开时，并且下一个进入的页面是iframe，卸载沙箱页面回到根路径  */
-    if (
-      unmoutPane &&
-      unmoutPane.loadingMode === 'sandbox' &&
-      mountPane &&
-      mountPane.loadingMode === 'iframe'
-    ) {
-      this.unmountSanboxMicroApp(unmoutPane, mountPane);
+      /** 沙箱页面离开时，并且下一个进入的页面是iframe，卸载沙箱页面回到根路径  */
+      if (mountPane &&
+        mountPane.loadingMode === 'iframe') {
+        this.unmountSanboxMicroApp(unmoutPane,mountPane);
+      }
     }
     /** 只要是沙箱的页面，在进入时都执行装载 */
     if (mountPane && mountPane.loadingMode === 'sandbox') {
       this.mountSanboxMicroApp(mountPane);
       sanboxRenderList.forEach((item) => {
         if (mountPane.sandbox.appName === item.id) {
-          item['style']['display']='block'
+          item['style']['display'] = 'block'
         }
       })
     }
   }
   getRouterPath(pane: IPanes) {
     const path = pane.path || '';
-    const routerPaths = path.split('#');
-    let routerPath = '';
-    if (routerPaths.length > 1) {
-      routerPath = routerPaths[1];
+    if (pane.router === 'hash') {
+      const routerPaths = path.split('#');
+      let routerPath = '';
+      if (routerPaths.length > 1) {
+        routerPath = routerPaths[1];
+      }
+      return routerPath;
     }
-    return routerPath;
+    return path
   }
   createMicroAppId(pane: IPanes) {
     let routerPath = this.getRouterPath(pane);

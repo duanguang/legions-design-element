@@ -1,6 +1,6 @@
 /**
-  *  legions-pro-design v0.0.9
-  * (c) 2021 duanguang
+  *  legions-pro-design v0.0.11
+  * (c) 2022 duanguang
   * @license MIT
   */
 import LegionsStore from '../LegionsStore';
@@ -69,7 +69,7 @@ function __metadata(metadataKey, metadataValue) {
 /*
  * @Author: duanguang
  * @Date: 2020-12-31 15:04:38
- * @LastEditTime: 2021-10-31 22:22:36
+ * @LastEditTime: 2022-02-21 11:05:24
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreLayout/ProxySanbox.ts
@@ -99,11 +99,11 @@ var ProxySanbox = /** @class */ (function () {
         if (this.microSanboxApp.has(mountPane.sandbox.appName)) {
             return;
         }
-        var routerPath = this.getRouterPath(mountPane);
         var app = loadMicroApp({
             name: mountPane.sandbox.appName,
             entry: mountPane.sandbox.appEntiy,
             container: "#" + mountPane.sandbox.appName,
+            props: mountPane.sandbox.props || {}
         }, {
             sandbox: {
                 experimentalStyleIsolation: mountPane.sandbox.experimentalStyleIsolation,
@@ -124,7 +124,6 @@ var ProxySanbox = /** @class */ (function () {
                 return err;
             });
         };
-        var appid = this.createMicroAppId(mountPane);
         this.microSanboxApp.set(mountPane.sandbox.appName, {
             getStatus: app.getStatus,
             appName: mountPane.sandbox.appName,
@@ -132,11 +131,6 @@ var ProxySanbox = /** @class */ (function () {
             app: app,
             mount: mount,
             unmount: unmount,
-            root: {
-                /* status: 'mount', */
-                rootid: mountPane.sandbox.appName,
-                wrapid: mountPane.sandbox.appRootId,
-            },
         });
     };
     ProxySanbox.prototype.mountSanboxMicroApp = function (mountPane) {
@@ -171,19 +165,21 @@ var ProxySanbox = /** @class */ (function () {
         }
         /** 切换页签时，记录页签的最后一次访问路径 */
         if (unmoutPane && unmoutPane.loadingMode === 'sandbox') {
-            this.microSanboxRoute.set(unmoutPane.key, window.location.hash.replace('#', ''));
+            var path = window.location.pathname.replace('#', '');
+            if (unmoutPane.router === 'hash') {
+                path = window.location.hash.replace('#', '');
+            }
+            this.microSanboxRoute.set(unmoutPane.key, path);
             sanboxRenderList.forEach(function (item) {
                 if (unmoutPane.sandbox.appName === item.id) {
                     item['style']['display'] = 'none';
                 }
             });
-        }
-        /** 沙箱页面离开时，并且下一个进入的页面是iframe，卸载沙箱页面回到根路径  */
-        if (unmoutPane &&
-            unmoutPane.loadingMode === 'sandbox' &&
-            mountPane &&
-            mountPane.loadingMode === 'iframe') {
-            this.unmountSanboxMicroApp(unmoutPane, mountPane);
+            /** 沙箱页面离开时，并且下一个进入的页面是iframe，卸载沙箱页面回到根路径  */
+            if (mountPane &&
+                mountPane.loadingMode === 'iframe') {
+                this.unmountSanboxMicroApp(unmoutPane, mountPane);
+            }
         }
         /** 只要是沙箱的页面，在进入时都执行装载 */
         if (mountPane && mountPane.loadingMode === 'sandbox') {
@@ -197,12 +193,15 @@ var ProxySanbox = /** @class */ (function () {
     };
     ProxySanbox.prototype.getRouterPath = function (pane) {
         var path = pane.path || '';
-        var routerPaths = path.split('#');
-        var routerPath = '';
-        if (routerPaths.length > 1) {
-            routerPath = routerPaths[1];
+        if (pane.router === 'hash') {
+            var routerPaths = path.split('#');
+            var routerPath = '';
+            if (routerPaths.length > 1) {
+                routerPath = routerPaths[1];
+            }
+            return routerPath;
         }
-        return routerPath;
+        return path;
     };
     ProxySanbox.prototype.createMicroAppId = function (pane) {
         var routerPath = this.getRouterPath(pane);
@@ -349,6 +348,20 @@ var TabPaneViewStore = /** @class */ (function (_super) {
         var currMenu = menuList.find(function (item) { return item.key === defaultItem.key; });
         this.updateBreadcrumbs({ keyPath: currMenu.deep }, menuList);
         if (index < 0) {
+            var sandbox = {
+                appName: '',
+                appEntiy: '',
+                appRootId: '',
+                experimentalStyleIsolation: false,
+                isMerge: true,
+            };
+            if (currMenu && currMenu.sandbox) {
+                sandbox.appName = currMenu.sandbox['appName'];
+                sandbox.appEntiy = currMenu.sandbox['appEntiy'];
+                sandbox.appRootId = currMenu.sandbox['appRootId'];
+                sandbox.experimentalStyleIsolation = currMenu.sandbox['experimentalStyleIsolation'];
+                sandbox.isMerge = currMenu.sandbox['isMerge'];
+            }
             this.panes.push({
                 key: defaultItem.key,
                 keyPath: defaultItem.keyPath,
@@ -356,13 +369,7 @@ var TabPaneViewStore = /** @class */ (function (_super) {
                 title: currMenu && currMenu.title,
                 activeRouter: defaultItem.path,
                 loadingMode: currMenu ? currMenu['loadingMode'] : 'iframe',
-                sandbox: {
-                    appName: (currMenu && currMenu.sandbox) && currMenu.sandbox['appName'],
-                    appEntiy: (currMenu && currMenu.sandbox) && currMenu.sandbox['appEntiy'],
-                    appRootId: (currMenu && currMenu.sandbox) && currMenu.sandbox['appRootId'],
-                    experimentalStyleIsolation: (currMenu && currMenu.sandbox) && currMenu.sandbox['experimentalStyleIsolation'],
-                    isMerge: (currMenu && currMenu.sandbox) && currMenu.sandbox['isMerge'],
-                },
+                sandbox: sandbox,
             });
             this.viewUIModel.updateTimestamp(defaultItem.key.toString());
         }
@@ -386,6 +393,20 @@ var TabPaneViewStore = /** @class */ (function (_super) {
         var currMenu = menuList.find(function (item) { return item.key === defaultItem.key; });
         this.updateBreadcrumbs({ keyPath: currMenu.deep }, menuList);
         if (index < 0) {
+            var sandbox = {
+                appName: '',
+                appEntiy: '',
+                appRootId: '',
+                experimentalStyleIsolation: false,
+                isMerge: true,
+            };
+            if (currMenu && currMenu.sandbox) {
+                sandbox.appName = currMenu.sandbox['appName'];
+                sandbox.appEntiy = currMenu.sandbox['appEntiy'];
+                sandbox.appRootId = currMenu.sandbox['appRootId'];
+                sandbox.experimentalStyleIsolation = currMenu.sandbox['experimentalStyleIsolation'];
+                sandbox.isMerge = currMenu.sandbox['isMerge'];
+            }
             this.panes.push({
                 key: defaultItem.key,
                 keyPath: defaultItem.keyPath,
@@ -393,13 +414,7 @@ var TabPaneViewStore = /** @class */ (function (_super) {
                 title: currMenu && currMenu.title,
                 activeRouter: currMenu && currMenu.path,
                 loadingMode: currMenu ? currMenu['loadingMode'] : 'iframe',
-                sandbox: {
-                    appName: (currMenu && currMenu.sandbox) && currMenu.sandbox['appName'],
-                    appEntiy: (currMenu && currMenu.sandbox) && currMenu.sandbox['appEntiy'],
-                    appRootId: (currMenu && currMenu.sandbox) && currMenu.sandbox['appRootId'],
-                    experimentalStyleIsolation: (currMenu && currMenu.sandbox) && currMenu.sandbox['experimentalStyleIsolation'],
-                    isMerge: (currMenu && currMenu.sandbox) && currMenu.sandbox['isMerge'],
-                },
+                sandbox: sandbox,
             });
             this.viewUIModel.updateTimestamp(defaultItem.key.toString());
             setStorageItems(LegionsCore.StorageKeysDataSet.panesStorageKeys, this.panes); //同步缓存
