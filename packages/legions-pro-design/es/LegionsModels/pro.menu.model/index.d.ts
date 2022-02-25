@@ -1,3 +1,12 @@
+/*
+ * @Author: duanguang
+ * @Date: 2022-01-09 18:21:39
+ * @LastEditTime: 2022-02-22 16:40:00
+ * @LastEditors: duanguang
+ * @Description: 
+ * @FilePath: /legions-design-element/packages/legions-pro-design/es/LegionsModels/pro.menu.model/index.d.ts
+ * 「扫去窗上的尘埃，才可以看到窗外的美景。」
+ */
 import { IPanes } from '../../LegionsStoreLayout/interface';
 import { BaseEntity } from '../pro.base.model';
 export declare abstract class InterfaceMenuEntity {
@@ -71,7 +80,7 @@ export declare class MenuEntity extends InterfaceMenuEntity {
         appRootId: string;
         experimentalStyleIsolation: boolean;
         isMerge: boolean;
-        props: any;
+        props?: any;
     };
     beforeLoad?: (pane: IPanes) => IPanes;
     afterLoad?: (value: {

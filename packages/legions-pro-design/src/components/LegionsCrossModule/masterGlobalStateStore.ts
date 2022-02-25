@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-05 13:57:53
- * @LastEditTime: 2021-03-03 16:33:05
+ * @LastEditTime: 2022-02-22 16:34:16
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsCrossModule/masterGlobalStateStore.ts
@@ -10,7 +10,7 @@
 import { initGlobalState } from 'legions-micro-service';
 import { IframePostMessage, masterEventScopes, subscribeLegionsProGlobal } from './globalStateEven';
 import { IGlobalStates, IResource, typeOpenPaneParames } from '../interface';
-import { StoreModules } from 'legions/store';
+import { resource, StoreModules } from 'legions/store';
 import LegionsStore from '../LegionsStore';
 import { IStoreBaseMeta } from '../LegionsStore/interface'
 import { MicroAppStateActions } from 'legions-micro-service/types/interfaces';
@@ -31,10 +31,13 @@ export class MasterGlobalStateStore extends LegionsStore.StoreBase<IContext>{
     static meta :IStoreBaseMeta={
         ...LegionsStore.StoreBase.meta,
     }
+    /** 创建主应用事件 */
+    static createEventScopes(event_key: string) {
+        return resource(`master/resource/${event_key}`);
+    }
     //@ts-ignore
     private onGlobalStateChange: (callback:(value:IGlobalStates,prev:IGlobalStates,event:IIGlobalStateEvent)=>void,options:Parameters<MicroAppStateActions['onGlobalStateChange']>[1])=>void = null;
-     //@ts-ignore
-     setGlobalState: (state: IGlobalStates,event: IIGlobalStateEvent) => void = null;
+    setGlobalState: <state = {}>(state: IGlobalStates&state,event: IIGlobalStateEvent) => void = null;
      openTabPane: (pane: typeOpenPaneParames) => void=()=>{}
      removeTablePane: (targetKey: string | string[]) => void=()=>{};
      menuList: InstanceType<typeof LegionsModels.MenuEntity>[] = [];
@@ -51,7 +54,6 @@ export class MasterGlobalStateStore extends LegionsStore.StoreBase<IContext>{
         this.onGlobalStateChange = onGlobalStateChange;
         this.setGlobalState = setGlobalState;
     }
-   
     listeningGlobalStateChange(options: {
         /** 监听事件队列数据 */
         eventScopes: IResource[],

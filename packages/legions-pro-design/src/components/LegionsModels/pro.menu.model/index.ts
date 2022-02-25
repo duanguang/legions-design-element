@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-31 10:38:25
- * @LastEditTime: 2022-02-21 11:00:23
+ * @LastEditTime: 2022-02-22 16:38:55
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsModels/pro.menu.model/index.ts
@@ -99,7 +99,6 @@ export class MenuEntity extends InterfaceMenuEntity {
     appRootId: '',
     experimentalStyleIsolation: true,
     isMerge: false,
-    props:null,
   };
   beforeLoad?: (pane: IPanes) => IPanes;
   afterLoad?: (value: { pane: IPanes; iframe?: HTMLIFrameElement }) => void;

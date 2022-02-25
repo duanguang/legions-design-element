@@ -13,8 +13,10 @@ interface IIGlobalStateEvent {
  */
 export declare class MasterGlobalStateStore extends LegionsStore.StoreBase<IContext> {
     static meta: IStoreBaseMeta;
+    /** 创建主应用事件 */
+    static createEventScopes(event_key: string): import("brain-store/types/api/resourceEvent").IResource;
     private onGlobalStateChange;
-    setGlobalState: (state: IGlobalStates, event: IIGlobalStateEvent) => void;
+    setGlobalState: <state = {}>(state: IGlobalStates & state, event: IIGlobalStateEvent) => void;
     openTabPane: (pane: typeOpenPaneParames) => void;
     removeTablePane: (targetKey: string | string[]) => void;
     menuList: InstanceType<typeof LegionsModels.MenuEntity>[];

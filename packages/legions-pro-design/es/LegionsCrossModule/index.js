@@ -1,6 +1,6 @@
 /**
-  *  legions-pro-design v0.0.9
-  * (c) 2021 duanguang
+  *  legions-pro-design v0.0.19
+  * (c) 2022 duanguang
   * @license MIT
   */
 import { initGlobalState } from 'legions-micro-service';
@@ -145,7 +145,6 @@ var MasterGlobalStateStore = /** @class */ (function (_super) {
         var _this = _super.call(this, context) || this;
         //@ts-ignore
         _this.onGlobalStateChange = null;
-        //@ts-ignore
         _this.setGlobalState = null;
         _this.openTabPane = function () { };
         _this.removeTablePane = function () { };
@@ -162,6 +161,10 @@ var MasterGlobalStateStore = /** @class */ (function (_super) {
         _this.setGlobalState = setGlobalState;
         return _this;
     }
+    /** 创建主应用事件 */
+    MasterGlobalStateStore.createEventScopes = function (event_key) {
+        return resource("master/resource/" + event_key);
+    };
     MasterGlobalStateStore.prototype.listeningGlobalStateChange = function (options) {
         this.onGlobalStateChange(function (value, prev, event) {
             if (options.callback && typeof options.callback === 'function') {
@@ -192,29 +195,53 @@ var WorkerGlobalStateStore = /** @class */ (function (_super) {
     __extends(WorkerGlobalStateStore, _super);
     function WorkerGlobalStateStore(context) {
         var _this = _super.call(this, context) || this;
-        _this.onGlobalStateChange = null;
-        _this.subscribeLegionsProGlobal = subscribeLegionsProGlobal;
         _this.menuList = [];
+        /** 监听全局数据，发生改变时触发,最基础监听函数 */
+        _this.onGlobalStateChange = null;
+        /**订阅子应用iframe挂载在全局的变量 */
+        _this.subscribeLegionsProGlobal = subscribeLegionsProGlobal;
         //@ts-ignore
         _this.masterEventScopes = masterEventScopes;
         /** 打开菜单页签方法 */
         _this.openTabPane = function () { };
         /** 移除菜单页签方法 */
         _this.removeTablePane = function () { };
+        /** 更新全局数据方法
+         * 此函数在执行时，微应用全局监听事件都会接收到数据变化通知。 譬如listeningSanboxGlobalStateChange
+         */
         _this.setGlobalState = null;
         /** postmessage 通信 */
         _this.iframePostMessage = IframePostMessage;
-        /** 订阅子应用iframe挂载在全局的变量 */
+        /** 微应用id */
         _this.appId = '';
         return _this;
     }
+    /** 创建微应用事件 */
+    WorkerGlobalStateStore.createEventScopes = function (event_key) {
+        return resource("worker/resource/" + event_key);
+    };
+    Object.defineProperty(WorkerGlobalStateStore.prototype, "user", {
+        get: function () {
+            return this.userInfo;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(WorkerGlobalStateStore.prototype, "menu_data", {
+        get: function () {
+            return this.menuList;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    /** 全局数据变化监听函数，主要用于沙箱微应用环境 */
     WorkerGlobalStateStore.prototype.listeningSanboxGlobalStateChange = function (options) {
         var _this = this;
         //@ts-ignore
-        this.syncUpdateGlobalState(options.props);
+        this._syncUpdateGlobalState(options.props);
         this.onGlobalStateChange(function (value, prev, event) {
             if (!event && (value.user || value.methods)) {
-                _this.setLayoutData(value);
+                _this._setLayoutData(value);
             }
             if (options.callback && typeof options.callback === 'function') {
                 options.callback(value, prev, event);
@@ -225,14 +252,14 @@ var WorkerGlobalStateStore = /** @class */ (function (_super) {
         });
     };
     /** 监听广播数据(主要用于基座跟子应用不在同一个容器，比如iframe) */
-    WorkerGlobalStateStore.prototype.listeningGlobalStateChange = function (options) {
+    WorkerGlobalStateStore.prototype.listeningIframeGlobalStateChange = function (options) {
         var _this = this;
         this.subscribeLegionsProGlobal(function (values) {
             //@ts-ignore
-            _this.syncUpdateGlobalState(values);
+            _this._syncUpdateGlobalState(values);
             _this.onGlobalStateChange(function (value, prev, event) {
                 if (!event && (value.user || value.methods)) {
-                    _this.setLayoutData(value);
+                    _this._setLayoutData(value);
                 }
                 if (options.callback && typeof options.callback === 'function') {
                     options.callback(value, prev, event);
@@ -246,7 +273,7 @@ var WorkerGlobalStateStore = /** @class */ (function (_super) {
             });
         });
     };
-    WorkerGlobalStateStore.prototype.syncUpdateGlobalState = function (props) {
+    WorkerGlobalStateStore.prototype._syncUpdateGlobalState = function (props) {
         if (!this.onGlobalStateChange) {
             this.onGlobalStateChange = function (callback, options) {
                 props.onGlobalStateChange(callback, options);
@@ -257,17 +284,17 @@ var WorkerGlobalStateStore = /** @class */ (function (_super) {
                 props.setGlobalState(state, event);
             };
         }
-        this.appId = props.appId;
+        this.appId = props.name;
     };
     /** 写入用户数据 */
-    WorkerGlobalStateStore.prototype.setUserInfo = function (user) {
+    WorkerGlobalStateStore.prototype._setUserInfo = function (user) {
         this.userInfo = user;
     };
     /** 写入基座系统相关方法及对象变量 */
-    WorkerGlobalStateStore.prototype.setLayoutData = function (data) {
+    WorkerGlobalStateStore.prototype._setLayoutData = function (data) {
         if (data.user) {
             this.proTableStore.userInfo = data.user;
-            this.setUserInfo(data.user);
+            this._setUserInfo(data.user);
         }
         if (data.methods) {
             if (data.methods.openTabPane) {
