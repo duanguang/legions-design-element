@@ -1,6 +1,6 @@
 /**
-  *  legions-pro-design v0.0.10
-  * (c) 2021 duanguang
+  *  legions-pro-design v0.0.21
+  * (c) 2022 duanguang
   * @license MIT
   */
 import LegionsStore from '../LegionsStore';
@@ -446,7 +446,7 @@ var ConditionView = /** @class */ (function () {
 /*
  * @Author: duanguang
  * @Date: 2020-12-29 16:44:16
- * @LastEditTime: 2021-08-09 23:31:08
+ * @LastEditTime: 2022-02-28 17:14:28
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreConditions/index.ts

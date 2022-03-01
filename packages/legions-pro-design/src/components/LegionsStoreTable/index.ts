@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-26 11:35:17
- * @LastEditTime: 2021-08-09 23:42:17
+ * @LastEditTime: 2022-02-28 17:15:34
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreTable/index.ts
@@ -21,7 +21,7 @@ import { observableViewModel, observablePromise } from 'legions/store-utils';
 import { shortHash } from 'legions-lunar/object-hash';
 import { ProTableView } from './ProTableView';
 import { ProTableLocalView } from './ProTableLocalView';
-import {IStoreBaseMeta} from '../LegionsStore/interface';
+import {legionsStoreInterface} from '../LegionsStore/interface';
 import { ObservableMap } from 'mobx';
 import { PageListEntity } from './pageListEntity';
 import { ViewModel } from 'brain-store-utils/types/create-view-model';
@@ -32,7 +32,7 @@ type Proxify<T> = {
 };
 @StoreModules
 export default class LegionsStoreTable extends LegionsStore.StoreBase {
-  static meta: IStoreBaseMeta = {
+  static meta: legionsStoreInterface['storeBaseMeta'] = {
     ...LegionsStore.StoreBase.meta,
   };
   static pageListEntity = PageListEntity;

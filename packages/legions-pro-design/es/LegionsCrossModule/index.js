@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.19
+  *  legions-pro-design v0.0.21
   * (c) 2022 duanguang
   * @license MIT
   */
@@ -65,7 +65,7 @@ function __metadata(metadataKey, metadataValue) {
 /*
  * @Author: duanguang
  * @Date: 2021-01-04 11:17:55
- * @LastEditTime: 2021-04-02 12:08:53
+ * @LastEditTime: 2022-02-28 17:03:17
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsCrossModule/globalStateEven.ts
@@ -143,7 +143,7 @@ var MasterGlobalStateStore = /** @class */ (function (_super) {
     __extends(MasterGlobalStateStore, _super);
     function MasterGlobalStateStore(context) {
         var _this = _super.call(this, context) || this;
-        //@ts-ignore
+        //@ts-ignor
         _this.onGlobalStateChange = null;
         _this.setGlobalState = null;
         _this.openTabPane = function () { };

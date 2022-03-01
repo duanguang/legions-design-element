@@ -5,7 +5,7 @@ import { ContainerEntity } from '../models/common/baseEntity';
  * @export
  * @returns
  */
-export declare function getMenuList(): Promise<import("../../components/LegionsModels/pro.menu.model").MenuContainerEntity>;
+export declare function getMenuList(): Promise<any>;
 /**
  * 删除异步任务
  * @param id 任务id

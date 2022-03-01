@@ -1,4 +1,3 @@
-import { BaseEntity } from '../pro.base.model';
 export declare class TableListColumns {
     dataIndex: string;
     title: string;
@@ -24,6 +23,29 @@ export interface ITableColumnsEntity {
     data: TableColumnsEntity;
     code?: string;
 }
-export declare class TableColumnsContainerEntity extends BaseEntity<TableColumnsEntity> {
+export declare class TableColumnsContainerEntity {
+    /** *操作结果
+       * @type {boolean}
+       */
+    success: boolean;
+    /**
+     * 描述信息
+     *
+     * @type {string}
+     * @memberof BaseEntity
+     */
+    message: string;
+    /**  提示信息编码
+     * @type {(string|number)}
+     */
+    code: string | number;
+    /**  返回数据信息
+     * @type {T}
+     * @memberof BaseEntity
+     */
+    result: TableColumnsEntity;
     constructor(fromJson?: ITableColumnsEntity);
+    transformArray(rows: any, mapEntity: any): any;
+    transformRows(rows: any, mapEntity: any): any;
+    transformRow(row: any, mapEntity: any): import("json-mapper-object").IGenericObject;
 }

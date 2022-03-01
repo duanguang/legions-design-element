@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-29 10:26:57
- * @LastEditTime: 2021-11-09 21:49:51
+ * @LastEditTime: 2022-02-25 16:21:28
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProForm/interface/form.ts
@@ -112,7 +112,7 @@ interface IMethods {
   getQuerySelectOption?: (
     /** 下拉组件name值，对应container.component.JsonProperty.name */ name: string,
     /** 下拉选项key值*/ optionKey: string
-  ) => { readonly option: LegionsLabeledValue };
+  ) => LegionsLabeledValue|Array<LegionsLabeledValue>;
 
   setFormStates: <T extends IProFormFields['componentModel']>(name: string,callback: (state: T) => void) => void;
 

@@ -13,7 +13,7 @@ import { observer,bind } from 'legions/store-react'
 import {
     TableColumnConfig,
 } from '../interface/antd';
-import { ISchedule} from '../LegionsStore/interface';
+import { legionsStoreInterface} from '../LegionsStore/interface';
 import LegionsProLineOverflow from '../LegionsProLineOverflow';
 import { observable,runInAction } from 'mobx';
 interface IState {
@@ -63,7 +63,7 @@ export default class LegionsProVirtualTable extends Component<IProTableProps,ISt
     refLeftTable: Element = null
     lastSlideUpHeight = 0;
     sameSlideHeightCount = 0;
-    subscription: ISchedule = null;
+    subscription: legionsStoreInterface['schedule'] = null;
     /* lodaMore = debounce(() => {
         const { data } = this.props
         this.handleScroll((data || []).length)

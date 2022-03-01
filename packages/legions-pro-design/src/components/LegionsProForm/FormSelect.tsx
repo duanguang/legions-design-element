@@ -138,34 +138,12 @@ export default class FormSelect extends AbstractForm<IFormWithSelectProps,IState
         this.props.iFormWithSelect && this.props.iFormWithSelect.onSelect && this.props.iFormWithSelect.onSelect(value,option)
     }
     onSearch(value: string) {
-        /** 启用了远程搜索才会在搜索输入触发时调用 */
-        if (this.props.formStore && this.props.formStore.localViewModel && this.props.iFormWithSelect.remote) {
-            const view = this.props.formStore.viewModel.getFormItemField<InstanceType<typeof LabelWithSelectModel>>(this.props.iAntdProps.name)
-            if (view && view.value.iFormProps.autoQuery) {
-                this.props.formStore.localViewModel.dispatchRequest(this.props.iAntdProps.name,view.value.iFormProps.autoQuery,{
-                    pageIndex: 1,
-                    pageSize: view.value.iFormProps.pageSize,
-                    keyWords: value as string,
-                })
-            }
-        }
         if (this.state.styleClassFocus) {
             this.setState({ styleClassFocus: '' })
         }
         this.props.iFormWithSelect && this.props.iFormWithSelect.onSearch && this.props.iFormWithSelect.onSearch(value)
     }
     onClear = () => {
-        /** 启用了远程搜索才会在清除输入触发时调用搜索接口 */
-        if (this.props.formStore && this.props.formStore.localViewModel && this.props.iFormWithSelect.remote) {
-            const view = this.props.formStore.localViewModel._selectView.get(this.props.iAntdProps.name)
-            if (view && view.autoQuery) {
-                this.props.formStore.localViewModel.dispatchRequest(this.props.iAntdProps.name,view.autoQuery,{
-                    pageIndex: 1,
-                    pageSize: view.pageSize,
-                    keyWords: '',
-                })
-            }
-        }
         this.props.iFormWithSelect && this.props.iFormWithSelect.onClear && this.props.iFormWithSelect.onClear()
     }
     onChange(even,res) {
@@ -175,16 +153,6 @@ export default class FormSelect extends AbstractForm<IFormWithSelectProps,IState
         }
     }
     onPagingQuery = (pageIndex: number,pageSize: number,value?: string | string[] | number[] | LabeledValue | LabeledValue[]) => {
-        if (this.props.formStore && this.props.formStore.localViewModel) {
-            const view = this.props.formStore.localViewModel._selectView.get(this.props.iAntdProps.name)
-            if (view && view.autoQuery) {
-                this.props.formStore.localViewModel.dispatchRequest(this.props.iAntdProps.name,view.autoQuery,{
-                    pageIndex: pageIndex,
-                    pageSize: view.pageSize,
-                    keyWords: value as string,
-                })
-            }
-        }
         this.props.iFormWithSelect.onPagingQuery && this.props.iFormWithSelect.onPagingQuery(pageIndex,pageSize,value)
     }
     shouldComponentUpdate(nextProps:IFormWithSelectProps,nextState,context) {

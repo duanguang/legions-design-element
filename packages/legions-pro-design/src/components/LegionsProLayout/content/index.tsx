@@ -5,11 +5,9 @@
  * @Last Modified time: 2020-11-27 10:20:10
  */
 import React from "react";
-import { Tabs,Layout,Form,Icon,Dropdown,Menu,message,Spin } from 'antd';
-const { Content } = Layout;
-const TabPane = Tabs.TabPane;
+import { Tabs,Layout,Dropdown,Menu,message,Spin } from 'antd';
 import { observer,bind } from "legions/store-react";
-import LegionsStoreLayout from "../../LegionsStoreLayout";
+import LegionsStoreLayout from "../store";
 import ReactDOM,{ findDOMNode } from "react-dom";
 import { observableViewModel } from 'legions/store-utils'
 import { debounce } from 'legions-utils-tool/debounce'
@@ -18,48 +16,10 @@ import classNames from 'classnames';
 import { observable } from 'mobx';
 import { shortHash } from 'legions-lunar/object-hash';
 import { focusBind,focusUnbind } from 'legions-thirdparty-plugin/focus-outside'
-import { IPanes } from '../../LegionsStoreLayout/interface';
-import { IUserInfo } from '../../interface';
 import { LayoutContentUtils } from './layoutContentUtils';
-
-export interface ClickParam {
-  key: string;
-  keyPath: Array<string>;
-  item: any;
-  domEvent: any;
-}
-export interface IRouter {
-  path: string;
-  key?: string;
-  component: any;
-}
-interface IProps extends IUserInfo {
-  store?: InstanceType<typeof LegionsStoreLayout.TabPaneViewStore>;
-  menuStore?: InstanceType<typeof LegionsStoreLayout.MenuStore>;
-  router: Array<IRouter>;
-
-  /**
-   * 是否启用页签
-   *
-   * @type {boolean}
-   * @memberof IProps
-   */
-  isEnabledTabs: boolean;
-  domainUrl?: string;
-
-  /**
-   *
-   *404 url or path
-   * @type {string}
-   * @memberof IProps
-   */
-  notFoundUrl: string;
-
-  /** 布局布局位置
-   *  fixedSider 主要为了兼容历史固定侧边方案  过渡性方案
-   */
-  fixedLayoutPosition?:'fixedSider'|'fixedSiderHeader'
-}
+import { legionsProLayoutInterface,legionsProLayoutProps } from "../interface";
+const { Content } = Layout;
+const TabPane = Tabs.TabPane;
 class ViewModels {
   @observable iframeHeight = 500
   @observable contentHeight = 500
@@ -69,7 +29,7 @@ interface IState{
 }
 @bind({ store: LegionsStoreLayout.TabPaneViewStore,menuStore: LegionsStoreLayout.MenuStore })
 @observer
-export default class ContentPart extends React.Component<IProps,IState> {
+export default class ContentPart extends React.Component<legionsProLayoutProps['contentPart'],IState> {
   history = this.props.store.context._manage.history;
   viewModel = observableViewModel<ViewModels>(new ViewModels())
   setIframe = debounce(() => {
@@ -251,7 +211,7 @@ export default class ContentPart extends React.Component<IProps,IState> {
     });
   }
   
-  renderContentElement(pane: IPanes) {
+  renderContentElement(pane: legionsProLayoutInterface['panes']) {
     //let regex = /^http|https:\/\/\w+\.\w+[\/=\?%\-&_~`@[\]\':+!]*([^<>\"\"])*$/;
     if (typeof pane.path === "string") {
       return LayoutContentUtils.renderTabPaneContent(pane,this);
@@ -395,7 +355,7 @@ export default class ContentPart extends React.Component<IProps,IState> {
       <Content {...this.computedContentClassProps()}>
         {
             /** 菜单数据加载完毕之后再渲染content区域 */
-            this.props.menuStore.obMenuList.isResolved && (
+            this.props.menuStore._ob_menu_request.isResolved && (
                 /** 更具用户信息判断时候暂时loading状态 */
                 this.props.userEntity !== void 0 ? <Spin tip="Loading..." spinning={loading}>
                 {this.renderLayoutContentElement()}

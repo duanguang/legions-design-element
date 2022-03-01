@@ -1,10 +1,18 @@
+/*
+ * @Author: duanguang
+ * @Date: 2021-11-04 23:48:49
+ * @LastEditTime: 2022-02-28 16:50:41
+ * @LastEditors: duanguang
+ * @Description: 
+ * @FilePath: /legions-design-element/packages/legions-pro-design/src/common/stores/StoreBase.ts
+ * 「扫去窗上的尘埃，才可以看到窗外的美景。」
+ */
 /** @format */
 
 import Store from 'legions/store';
 import { autorun } from 'mobx';
 // mobx.useStrict(true);
 import { StaticMeta } from 'brain-store/types/api/meta';
-import { IResourceEvent } from './event/resourceEvent';
 import { schedule } from 'legions-lunar/schedule';
 import { History } from '../typings/history';
 import { project } from '../containers/config';

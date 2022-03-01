@@ -1,16 +1,15 @@
 import { RegExChk,validatorType } from 'legions-utils-tool/regex';
-import { IPanes } from '../../LegionsStoreLayout/interface';
 import ContentPart from '.';
 import LegionsProIframe from "../../LegionsProIframe";
 import React from 'react';
 import { NProgress } from "legions-nprogress";
 import pathToRegexp from 'path-to-regexp'
-import LegionsStoreLayout from '../../LegionsStoreLayout';
 import cloneDeep from 'lodash/cloneDeep';
 import { getMicroAppStateActions } from 'legions-micro-service'
 import LegionsCrossModule from '../../LegionsCrossModule';
 import { inject } from 'legions/store';
-
+import LegionsStoreLayout from '../store';
+import { legionsProLayoutInterface } from '../interface'
 export class LayoutContentUtils {
   @inject(LegionsCrossModule.MasterGlobalStateStore)
   static masterGlobalStateStore: InstanceType<typeof LegionsCrossModule.MasterGlobalStateStore>
@@ -52,7 +51,7 @@ export class LayoutContentUtils {
   }
   /** 获取菜单页签path  */
 
-  static getTabPanePath(pane: IPanes,that: ContentPart) {
+  static getTabPanePath(pane: legionsProLayoutInterface['panes'],that: ContentPart) {
     let src = '';
     // @ts-ignore
     if (RegExChk(validatorType.url,pane.path)) {
@@ -82,7 +81,7 @@ export class LayoutContentUtils {
     return src;
   }
 
-  static renderTabPaneContent(pane: IPanes,that: ContentPart) {
+  static renderTabPaneContent(pane: legionsProLayoutInterface['panes'],that: ContentPart) {
     const menuList = that.props.menuStore.getAllMenuList()
     const currMenu = menuList.find(item => item.key === pane.key)
     const tempPane = { ...currMenu,...cloneDeep(pane) }
@@ -111,10 +110,10 @@ export class LayoutContentUtils {
     }
   }
   //@ts-ignore
-  static renderTabPaneIframe(pane: IPanes,that: ContentPart,src: string) {
+  static renderTabPaneIframe(pane: legionsProLayoutInterface['panes'],that: ContentPart,src: string) {
     /* let url =!this.props.isEnabledTabs?this.transHttpUrl(src, this.props.store.urlRangTimestamp):src; */
-    const tabPanesTimestamp = that.props.store.viewUIModel.tabPanesTimestamp.get(pane.key) || new Date().getTime()
-    that.props.store.viewUIModel.updateTimestamp(pane.key.toString(),tabPanesTimestamp)
+    const tabPanesTimestamp = that.props.store.viewData.tabPanesTimestamp.get(pane.key) || new Date().getTime()
+    that.props.store.viewData.updateTimestamp(pane.key.toString(),tabPanesTimestamp)
     if (pane.loadingMode === 'iframe') {
       let url = LayoutContentUtils.transHttpUrl(src,tabPanesTimestamp)
 
@@ -189,7 +188,7 @@ export class LayoutContentUtils {
 
   }
   //@ts-ignore
-  static renderTabPaneRouterComponent(pane: IPanes,that: ContentPart,src: string) {
+  static renderTabPaneRouterComponent(pane: legionsProLayoutInterface['panes'],that: ContentPart,src: string) {
     NProgress.done();
     const curPane = that.props.store.panes.find((i) => i.key === that.props.store.activeKey)
     /** 只渲染当前活跃的页签，其他页面不渲染，避免路由跳转时触发多份实例导致显示异常 */
@@ -203,13 +202,13 @@ export class LayoutContentUtils {
     }
   }
 
-  static renderProxySanboxDom(pane: IPanes,that: ContentPart,src: string,proxySanbox: InstanceType<typeof LegionsStoreLayout.ProxySanbox>) {
+  static renderProxySanboxDom(pane: legionsProLayoutInterface['panes'],that: ContentPart,src: string,proxySanbox: InstanceType<typeof LegionsStoreLayout.ProxySanbox>) {
     if (pane.loadingMode === 'sandbox') {
       return null;
     }
   }
   /** 沙箱单实例加载方式 */
-  static loadMicroApp(pane: IPanes,that: ContentPart,proxySanbox: InstanceType<typeof LegionsStoreLayout.ProxySanbox>) {
+  static loadMicroApp(pane: legionsProLayoutInterface['panes'],that: ContentPart,proxySanbox: InstanceType<typeof LegionsStoreLayout.ProxySanbox>) {
     proxySanbox.isEnabledTabs = that.props.isEnabledTabs
     /** 空判跳过 */
     if (!pane) {

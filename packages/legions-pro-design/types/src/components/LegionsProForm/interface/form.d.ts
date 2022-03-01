@@ -89,9 +89,7 @@ interface IMethods {
     /** 查询指定下拉组件数据项 */
     getQuerySelectOption?: (
     /** 下拉组件name值，对应container.component.JsonProperty.name */ name: string, 
-    /** 下拉选项key值*/ optionKey: string) => {
-        readonly option: LegionsLabeledValue;
-    };
+    /** 下拉选项key值*/ optionKey: string) => LegionsLabeledValue | Array<LegionsLabeledValue>;
     setFormStates: <T extends IProFormFields['componentModel']>(name: string, callback: (state: T) => void) => void;
     /** 添加新的表单项 */
     addFormItem: (list: Array<IProFormFields['componentModel']>) => void;

@@ -1,4 +1,4 @@
-import LegionsModels from '../../../components/LegionsModels';
+import LegionsProLayout from 'components/LegionsProLayout';
 /** 海关基础参数 */
 export declare class SearchResponse {
     /**  */
@@ -17,6 +17,6 @@ export declare class SearchResponse {
     total: number;
 }
 /** 海关基础参数请求结果 */
-export declare class SearchEntity extends LegionsModels.BaseEntity<SearchResponse> {
+export declare class SearchEntity extends LegionsProLayout.BaseModel<SearchResponse> {
     constructor(fromJson: any);
 }

@@ -8,11 +8,11 @@
 cp -r types/src/components/index.d.ts es/
 cp -r types/src/components/index.d.ts lib/
 
-cp -r -f types/src/components/LegionsCore/*.d.ts es/LegionsCore/
-cp -r -f types/src/components/LegionsCore/*.d.ts lib/LegionsCore/
+cp -r -f types/src/components/LegionsCore/* es/LegionsCore/
+cp -r -f types/src/components/LegionsCore/* lib/LegionsCore/
 
-cp -r -f types/src/components/LegionsCrossModule/*.d.ts es/LegionsCrossModule/
-cp -r -f types/src/components/LegionsCrossModule/*.d.ts lib/LegionsCrossModule/
+cp -r -f types/src/components/LegionsCrossModule/* es/LegionsCrossModule/
+cp -r -f types/src/components/LegionsCrossModule/* lib/LegionsCrossModule/
 
 
 cp -r -f types/src/components/LegionsModels/* es/LegionsModels/
@@ -33,8 +33,7 @@ cp -r -f types/src/components/LegionsStoreConditions/* lib/LegionsStoreCondition
 cp -r -f types/src/components/LegionsStoreForm/* es/LegionsStoreForm/
 cp -r -f types/src/components/LegionsStoreForm/* lib/LegionsStoreForm/
 
-cp -r -f types/src/components/LegionsStoreLayout/* es/LegionsStoreLayout/
-cp -r -f types/src/components/LegionsStoreLayout/* lib/LegionsStoreLayout/
+
 
 cp -r -f types/src/components/LegionsStoreModal/* es/LegionsStoreModal/
 cp -r -f types/src/components/LegionsStoreModal/* lib/LegionsStoreModal/

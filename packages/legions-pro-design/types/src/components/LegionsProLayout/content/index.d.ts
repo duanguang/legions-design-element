@@ -1,42 +1,5 @@
 import React from "react";
-import LegionsStoreLayout from "../../LegionsStoreLayout";
-import { IPanes } from '../../LegionsStoreLayout/interface';
-import { IUserInfo } from '../../interface';
-export interface ClickParam {
-    key: string;
-    keyPath: Array<string>;
-    item: any;
-    domEvent: any;
-}
-export interface IRouter {
-    path: string;
-    key?: string;
-    component: any;
-}
-interface IProps extends IUserInfo {
-    store?: InstanceType<typeof LegionsStoreLayout.TabPaneViewStore>;
-    menuStore?: InstanceType<typeof LegionsStoreLayout.MenuStore>;
-    router: Array<IRouter>;
-    /**
-     * 是否启用页签
-     *
-     * @type {boolean}
-     * @memberof IProps
-     */
-    isEnabledTabs: boolean;
-    domainUrl?: string;
-    /**
-     *
-     *404 url or path
-     * @type {string}
-     * @memberof IProps
-     */
-    notFoundUrl: string;
-    /** 布局布局位置
-     *  fixedSider 主要为了兼容历史固定侧边方案  过渡性方案
-     */
-    fixedLayoutPosition?: 'fixedSider' | 'fixedSiderHeader';
-}
+import { legionsProLayoutInterface, legionsProLayoutProps } from "../interface";
 declare class ViewModels {
     iframeHeight: number;
     contentHeight: number;
@@ -49,7 +12,7 @@ declare class ViewModels {
 }
 interface IState {
 }
-export default class ContentPart extends React.Component<IProps, IState> {
+export default class ContentPart extends React.Component<legionsProLayoutProps['contentPart'], IState> {
     history: any;
     viewModel: import("brain-store-utils/types/create-view-model").ViewModel<ViewModels> & {
         iframeHeight: number;
@@ -83,7 +46,7 @@ export default class ContentPart extends React.Component<IProps, IState> {
     /** 渲染页签悬浮窗元素 */
     renderDropMenuElement(tabkey: string): JSX.Element;
     renderTabPaneElement(): JSX.Element[];
-    renderContentElement(pane: IPanes): any;
+    renderContentElement(pane: legionsProLayoutInterface['panes']): any;
     /**
      * 渲染页签标题
      *

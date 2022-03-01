@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-25 18:42:42
- * @LastEditTime: 2021-03-03 16:52:25
+ * @LastEditTime: 2022-03-01 14:09:54
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/index.ts
@@ -42,7 +42,6 @@ export { default as LegionsProTabsForm } from './LegionsProTabsForm';
 export { default as LegionsStore } from './LegionsStore';
 export { default as LegionsStoreConditions } from './LegionsStoreConditions';
 export { default as LegionsStoreForm } from './LegionsStoreForm';
-export { default as LegionsStoreLayout } from './LegionsStoreLayout';
 export { default as LegionsStoreModal } from './LegionsStoreModal';
 export { default as LegionsStoreTable } from './LegionsStoreTable';
 export { default as LegionsCore } from './LegionsCore';

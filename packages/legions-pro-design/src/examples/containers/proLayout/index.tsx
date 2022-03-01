@@ -6,10 +6,8 @@ import { observablePromise } from 'legions/store-utils';
 import { observable } from 'legions/store';
 import { getSystem,getToken,HttpConfig,SocketUrl } from '../../constants/httpConfig';
 import { FormFields } from '../proForm/model';
-import { ClassOf } from 'legions-lunar/types/api/typescript';
 import { exportTaskDeleteService,getMenuList } from '../../services/menuService';
 import UserInfoStore from '../../stores/UserInfoStore';
-import LegionsStoreLayout from '../../../components/LegionsStoreLayout';
 import { page } from 'legions-lunar/mobx-decorator';
 import { InstanceProModal } from '../../../components/LegionsProModal/interface';
 import { TableColumnConfig } from '../../../components/interface/antd';
@@ -96,14 +94,14 @@ const Columns = (that: ProLayout): TableColumnConfig<ExportTaskEntity>[] => [
 ];
 interface IProps {
     store?: UserInfoStore,
-    menuStore?:InstanceType<typeof LegionsStoreLayout['MenuStore']>;
+    menuStore?:InstanceType<typeof LegionsProLayout['LegionsStoreLayout']['MenuStore']>;
 }
 interface IState {
 }
 const whiteList = ['uat-scm.hoolinks.com','qa-scm.hoolinks.com','scm.hoolinks.com','demo-scm.hoolinks.com',
     'jabil.hoolinks.com','qa-jabil.hoolinks.com','demo-jabil.hoolinks.com','uat-jabil.hoolinks.com','localhost:8057']
 let isRegisterTask = false;
-@bind({ store: UserInfoStore,menuStore: LegionsStoreLayout.MenuStore })
+@bind({ store: UserInfoStore,menuStore: LegionsProLayout['LegionsStoreLayout'].MenuStore })
 @page<ProLayout,UserInfoStore>({
     sideEffect: (that,store: UserInfoStore) => {
         if (store.obUserInfo.isResolved) {

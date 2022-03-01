@@ -4,7 +4,7 @@ import { TableColumnConfig } from 'antd/lib/table/Table';
 import { IViewModelProTableStore, ITableAutoQuery } from '../LegionsStoreTable/interface';
 import { SelectionDecorator } from '../interface/antd';
 import { ITableColumnConfig, IExportCsv, IProTableProps, ICustomColumnsConfig } from './interface';
-import { ISchedule } from '../LegionsStore/interface';
+import { legionsStoreInterface } from '../LegionsStore/interface';
 import { InstanceProModal } from '../LegionsProModal/interface';
 import { ProTableBaseClass } from './ProTableBaseClass';
 interface IState {
@@ -33,7 +33,7 @@ export default class LegionsProTable<TableRow = {}, Model = {}> extends React.Co
     /** 全链路监控跟踪id */
     traceId: string;
     log: (uid: any) => void;
-    subscription: ISchedule;
+    subscription: legionsStoreInterface['schedule'];
     node: Element;
     resize: () => void;
     static defaultProps: {
@@ -108,7 +108,7 @@ export default class LegionsProTable<TableRow = {}, Model = {}> extends React.Co
         readonly computedUnShowColumns: import("../LegionsStoreTable/interface").IShowColumns[];
         readonly computedStorageShowColumnsKeys: string;
         readonly computedRenderColumns: (TableColumnConfig<{}> & import("../LegionsStoreTable/interface").ITableColumnConfig)[];
-        readonly tableXAutoWidth: string | number;
+        readonly tableXAutoWidth: React.ReactText;
         readonly computedTotal: number;
         _filterColumns: () => void;
         _moveRightShowColumns: (Columns: string[]) => void;

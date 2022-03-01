@@ -1,5 +1,5 @@
 import { MicroAppStateActions } from 'legions-micro-service/types/interfaces';
-import { IGlobalStateEvent } from '../interface';
+import { legionsCrossModuleInterface } from './interface';
 declare function sendMessageToParentWin(options: {
     data: {
         /** 数据操作口令，用于区分 */
@@ -25,8 +25,8 @@ declare const IframePostMessage: {
 };
 /** 订阅子应用iframe挂载在全局的变量 */
 declare function subscribeLegionsProGlobal(callback: (value: {
-    onGlobalStateChange: (callback: (value: any, prev: any, event: IGlobalStateEvent) => void, options: Parameters<MicroAppStateActions['onGlobalStateChange']>[1]) => void;
-    setGlobalState: (state: any, event: IGlobalStateEvent) => void;
+    onGlobalStateChange: (callback: (value: any, prev: any, event: legionsCrossModuleInterface['GlobalStateEvent']) => void, options: Parameters<MicroAppStateActions['onGlobalStateChange']>[1]) => void;
+    setGlobalState: (state: any, event: legionsCrossModuleInterface['GlobalStateEvent']) => void;
     appId: string;
 }) => void): void;
 export declare const masterEventScopes: {

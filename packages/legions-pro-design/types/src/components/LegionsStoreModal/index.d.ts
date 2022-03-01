@@ -1,7 +1,7 @@
 import LegionsStore from '../LegionsStore';
-import { IStoreBaseMeta } from '../LegionsStore/interface';
+import { legionsStoreInterface } from '../LegionsStore/interface';
 export default class LegionsStoreModal extends LegionsStore.StoreBase {
-    static meta: IStoreBaseMeta;
+    static meta: legionsStoreInterface['storeBaseMeta'];
     constructor(context: any);
     ModalContainer: import("mobx").ObservableMap<string, import("./interface").IViewModelModalStore>;
     /**

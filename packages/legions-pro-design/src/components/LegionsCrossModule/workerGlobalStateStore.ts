@@ -1,19 +1,15 @@
 import LegionsStore from '../LegionsStore';
-import { IStoreBaseMeta } from '../LegionsStore/interface'
+import { legionsStoreInterface } from '../LegionsStore/interface'
 import { MicroAppStateActions } from 'legions-micro-service/types/interfaces'
 import { inject, resource, StoreModules } from 'legions/store';
-import { IGlobalStates, IResource } from '../interface';
 import LegionsStoreTable from '../LegionsStoreTable';
 import { IframePostMessage, masterEventScopes, subscribeLegionsProGlobal } from './globalStateEven';
-import LegionsModels from '../LegionsModels';
+import { legionsProLayoutInterface } from '../LegionsProLayout/interface'
+import {legionsCrossModuleInterface} from './interface'
 interface IContext{
 /*  UserInfoApp:UserInfoStore, */
 }
 
-interface IIGlobalStateEvent{
-    name: string;
-    scope: string;
-}
 interface InterfaceUer<U>{
     userName: string;
     userUid: string;
@@ -25,7 +21,7 @@ interface InterfaceUer<U>{
 /** 子应用全局数据基类 */
 @StoreModules
 export default class WorkerGlobalStateStore<IGlobalState,User={}> extends LegionsStore.StoreBase<IContext>{
-    static meta :IStoreBaseMeta={
+    static meta :legionsStoreInterface['storeBaseMeta']={
         ...LegionsStore.StoreBase.meta,
     }
     /** 创建微应用事件 */
@@ -35,22 +31,22 @@ export default class WorkerGlobalStateStore<IGlobalState,User={}> extends Legion
     @inject(LegionsStoreTable)
     private proTableStore: InstanceType<typeof LegionsStoreTable>
     private userInfo: InterfaceUer<User>;
-    private menuList: InstanceType<typeof LegionsModels['MenuEntity']>[] = [];
+    private menuList: legionsProLayoutInterface['menuList'] = [];
     /** 监听全局数据，发生改变时触发,最基础监听函数 */
-    protected onGlobalStateChange: (callback:(value:IGlobalStates&IGlobalState,prev:IGlobalStates&IGlobalState,event:IIGlobalStateEvent)=>void,options:Parameters<MicroAppStateActions['onGlobalStateChange']>[1])=>void = null;
+    protected onGlobalStateChange: (callback:(value:legionsProLayoutInterface['GlobalStates']&IGlobalState,prev:legionsProLayoutInterface['GlobalStates']&IGlobalState,event:legionsCrossModuleInterface['GlobalStateEvent'])=>void,options:Parameters<MicroAppStateActions['onGlobalStateChange']>[1])=>void = null;
     /**订阅子应用iframe挂载在全局的变量 */
     protected subscribeLegionsProGlobal = subscribeLegionsProGlobal;
     
     //@ts-ignore
     public masterEventScopes = masterEventScopes;
     /** 打开菜单页签方法 */
-    openTabPane: IGlobalStates['methods']['openTabPane'] = () => { };
+    openTabPane: legionsProLayoutInterface['GlobalStates']['methods']['openTabPane'] = () => { };
     /** 移除菜单页签方法 */
-    removeTablePane: IGlobalStates['methods']['removeTablePane'] = () => { };
+    removeTablePane: legionsProLayoutInterface['GlobalStates']['methods']['removeTablePane'] = () => { };
     /** 更新全局数据方法
      * 此函数在执行时，微应用全局监听事件都会接收到数据变化通知。 譬如listeningSanboxGlobalStateChange
      */
-    setGlobalState: (state: IGlobalStates & IGlobalState,event: IIGlobalStateEvent) => void = null;
+    setGlobalState: (state: legionsProLayoutInterface['GlobalStates'] & IGlobalState,event: legionsCrossModuleInterface['GlobalStateEvent']) => void = null;
     /** postmessage 通信 */
     iframePostMessage = IframePostMessage;
     /** 微应用id */
@@ -67,14 +63,14 @@ export default class WorkerGlobalStateStore<IGlobalState,User={}> extends Legion
     /** 全局数据变化监听函数，主要用于沙箱微应用环境 */
     listeningSanboxGlobalStateChange(options: {
         props:{
-            onGlobalStateChange: (callback:(value:any,prev:any,event:IIGlobalStateEvent)=>void,options:Parameters<MicroAppStateActions['onGlobalStateChange']>[1])=>void;
-            setGlobalState: (state: any,event: IIGlobalStateEvent) => void;
+            onGlobalStateChange: (callback:(value:any,prev:any,event:legionsCrossModuleInterface['GlobalStateEvent'])=>void,options:Parameters<MicroAppStateActions['onGlobalStateChange']>[1])=>void;
+            setGlobalState: (state: any,event: legionsCrossModuleInterface['GlobalStateEvent']) => void;
             name?: string;
         },
         /** 监听事件队列数据 */
-        eventScopes: IResource[],
+        eventScopes: legionsStoreInterface['resource'][],
         /** 监听回调执行函数 */
-        callback: (value: IGlobalStates & IGlobalState,prev: IGlobalStates & IGlobalState,event: IIGlobalStateEvent) => void;
+        callback: (value: legionsProLayoutInterface['GlobalStates'] & IGlobalState,prev: legionsProLayoutInterface['GlobalStates'] & IGlobalState,event: legionsCrossModuleInterface['GlobalStateEvent']) => void;
     }) {
         //@ts-ignore
         this._syncUpdateGlobalState(options.props);
@@ -93,9 +89,9 @@ export default class WorkerGlobalStateStore<IGlobalState,User={}> extends Legion
     /** 监听广播数据(主要用于基座跟子应用不在同一个容器，比如iframe) */
     listeningIframeGlobalStateChange(options: {
         /** 监听事件队列数据 */
-        eventScopes: IResource[],
+        eventScopes: legionsStoreInterface['resource'][],
         /** 监听回调执行函数 */
-        callback: (value: IGlobalStates & IGlobalState,prev: IGlobalStates & IGlobalState,event: IIGlobalStateEvent) => void;
+        callback: (value: legionsProLayoutInterface['GlobalStates'] & IGlobalState,prev: legionsProLayoutInterface['GlobalStates'] & IGlobalState,event: legionsCrossModuleInterface['GlobalStateEvent']) => void;
     }) {
         this.subscribeLegionsProGlobal((values) => {
             //@ts-ignore
@@ -138,7 +134,7 @@ export default class WorkerGlobalStateStore<IGlobalState,User={}> extends Legion
         this.userInfo = user;
     }
     /** 写入基座系统相关方法及对象变量 */
-    private _setLayoutData(data:IGlobalStates) {
+    private _setLayoutData(data:legionsProLayoutInterface['GlobalStates']) {
         if (data.user) {
             this.proTableStore.userInfo = data.user;
             this._setUserInfo(data.user);

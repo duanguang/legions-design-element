@@ -1,6 +1,6 @@
 /**
-  *  legions-pro-design v0.0.9
-  * (c) 2021 duanguang
+  *  legions-pro-design v0.0.21
+  * (c) 2022 duanguang
   * @license MIT
   */
 import Store, { resource, Lifecycle, getInjector } from 'legions/store';
@@ -86,7 +86,7 @@ var project = {
 /*
  * @Author: duanguang
  * @Date: 2020-12-26 11:23:17
- * @LastEditTime: 2021-08-09 23:27:48
+ * @LastEditTime: 2022-02-28 17:18:18
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStore/StoreBase.ts

@@ -1,6 +1,6 @@
-import LegionsModels from '../LegionsModels';
+import { BaseModel } from './model/base';
 /** 列表页数据模型类*/
-export declare class PageListEntity<ResponseEntity> extends LegionsModels.BaseEntity<ResponseEntity[]> {
+export declare class PageListEntity<ResponseEntity> extends BaseModel<ResponseEntity[]> {
     total: number;
     current: number;
     pageSize: number;

@@ -1,32 +1,34 @@
 /**
-  *  legions-pro-design v0.0.14
+  *  legions-pro-design v0.0.21
   * (c) 2022 duanguang
   * @license MIT
   */
 import React from 'react';
 import { Layout, Tabs, message, Menu, Dropdown, Spin, Icon, Avatar, Breadcrumb } from 'antd';
-import './style/index.less';
 import { bind, observer } from 'legions/store-react';
-import LegionsStoreLayout from '../LegionsStoreLayout';
+import LegionsStore from '../LegionsStore';
+import { observable, action, StoreModules, inject } from 'legions/store';
+import { setStorageItems, getStorageItem } from 'legions-utils-tool/storage';
+import { observableViewModel, observablePromise } from 'legions/store-utils';
+import { RegExChk, validatorType } from 'legions-utils-tool/regex';
+import { loadMicroApp, getMicroAppStateActions } from 'legions-micro-service';
+import { shortHash } from 'legions-lunar/object-hash';
+import { computed, observable as observable$1, isObservableArray } from 'mobx';
 import ReactDOM from 'react-dom';
-import { observableViewModel } from 'legions/store-utils';
 import { debounce } from 'legions-utils-tool/debounce';
 import styles from './style/content.modules.less';
 import classNames from 'classnames';
-import { observable, isObservableArray } from 'mobx';
-import { shortHash } from 'legions-lunar/object-hash';
 import { focusBind, focusUnbind } from 'legions-thirdparty-plugin/focus-outside';
-import { RegExChk, validatorType } from 'legions-utils-tool/regex';
 import LegionsProIframe from '../LegionsProIframe';
 import { NProgress } from 'legions-nprogress';
 import pathToRegexp from 'path-to-regexp';
 import cloneDeep from 'lodash/cloneDeep';
-import { getMicroAppStateActions } from 'legions-micro-service';
 import LegionsCrossModule from '../LegionsCrossModule';
-import { inject } from 'legions/store';
 import './style/memu.less';
 import { page } from 'legions-lunar/mobx-decorator';
 import LegionsProSelect from '../LegionsProSelect';
+import { MapperEntity, JsonProperty } from 'json-mapper-object';
+import './style/index.less';
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -116,6 +118,952 @@ function __spread() {
         ar = ar.concat(__read(arguments[i]));
     return ar;
 }
+
+/** 沙箱页签活动类型 */
+var SanboxTabActionMode;
+(function (SanboxTabActionMode) {
+    /** 新增 */
+    SanboxTabActionMode[SanboxTabActionMode["add"] = 0] = "add";
+    /** 删除 */
+    SanboxTabActionMode[SanboxTabActionMode["delete"] = 1] = "delete";
+    /** 切换 */
+    SanboxTabActionMode[SanboxTabActionMode["switch"] = 2] = "switch";
+})(SanboxTabActionMode || (SanboxTabActionMode = {}));
+var ProxySanbox = /** @class */ (function () {
+    function ProxySanbox(history) {
+        this.microSanboxApp = new Map();
+        /** 记录各个页签最后一次访问路径 */
+        this.microSanboxRoute = new Map();
+        //@ts-ignore
+        this.history = null;
+        this.isEnabledTabs = false;
+        this.history = history;
+    }
+    ProxySanbox.prototype.registerMicroApps = function (mountPane) {
+        if (this.microSanboxApp.has(mountPane.sandbox.appName)) {
+            return;
+        }
+        var app = loadMicroApp({
+            name: mountPane.sandbox.appName,
+            entry: mountPane.sandbox.appEntiy,
+            container: "#" + mountPane.sandbox.appName,
+            props: __assign({ history: this.history }, mountPane.sandbox.props || {})
+        }, {
+            sandbox: {
+                experimentalStyleIsolation: mountPane.sandbox.experimentalStyleIsolation,
+            },
+            isMerge: mountPane.sandbox.isMerge,
+        });
+        var mount = function () {
+            return app.mount().catch(function (err) {
+                console.log('----------status----------', app.getStatus());
+                console.error('----------mount error----------', err);
+                return err;
+            });
+        };
+        var unmount = function () {
+            return app.unmount().catch(function (err) {
+                console.log('----------status----------', app.getStatus());
+                console.error('----------unmount error----------', err);
+                return err;
+            });
+        };
+        this.microSanboxApp.set(mountPane.sandbox.appName, {
+            getStatus: app.getStatus,
+            appName: mountPane.sandbox.appName,
+            entry: mountPane.sandbox.appEntiy,
+            app: app,
+            mount: mount,
+            unmount: unmount,
+        });
+    };
+    ProxySanbox.prototype.mountSanboxMicroApp = function (mountPane) {
+        if (mountPane.loadingMode === 'sandbox') {
+            var path = this.microSanboxRoute.get(mountPane.key) ||
+                this.getRouterPath(mountPane);
+            if (this.isEnabledTabs) {
+                this.history.replace(path); // 如果启动了页签模式，则切换路由使用替换模式，防止回退导致路由错乱
+            }
+            else {
+                this.history.push(path);
+            }
+        }
+    };
+    ProxySanbox.prototype.unmountSanboxMicroApp = function (unmoutPane, mountPane) {
+        if (unmoutPane.loadingMode === 'sandbox') {
+            if (this.isEnabledTabs) {
+                this.history.replace('/');
+            }
+            else {
+                this.history.push('/');
+            }
+        }
+    };
+    ProxySanbox.prototype.switchTabPaneSanboxMicroApp = function (unmoutPane, mountPane, type) {
+        var sanboxRenderList = document.querySelectorAll("div[data-mode=sanbox-tabs-render]");
+        /** 新增页签时，初始化页面路径 */
+        if (type === SanboxTabActionMode.add &&
+            mountPane &&
+            mountPane.loadingMode === 'sandbox') {
+            this.microSanboxRoute.set(mountPane.key, this.getRouterPath(mountPane));
+        }
+        /** 切换页签时，记录页签的最后一次访问路径 */
+        if (unmoutPane && unmoutPane.loadingMode === 'sandbox') {
+            var path = window.location.pathname.replace('#', '');
+            if (unmoutPane.router === 'hash') {
+                path = window.location.hash.replace('#', '');
+            }
+            this.microSanboxRoute.set(unmoutPane.key, path);
+            sanboxRenderList.forEach(function (item) {
+                if (unmoutPane.sandbox.appName === item.id) {
+                    item['style']['display'] = 'none';
+                }
+            });
+            /** 沙箱页面离开时，并且下一个进入的页面是iframe，卸载沙箱页面回到根路径  */
+            if (mountPane &&
+                mountPane.loadingMode === 'iframe') {
+                this.unmountSanboxMicroApp(unmoutPane, mountPane);
+            }
+        }
+        /** 只要是沙箱的页面，在进入时都执行装载 */
+        if (mountPane && mountPane.loadingMode === 'sandbox') {
+            this.mountSanboxMicroApp(mountPane);
+            sanboxRenderList.forEach(function (item) {
+                if (mountPane.sandbox.appName === item.id) {
+                    item['style']['display'] = 'block';
+                }
+            });
+        }
+    };
+    ProxySanbox.prototype.getRouterPath = function (pane) {
+        var path = pane.path || '';
+        if (pane.router === 'hash') {
+            var routerPaths = path.split('#');
+            var routerPath = '';
+            if (routerPaths.length > 1) {
+                routerPath = routerPaths[1];
+            }
+            return routerPath;
+        }
+        return path;
+    };
+    ProxySanbox.prototype.createMicroAppId = function (pane) {
+        var routerPath = this.getRouterPath(pane);
+        return shortHash(routerPath);
+    };
+    ProxySanbox.SanboxTabActionMode = SanboxTabActionMode;
+    return ProxySanbox;
+}());
+
+var TabPaneViewData = /** @class */ (function () {
+    function TabPaneViewData() {
+        /**
+         * 页签生成时间戳信息
+         *
+         */
+        this.tabPanesTimestamp = observable.map();
+    }
+    /**
+     *
+     * 更新相关页签时间戳信息
+     */
+    TabPaneViewData.prototype.updateTimestamp = function (panesKey, timeStamp) {
+        //@ts-ignore
+        if (this.tabPanesTimestamp.has(panesKey)) {
+            this.tabPanesTimestamp.set(
+            //@ts-ignore
+            panesKey, timeStamp || Date.parse(new Date().toString()));
+        }
+        else {
+            this.tabPanesTimestamp.set(
+            //@ts-ignore
+            panesKey, timeStamp || Date.parse(new Date().toString()));
+        }
+    };
+    __decorate([
+        observable,
+        __metadata("design:type", Object)
+    ], TabPaneViewData.prototype, "tabPanesTimestamp", void 0);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [String, Number]),
+        __metadata("design:returntype", void 0)
+    ], TabPaneViewData.prototype, "updateTimestamp", null);
+    return TabPaneViewData;
+}());
+
+/*
+ * @Author: duanguang
+ * @Date: 2022-03-01 14:20:34
+ * @LastEditTime: 2022-03-01 14:23:22
+ * @LastEditors: duanguang
+ * @Description:
+ * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProLayout/constant.storageKeys.ts
+ * 「扫去窗上的尘埃，才可以看到窗外的美景。」
+ */
+/**  当前展开的 SubMenu 菜单项 key 数组 缓存*/
+var OPENKEYS_STORAGE_KEY = 'openKeys_storage_key';
+/**  当前选中的菜单项 key 数组 缓存*/
+var SELECTED_STORAGE_KEY = 'selected_storage_key';
+var panesStorageKeys = 'panes_storage_key';
+/** 活动tabs 编码 缓存 */
+var activeKeyStorageKeys = 'panes_activeKey_key';
+/**  menu 菜单选中缓存数据*/
+var selectedStorageKeys = 'selected_storage_key';
+/**  菜单面包屑缓存数据*/
+var breadcrumbStorageKeys = 'breadcrumb_storage_key';
+/** 菜单缓存数据keys */
+var storageKeysData = {
+    /**  当前展开的 SubMenu 菜单项 key 数组 缓存*/
+    OPENKEYS_STORAGE_KEY: OPENKEYS_STORAGE_KEY,
+    /**  当前选中的菜单项 key 数组 缓存*/
+    SELECTED_STORAGE_KEY: SELECTED_STORAGE_KEY,
+    panesStorageKeys: panesStorageKeys,
+    /** 活动tabs 编码 缓存 */
+    activeKeyStorageKeys: activeKeyStorageKeys,
+    /**  menu 菜单选中缓存数据*/
+    selectedStorageKeys: selectedStorageKeys,
+    /**  菜单面包屑缓存数据*/
+    breadcrumbStorageKeys: breadcrumbStorageKeys,
+};
+
+/** @format */
+var TabPaneViewStore = /** @class */ (function (_super) {
+    __extends(TabPaneViewStore, _super);
+    function TabPaneViewStore(context) {
+        var _this = _super.call(this, context) || this;
+        _this.proxySanbox = null;
+        /**  页签组件视图数据 */
+        _this.viewData = observableViewModel(new TabPaneViewData());
+        /**  用于同步菜单栏是否收缩状态 */
+        _this.collapsed = false;
+        /**  Tabs 页签打开缓存数据*/
+        _this.panes = getStorageItem(storageKeysData.panesStorageKeys, []);
+        /**  当前标签页,默认首页*/
+        _this.activeKey = getStorageItem(storageKeysData.activeKeyStorageKeys, '');
+        _this.breadcrumbMenu = getStorageItem(storageKeysData.breadcrumbStorageKeys, []);
+        _this.proxySanbox = new ProxySanbox(_this.history);
+        return _this;
+    }
+    TabPaneViewStore.prototype.remove = function (targetKey) {
+        var activeKey = this.activeKey;
+        var lastIndex;
+        this.panes.forEach(function (pane, i) {
+            if (pane.key === targetKey) {
+                lastIndex = i - 1;
+            }
+        });
+        var panes = this.panes.filter(function (pane) { return pane.key !== targetKey; });
+        /**  当页签数量等于1时，则不允许删除最后一个页签*/
+        if (panes.length > 0) {
+            if (lastIndex >= 0 && activeKey === targetKey) {
+                activeKey = panes[lastIndex].key;
+            }
+            else {
+                /**  当页签为-1时，即从左至右一次关闭页签时，总是把后一个设为活动页签*/
+                lastIndex = 0;
+                activeKey = panes[lastIndex].key;
+            }
+            this.panes = panes;
+            this.setActiveKey(activeKey);
+            setStorageItems(storageKeysData.panesStorageKeys, this.panes);
+        }
+    };
+    /** 同步设置面包屑导航信息*/
+    TabPaneViewStore.prototype.updateBreadcrumbs = function (panes, menuList) {
+        var _this = this;
+        this.breadcrumbMenu = []; //清空面包屑导航
+        var keyPath = panes.keyPath;
+        keyPath.map(function (items) {
+            var entity = menuList.find(function (item) { return item.key === items; });
+            if (entity) {
+                _this.breadcrumbMenu.push(entity.title);
+            }
+            else if (panes.title) {
+                _this.breadcrumbMenu.push(panes.title);
+            }
+        });
+        this.breadcrumbMenu = this.breadcrumbMenu.reverse().slice(); //处理头部面包屑导航数据
+        setStorageItems(storageKeysData.breadcrumbStorageKeys, this.breadcrumbMenu); //同步持久化
+    };
+    TabPaneViewStore.prototype.addTabPanes = function (panes, menu_list) {
+        var _this = this;
+        var _index = this.panes.findIndex(function (item) { return item.key === panes.key; });
+        /** 在打开新页签时，拉出上一次活动页签数据 */
+        var pre_pane = this.panes.find(function (item) { return item.key === _this.activeKey; });
+        var curr_menu = menu_list.find(function (item) { return item.key === panes.key; });
+        if (_index < 0) {
+            var appName = '';
+            var appEntiy = '';
+            var appRootId = '';
+            var experimentalStyleIsolation = true;
+            var isMerge = false;
+            if (curr_menu === null || curr_menu === void 0 ? void 0 : curr_menu.sandbox) {
+                appName = curr_menu.sandbox['appName'];
+                appEntiy = curr_menu.sandbox['appEntiy'];
+                appRootId = curr_menu.sandbox['appRootId'];
+                experimentalStyleIsolation = curr_menu.sandbox['experimentalStyleIsolation'];
+                isMerge = curr_menu.sandbox['isMerge'];
+            }
+            else if (panes && panes.sandbox) {
+                appName = panes.sandbox['appName'];
+                appEntiy = panes.sandbox['appEntiy'];
+                appRootId = panes.sandbox['appRootId'];
+                experimentalStyleIsolation = panes.sandbox['experimentalStyleIsolation'];
+                isMerge = panes.sandbox['isMerge'];
+            }
+            this.panes.push({
+                key: panes.key,
+                keyPath: panes.keyPath || (curr_menu ? curr_menu.deep.reverse() : []),
+                path: (curr_menu === null || curr_menu === void 0 ? void 0 : curr_menu.path) || panes.path,
+                title: (curr_menu === null || curr_menu === void 0 ? void 0 : curr_menu.title) || panes.title,
+                activeRouter: (curr_menu === null || curr_menu === void 0 ? void 0 : curr_menu.path) || panes.path,
+                loadingMode: (curr_menu === null || curr_menu === void 0 ? void 0 : curr_menu.loadingMode) || panes['loadingMode'] || 'iframe',
+                sandbox: {
+                    appName: appName,
+                    appEntiy: appEntiy,
+                    appRootId: appRootId,
+                    experimentalStyleIsolation: experimentalStyleIsolation,
+                    isMerge: isMerge,
+                },
+                params: panes.params || {},
+            });
+            this.viewData.updateTimestamp(panes.key.toString());
+            this.proxySanbox.switchTabPaneSanboxMicroApp(pre_pane, this.panes[this.panes.length - 1], ProxySanbox.SanboxTabActionMode.add);
+        }
+        else {
+            this.panes[_index].keyPath = panes.keyPath;
+            this.panes[_index].path = (curr_menu === null || curr_menu === void 0 ? void 0 : curr_menu.path) || panes.path;
+            this.panes[_index].activeRouter = (curr_menu === null || curr_menu === void 0 ? void 0 : curr_menu.path) || panes.path;
+            this.panes[_index].params = panes.params ? panes.params : this.panes[_index].params;
+            if (panes.forceRefresh) {
+                this.viewData.updateTimestamp(panes.key.toString());
+            }
+            this.proxySanbox.switchTabPaneSanboxMicroApp(pre_pane, this.panes[_index]);
+        }
+        this.panes = this.panes.slice(); //
+        this.updateBreadcrumbs(panes, menu_list);
+        this.setActiveKey(panes.key);
+        setStorageItems(storageKeysData.panesStorageKeys, this.panes); //同步缓存
+    };
+    /**
+     * 打开指定菜单
+     * @param defaultItem 即将打开菜单页签数据
+     * @param menuList 菜单项数据集
+     */
+    TabPaneViewStore.prototype.openAppoint = function (defaultItem, menuList) {
+        var index = this.panes.findIndex(function (item) { return item.key === defaultItem.key; });
+        var curr_menu = menuList.find(function (item) { return item.key === defaultItem.key; });
+        if (index < 0) {
+            // 如未查到页签打开缓存记录,则按照新页签打开方式处理
+            var sandbox = {
+                appName: '',
+                appEntiy: '',
+                appRootId: '',
+                experimentalStyleIsolation: false,
+                isMerge: true,
+            };
+            if (curr_menu === null || curr_menu === void 0 ? void 0 : curr_menu.sandbox) {
+                sandbox.appName = curr_menu.sandbox['appName'];
+                sandbox.appEntiy = curr_menu.sandbox['appEntiy'];
+                sandbox.appRootId = curr_menu.sandbox['appRootId'];
+                sandbox.experimentalStyleIsolation = curr_menu.sandbox['experimentalStyleIsolation'];
+                sandbox.isMerge = curr_menu.sandbox['isMerge'];
+            }
+            this.panes.push({
+                key: defaultItem.key,
+                keyPath: defaultItem.keyPath,
+                path: defaultItem.path,
+                title: defaultItem.title,
+                activeRouter: defaultItem.path,
+                loadingMode: curr_menu ? curr_menu['loadingMode'] : 'iframe',
+                sandbox: sandbox,
+            });
+            this.viewData.updateTimestamp(defaultItem.key.toString());
+        }
+        else {
+            // 如存在打开记录，则更新页签相关信息
+            this.panes[index].path = defaultItem.path;
+            this.panes[index].keyPath = defaultItem.keyPath;
+            this.panes[index].activeRouter = defaultItem.path;
+            this.panes[index].title = defaultItem.title;
+        }
+        this.panes = this.panes.slice(); //
+        //@ts-ignore
+        this.updateBreadcrumbs({ keyPath: (curr_menu === null || curr_menu === void 0 ? void 0 : curr_menu.deep) || [] }, menuList);
+        setStorageItems(storageKeysData.panesStorageKeys, this.panes); //同步缓存
+        this.setActiveKey(defaultItem.key);
+    };
+    /**
+     * 设置默认展开菜单信息
+     * @param defaultItem 默认打开菜单项数据
+     * @param menuList 菜单项数据集
+     */
+    TabPaneViewStore.prototype.setDefaultTabPanes = function (defaultItem, menuList) {
+        var index = this.panes.findIndex(function (item) { return item.key === defaultItem.key; });
+        var curr_menu = menuList.find(function (item) { return item.key === defaultItem.key; });
+        if (index < 0) {
+            var sandbox = {
+                appName: '',
+                appEntiy: '',
+                appRootId: '',
+                experimentalStyleIsolation: false,
+                isMerge: true,
+            };
+            if (curr_menu && curr_menu.sandbox) {
+                sandbox.appName = curr_menu.sandbox['appName'];
+                sandbox.appEntiy = curr_menu.sandbox['appEntiy'];
+                sandbox.appRootId = curr_menu.sandbox['appRootId'];
+                sandbox.experimentalStyleIsolation = curr_menu.sandbox['experimentalStyleIsolation'];
+                sandbox.isMerge = curr_menu.sandbox['isMerge'];
+            }
+            this.panes.push({
+                key: defaultItem.key,
+                keyPath: defaultItem.keyPath,
+                path: curr_menu === null || curr_menu === void 0 ? void 0 : curr_menu.path,
+                title: curr_menu === null || curr_menu === void 0 ? void 0 : curr_menu.title,
+                activeRouter: curr_menu === null || curr_menu === void 0 ? void 0 : curr_menu.path,
+                loadingMode: curr_menu ? curr_menu['loadingMode'] : 'iframe',
+                sandbox: sandbox,
+            });
+            //@ts-ignore
+            this.updateBreadcrumbs({ keyPath: (curr_menu === null || curr_menu === void 0 ? void 0 : curr_menu.deep) || [] }, menuList);
+            this.viewData.updateTimestamp(defaultItem.key.toString());
+            setStorageItems(storageKeysData.panesStorageKeys, this.panes); //同步缓存
+            this.panes = this.panes.slice(); //
+            this.setActiveKey(defaultItem.key);
+        }
+    };
+    /**
+     * 设置活动页签
+     * @param activeKey
+     */
+    TabPaneViewStore.prototype.setActiveKey = function (activeKey) {
+        this.activeKey = activeKey;
+        setStorageItems(storageKeysData.activeKeyStorageKeys, this.activeKey);
+        setStorageItems(storageKeysData.selectedStorageKeys, this.activeKey);
+    };
+    /**
+     * 新增和删除页签
+     *
+     * @param {any} targetKey  页签id
+     * @param {any} action 操作类型 remove,add
+     */
+    TabPaneViewStore.prototype.update = function (targetKey, action) {
+        var _this = this;
+        if (action === 'remove') {
+            if (typeof targetKey === 'string') {
+                this.remove(targetKey);
+            }
+            else if (targetKey && Array.isArray(targetKey)) {
+                targetKey.map(function (item) {
+                    _this.remove(item);
+                });
+            }
+        }
+    };
+    /**
+     * 同步状态，主要用于当菜单手收起和展开时，执行的一些副作用
+     *
+     */
+    TabPaneViewStore.prototype.syncCollapsed = function (collapsed) {
+        this.collapsed = collapsed;
+    };
+    TabPaneViewStore.prototype.clearStorage = function () {
+        localStorage.removeItem(storageKeysData.panesStorageKeys);
+        localStorage.removeItem(storageKeysData.activeKeyStorageKeys);
+        localStorage.removeItem(storageKeysData.selectedStorageKeys);
+        localStorage.removeItem(storageKeysData.breadcrumbStorageKeys);
+    };
+    /**
+     * 同步菜单缓存信息
+     * @param menuList
+     */
+    TabPaneViewStore.prototype.syncTabPanes = function (menuList) {
+        this.panes = this.panes.map(function (item) {
+            var entity = menuList.find(function (menu) { return menu.key === item.key; });
+            if (entity) {
+                item.path = entity.path;
+                item.activeRouter = entity.path;
+                item.title = entity.title;
+                item['loadingMode'] = entity['loadingMode'];
+                item['sandbox'] = entity['sandbox'] || {
+                    appName: '',
+                    appEntiy: '',
+                    appRootId: '',
+                    experimentalStyleIsolation: true,
+                    isMerge: false,
+                };
+            }
+            return item;
+        });
+        setStorageItems(storageKeysData.panesStorageKeys, this.panes); //同步缓存
+    };
+    TabPaneViewStore.prototype.onEvent = function (event) {
+        var _this = this;
+        if (LegionsStore.CollapsedResource.created.name === event.name) {
+            this.collapsed = event.payload.collapsed; // 当菜单折叠状态变更时，同步更新
+        }
+        if (LegionsStore.MenuPanesStorageResource.removed.name === event.name) {
+            // 移除缓存信息
+            this.clearStorage();
+        }
+        if (LegionsStore.BreadCrumbsResourceEven.created.name === event.name) {
+            var item = this.panes.find(function (item) { return item.key === _this.activeKey; }); // 当移除页签时，重新设置面包屑导航信息
+            if (item) {
+                this.updateBreadcrumbs(item, event.payload.menuList);
+                if (
+                //@ts-ignore
+                RegExChk(validatorType.path, item.path) &&
+                    item.path.indexOf('#') > -1) {
+                    var _path_1 = item.path.split('#');
+                    var _router = event.payload.router || [];
+                    if (_path_1.length > 1) {
+                        var _index = _router.findIndex(function (item) { return item.path === _path_1[1]; });
+                        if (_index > -1) {
+                            window.location.hash = _path_1[1];
+                        }
+                    }
+                }
+            }
+        }
+    };
+    TabPaneViewStore.meta = __assign(__assign({}, LegionsStore.StoreBase.meta), { eventScopes: [
+            LegionsStore.CollapsedResource,
+            LegionsStore.MenuPanesStorageResource,
+            LegionsStore.BreadCrumbsResourceEven,
+        ] });
+    __decorate([
+        observable,
+        __metadata("design:type", Object)
+    ], TabPaneViewStore.prototype, "viewData", void 0);
+    __decorate([
+        observable,
+        __metadata("design:type", Object)
+    ], TabPaneViewStore.prototype, "collapsed", void 0);
+    __decorate([
+        observable,
+        __metadata("design:type", Array)
+    ], TabPaneViewStore.prototype, "panes", void 0);
+    __decorate([
+        observable,
+        __metadata("design:type", Object)
+    ], TabPaneViewStore.prototype, "activeKey", void 0);
+    __decorate([
+        observable,
+        __metadata("design:type", Array)
+    ], TabPaneViewStore.prototype, "breadcrumbMenu", void 0);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [Object, Object]),
+        __metadata("design:returntype", void 0)
+    ], TabPaneViewStore.prototype, "addTabPanes", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [Object, Object]),
+        __metadata("design:returntype", void 0)
+    ], TabPaneViewStore.prototype, "openAppoint", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [Object, Object]),
+        __metadata("design:returntype", void 0)
+    ], TabPaneViewStore.prototype, "setDefaultTabPanes", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [String]),
+        __metadata("design:returntype", void 0)
+    ], TabPaneViewStore.prototype, "setActiveKey", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [Object, Object]),
+        __metadata("design:returntype", void 0)
+    ], TabPaneViewStore.prototype, "update", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [Object]),
+        __metadata("design:returntype", void 0)
+    ], TabPaneViewStore.prototype, "syncCollapsed", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], TabPaneViewStore.prototype, "clearStorage", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [Object]),
+        __metadata("design:returntype", void 0)
+    ], TabPaneViewStore.prototype, "syncTabPanes", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [Object]),
+        __metadata("design:returntype", void 0)
+    ], TabPaneViewStore.prototype, "onEvent", null);
+    TabPaneViewStore = __decorate([
+        StoreModules,
+        __metadata("design:paramtypes", [Object])
+    ], TabPaneViewStore);
+    return TabPaneViewStore;
+}(LegionsStore.StoreBase));
+
+var MenuViewStore = /** @class */ (function () {
+    function MenuViewStore() {
+        /**
+         * logo 宽度
+         */
+        this.logoWidth = 125;
+        /** *
+         *皮肤方案
+         */
+        this.skin = '0';
+        /**
+         * 皮肤列表数据
+         */
+        this.SkinList = {
+            '0': {
+                color: '#484C72',
+                skin: 'legions-pro-menu-them-dark-green',
+                logoSkin: 'legions-pro-menu-them-dark-green-logo',
+                theme: 'dark',
+                width: 170,
+                collapsedWidth: 65,
+            },
+            '1': {
+                skin: 'legions-pro-menu-them-light-blue',
+                color: '#212D32',
+                logoSkin: 'legions-pro-menu-them-light-blue-logo',
+                theme: 'dark',
+                width: 170,
+                collapsedWidth: 65,
+            },
+            '2': {
+                skin: 'legions-pro-menu-them-2',
+                color: '#fff',
+                logoSkin: 'legions-pro-menu-them-2-logo',
+                theme: 'light',
+                width: 160,
+                collapsedWidth: 65,
+            },
+            '3': {
+                skin: 'legions-pro-menu-them-blue',
+                color: '#015EA3',
+                logoSkin: 'legions-pro-menu-them-blue-logo',
+                theme: 'dark',
+                width: 160,
+                collapsedWidth: 40,
+            },
+        };
+        /**
+         *菜单左右方向展开收起
+         *
+         *true 折叠,false 展开
+         */
+        this.collapsed = false; //
+        /** 是否固定侧边菜单 */
+        this.fixedSiderMenu = true;
+        /** 是否固定头部区域 */
+        this.fixedHeader = true;
+    }
+    MenuViewStore.prototype.getSkinInfos = function () {
+        return this.SkinList[this.skin];
+    };
+    __decorate([
+        observable,
+        __metadata("design:type", Object)
+    ], MenuViewStore.prototype, "logoWidth", void 0);
+    __decorate([
+        observable,
+        __metadata("design:type", Object)
+    ], MenuViewStore.prototype, "skin", void 0);
+    __decorate([
+        observable,
+        __metadata("design:type", Object)
+    ], MenuViewStore.prototype, "SkinList", void 0);
+    __decorate([
+        observable,
+        __metadata("design:type", Object)
+    ], MenuViewStore.prototype, "collapsed", void 0);
+    __decorate([
+        observable,
+        __metadata("design:type", Object)
+    ], MenuViewStore.prototype, "fixedSiderMenu", void 0);
+    __decorate([
+        observable,
+        __metadata("design:type", Object)
+    ], MenuViewStore.prototype, "fixedHeader", void 0);
+    return MenuViewStore;
+}());
+
+/*
+ * @Author: duanguang
+ * @Date: 2020-12-31 10:34:43
+ * @LastEditTime: 2022-03-01 15:52:09
+ * @LastEditors: duanguang
+ * @Description:
+ * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProLayout/store/MenuStore.ts
+ * @「扫去窗上的尘埃，才可以看到窗外的美景。」
+ */
+var MenuStore = /** @class */ (function (_super) {
+    __extends(MenuStore, _super);
+    function MenuStore(context) {
+        var _this = _super.call(this, context) || this;
+        /** 菜单组件涉及到数据Model */
+        _this.viewModel = observableViewModel(new MenuViewStore());
+        /** 菜单展开选项值集合 */
+        _this.openKeys = getStorageItem(storageKeysData.OPENKEYS_STORAGE_KEY, []);
+        _this._ob_menu_request = observablePromise(null);
+        /** 选中菜单项数据 */
+        _this.selectedKeys = getStorageItem(storageKeysData.SELECTED_STORAGE_KEY, []);
+        /**一级菜单节点数据*/
+        _this.rootSubmenuKeys = [];
+        /**
+         * 菜单展开收起
+         *
+         * @memberof MenuStore
+         */
+        _this.openChange = function (openKeys) {
+            _this.openKeys = openKeys;
+            localStorage.setItem(storageKeysData.OPENKEYS_STORAGE_KEY, JSON.stringify(_this.openKeys));
+        };
+        _this._menuList = _this._plainMenuList();
+        return _this;
+    }
+    /** 菜单由层级改为平级*/
+    MenuStore.prototype._plainMenuList = function () {
+        var _this = this;
+        //菜单由层级改为平级
+        var plainMenu = [];
+        var func = function (options) {
+            if (plainMenu.length <= 0) {
+                _this._cycleMenuList(plainMenu, options.list);
+                if (options.loadedMenuTransformData) {
+                    options.loadedMenuTransformData(plainMenu);
+                }
+                return plainMenu;
+            }
+            return plainMenu;
+        };
+        return func;
+    };
+    /**
+     * 菜单由多层嵌套层级改为平级
+     * @param arr
+     * @param list
+     * @returns
+     */
+    MenuStore.prototype._cycleMenuList = function (arr, list) {
+        var _this = this;
+        if (list === void 0) { list = []; }
+        list.map(function (item) {
+            arr.push(item);
+            if (item.children.length) {
+                _this._cycleMenuList(arr, item.children);
+            }
+        });
+        return arr;
+    };
+    /**
+     * 设置选中菜单缓存值，用于持久化
+     */
+    MenuStore.prototype._updateSelectedStorage = function () {
+        localStorage.setItem(storageKeysData.SELECTED_STORAGE_KEY, JSON.stringify(this.selectedKeys));
+    };
+    /**
+     * 清空当前展开,选中的菜单项缓存值
+     *
+     */
+    MenuStore.prototype._clearStorage = function () {
+        localStorage.removeItem(storageKeysData.OPENKEYS_STORAGE_KEY);
+        localStorage.removeItem(storageKeysData.SELECTED_STORAGE_KEY);
+    };
+    Object.defineProperty(MenuStore.prototype, "computedLastStageMenuItemList", {
+        /** 查询末级菜单选项集合 */
+        get: function () {
+            if (this._ob_menu_request.isResolved) {
+                return this.getAllMenuList().filter(function (item) { return item.children.length === 0; });
+            }
+            return [];
+        },
+        enumerable: false,
+        configurable: true
+    });
+    /** 获取全部菜单数据 */
+    MenuStore.prototype.getAllMenuList = function (list, loadedMenuTransformData) {
+        return this._menuList({
+            list: list,
+            loadedMenuTransformData: loadedMenuTransformData
+        });
+    };
+    /**
+     * 查询指定菜单选项
+     * @param  key 菜单key
+     */
+    MenuStore.prototype.getMenuByKey = function (key) {
+        var menuList = this._menuList();
+        return menuList.find(function (item) { return item['key'] === key; });
+    };
+    /**
+     * 菜单折叠触发器
+     *
+     * @param {legionsProLayoutInterface['triggerEventPrams']} payload
+     */
+    MenuStore.prototype.triggerSyncCollapsedEvent = function (payload) {
+        this.context.dispatch(LegionsStore.CollapsedResource.created, payload);
+    };
+    /** 清理菜单及页签缓存数据触发器 */
+    MenuStore.prototype.triggerClearStorageEvent = function () {
+        this.context.dispatch(LegionsStore.MenuPanesStorageResource.removed, {});
+    };
+    /**
+     *
+     * 设置菜单面包屑信息(点击tabs页签切换)
+     * @param {{ keyPath: string[] }} panesKeyPath
+     * @memberof MenuStore
+     */
+    MenuStore.prototype.triggerSetBreadCrumbsEven = function (router) {
+        this.context.dispatch(LegionsStore.BreadCrumbsResourceEven.created, {
+            menuList: this._menuList(),
+            router: router,
+        });
+    };
+    /** 调用接口查询菜单数据 */
+    MenuStore.prototype.getMenuList = function (func) {
+        this._ob_menu_request = observablePromise(func());
+    };
+    /** 当前展开的 SubMenu 菜单项 key 数组  */
+    MenuStore.prototype.expand = function (openKeys) {
+        this.openKeys = openKeys;
+    };
+    MenuStore.prototype.updateSelected = function (selected) {
+        this.selectedKeys = selected;
+        this._updateSelectedStorage();
+    };
+    /** 设置根节点菜单项信息 */
+    MenuStore.prototype.setRootSubMenu = function (key, depth) {
+        var index = this.rootSubmenuKeys.findIndex(function (item) { return item.key === key; });
+        if (index < 0) {
+            this.rootSubmenuKeys.push({ key: key, depth: depth });
+        }
+    };
+    /** 打开默认菜单页签 */
+    MenuStore.prototype.openAppoint = function (panes) {
+        this.context.TabPaneApp.openAppoint(panes, this._menuList());
+    };
+    MenuStore.prototype.onEvent = function (event) {
+        if (event.name === LegionsStore.MenuPanesStorageResource.removed.name) {
+            this._clearStorage();
+        }
+        if (event.name === LegionsStore.CollapsedResource.created.name) {
+            this.viewModel.logoWidth = 125;
+            if (this.viewModel.collapsed) {
+                this.viewModel.logoWidth = 80;
+            }
+        }
+    };
+    MenuStore.meta = __assign(__assign({}, LegionsStore.StoreBase.meta), { eventScopes: [
+            LegionsStore.CollapsedResource,
+            LegionsStore.MenuPanesStorageResource,
+            LegionsStore.BreadCrumbsResourceEven,
+        ], contextTypes: {
+            TabPaneApp: TabPaneViewStore,
+        } });
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], MenuStore.prototype, "_clearStorage", null);
+    __decorate([
+        observable.ref,
+        __metadata("design:type", Array)
+    ], MenuStore.prototype, "openKeys", void 0);
+    __decorate([
+        observable,
+        __metadata("design:type", Object)
+    ], MenuStore.prototype, "_ob_menu_request", void 0);
+    __decorate([
+        observable,
+        __metadata("design:type", Object)
+    ], MenuStore.prototype, "selectedKeys", void 0);
+    __decorate([
+        observable,
+        __metadata("design:type", Array)
+    ], MenuStore.prototype, "rootSubmenuKeys", void 0);
+    __decorate([
+        computed,
+        __metadata("design:type", Object),
+        __metadata("design:paramtypes", [])
+    ], MenuStore.prototype, "computedLastStageMenuItemList", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [Function]),
+        __metadata("design:returntype", void 0)
+    ], MenuStore.prototype, "getMenuList", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [Array]),
+        __metadata("design:returntype", void 0)
+    ], MenuStore.prototype, "expand", null);
+    __decorate([
+        action,
+        __metadata("design:type", Object)
+    ], MenuStore.prototype, "openChange", void 0);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [Array]),
+        __metadata("design:returntype", void 0)
+    ], MenuStore.prototype, "updateSelected", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [String, String]),
+        __metadata("design:returntype", void 0)
+    ], MenuStore.prototype, "setRootSubMenu", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [Object]),
+        __metadata("design:returntype", void 0)
+    ], MenuStore.prototype, "openAppoint", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [Object]),
+        __metadata("design:returntype", void 0)
+    ], MenuStore.prototype, "onEvent", null);
+    MenuStore = __decorate([
+        StoreModules,
+        __metadata("design:paramtypes", [Object])
+    ], MenuStore);
+    return MenuStore;
+}(LegionsStore.StoreBase));
+
+/*
+ * @Author: duanguang
+ * @Date: 2020-12-31 15:48:03
+ * @LastEditTime: 2021-03-02 18:51:31
+ * @LastEditors: duanguang
+ * @Description:
+ * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreLayout/index.ts
+ * @「扫去窗上的尘埃，才可以看到窗外的美景。」
+ */
+var LegionsStoreLayout = {
+    TabPaneViewStore: TabPaneViewStore,
+    MenuStore: MenuStore,
+    ProxySanbox: ProxySanbox,
+};
 
 var LayoutContentUtils = /** @class */ (function () {
     function LayoutContentUtils() {
@@ -218,8 +1166,8 @@ var LayoutContentUtils = /** @class */ (function () {
     //@ts-ignore
     LayoutContentUtils.renderTabPaneIframe = function (pane, that, src) {
         /* let url =!this.props.isEnabledTabs?this.transHttpUrl(src, this.props.store.urlRangTimestamp):src; */
-        var tabPanesTimestamp = that.props.store.viewUIModel.tabPanesTimestamp.get(pane.key) || new Date().getTime();
-        that.props.store.viewUIModel.updateTimestamp(pane.key.toString(), tabPanesTimestamp);
+        var tabPanesTimestamp = that.props.store.viewData.tabPanesTimestamp.get(pane.key) || new Date().getTime();
+        that.props.store.viewData.updateTimestamp(pane.key.toString(), tabPanesTimestamp);
         if (pane.loadingMode === 'iframe') {
             var url = LayoutContentUtils.transHttpUrl(src, tabPanesTimestamp);
             return (React.createElement(LegionsProIframe, { url: url, ref: "iframeContainer" + pane.key, height: "100vh", display: "initial", position: "relative", styles: { border: "none", minHeight: "" + that.viewModel.iframeHeight }, id: "ReactIframe", name: pane.key, allowFullScreen: true, onFirstLoaded: function () {
@@ -342,18 +1290,18 @@ var ViewModels = /** @class */ (function () {
     function ViewModels() {
         this.iframeHeight = 500;
         this.contentHeight = 500;
-        this.dropdown = observable.map();
+        this.dropdown = observable$1.map();
     }
     __decorate([
-        observable,
+        observable$1,
         __metadata("design:type", Object)
     ], ViewModels.prototype, "iframeHeight", void 0);
     __decorate([
-        observable,
+        observable$1,
         __metadata("design:type", Object)
     ], ViewModels.prototype, "contentHeight", void 0);
     __decorate([
-        observable,
+        observable$1,
         __metadata("design:type", Object)
     ], ViewModels.prototype, "dropdown", void 0);
     return ViewModels;
@@ -682,7 +1630,7 @@ var ContentPart = /** @class */ (function (_super) {
         }
         return (React.createElement(Content, __assign({}, this.computedContentClassProps()), 
         /** 菜单数据加载完毕之后再渲染content区域 */
-        this.props.menuStore.obMenuList.isResolved && (
+        this.props.menuStore._ob_menu_request.isResolved && (
         /** 更具用户信息判断时候暂时loading状态 */
         this.props.userEntity !== void 0 ? React.createElement(Spin, { tip: "Loading...", spinning: loading }, this.renderLayoutContentElement()) : this.renderLayoutContentElement())));
     };
@@ -713,8 +1661,6 @@ var MenuParts = /** @class */ (function (_super) {
             if (newItem) {
                 var path_1 = newItem['path'];
                 var index = _this.props.router.findIndex(function (item) { return item.path === path_1.replace('#', ''); });
-                var pane = store.context.TabPaneApp.panes.find(function (item) { return item.key === selected['key']; });
-                var oldpane = store.context.TabPaneApp.panes.find(function (item) { return item.key === oldActiveKey; });
                 if (path_1.indexOf('#') > -1 && index > -1) {
                     // window.location.href = `${this.props.domainUrl}${path.replace('','')}`
                     _this.props.store.history.push("" + path_1.replace('#', ''));
@@ -756,7 +1702,7 @@ var MenuParts = /** @class */ (function (_super) {
     };
     /** 在did mount 生命周期内设置菜单展开项数据 */
     MenuParts.prototype.setOpenKesInDidMountcycle = function () {
-        if (this.props.defaultOpenKeys && Array.isArray(this.props.defaultOpenKeys) && this.props.defaultOpenKeys.length) {
+        if (Array.isArray(this.props.defaultOpenKeys) && this.props.defaultOpenKeys.length) {
             if (this.props.store.openKeys.length === 0) {
                 this.props.store.openChange(this.props.defaultOpenKeys);
             }
@@ -775,10 +1721,10 @@ var MenuParts = /** @class */ (function (_super) {
         var hash = window.location.hash;
         var menuItem = hash && menuList.find(function (item) { return (item.path === hash.replace('#', '') || item.path === hash || (item.path !== '#' && hash.indexOf(item.path) > -1)); });
         if (activeMenuItem) { /** 如果用户通过URL传入了活动菜单key值， 则打开用户指定的菜单key */
-            store.openDefault({ key: defaultOpenMenuTabs.meunKey, title: activeMenuItem.title, path: activeMenuItem.path + "?" + defaultOpenMenuTabs.params });
+            store.openAppoint({ key: defaultOpenMenuTabs.meunKey, title: activeMenuItem.title, path: activeMenuItem.path + "?" + defaultOpenMenuTabs.params });
         }
         else if (hash && menuItem) { /** 如果用户传入指定菜单路由进行访问，则通过路由地址去找寻菜单数据，进行访问菜单页面 */
-            store.openDefault({ key: menuItem.key, title: menuItem.title, path: "" + menuItem.path });
+            store.openAppoint({ key: menuItem.key, title: menuItem.title, path: "" + menuItem.path });
         }
         else {
             /** 默认打开第一个
@@ -854,7 +1800,7 @@ var MenuParts = /** @class */ (function (_super) {
     MenuParts.prototype.renderMenuNodesElement = function () {
         var store = this.props.store;
         var skin = store.viewModel.getSkinInfos();
-        var renderMenuNode = React.createElement(Menu, __assign({ inlineIndent: 12 }, this.props, { mode: "inline", theme: skin.theme, openKeys: store.openKeys, className: (skin && skin.skin) || '', style: __assign({ color: 'hsla(0,0%,100%,.65)' }, this.props.style), selectedKeys: [store.context.TabPaneApp.activeKey], defaultSelectedKeys: [store.context.TabPaneApp.activeKey], defaultOpenKeys: this.props.defaultOpenKeys || [], inlineCollapsed: store.viewModel.collapsed, onSelect: this.onSelect, onOpenChange: this.onOpenChange, onClick: this.onClick }), store.obMenuList.isResolved && this.renderRecursiveCallsMenu(store.obMenuList.value.result));
+        var renderMenuNode = React.createElement(Menu, __assign({ inlineIndent: 12 }, this.props, { mode: "inline", theme: skin.theme, openKeys: store.openKeys, className: (skin && skin.skin) || '', style: __assign({ color: 'hsla(0,0%,100%,.65)' }, this.props.style), selectedKeys: [store.context.TabPaneApp.activeKey], defaultSelectedKeys: [store.context.TabPaneApp.activeKey], defaultOpenKeys: this.props.defaultOpenKeys || [], inlineCollapsed: store.viewModel.collapsed, onSelect: this.onSelect, onOpenChange: this.onOpenChange, onClick: this.onClick }), store._ob_menu_request.isResolved && this.renderRecursiveCallsMenu(store._ob_menu_request.value.data));
         if (this.props.fixedLayoutPosition === 'fixedSiderHeader') {
             return React.createElement("div", { style: this.computedMenuParentElementStyles(), className: 'scroll_firefox_content' }, renderMenuNode);
         }
@@ -918,7 +1864,6 @@ var MenuParts = /** @class */ (function (_super) {
      * 被选中时调用
      *
      * @param {any} selected { item:'Menu.Item组件实例', key:'菜单序号', selectedKeys：‘当前选中的菜单项 key 数组’ }
-     * @memberof MenuPart
      */
     MenuParts.prototype.onSelect = function (selected) {
         this.props.store.updateSelected(selected.selectedKeys);
@@ -926,8 +1871,7 @@ var MenuParts = /** @class */ (function (_super) {
     /**
      * SubMenu 展开/关闭的回调
      *
-     * @param {any} openKeys string[]
-     * @memberof MenuPart
+     * @param openKeys
      */
     MenuParts.prototype.onOpenChange = function (openKeys) {
         var store = this.props.store;
@@ -956,9 +1900,9 @@ var MenuParts = /** @class */ (function (_super) {
         bind({ store: LegionsStoreLayout.MenuStore }),
         page({
             sideEffect: function (that, store) {
-                if (store.obMenuList.isResolved) {
+                if (store._ob_menu_request.isResolved) {
                     /** 首次加载完成 */
-                    that.masterGlobalStateStore.menuList = store.getAllMenuList(store.obMenuList.value.result, that.props.loadedMenuTransformData);
+                    that.masterGlobalStateStore.menuList = store.getAllMenuList(store._ob_menu_request.value.data, that.props.loadedMenuTransformData);
                     that.onPageloadedOpenTabpane(that.masterGlobalStateStore.menuList);
                 }
             }
@@ -1128,7 +2072,6 @@ var HeaderPart = /** @class */ (function (_super) {
         }
     };
     HeaderPart.prototype.render = function () {
-        var store = this.props.store;
         return (this.renderHeaderElement());
     };
     HeaderPart.defaultProps = {
@@ -1141,6 +2084,124 @@ var HeaderPart = /** @class */ (function (_super) {
     ], HeaderPart);
     return HeaderPart;
 }(React.Component));
+
+/*
+ * @Author: duanguang
+ * @Date: 2022-02-28 14:43:50
+ * @LastEditTime: 2022-03-01 13:58:55
+ * @LastEditors: duanguang
+ * @Description:
+ * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProLayout/model/base.ts
+ * 「扫去窗上的尘埃，才可以看到窗外的美景。」
+ */
+var BaseModel = /** @class */ (function () {
+    function BaseModel() {
+        /** *操作结果
+         * @type {boolean}
+         */
+        this.success = true;
+        /**
+         * 描述信息
+         *
+         * @type {string}
+         */
+        this.message = '';
+        /**  提示信息编码
+         * @type {(string|number)}
+         */
+        this.code = '';
+        /**  返回数据信息
+         * @type {T}
+         */
+        this.data = null;
+    }
+    BaseModel.prototype.transformArray = function (rows, mapEntity) {
+        var _this = this;
+        return (rows || []).map(function (row) {
+            return _this.transformRow(row, mapEntity);
+        });
+    };
+    BaseModel.prototype.transformRows = function (rows, mapEntity) {
+        var _this = this;
+        return (rows || []).map(function (row) {
+            return _this.transformRow(row, mapEntity);
+        });
+    };
+    BaseModel.prototype.transformRow = function (row, mapEntity) {
+        return MapperEntity(mapEntity, row);
+    };
+    return BaseModel;
+}());
+
+var InterfaceMenuModel = /** @class */ (function () {
+    function InterfaceMenuModel() {
+    }
+    return InterfaceMenuModel;
+}());
+var MenuBaseModel = /** @class */ (function (_super) {
+    __extends(MenuBaseModel, _super);
+    function MenuBaseModel() {
+        var _this = _super.call(this) || this;
+        _this.key = '';
+        _this.title = '';
+        _this.content = '';
+        _this.path = '';
+        _this.closable = false;
+        _this.children = [];
+        _this.deep = [];
+        _this.icon = '';
+        _this.loadingMode = 'iframe';
+        _this.router = 'history';
+        _this.sandbox = {
+            appName: '',
+            appEntiy: '',
+            appRootId: '',
+            experimentalStyleIsolation: true,
+            isMerge: false,
+        };
+        return _this;
+    }
+    __decorate([
+        JsonProperty('key'),
+        __metadata("design:type", Object)
+    ], MenuBaseModel.prototype, "key", void 0);
+    __decorate([
+        JsonProperty('title'),
+        __metadata("design:type", Object)
+    ], MenuBaseModel.prototype, "title", void 0);
+    __decorate([
+        JsonProperty('content'),
+        __metadata("design:type", Object)
+    ], MenuBaseModel.prototype, "content", void 0);
+    __decorate([
+        JsonProperty('path'),
+        __metadata("design:type", Object)
+    ], MenuBaseModel.prototype, "path", void 0);
+    __decorate([
+        JsonProperty('closable'),
+        __metadata("design:type", Object)
+    ], MenuBaseModel.prototype, "closable", void 0);
+    __decorate([
+        JsonProperty({ clazz: MenuBaseModel, name: 'child' }),
+        __metadata("design:type", Array)
+    ], MenuBaseModel.prototype, "children", void 0);
+    __decorate([
+        JsonProperty('deep'),
+        __metadata("design:type", Array)
+    ], MenuBaseModel.prototype, "deep", void 0);
+    __decorate([
+        JsonProperty('iconurl'),
+        __metadata("design:type", String)
+    ], MenuBaseModel.prototype, "icon", void 0);
+    return MenuBaseModel;
+}(InterfaceMenuModel));
+var MenuModel = /** @class */ (function (_super) {
+    __extends(MenuModel, _super);
+    function MenuModel() {
+        return _super.call(this) || this;
+    }
+    return MenuModel;
+}(BaseModel));
 
 var baseCls = 'legions-pro-layout';
 var theme = {
@@ -1156,5 +2217,9 @@ var LegionsProLayout = function (props) {
                 (props.isShowHeader === void 0 || props.isShowHeader) && React.createElement(HeaderPart, { onLoginOut: props.onLoginOut, fixedLayoutPosition: props.fixedLayoutPosition, userEntity: props.userEntity, sysSettingDropdown: props.sysSettingDropdown, header: props.header, skin: theme[props.theme] || '0', isReCustomHeader: props.isReCustomHeader }),
                 React.createElement(ContentPart, { notFoundUrl: props.notFoundUrl, fixedLayoutPosition: props.fixedLayoutPosition, domainUrl: props.domainUrl, userEntity: props.userEntity, isEnabledTabs: props.isEnabledTabs, router: props.router || [] })))));
 };
+LegionsProLayout['MenuModel'] = MenuModel;
+LegionsProLayout['MenuBaseModel'] = MenuBaseModel;
+LegionsProLayout['BaseModel'] = BaseModel;
+LegionsProLayout['LegionsStoreLayout'] = LegionsStoreLayout;
 
 export default LegionsProLayout;

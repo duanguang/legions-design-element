@@ -1,6 +1,6 @@
 /**
-  *  legions-pro-design v0.0.11
-  * (c) 2021 duanguang
+  *  legions-pro-design v0.0.21
+  * (c) 2022 duanguang
   * @license MIT
   */
 import { Tabs, Button, Col, Icon } from 'antd';

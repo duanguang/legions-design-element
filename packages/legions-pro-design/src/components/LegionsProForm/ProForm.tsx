@@ -6,15 +6,15 @@ import CreateForm from './CreateForm';
 import { LabelWithInputModel } from './FormInput';
 import './style/index.less'
 import { WrappedFormUtils } from '../interface/antd';
-import { IErrorView, IFormState, IGroup } from './interface/form';
-import { ISchedule } from '../LegionsStore/interface';
+import { IErrorView,IFormState,IGroup } from './interface/form';
+import { legionsStoreInterface } from '../LegionsStore/interface';
 import {
     LabelWithSelectModel,LabelWithRenderModel,LabelWithDatePickerModel,
     LabelWithMonthPickerModel,LabelWithRangePickerModel,LabelWithUploadModel,LabelWithInputNumberModel,
 } from './interface';
 import { bind,observer } from 'legions/store-react'
 import LegionsStoreForm from '../LegionsStoreForm';
-import {IViewModelHlFormStore,IElementList, IProFormFields} from '../LegionsStoreForm/interface'
+import { IViewModelHlFormStore,IElementList,IProFormFields } from '../LegionsStoreForm/interface'
 import { shortHash } from 'legions-lunar/object-hash';
 import { LabelWithSwitchModel } from './FormSwitch';
 import { LabelWithRadioButtonModel } from './FormRadioButton';
@@ -117,7 +117,7 @@ export interface IProFormProps<mapProps = {}> {
         traceId: string;
         browserEnvironment: string;
     }) => void
-    debugger?:boolean
+    debugger?: boolean
 }
 
 interface IState {
@@ -149,7 +149,7 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
 
     /** 未加密的freezeUid 值 */
     decryptionFreezeUid = ''
-    subscription: ISchedule = null;
+    subscription: legionsStoreInterface['schedule'] = null;
     controlsLen = 0;
     /** 全链路监控跟踪id */
     traceId: string = '';
@@ -169,7 +169,6 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
         if (this.freezeUid) {
             if (!this.props.store.HLFormLocalDataContainer.has(this.freezeUid)) {
                 this.props.store.addLocalData(this.freezeUid)
-                this.initSelectView();
             }
             this.storeLocalView.setDragSort(this.props.isDragSort);
             if (this.storeLocalView.dragSortState) {
@@ -178,11 +177,6 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
         }
         this.storeView.updateFormSize(this.props.size);
         this.initFromState();
-        // @ts-ignore
-        this.consoleLog('legionsProForm-constructor');
-    }
-    watcher = (n) => {
-        console.log(this.storeView.InputDataModel,'InputDataModel')
     }
     static defaultProps = {
         size: 'default',
@@ -193,42 +187,6 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
     }
     get storeLocalView() {
         return this.props.store.HLFormLocalDataContainer.get(this.freezeUid)
-    }
-    consoleLog(type: Parameters<typeof LoggerManager['report']>[0]['type'],logObj?: Object) {
-        if (!this.props.debugger) {
-            return
-        }
-        const obj = logObj || {}
-        const logConent = {
-            localView: { ...this.storeLocalView },...obj,
-            store: this.props.store,
-            that: toJS(this),
-            props: toJS(this.props),
-            storeView: this.storeView,
-        }
-        LoggerManager.consoleLog({
-            type,
-            logConent:logConent,
-        })
-    }
-    logger(type: Parameters<ProForm['consoleLog']>[0],logObj?: Object) {
-        if (typeof this.props.onLogRecord === 'function') {
-            const obj = logObj || {}
-            const { store,form,...props } = this.props
-            const logConent = {
-                ...obj,
-                props: {
-                    colCount: props.colCount,
-                    size: props.size,
-                },
-            }
-            LoggerManager.report({
-                type,
-                content: JSON.stringify(logConent),
-                traceId: this.traceId,
-                modulesPath: this.props['uniqueUid'],
-            },this.props.onLogRecord)
-        }
     }
     initGroup(group: IGroup[] = this.props.group) {
         if (this.state.groupEntity.length === 0 || (group && this.state.groupEntity.length !== group.length)) {
@@ -245,7 +203,6 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
     validateFields(...options) {
         let callback: ValidateCallback = null;
         const newCallback = (callbacks: ValidateCallback) => (error,values) => {
-            this.logger('LegionsProForm-validateFields',{ error,values,traceId: this.traceId })
             callbacks(error,values)
         }
 
@@ -278,14 +235,14 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
             const value = this.storeView.getFormItemField(name);
             if (value) {
                 if (value.type === 'normal') {
-                    
+
                     //@ts-ignore
                     callback && callback(value.value)
                     insertRenderEle();
                     this.forceUpdate()
                 }
                 if (value.type === 'custom') {
-                     //@ts-ignore
+                    //@ts-ignore
                     callback && callback(value.value)
                     insertRenderEle();
                     this.forceUpdate()
@@ -314,34 +271,23 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
             decryptionFreezeUid: this.decryptionFreezeUid,
             methods: {
                 onSelectSearch: (name,options) => {
-                    this.onSelectSearch(name,options);
                 },
                 getQuerySelectOption: (name: string,optionKey: string) => {
-                    const selectView = this.storeLocalView._selectView.get(name)
-                    let optionItem = new LegionsLabeledValue();
-                    if (selectView && selectView.currValue) {
-                        for (let i = 1; i <= selectView.currValue.data.size; i++) {
-                             //@ts-ignore
-                            const option = selectView.currValue.data.get(i.toString()).find((item) => item.key === optionKey)
-                            if (option) {
-                                optionItem = {
-                                    ...optionItem,
-                                    ...option,
-                                }
-                                break;
-                            }
-                        }
+                    const config = this.props.controls.find((item) => item.iAntdProps.id === name)
+                    if (!config) {
+                        return []
                     }
-                    return {
-                        option: optionItem,
+                    const new_item = config.iFormProps['options'].find((item) => item.key === optionKey)
+                    if (new_item) {
+                        return new_item
                     }
+                    return  config.iFormProps['options']
                 },
                 setFormStates: (name: string,callback: (state) => void) => {
                     this.setFormStates(name,callback)
                 },
                 addFormItem: (controls: Array<IProFormFields['componentModel']>) => {
                     this.initFromState(controls);
-                    this.initSelectView(true,controls);
                     if (this.storeLocalView.dragSortState) {
                         this.storeLocalView._initControlsSort(controls.map(item => item.iAntdProps.name));
                     }
@@ -354,7 +300,6 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
                 view.form.validateFields(callback)
             }
         })
-        this.consoleLog('legionsProForm-componentWillMount')
         /* document.addEventListener('keydown',this.handleKeyDown.bind(this)) */
     }
     componentDidMount() {
@@ -363,7 +308,6 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
             el.addEventListener('keydown',this.handleKeyDown.bind(this));
         }
         this.controlsLen = this.props.controls.length;
-        this.consoleLog('legionsProForm-componentDidMount');
     }
     componentWillReceiveProps(nextProps: IProFormProps) {
         if (nextProps.size !== this.props.size) {
@@ -372,7 +316,6 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
         if (this.props.group !== nextProps.group) {
             this.initGroup(nextProps.group);
         }
-        this.consoleLog('legionsProForm-componentWillReceiveProps');
     }
     componentWillUnmount() {
         if (!this.props['uniqueUid']) {
@@ -382,12 +325,11 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
         if (el) {
             el.removeEventListener('keydown',this.handleKeyDown.bind(this))
         }
-        this.consoleLog('legionsProForm-componentWillUnmount');
         /* document.removeEventListener('keydown',this.handleKeyDown.bind(this)) */
     }
 
-    initFromState(controls:Array<IProFormFields['componentModel']>=this.props.controls) {
-        if ( controls&& Array.isArray(controls)) {
+    initFromState(controls: Array<IProFormFields['componentModel']> = this.props.controls) {
+        if (controls && Array.isArray(controls)) {
             controls.map((item) => {
                 const name = item['iAntdProps'].name
                 this.storeView._initFormItemField(name,item)
@@ -397,83 +339,12 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
             })
         }
     }
-
-    /**
-     * 初始化下拉框数据
-     *
-     * @param {boolean} [isDispatch=true]
-     * @param {*} [controls=this.props.controls]
-     * @memberof HLForm
-     */
-    initSelectView(isDispatch: boolean = true,controls = this.props.controls) {
-        if (controls && Array.isArray(this.props.controls)) {
-            controls.map((item) => {
-                if (item instanceof LabelWithSelectModel && item.iFormProps && item.iFormProps.autoQuery)
-                    runInAction(() => {
-                        if (this.storeLocalView && item.iAntdProps) {
-                            const pageSize = item.iFormProps.pageSize || 30;
-                            const keywords = item.iFormProps.autoQuery.params(1,pageSize,'').defaultKeyWords;
-                            if (!this.storeLocalView._selectView.has(item.iAntdProps.name)) {
-                                this.storeLocalView._initSelectView(item.iAntdProps.name,item.iFormProps.autoQuery,{
-                                    paging: item.iFormProps.paging === void 0 ? false : item.iFormProps.paging,
-                                    remote: item.iFormProps.remote === void 0 ? false : item.iFormProps.remote,
-                                    pageSize: pageSize,
-                                    tableNameDb: `${this.freezeUid}`,
-                                    keywords: item.iFormProps.autoQuery.params(1,item.iFormProps.pageSize || 30,'').defaultKeyWords
-                                })
-                            }
-                            if (item.iFormProps.autoQuery) {
-                                if (!this.storeLocalView._selectOptions.has(item.iAntdProps.name)) {
-                                    this.storeLocalView._initSelectOptions(item.iAntdProps.name,item.iFormProps.autoQuery);
-                                }
-                                if (isDispatch) {
-                                    const name=item.iAntdProps.name
-                                    this.storeLocalView.dispatchRequest(item.iAntdProps.name,item.iFormProps.autoQuery,{
-                                        pageIndex: 1,
-                                        pageSize,
-                                        keyWords: keywords,
-                                        callback: (value) => {
-                                            if (!this.storeView.renderNodeQueue.has(name)) {
-                                                this.storeView.renderNodeQueue.set(name,name)
-                                            }
-                                        }
-                                    });
-
-                                }
-                            }
-                        }
-                    })
-            })
-        }
-    }
-    onSelectSearch(name: string,options: {
-        pageIndex: number;
-        pageSize?: number;
-        keywords?: string;
-    } & Object) {
-        if (this.storeLocalView && this.storeLocalView._selectView.has(name)) {
-            const item = this.storeView.getFormItemField<InstanceType<typeof LegionsProForm['LabelWithSelectModel']>>(name)
-            if (item) {
-                this.storeLocalView.dispatchRequest(name,item.value.iFormProps.autoQuery,{
-                    pageIndex: options.pageIndex,
-                    pageSize: item.value.iFormProps.pageSize,
-                    keyWords: options.keywords,
-                    ...options,
-                    callback: (value) => {
-                        if (!this.storeView.renderNodeQueue.has(name)) {
-                            this.storeView.renderNodeQueue.set(name,name)
-                        }
-                    }
-                });
-            }
-        }
-    }
-
+    
     queryElementItem(ElementKey: string): IElementList & { keys: string } {
         if (this.storeView) {
             const keys = this.storeView._elementList.keys()
             let entitys: IElementList & { keys: string } = null
-             //@ts-ignore
+            //@ts-ignore
             keys.map((item) => {
                 const entity = this.storeView._elementList.get(item)
                 if (entity && entity.elementKey === ElementKey) {
@@ -519,16 +390,16 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
             const keysNext = formStore._elementList.keys()
             const keys = [];
             for (let key of keysNext) {
-               keys.push(key)
+                keys.push(key)
             }
-             //@ts-ignore
+            //@ts-ignore
             if (keys.length > 0 && !formStore.focusUid) {
                 formStore.focusUid = keys[0];
             }
             if (keyCode === KeydownEnum.next || keyCode === KeydownEnum.enter) {
-                 //@ts-ignore
+                //@ts-ignore
                 for (let i = 0; i < keys.length; i++) {
-                     //@ts-ignore
+                    //@ts-ignore
                     let index = keys.findIndex((item) => item === formStore.focusUid)
                     if (index > -1) {
                         let currUid = keys[index]
@@ -553,7 +424,7 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
 
                         }
                         else {
-                             //@ts-ignore
+                            //@ts-ignore
                             if (nextIndex >= keys.length) {/**  当到达最后一个元素时，再次回车将回到第一个元素的焦点*/
                                 nextIndex = 0
                                 nextUid = keys[nextIndex]
@@ -596,15 +467,15 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
                 }
             }
             if (keyCode === KeydownEnum.up) {
-                 //@ts-ignore
+                //@ts-ignore
                 for (let i = 0; i < keys.length; i++) {
-                     //@ts-ignore
+                    //@ts-ignore
                     let index = keys.findIndex((item) => item === formStore.focusUid)
                     if (index > -1) {
                         let preIndex = index - 1
                         let nextUid = keys[preIndex]
                         if (preIndex < 0) {/**  当到达第一个一个元素时，再次按上键将回到最后一个元素的焦点*/
-                             //@ts-ignore
+                            //@ts-ignore
                             preIndex = keys.length - 1
                             nextUid = keys[preIndex]
                         }
@@ -717,7 +588,7 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
             control.iAntdProps.className = control.iAntdProps.className.replace(size[formSize]['formItemLayOut'],'')
         }
         const item = 'iFormProps'
-        const formItemRowHeight=formClasses.itemRowHeight
+        const formItemRowHeight = formClasses.itemRowHeight
         if (!(control instanceof LegionsProForm.LabelWithRenderModel)) {
             //@ts-ignore
             control[item].size = formSize
@@ -762,22 +633,6 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
             return super.createFormInputNumber(key,control,form,this.uid,viewModel);
         }
         else if (control instanceof LabelWithSelectModel) {
-            if (control instanceof LabelWithSelectModel && control.iFormProps.autoQuery) {
-                const view = localview._selectView.get(control.iAntdProps.name)
-                if (view && view.currValue) {
-                    let options = []
-                    let total = 0;
-                    //@ts-ignore
-                    if (view.currValue.data.get(view.pageIndex.toString())) {
-                         //@ts-ignore
-                        options = view.currValue.data.get(view.pageIndex.toString())
-                        const name = control.iAntdProps.name
-                        total = view.currValue.total;
-                    }
-                    control.iFormProps.options = options;
-                    control.iFormProps.total = total
-                }
-            }
             return super.createFormSelect(key,control,form,this.uid,viewModel);
         }
         else if (control instanceof LabelWithRenderModel) {
@@ -859,7 +714,7 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
                 this.storeLocalView._updateControlsSort(items);
                 this.storeView._elementList.clear();
                 this.storeView.computedAllFormFields.map((w) => {
-                    const name= w.iAntdProps.name
+                    const name = w.iAntdProps.name
                     this.storeView.renderNodeQueue.set(name,name);
 
                 })
@@ -946,7 +801,7 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
     }
     renderForm() {
         const group = this.props.group;
-    /* const controls = this.props.controls; */
+        /* const controls = this.props.controls; */
         const controls = this.storeView.computedFormFields;
         if (group && group instanceof Array && group.length) {
             return this.renderGroup()
@@ -957,7 +812,7 @@ class ProForm<mapProps = {}> extends CreateForm<IProFormProps<mapProps>,IState>{
     }
     render() {
         return (
-            <Form  className={`${baseCls} ${this.uid}`} /* key={this.props.controls.length} */>
+            <Form className={`${baseCls} ${this.uid}`} /* key={this.props.controls.length} */>
                 {this.renderForm()}
             </Form>
         )
@@ -972,27 +827,27 @@ const CustomizedForm = Form.create({
         if (typeof props.InputDataModel === 'function') {
             // @ts-ignore
             originFormModel = new props.InputDataModel(props)
-            
+
             Object.keys(props).forEach(function (item) {
                 if (originFormModel.hasOwnProperty(item)) {
                     if (isObject(props[item]) && props[item].hasOwnProperty('value')) {
-                        originFormModel[item] =props[item]
+                        originFormModel[item] = props[item]
                     } else {
                         originFormModel[item] = {
-                            value:props[item]
+                            value: props[item]
                         }
                     }
                 }
             });
         }
         if (!props.mapPropsToFields) {
-            return {...props,...originFormModel}
+            return { ...props,...originFormModel }
         }
-        return props.mapPropsToFields({...props,...originFormModel})
+        return props.mapPropsToFields({ ...props,...originFormModel })
     },
     onFieldsChange: (props: IProFormProps,changedFields) => {
         props.store.updateFormInputData(props['uid'],changedFields)
-        return props.onFieldsChange&&props.onFieldsChange(props,changedFields);
+        return props.onFieldsChange && props.onFieldsChange(props,changedFields);
         /* return debounceOnFieldsChange(props,changedFields) */
     },
     onValuesChange(props: IProFormProps,values) {
@@ -1027,7 +882,7 @@ export class LegionsProForm<mapProps = {}> extends React.Component<IProFormProps
 
     /** 未加密的freezeUid 值 */
     decryptionFreezeUid = ''
-    constructor(props){
+    constructor(props) {
         super(props);
         if (this.props['uniqueUid']) {
             this.decryptionFreezeUid = `${this.props['uniqueUid']}${this.props.uniqueKeys || ''}${process.env.environment === 'production' ? 'production' : ''}`;
@@ -1045,7 +900,7 @@ export class LegionsProForm<mapProps = {}> extends React.Component<IProFormProps
         if (!this.props.store.get(this.uid)) {
             this.props.store.add(this.uid,{
                 InputDataModel: this.props.InputDataModel,
-                formRef:this,
+                formRef: this,
             })
         }
     }
@@ -1056,7 +911,7 @@ export class LegionsProForm<mapProps = {}> extends React.Component<IProFormProps
         return <CustomizedForm {...this.props} {...this.storeView.InputDataModel} {...{
             uid: this.uid,
             freezeUid: this.freezeUid,
-            decryptionFreezeUid:this.decryptionFreezeUid
+            decryptionFreezeUid: this.decryptionFreezeUid
         }} />
     }
 }

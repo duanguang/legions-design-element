@@ -1,5 +1,5 @@
 import StoreBase from "./StoreBase";
-import { IStoreBaseMeta } from './interface';
+import { legionsStoreInterface } from './interface';
 export default class UiStoreBase extends StoreBase {
-    static meta: IStoreBaseMeta;
+    static meta: legionsStoreInterface['storeBaseMeta'];
 }

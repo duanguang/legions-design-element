@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-04 11:17:55
- * @LastEditTime: 2021-04-02 12:08:53
+ * @LastEditTime: 2022-02-28 17:03:17
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsCrossModule/globalStateEven.ts
@@ -10,7 +10,7 @@
 import { postMessage } from 'legions-utils-tool/dom';
 import { MicroAppStateActions } from 'legions-micro-service/types/interfaces';
 import { resource } from 'legions/store';
-import { IGlobalStateEvent } from '../interface';
+import { legionsCrossModuleInterface } from './interface';
 function findWindow<T = {}>(name: string) {
     let LegionstValue: T | null = null;
     try {
@@ -56,8 +56,8 @@ const IframePostMessage = {
 }
 /** 订阅子应用iframe挂载在全局的变量 */
 function subscribeLegionsProGlobal(callback: (value: {
-    onGlobalStateChange: (callback:(value:any,prev:any,event:IGlobalStateEvent)=>void,options:Parameters<MicroAppStateActions['onGlobalStateChange']>[1])=>void;
-    setGlobalState: (state: any,event: IGlobalStateEvent) => void;
+    onGlobalStateChange: (callback:(value:any,prev:any,event:legionsCrossModuleInterface['GlobalStateEvent'])=>void,options:Parameters<MicroAppStateActions['onGlobalStateChange']>[1])=>void;
+    setGlobalState: (state: any,event: legionsCrossModuleInterface['GlobalStateEvent']) => void;
     appId: string;
 }) => void) {
     if (typeof callback === 'function') {

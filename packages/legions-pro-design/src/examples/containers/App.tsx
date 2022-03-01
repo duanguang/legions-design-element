@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-03-02 14:19:18
- * @LastEditTime: 2021-11-18 23:21:12
+ * @LastEditTime: 2022-03-01 14:01:44
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/examples/containers/App.tsx
@@ -18,6 +18,7 @@ import { FlexLayout } from './demo-layout';
 import DataImportBaseDemo from './proDataImport/base';
 import DataImportLocalDemo from './proDataImport/local'; */
 import { ProForm } from './proForm';
+import { ProLayout } from './proLayout';
 /* import { ProLayout } from './proLayout';
 import { ProModal } from './proModal';
 import QueryDemo from './proQuery';
@@ -49,6 +50,7 @@ export default class App extends React.Component {
                     <Route path="/form" component={ProForm}></Route>
                     <Route path="/table" component={ProTable}></Route>
                     <Route path="/tform" component={ProTabsForm}></Route>
+                    <Route path="/layout" component={ProLayout}></Route>
                 {/* 
                 <Route path="/modal" component={ProModal}></Route>
                 <Route path="/query" component={QueryDemo}></Route>

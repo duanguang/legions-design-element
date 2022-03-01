@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-29 16:44:16
- * @LastEditTime: 2021-08-09 23:31:08
+ * @LastEditTime: 2022-02-28 17:14:28
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreConditions/index.ts
@@ -10,7 +10,7 @@
 /** @format */
 
 import LegionsStore from '../LegionsStore';
-import {IStoreBaseMeta} from '../LegionsStore/interface';
+import {legionsStoreInterface} from '../LegionsStore/interface';
 import { observable, action, StoreModules } from 'legions/store';
 import { observableViewModel, observablePromise } from 'legions/store-utils';
 import { computed,ObservableMap } from 'mobx';
@@ -20,7 +20,7 @@ type Proxify<T> = { [P in keyof T]: T[P] };
 
 @StoreModules
 export default class LegionsStoreConditions<Query = {}> extends LegionsStore.StoreBase {
-    static meta: IStoreBaseMeta = {
+    static meta: legionsStoreInterface['storeBaseMeta'] = {
         ...LegionsStore.StoreBase.meta,
     };
     @observable private viewModelQuery=observableViewModel<ConditionView<Query>>(new ConditionView())

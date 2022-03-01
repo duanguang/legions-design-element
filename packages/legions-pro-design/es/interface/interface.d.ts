@@ -1,5 +1,3 @@
-import LegionsModels from '../LegionsModels';
-import { IPanes } from '../LegionsStoreLayout/interface';
 /**
  *  使用 typescript 有时候需要重写一个库提供的 interface 的某个属性，但是重写 interface 有可能会导致冲突：
  *  原理是，将 类型 T 的所有 K 属性置为 any，
@@ -19,16 +17,6 @@ type A = Exclude<'a'|'b'|'c'|'d' ,'b'|'c'|'e' >  // 'a' | 'd'
 */
 export declare type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export declare type InstanceType<T extends new (...args: any) => any> = T extends new (...args: any) => infer R ? R : any;
-export interface IUserInfo<U = {}> {
-    userEntity?: {
-        userName: string;
-        userUid: string;
-        companyName?: string;
-        companyUid?: string;
-        /** 接口返回的原始用户信息 */
-        rowData?: U;
-    };
-}
 export declare type loggerType = 'proTable-constructor' | 'proTable-watchData' | 'proTable-componentWillMount' | 'proTable-componentWillUnmount' | 'proTable-componentDidMount' | 'proTable-componentDidUpdate' | 'proTable-componentWillReceiveProps' | 'proTable-render' | 'proForm-constructor' | 'proForm-watchData' | 'proForm-componentWillMount' | 'proForm-componentWillUnmount' | 'proForm-componentDidMount' | 'proForm-componentDidUpdate' | 'proForm-componentWillReceiveProps' | 'proForm-render' | 'proForm-validateFields' | 'uiStore';
 export interface ILegionsPluginDataOrigin {
     /** 表格组件关键点函数埋点函数，如果需要调试各个节点输出信息，就请注入。 系统级别私有方法 */
@@ -40,51 +28,5 @@ export interface ILegionsPluginDataOrigin {
     /** 操作记录上报函数， 系统级别私有方法, 其他成员调用前先咨询 */
     loggerReport?: (value: Object, type: loggerType) => void;
     /** 获取用户信息, 请勿直接修改 */
-    readonly sysUserInfos?: IUserInfo['userEntity'];
+    readonly sysUserInfos?: any;
 }
-export interface IGlobalStateEvent {
-    name: string;
-    scope: string;
-}
-export interface IGlobalUserInfo<U> {
-    userName: string;
-    userUid: string;
-    companyName?: string;
-    companyUid?: string;
-    /** 接口返回的原始用户信息 */
-    rowData?: U;
-}
-export interface IGlobalStates {
-    methods?: {
-        /** 打开菜单页签，可只传递菜单key */
-        openTabPane?: (pane: {
-            key: string;
-            keyPath?: string[];
-            title?: string;
-            path?: string;
-            params?: {
-                [x: string]: string;
-            };
-            forceRefresh?: boolean;
-        }) => void;
-        /** 关闭菜单页签 */
-        removeTablePane?: (targetKey: string | string[]) => void;
-    };
-    menuList?: InstanceType<typeof LegionsModels.MenuEntity>[];
-    user?: IGlobalUserInfo<any>;
-}
-interface IOperation {
-    name: string;
-    scope: string;
-}
-export interface IResource {
-    created: IOperation;
-    events: string[];
-    name: string;
-    removed: IOperation;
-    updated: IOperation;
-}
-export declare type typeOpenPaneParames = Pick<IPanes, 'key' | 'title' | 'path' | 'params' | 'forceRefresh'> & {
-    keyPath?: Array<string>;
-};
-export {};

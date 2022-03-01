@@ -1,6 +1,6 @@
 /**
-  *  legions-pro-design v0.0.9
-  * (c) 2021 duanguang
+  *  legions-pro-design v0.0.21
+  * (c) 2022 duanguang
   * @license MIT
   */
 import { cloneElement, Component } from 'react';

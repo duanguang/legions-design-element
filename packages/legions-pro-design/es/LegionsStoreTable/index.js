@@ -1,6 +1,6 @@
 /**
-  *  legions-pro-design v0.0.10
-  * (c) 2021 duanguang
+  *  legions-pro-design v0.0.21
+  * (c) 2022 duanguang
   * @license MIT
   */
 import LegionsStore from '../LegionsStore';
@@ -13,6 +13,7 @@ import { editTableColumns, queryTableColumns } from '../services';
 import { mobxVersion } from 'brain-store-utils';
 import LegionsCore from '../LegionsCore';
 import { cloneDeep } from 'lodash';
+import { MapperEntity } from 'json-mapper-object';
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -956,6 +957,56 @@ var ProTableView = /** @class */ (function () {
     return ProTableView;
 }());
 
+/*
+ * @Author: duanguang
+ * @Date: 2022-02-28 18:10:01
+ * @LastEditTime: 2022-02-28 18:10:02
+ * @LastEditors: duanguang
+ * @Description:
+ * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreTable/model/base.ts
+ * 「扫去窗上的尘埃，才可以看到窗外的美景。」
+ */
+var BaseModel = /** @class */ (function () {
+    function BaseModel() {
+        /** *操作结果
+         * @type {boolean}
+         */
+        this.success = true;
+        /**
+         * 描述信息
+         *
+         * @type {string}
+         * @memberof BaseEntity
+         */
+        this.message = '';
+        /**  提示信息编码
+         * @type {(string|number)}
+         */
+        this.code = '';
+        /**  返回数据信息
+         * @type {T}
+         * @memberof BaseEntity
+         */
+        this.result = null;
+    }
+    BaseModel.prototype.transformArray = function (rows, mapEntity) {
+        var _this = this;
+        return (rows || []).map(function (row) {
+            return _this.transformRow(row, mapEntity);
+        });
+    };
+    BaseModel.prototype.transformRows = function (rows, mapEntity) {
+        var _this = this;
+        return (rows || []).map(function (row) {
+            return _this.transformRow(row, mapEntity);
+        });
+    };
+    BaseModel.prototype.transformRow = function (row, mapEntity) {
+        return MapperEntity(mapEntity, row);
+    };
+    return BaseModel;
+}());
+
 /** 列表页数据模型类*/
 var PageListEntity = /** @class */ (function (_super) {
     __extends(PageListEntity, _super);
@@ -980,7 +1031,7 @@ var PageListEntity = /** @class */ (function (_super) {
         return _this;
     }
     return PageListEntity;
-}(LegionsModels.BaseEntity));
+}(BaseModel));
 
 var ProTableLocalView = /** @class */ (function () {
     function ProTableLocalView() {
@@ -1117,7 +1168,7 @@ var ProTableLocalView = /** @class */ (function () {
 /*
  * @Author: duanguang
  * @Date: 2020-12-26 11:35:17
- * @LastEditTime: 2021-08-09 23:42:17
+ * @LastEditTime: 2022-02-28 17:15:34
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreTable/index.ts

@@ -1,10 +1,9 @@
 import React from 'react';
 import LegionsStore from '../LegionsStore';
-import { IStoreBaseMeta } from '../LegionsStore/interface';
+import { legionsStoreInterface } from '../LegionsStore/interface';
 import { ViewModel } from 'brain-store-utils/types/create-view-model';
-import { WrappedFormUtils, IAntdSelectOption } from '../interface/antd';
-import { ObservableMap } from 'mobx';
-import { IElementList, IErrorView, ISelectAutoQuery, ISelectOptions, IObservableMap, IProFormFields } from './interface';
+import { WrappedFormUtils } from '../interface/antd';
+import { IElementList, IErrorView, ISelectOptions, IObservableMap, IProFormFields } from './interface';
 import { TabsFormView } from './tabsView';
 declare type Proxify<T> = {
     [P in keyof T]: T[P];
@@ -120,19 +119,6 @@ export declare class ErrorViewModel {
 }
 export declare class HLFormLocalView {
     _selectOptions: IObservableMap<string, ISelectOptions[]>;
-    _selectView: IObservableMap<string, {
-        paging: boolean;
-        remote: boolean;
-        autoQuery: ISelectAutoQuery;
-        pageIndex: number;
-        pageSize: number;
-        keywords: string;
-        tableNameDb: string;
-        currValue: {
-            total: number;
-            data: ObservableMap<IAntdSelectOption[]>;
-        };
-    }>;
     /**
      * 是否开启拖拽排序
      *
@@ -151,45 +137,9 @@ export declare class HLFormLocalView {
     _initControlsSort(sorts: string[]): void;
     _updateControlsSort(sorts: string[]): void;
     setDragSort(sort: boolean): void;
-    _initSelectOptions(keys: string, autoQuery: ISelectAutoQuery): void;
-    _initSelectView(keys: string, autoQuery: ISelectAutoQuery, options: {
-        paging: boolean;
-        remote: boolean;
-        keywords: string;
-        pageSize: number;
-        tableNameDb: string;
-    }): void;
-    /**
-     *
-     * 对数据进行转换，用于绑定组件的数据结构
-     * @private
-     * @param {ISelectOptions} item
-     * @param {ISelectAutoQuery} autoQuery
-     * @returns
-     * @memberof HLFormLocalView
-     */
-    private tranSelectOptions;
-    private tranSelectOptionsFromDd;
-    private getSelectDataDbBase;
-    /**
-     * 同步数据到indexdb
-     *
-     * @private
-     * @param {ISelectOptions} item
-     * @param {ISyncSelectDataBase['options']} options
-     * @memberof HLFormLocalView
-     */
-    private syncSelectDataDbBase;
-    dispatchRequest(name: string, autoQuery: ISelectAutoQuery, options?: {
-        pageIndex: number;
-        pageSize?: number;
-        keyWords?: string;
-        /** 接口请求完成触发 */
-        callback?: (value: any) => void;
-    }): void;
 }
 export default class ProFormStore extends LegionsStore.StoreBase {
-    static meta: IStoreBaseMeta;
+    static meta: legionsStoreInterface['storeBaseMeta'];
     constructor(context: any);
     /**
      *

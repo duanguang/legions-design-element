@@ -28,7 +28,6 @@ export { default as LegionsProTabsForm } from './LegionsProTabsForm';
 export { default as LegionsStore } from './LegionsStore';
 export { default as LegionsStoreConditions } from './LegionsStoreConditions';
 export { default as LegionsStoreForm } from './LegionsStoreForm';
-export { default as LegionsStoreLayout } from './LegionsStoreLayout';
 export { default as LegionsStoreModal } from './LegionsStoreModal';
 export { default as LegionsStoreTable } from './LegionsStoreTable';
 export { default as LegionsCore } from './LegionsCore';

@@ -1,17 +1,12 @@
 /**
-  *  legions-pro-design v0.0.11
+  *  legions-pro-design v0.0.21
   * (c) 2022 duanguang
   * @license MIT
   */
 import LegionsStore from '../LegionsStore';
 import { observable as observable$1, action as action$1, StoreModules } from 'legions/store';
 import { observableViewModel } from 'legions/store-utils';
-import { observable, computed, action, runInAction, extendObservable } from 'mobx';
-import LegionsCore from '../LegionsCore';
-import { pagingQueryProcessing } from 'legions-lunar';
-import { cloneDeep } from 'lodash';
-import { SelectDatabaseDB } from '../db';
-import LegionsModels from '../LegionsModels';
+import { observable, computed, action, extendObservable } from 'mobx';
 import { shortHash } from 'legions-lunar/object-hash';
 import { isObject } from 'legions-utils-tool/type.validation';
 
@@ -56,18 +51,6 @@ var __assign = function() {
     };
     return __assign.apply(this, arguments);
 };
-
-function __rest(s, e) {
-    var t = {};
-    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
-        t[p] = s[p];
-    if (s != null && typeof Object.getOwnPropertySymbols === "function")
-        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
-                t[p[i]] = s[p[i]];
-        }
-    return t;
-}
 
 function __decorate(decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -714,7 +697,6 @@ var ErrorViewModel = /** @class */ (function () {
 var HLFormLocalView = /** @class */ (function () {
     function HLFormLocalView() {
         this._selectOptions = observable$1.map();
-        this._selectView = observable$1.map();
         /**
          * 是否开启拖拽排序
          *
@@ -758,302 +740,10 @@ var HLFormLocalView = /** @class */ (function () {
     HLFormLocalView.prototype.setDragSort = function (sort) {
         this._isDragSort = sort;
     };
-    HLFormLocalView.prototype._initSelectOptions = function (keys, autoQuery) {
-        this._selectOptions.set(keys, [
-            {
-                keywords: '',
-                // @ts-ignore
-                obData: observable$1.map(),
-            },
-        ]);
-    };
-    HLFormLocalView.prototype._initSelectView = function (keys, autoQuery, options) {
-        this._selectView.set(keys, {
-            paging: options.paging,
-            remote: options.remote,
-            autoQuery: autoQuery,
-            pageIndex: 1,
-            pageSize: options.pageSize || 30,
-            keywords: options.keywords || '',
-            tableNameDb: options.tableNameDb,
-            currValue: { total: 0, data: observable$1.map() },
-        });
-    };
-    /**
-     *
-     * 对数据进行转换，用于绑定组件的数据结构
-     * @private
-     * @param {ISelectOptions} item
-     * @param {ISelectAutoQuery} autoQuery
-     * @returns
-     * @memberof HLFormLocalView
-     */
-    HLFormLocalView.prototype.tranSelectOptions = function (item, autoQuery) {
-        var oldList = new Map();
-        var total = 0;
-        for (var i = 1; i <= item.obData.size; i++) {
-            //@ts-ignore
-            var data = item.obData.get(i.toString());
-            if (data && data.isResolved) {
-                var tranObj = autoQuery.transform(data);
-                oldList.set(i.toString(), tranObj.data);
-                total = tranObj.total;
-            }
-        }
-        return {
-            total: total,
-            // @ts-ignore
-            data: oldList,
-        };
-    };
-    HLFormLocalView.prototype.tranSelectOptionsFromDd = function (value) {
-        if (value && Array.isArray(value) && value.length) {
-            var oldList_1 = new Map();
-            var total_1 = 0;
-            value.map(function (item) {
-                oldList_1.set(item.pageIndex.toString(), JSON.parse(item.value));
-                total_1 = item.total;
-            });
-            return {
-                total: total_1,
-                // @ts-ignore
-                data: oldList_1,
-            };
-        }
-        return null;
-    };
-    HLFormLocalView.prototype.getSelectDataDbBase = function (options) {
-        var dbBase = null;
-        var name = options.name;
-        SelectDatabaseDB.initTable(options.tableNameDb).then(function () {
-            dbBase = new SelectDatabaseDB(options.tableNameDb);
-            if (dbBase && dbBase.selectItem) {
-                dbBase.selectItem
-                    .where({
-                    keywords: options.keyWords,
-                    modulesKeys: "" + options.tableNameDb + name,
-                })
-                    .toArray()
-                    .then(function (result) {
-                    options.callback && options.callback(result);
-                });
-            }
-        });
-    };
-    /**
-     * 同步数据到indexdb
-     *
-     * @private
-     * @param {ISelectOptions} item
-     * @param {ISyncSelectDataBase['options']} options
-     * @memberof HLFormLocalView
-     */
-    HLFormLocalView.prototype.syncSelectDataDbBase = function (item, options) {
-        var dbBase = null;
-        var name = options.name;
-        SelectDatabaseDB.initTable(options.tableNameDb).then(function () {
-            dbBase = new SelectDatabaseDB(options.tableNameDb);
-            if (dbBase && dbBase.selectItem) {
-                var _loop_1 = function (i) {
-                    //@ts-ignore
-                    var data = item.obData.get(i.toString());
-                    if (data && data.isResolved) {
-                        var tranObj_1 = options.autoQuery.transform(data);
-                        dbBase.selectItem
-                            .get({
-                            keywords: options.keyWords,
-                            modulesKeys: "" + options.tableNameDb + name,
-                            pageIndex: i,
-                        })
-                            .then(function (result) {
-                            if (result) {
-                                dbBase.selectItem.update(result.id, __assign(__assign({}, result), {
-                                    total: tranObj_1.total,
-                                    value: JSON.stringify(tranObj_1.data),
-                                }));
-                            }
-                            else {
-                                dbBase.selectItem.add({
-                                    modulesKeys: "" + options.tableNameDb + name,
-                                    keywords: options.keyWords,
-                                    pageIndex: i,
-                                    value: JSON.stringify(tranObj_1.data),
-                                    total: options.total,
-                                });
-                            }
-                        });
-                    }
-                };
-                for (var i = 1; i <= item.obData.size; i++) {
-                    _loop_1(i);
-                }
-            }
-        });
-    };
-    HLFormLocalView.prototype.dispatchRequest = function (name, autoQuery, options) {
-        var _this = this;
-        if (options === void 0) { options = { pageIndex: 1, pageSize: 30 }; }
-        if (autoQuery) {
-            /*  const server = new HttpService({ token: autoQuery.token }); */
-            var server_1 = new LegionsCore.LegionsFetch();
-            var keyWords_1 = options.keyWords || '';
-            if (!autoQuery.transform) {
-                autoQuery['transform'] = function (value) {
-                    var arr = value.value ? value.value.result : [];
-                    return {
-                        data: arr,
-                        total: value.value ? value.value.total : 0,
-                    };
-                };
-            }
-            //@ts-ignore
-            var apiServer = function () {
-                var pageIndex = options.pageIndex, pageSize = options.pageSize, _a = options.keyWords, keyWords = _a === void 0 ? '' : _a, props = __rest(options, ["pageIndex", "pageSize", "keyWords"]);
-                var params = cloneDeep(autoQuery.params(options.pageIndex, options.pageSize, keyWords, props));
-                var model = {
-                    onBeforTranform: function (value) {
-                        options.callback && options.callback(value);
-                        return {
-                            responseData: value,
-                            mappingEntity: autoQuery.mappingEntity,
-                        };
-                    },
-                };
-                if (autoQuery.method === 'post') {
-                    return server_1.post(__assign({ url: autoQuery.ApiUrl, parameter: params, headers: __assign({}, autoQuery.options), model: LegionsModels.SelectKeyValue }, model));
-                }
-                else if (autoQuery.method === 'get') {
-                    return server_1.get(__assign({ url: autoQuery.ApiUrl, parameter: params, headers: __assign({}, autoQuery.options), model: LegionsModels.SelectKeyValue }, model));
-                }
-            };
-            var data = this._selectOptions.get(name); // 查询指定下拉组件数据
-            var currValue_1 = this._selectView.get(name);
-            if (data) {
-                // 如果数据存在
-                var item_1 = data.find(function (entity) { return entity.keywords === keyWords_1; }); // 查询指定下拉组件指定关键词数据
-                if (!item_1) {
-                    /** 如果输入关键词不存在搜索数据，则往map初始化一个此关键词的搜索数据 */
-                    data.push({
-                        keywords: keyWords_1,
-                        // @ts-ignore
-                        obData: observable$1.map(),
-                    });
-                    this._selectOptions.set(name, data);
-                    item_1 = data.find(function (entity) { return entity.keywords === keyWords_1; });
-                }
-                if (item_1) {
-                    //@ts-ignore
-                    if (item_1.obData.has(options.pageIndex.toString())) {
-                        /** 如果输入关键词存在历史搜索数据，先调出历史数据加载，提升加载速度
-                         * 加载完历史搜索记录，再去请求数据更新替换历史数据，用户界面无感知刷新数据
-                         */
-                        if (currValue_1) {
-                            // @ts-ignore
-                            // currValue.currValue= this.tranSelectOptions(item,autoQuery)
-                            var hisDbData = this.tranSelectOptions(item_1, autoQuery);
-                            for (var i = 1; i <= hisDbData.data.size; i++) {
-                                currValue_1.currValue.data.set(
-                                //@ts-ignore
-                                i.toString(), hisDbData.data.get(i.toString()));
-                            }
-                            currValue_1.currValue.total = hisDbData.total;
-                        }
-                    }
-                    else {
-                        if (currValue_1) {
-                            this.getSelectDataDbBase({
-                                tableNameDb: currValue_1.tableNameDb,
-                                name: name,
-                                pageIndex: options.pageIndex,
-                                keyWords: keyWords_1,
-                                callback: function (value) {
-                                    if (value && Array.isArray(value) && value.length) {
-                                        var dbData_1 = _this.tranSelectOptionsFromDd(value);
-                                        if (dbData_1) {
-                                            runInAction(function () {
-                                                var newCurrValue = _this._selectView.get(name);
-                                                for (var i = 1; i <= dbData_1.data.size; i++) {
-                                                    //@ts-ignore
-                                                    if (!newCurrValue.currValue.data.has(i.toString())) {
-                                                        newCurrValue.currValue.data.set(
-                                                        //@ts-ignore
-                                                        i.toString(), dbData_1.data.get(i.toString()));
-                                                    }
-                                                }
-                                                newCurrValue.currValue.total = dbData_1.total;
-                                            });
-                                        }
-                                    }
-                                },
-                            });
-                        }
-                    }
-                    if (currValue_1) {
-                        currValue_1.pageIndex = options.pageIndex;
-                        currValue_1.pageSize = options.pageSize;
-                        currValue_1.keywords = options.keyWords;
-                    }
-                    /** 输入关键词有无历史搜索数据，都会去请求接口，存在历史数据线调取历史数据 */
-                    var store = extendObservable({
-                        keyWords: keyWords_1,
-                        // @ts-ignore
-                        data: observable$1.map(),
-                    }, {});
-                    for (var i = 1; i <= item_1.obData.size; i++) {
-                        /**
-                         * 调出输入关键词历史搜索数据
-                         */
-                        //@ts-ignore
-                        var newData = item_1.obData.get(i.toString());
-                        if (newData && newData.isResolved) {
-                            //@ts-ignore
-                            store.data.set(i.toString(), newData);
-                        }
-                    }
-                    store = pagingQueryProcessing({
-                        store: store,
-                        servicePromise: apiServer,
-                        keyWords: keyWords_1,
-                        mapItemKeys: options.pageIndex.toString(),
-                        callback: function (value) {
-                            item_1.obData.set(
-                            //@ts-ignore
-                            options.pageIndex.toString(), 
-                            //@ts-ignore
-                            value.data.get(options.pageIndex.toString()));
-                            item_1.keywords = keyWords_1;
-                            if (autoQuery.transform) {
-                                if (currValue_1) {
-                                    var newsCurrValue = _this.tranSelectOptions(item_1, autoQuery);
-                                    for (var i = 1; i <= newsCurrValue.data.size; i++) {
-                                        currValue_1.currValue.data.set(
-                                        //@ts-ignore
-                                        i.toString(), newsCurrValue.data.get(i.toString()));
-                                    }
-                                    currValue_1.currValue.total = newsCurrValue.total;
-                                    _this.syncSelectDataDbBase(item_1, {
-                                        autoQuery: autoQuery,
-                                        keyWords: keyWords_1,
-                                        tableNameDb: currValue_1.tableNameDb,
-                                        name: name,
-                                        total: currValue_1.currValue.total,
-                                    });
-                                }
-                            }
-                        },
-                    });
-                }
-            }
-        }
-    };
     __decorate([
         observable$1,
         __metadata("design:type", Object)
     ], HLFormLocalView.prototype, "_selectOptions", void 0);
-    __decorate([
-        observable$1,
-        __metadata("design:type", Object)
-    ], HLFormLocalView.prototype, "_selectView", void 0);
     __decorate([
         observable$1,
         __metadata("design:type", Object)
@@ -1090,24 +780,6 @@ var HLFormLocalView = /** @class */ (function () {
         __metadata("design:paramtypes", [Boolean]),
         __metadata("design:returntype", void 0)
     ], HLFormLocalView.prototype, "setDragSort", null);
-    __decorate([
-        action$1,
-        __metadata("design:type", Function),
-        __metadata("design:paramtypes", [String, Object]),
-        __metadata("design:returntype", void 0)
-    ], HLFormLocalView.prototype, "_initSelectOptions", null);
-    __decorate([
-        action$1,
-        __metadata("design:type", Function),
-        __metadata("design:paramtypes", [String, Object, Object]),
-        __metadata("design:returntype", void 0)
-    ], HLFormLocalView.prototype, "_initSelectView", null);
-    __decorate([
-        action$1,
-        __metadata("design:type", Function),
-        __metadata("design:paramtypes", [String, Object, Object]),
-        __metadata("design:returntype", void 0)
-    ], HLFormLocalView.prototype, "dispatchRequest", null);
     return HLFormLocalView;
 }());
 var ProFormStore = /** @class */ (function (_super) {

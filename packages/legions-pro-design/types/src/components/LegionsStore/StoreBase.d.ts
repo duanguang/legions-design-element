@@ -1,8 +1,7 @@
 /** @format */
 import Store from 'legions/store';
-import { ISchedule } from './interface';
+import { legionsStoreInterface } from './interface';
 import { History } from '../interface/history';
-import { IStoreBaseMeta } from './interface';
 interface IDispatchPrams {
     name: string;
     scope: string;
@@ -12,7 +11,7 @@ interface IContext {
     _manage: any;
 }
 export default class StoreBase<T = {}, P = {}> extends Store {
-    static meta: IStoreBaseMeta;
+    static meta: legionsStoreInterface['storeBaseMeta'];
     context: T & IContext;
     history: History;
     /**
@@ -22,6 +21,6 @@ export default class StoreBase<T = {}, P = {}> extends Store {
      * @returns {Array<Function>}
      * @memberof StoreBase
      */
-    schedule(...funcs: Array<any>): ISchedule;
+    schedule(...funcs: Array<any>): legionsStoreInterface['schedule'];
 }
 export {};

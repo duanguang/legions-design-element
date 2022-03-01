@@ -1,55 +1,31 @@
 import React from 'react'
-import { Layout,Menu,Icon,message } from 'antd';
-const { Sider } = Layout;
-const SubMenu = Menu.SubMenu;
+import { Layout,Menu,Icon } from 'antd';
 import { observer,bind } from 'legions/store-react'
-import LegionsStoreLayout from '../../LegionsStoreLayout';
-import LegionsModels from '../../LegionsModels';
-import { SelectParam,MenuProps,ClickParam } from 'antd/lib/menu'
+import LegionsStoreLayout from '../store';
+import { SelectParam,ClickParam } from 'antd/lib/menu'
 import '../style/memu.less';
-import { autorun,isObservableArray } from 'mobx';
+import { isObservableArray } from 'mobx';
 import { RegExChk,validatorType } from 'legions-utils-tool/regex';
 import { page } from 'legions-lunar/mobx-decorator';
 import LegionsCrossModule from '../../LegionsCrossModule';
 import { inject } from 'legions/store';
-import { IPanes } from '../../LegionsStoreLayout/interface';
-import { IRouter } from '../../interface/router';
-import { IUserInfo,ILegionsPluginDataOrigin } from '../../interface';
-interface IProps extends IUserInfo,MenuProps {
-  store?: InstanceType<typeof LegionsStoreLayout.MenuStore>
-  logo: string,
-  onQueryPromiseMenus: () => Promise<InstanceType<typeof LegionsModels.MenuContainerEntity>>;
-  /** 外部链接跳转，打开指定菜单 */
-  defaultOpenMenuTabs?: {
-    /** 指定菜单Key */
-    meunKey?: string;
-    /** 打开菜单地址栏参数 */
-    params?: string;
-  };
-  domainUrl?: string
-  router: Array<IRouter>;
-  defaultOpenKeys?: string[];
-  onLogoClick?: () => void;
-  /** 布局布局位置
-   *  fixedSider 主要为了兼容历史固定侧边方案  过渡性方案
-   */
-  fixedLayoutPosition?: 'fixedSider' | 'fixedSiderHeader'
+import { TypeMenuBaseModel } from '../model';
+import { legionsProLayoutInterface,legionsProLayoutProps } from '../interface';
+const { Sider } = Layout;
+const SubMenu = Menu.SubMenu;
 
-  /** 在菜单数据接口请求完成后，如果需要对菜单数据项进行自定义加工，可传入此函数 */
-  loadedMenuTransformData?: (menuList:InstanceType<typeof LegionsModels.MenuEntity> []) => void;
-}
 @bind({ store: LegionsStoreLayout.MenuStore })
 @page<MenuParts,InstanceType<typeof LegionsStoreLayout.MenuStore>>({
   sideEffect: (that,store: InstanceType<typeof LegionsStoreLayout.MenuStore>) => {
-    if (store.obMenuList.isResolved) {
+    if (store._ob_menu_request.isResolved) {
       /** 首次加载完成 */
-      that.masterGlobalStateStore.menuList = store.getAllMenuList(store.obMenuList.value.result,that.props.loadedMenuTransformData)
+      that.masterGlobalStateStore.menuList = store.getAllMenuList(store._ob_menu_request.value.data,that.props.loadedMenuTransformData)
       that.onPageloadedOpenTabpane(that.masterGlobalStateStore.menuList)
     }
   }
 })
 @observer
-export default class MenuParts extends React.Component<IProps>{
+export default class MenuParts extends React.Component<legionsProLayoutProps['menuParts']>{
   @inject(LegionsCrossModule.MasterGlobalStateStore)
   masterGlobalStateStore: InstanceType<typeof LegionsCrossModule.MasterGlobalStateStore>
   constructor(props) {
@@ -59,7 +35,7 @@ export default class MenuParts extends React.Component<IProps>{
   }
   static defaultProps = {
     fixedLayoutPosition: 'fixedSider',
-    router:[]
+    router: []
   }
   componentDidMount() {
     this.props.store.getMenuList(this.props.onQueryPromiseMenus);
@@ -67,7 +43,7 @@ export default class MenuParts extends React.Component<IProps>{
     this.setOpenKesInDidMountcycle();
   }
   initGlobalVariableValue() {
-    const openTabPane = (pane: Pick<IPanes,'key' | 'title' | 'path' | 'params' | 'forceRefresh'> & { keyPath?: Array<string> }) => {
+    const openTabPane = (pane: Pick<legionsProLayoutInterface['panes'],'key' | 'title' | 'path' | 'params' | 'forceRefresh'> & { keyPath?: Array<string> }) => {
       const item = this.props.store.getMenuByKey(pane.key)
       if (item) {
         pane['keyPath'] = pane.keyPath || item.deep.reverse()
@@ -84,7 +60,7 @@ export default class MenuParts extends React.Component<IProps>{
   }
   /** 在did mount 生命周期内设置菜单展开项数据 */
   setOpenKesInDidMountcycle() {
-    if (this.props.defaultOpenKeys && Array.isArray(this.props.defaultOpenKeys) && this.props.defaultOpenKeys.length) {
+    if (Array.isArray(this.props.defaultOpenKeys) && this.props.defaultOpenKeys.length) {
       if (this.props.store.openKeys.length === 0) {
         this.props.store.openChange(this.props.defaultOpenKeys)
       } else {
@@ -94,34 +70,34 @@ export default class MenuParts extends React.Component<IProps>{
     }
   }
   /** 在打开菜单页面路由时，获取菜单完毕时，打开菜单页签 */
-  onPageloadedOpenTabpane(menuList: InstanceType<typeof LegionsModels.MenuEntity>[]) {
+  onPageloadedOpenTabpane(menuList: TypeMenuBaseModel[]) {
     const { store } = this.props;
     store.context.TabPaneApp.syncTabPanes(menuList);
-    const {defaultOpenMenuTabs={} } = this.props;
+    const { defaultOpenMenuTabs = {} } = this.props;
     const activeMenuItem = menuList.find((item) => item.key === defaultOpenMenuTabs.meunKey)
     const hash = window.location.hash;
     const menuItem = hash && menuList.find((item) => (item.path === hash.replace('#','') || item.path === hash || (item.path !== '#' && hash.indexOf(item.path) > -1)))
     if (activeMenuItem) {/** 如果用户通过URL传入了活动菜单key值， 则打开用户指定的菜单key */
-      store.openDefault({ key: defaultOpenMenuTabs.meunKey,title: activeMenuItem.title,path: `${activeMenuItem.path}?${defaultOpenMenuTabs.params}` });
+      store.openAppoint({ key: defaultOpenMenuTabs.meunKey,title: activeMenuItem.title,path: `${activeMenuItem.path}?${defaultOpenMenuTabs.params}` });
     }
     else if (hash && menuItem) {/** 如果用户传入指定菜单路由进行访问，则通过路由地址去找寻菜单数据，进行访问菜单页面 */
-      store.openDefault({ key: menuItem.key,title: menuItem.title,path: `${menuItem.path}` });
+      store.openAppoint({ key: menuItem.key,title: menuItem.title,path: `${menuItem.path}` });
     } else {
       /** 默认打开第一个 
          * 条件 当默认选中值为空或数组长度为0 则可以自动打开默认页，
          * 否则调取默认缓存中菜单数据进行打开 */
-        if ((Array.isArray(store.selectedKeys) || isObservableArray(store.selectedKeys)) && store.selectedKeys.length === 0) {
-          const entity = menuList.length && menuList[0];
-          if (entity.path && entity.path !== '#' && !defaultOpenMenuTabs.meunKey) {
-            store.context.TabPaneApp.setDefaultTabPanes({
-              key: entity.key,
-              keyPath: [entity.key.toString()]
-            },menuList)
-          }
+      if ((Array.isArray(store.selectedKeys) || isObservableArray(store.selectedKeys)) && store.selectedKeys.length === 0) {
+        const entity = menuList.length && menuList[0];
+        if (entity.path && entity.path !== '#' && !defaultOpenMenuTabs.meunKey) {
+          store.context.TabPaneApp.setDefaultTabPanes({
+            key: entity.key,
+            keyPath: [entity.key.toString()]
+          },menuList)
         }
+      }
     }
   }
-  renderFirstMenuItemElement(item: InstanceType<typeof LegionsModels.MenuEntity>) {
+  renderFirstMenuItemElement(item: TypeMenuBaseModel) {
     const skin = this.props.store.viewModel.getSkinInfos()
     this.props.store.setRootSubMenu(item.key.toString(),'0')
     return (
@@ -130,14 +106,14 @@ export default class MenuParts extends React.Component<IProps>{
         className={(skin && skin.skin) || ''}
       >
         {!item.icon ? [<Icon type='pie-chart' key='1'></Icon>,
-        <span  key='2'>{item.title}</span>] : [
-            <img className='anticon' src={item.icon} key='3' style={{ position: 'relative',top: '4px',right: '4px' }}></img>,
-            <span key='4'>{item.title}</span>
-          ]}
+        <span key='2'>{item.title}</span>] : [
+          <img className='anticon' src={item.icon} key='3' style={{ position: 'relative',top: '4px',right: '4px' }}></img>,
+          <span key='4'>{item.title}</span>
+        ]}
       </Menu.Item>
     )
   }
-  renderFirstSubMenuELement(item: InstanceType<typeof LegionsModels.MenuEntity>) {
+  renderFirstSubMenuELement(item: TypeMenuBaseModel) {
     const skin = this.props.store.viewModel.getSkinInfos()
     this.props.store.setRootSubMenu(item.key.toString(),'0')
     let icon = ''
@@ -160,7 +136,7 @@ export default class MenuParts extends React.Component<IProps>{
     )
   }
   /** 渲染末级菜单选项 */
-  renderMenuItemElement(item: InstanceType<typeof LegionsModels.MenuEntity>) {
+  renderMenuItemElement(item: TypeMenuBaseModel) {
     const skin = this.props.store.viewModel.getSkinInfos()
     return (
       <Menu.Item
@@ -171,7 +147,7 @@ export default class MenuParts extends React.Component<IProps>{
       </Menu.Item>
     )
   }
-  renderSubMenuElement(item: InstanceType<typeof LegionsModels.MenuEntity>) {
+  renderSubMenuElement(item: TypeMenuBaseModel) {
     const skin = this.props.store.viewModel.getSkinInfos()
     return (
       <SubMenu
@@ -183,7 +159,7 @@ export default class MenuParts extends React.Component<IProps>{
     )
   }
   /** 递归调用不断遍历所有菜单，并按照顺序渲染相应层级菜单 */
-  renderRecursiveCallsMenu(list: Array<InstanceType<typeof LegionsModels.MenuEntity>>,isFirst = true) {
+  renderRecursiveCallsMenu(list: Array<TypeMenuBaseModel>,isFirst = true) {
     if (isFirst) {
       return list.map((item,index) => {
         return !item.children.length ? this.renderFirstMenuItemElement(item) : this.renderFirstSubMenuELement(item)
@@ -228,9 +204,9 @@ export default class MenuParts extends React.Component<IProps>{
       onOpenChange={this.onOpenChange}
       onClick={this.onClick}
     >
-      {store.obMenuList.isResolved && this.renderRecursiveCallsMenu(store.obMenuList.value.result)}
+      {store._ob_menu_request.isResolved && this.renderRecursiveCallsMenu(store._ob_menu_request.value.data)}
     </Menu>
-    if (this.props.fixedLayoutPosition==='fixedSiderHeader') {
+    if (this.props.fixedLayoutPosition === 'fixedSiderHeader') {
       return <div style={this.computedMenuParentElementStyles()} className='scroll_firefox_content'>
         {renderMenuNode}
       </div>
@@ -240,7 +216,7 @@ export default class MenuParts extends React.Component<IProps>{
   renderSiderElement() {
     const { store } = this.props;
     const skin = store.viewModel.getSkinInfos()
-    const rednerSider =(style:React.CSSProperties,classValue:string)=> <Sider
+    const rednerSider = (style: React.CSSProperties,classValue: string) => <Sider
       className={`${(skin && skin.skin) || ''} ${classValue}`}
       ref='siderContainer'
       breakpoint="lg"
@@ -258,16 +234,16 @@ export default class MenuParts extends React.Component<IProps>{
       let classValue = store.viewModel.fixedSiderMenu ? 'ant-pro-sider ant-pro-sider-fixed' : ''
       let collapsedStyle: React.CSSProperties = {}
       if (store.viewModel.collapsed) {
-        collapsedStyle = {overflow:'inherit'}
+        collapsedStyle = { overflow: 'inherit' }
       }
       return <aside>
         {store.viewModel.fixedSiderMenu &&
           <div className={this.computedMenuPlaceholderNodesClass()} style={this.computedMenuPlaceholderNodesStyles()}></div>
         }
-        {rednerSider({...collapsedStyle},classValue)}
+        {rednerSider({ ...collapsedStyle },classValue)}
       </aside>
     }
-    return rednerSider({height: '100vh'},'')
+    return rednerSider({ height: '100vh' },'')
   }
   computedMenuParentElementStyles() {
     const { store } = this.props;
@@ -305,7 +281,6 @@ export default class MenuParts extends React.Component<IProps>{
    * 被选中时调用
    * 
    * @param {any} selected { item:'Menu.Item组件实例', key:'菜单序号', selectedKeys：‘当前选中的菜单项 key 数组’ }
-   * @memberof MenuPart
    */
   onSelect(selected: SelectParam) {
     this.props.store.updateSelected(selected.selectedKeys)
@@ -320,8 +295,6 @@ export default class MenuParts extends React.Component<IProps>{
     if (newItem) {
       const path = newItem['path'] as string
       const index = this.props.router.findIndex((item) => item.path === path.replace('#',''))
-      const pane = store.context.TabPaneApp.panes.find((item) => item.key === selected['key'])
-      const oldpane = store.context.TabPaneApp.panes.find((item) => item.key === oldActiveKey)
       if (path.indexOf('#') > -1 && index > -1) {
         // window.location.href = `${this.props.domainUrl}${path.replace('','')}`
         this.props.store.history.push(`${path.replace('#','')}`)
@@ -331,8 +304,7 @@ export default class MenuParts extends React.Component<IProps>{
   /**
    * SubMenu 展开/关闭的回调
    * 
-   * @param {any} openKeys string[]
-   * @memberof MenuPart
+   * @param openKeys 
    */
   onOpenChange(openKeys: string[]) {
     const { store } = this.props

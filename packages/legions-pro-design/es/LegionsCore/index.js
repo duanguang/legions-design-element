@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.19
+  *  legions-pro-design v0.0.21
   * (c) 2022 duanguang
   * @license MIT
   */
@@ -108,32 +108,10 @@ var project = {
     name: 'portal'
 };
 
-/**  当前展开的 SubMenu 菜单项 key 数组 缓存*/
-var OPENKEYS_STORAGE_KEY = 'openKeys_storage_key';
-/**  当前选中的菜单项 key 数组 缓存*/
-var SELECTED_STORAGE_KEY = 'selected_storage_key';
-var panesStorageKeys = 'panes_storage_key';
-/** 活动tabs 编码 缓存 */
-var activeKeyStorageKeys = 'panes_activeKey_key';
-/**  menu 菜单选中缓存数据*/
-var selectedStorageKeys = 'selected_storage_key';
-/**  菜单面包屑缓存数据*/
-var breadcrumbStorageKeys = 'breadcrumb_storage_key';
-
-var StorageKeysDataSet = /*#__PURE__*/Object.freeze({
-    __proto__: null,
-    OPENKEYS_STORAGE_KEY: OPENKEYS_STORAGE_KEY,
-    SELECTED_STORAGE_KEY: SELECTED_STORAGE_KEY,
-    panesStorageKeys: panesStorageKeys,
-    activeKeyStorageKeys: activeKeyStorageKeys,
-    selectedStorageKeys: selectedStorageKeys,
-    breadcrumbStorageKeys: breadcrumbStorageKeys
-});
-
 /*
  * @Author: duanguang
  * @Date: 2020-12-18 16:08:25
- * @LastEditTime: 2021-03-03 16:31:45
+ * @LastEditTime: 2022-03-01 14:20:57
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsCore/index.ts
@@ -142,7 +120,6 @@ var StorageKeysDataSet = /*#__PURE__*/Object.freeze({
 var LegionsCore = {
     LegionsFetch: LegionsFetch,
     project: project,
-    StorageKeysDataSet: StorageKeysDataSet,
 };
 
 export default LegionsCore;

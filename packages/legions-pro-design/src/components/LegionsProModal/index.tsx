@@ -5,7 +5,7 @@ import { bind,observer } from 'legions/store-react'
 import LegionsStoreModal from '../LegionsStoreModal';
 import { ILegionsProModalProps } from './interface';
 import { IViewModelModalStore } from '../LegionsStoreModal/interface';
-import { ISchedule } from '../LegionsStore/interface';
+import { legionsStoreInterface } from '../LegionsStore/interface';
 import { shortHash } from 'legions-lunar/object-hash';
 import './style/index.less';
 import { runInAction,autorun } from 'mobx';
@@ -101,8 +101,8 @@ const DrawerPositionWrap = {
     isBindingDom = false;
     contentResizableNode: Element = null;
     nodeMaximize: Element = null;
-    subscription: ISchedule = null;
-    subscriptionVisible: ISchedule = null;
+    subscription: legionsStoreInterface['schedule'] = null;
+    subscriptionVisible: legionsStoreInterface['schedule'] = null;
     /**
      * antd-content 坐标轴 *
      */

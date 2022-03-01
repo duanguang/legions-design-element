@@ -2,7 +2,7 @@
 import LegionsStore from '../LegionsStore';
 import { ProTableView } from './ProTableView';
 import { ProTableLocalView } from './ProTableLocalView';
-import { IStoreBaseMeta } from '../LegionsStore/interface';
+import { legionsStoreInterface } from '../LegionsStore/interface';
 import { ObservableMap } from 'mobx';
 import { PageListEntity } from './pageListEntity';
 import { ViewModel } from 'brain-store-utils/types/create-view-model';
@@ -10,7 +10,7 @@ declare type Proxify<T> = {
     [P in keyof T]: T[P];
 };
 export default class LegionsStoreTable extends LegionsStore.StoreBase {
-    static meta: IStoreBaseMeta;
+    static meta: legionsStoreInterface['storeBaseMeta'];
     static pageListEntity: typeof PageListEntity;
     constructor(context: any);
     userInfo: {

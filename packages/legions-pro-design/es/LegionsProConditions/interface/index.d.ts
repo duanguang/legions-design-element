@@ -1,7 +1,7 @@
 /// <reference types="react" />
 import LegionsStoreConditions from '../../LegionsStoreConditions';
 import { IViewQueryConditionStore, ISelectAutoQuery } from '../../LegionsStoreConditions/interface';
-import { HlLabeledValue } from 'legions-lunar/model';
+import { LegionsLabeledValue } from 'legions-lunar/model';
 import { Weaken } from '../../interface';
 import { InputProps, DatePickerProps, RangePickerProps, InputNumberProps, RadioGroupProps, TextAreaProps, CheckboxGroupProps, CheckboxProps } from '../../interface/antd';
 import { IProSelectProps } from '../../LegionsProSelect/interface';
@@ -21,7 +21,7 @@ interface IMethods {
     setFieldsValues?: <T extends IProConditions['componentModel']>(name: string, callback: (value: T) => void) => void;
     /** 查询指定下拉组件数据项 */
     getQuerySelectOption: (/** 下拉组件name值 */ name: string, /** 下拉选项key值*/ optionKey: string) => {
-        readonly item: HlLabeledValue;
+        readonly item: LegionsLabeledValue;
         readonly options: Array<ISelectProps>;
     };
     /** 下拉远程搜索

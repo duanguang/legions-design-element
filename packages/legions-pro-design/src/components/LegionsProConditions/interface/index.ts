@@ -1,15 +1,15 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-08 12:00:22
- * @LastEditTime: 2021-03-25 14:24:26
- * @LastEditors: zhaoliang
+ * @LastEditTime: 2022-02-28 18:02:41
+ * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProConditions/interface/index.ts
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
 import LegionsStoreConditions from '../../LegionsStoreConditions';
 import { IViewQueryConditionStore,ISelectAutoQuery } from '../../LegionsStoreConditions/interface';
-import { HlLabeledValue } from 'legions-lunar/model';
+import { LegionsLabeledValue } from 'legions-lunar/model';
 import { Weaken } from '../../interface'
 import {
     InputProps,
@@ -42,7 +42,7 @@ interface IMethods {
 
     setFieldsValues?:<T extends IProConditions['componentModel']>(name: string,callback: (value: T) => void)=>void
     /** 查询指定下拉组件数据项 */
-    getQuerySelectOption: (/** 下拉组件name值 */name: string,/** 下拉选项key值*/optionKey: string) => { readonly item: HlLabeledValue,readonly options: Array<ISelectProps> };
+    getQuerySelectOption: (/** 下拉组件name值 */name: string,/** 下拉选项key值*/optionKey: string) => { readonly item: LegionsLabeledValue,readonly options: Array<ISelectProps> };
 
     /** 下拉远程搜索
      * 主要同于手动触发下拉组件搜索函数 */

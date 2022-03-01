@@ -18,7 +18,7 @@ import {
     PaginationProps
 } from '../interface/antd';
 import { ITableColumnConfig,IExportCsv, IProTableProps, ICustomColumnsConfig } from './interface';
-import { ISchedule } from '../LegionsStore/interface';
+import { legionsStoreInterface } from '../LegionsStore/interface';
 import moment from 'moment';
 import LegionsProTableCustomColumns from '../LegionsProTableCustomColumns';
 import LegionsProLineOverflow from '../LegionsProLineOverflow';
@@ -94,7 +94,7 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
             );
         }
     }
-    subscription: ISchedule = null;
+    subscription: legionsStoreInterface['schedule'] = null;
     node: Element = null;
     resize = debounce(() => {
         this.viewModel.bodyContainerHeight = document.body.clientHeight

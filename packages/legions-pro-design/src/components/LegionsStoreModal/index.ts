@@ -1,14 +1,14 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-04 16:30:32
- * @LastEditTime: 2021-08-09 23:32:34
+ * @LastEditTime: 2022-02-28 17:15:19
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreModal/index.ts
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
 import LegionsStore from '../LegionsStore';
-import {IStoreBaseMeta} from '../LegionsStore/interface';
+import {legionsStoreInterface} from '../LegionsStore/interface';
 import { observable, action, StoreModules } from 'legions/store';
 import { observableViewModel } from 'legions/store-utils';
 import { ModalView } from './modalView';
@@ -19,7 +19,7 @@ import { ViewModel } from 'brain-store-utils/types/create-view-model';
 
 @StoreModules
 export default class LegionsStoreModal extends LegionsStore.StoreBase {
-  static meta: IStoreBaseMeta = {
+  static meta: legionsStoreInterface['storeBaseMeta'] = {
     ...LegionsStore.StoreBase.meta,
   };
   constructor(context) {
