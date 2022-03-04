@@ -1,15 +1,8 @@
 import { InstanceProForm } from '../../LegionsProForm/interface';
 import { InstanceProModal } from '../../LegionsProModal/interface';
-export interface InstanceLegionsModalForm<Model> {
-    formInstance: InstanceProForm;
-    modalInstance: InstanceProModal;
-    /**
-     * 暴露一些组件操作方法
-     *
-     * @memberof LegionsInstanceModalForm
-     */
-    methods?: IMethods<Model>;
+export interface ILegionsModalForm {
+    /** 表单实例  */
+    form_ref: InstanceProForm;
+    /** 对话框实例 */
+    modal_ref: InstanceProModal;
 }
-interface IMethods<Model> {
-}
-export {};

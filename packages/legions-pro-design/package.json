@@ -1,6 +1,6 @@
 {
   "name": "legions-pro-design",
-  "version": "0.0.21",
+  "version": "0.0.25",
   "description": "前端业务组件库",
   "keywords": [
     "design",
@@ -26,7 +26,8 @@
     "qr.js": "0.0.0",
     "raphael": "^2.2.6",
     "react-raphael": "^0.9.0",
-    "json-mapper-object": "^0.0.9-rc1"
+    "json-mapper-object": "^0.0.9-rc1",
+    "qiankun":"^2.6.3"
   },
   "devDependencies": {
     "@types/jest": "^24.0.25",

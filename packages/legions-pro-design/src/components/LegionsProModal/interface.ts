@@ -1,18 +1,54 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-26 17:57:29
- * @LastEditTime: 2021-11-28 15:58:29
+ * @LastEditTime: 2022-03-04 10:27:34
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProModal/interface.ts
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
 
-import { IViewModelModalStore } from '../LegionsStoreModal/interface';
-import LegionsStoreModal from '../LegionsStoreModal';
-import { ModalProps,WrappedFormUtils } from '../interface/antd';
-export interface InstanceProModal {
-    store: InstanceType<typeof LegionsStoreModal>;
+import ModalStore from './store';
+import { ViewModel } from 'brain-store-utils/types/create-view-model';
+import { ModalProps } from '../interface/antd';
+import { ModalView } from './store/modalView';
+export type Proxify<T> = {
+    [P in keyof T]: T[P];
+    //[P in keyof T]: Proxy<T[P]>;
+  };
+declare type IViewModelModalStore = ViewModel<ModalView> &
+  Proxify<ModalView>;
+export interface IResizable {
+    /**
+     *
+     * 拖拽缩放是否启用
+     * 在按下鼠标左键时更改其值
+     * @type {boolean}
+     */
+    enabled?: boolean;
+  
+    /**
+     *
+     * 鼠标落点位置
+     *
+     * 一般是用于确定鼠标在模态框边框线的位置
+     *
+     * 上，下，左，右，左上，右上，左下，右下
+     * @type {('top'|'upperLeft'|'upperRight'|'leftLower'|'lowRight'|'bottom'|'left'|'right'|'')}
+     */
+    direction?:
+      | 'top'
+      | 'upperLeft'
+      | 'upperRight'
+      | 'leftLower'
+      | 'lowRight'
+      | 'bottom'
+      | 'left'
+      | 'right'
+      | '';
+  }
+interface ILegionsProModalRef {
+    store: InstanceType<typeof ModalStore>;
     uid: string;
     viewModel: IViewModelModalStore;
     methods: {
@@ -24,9 +60,14 @@ interface IdraggableOptions {
     minWidth?: number;
     /* location?:'body'|'header'  */
 }
+export interface ILegionsProModal{
+    ref: ILegionsProModalRef;
+    resizable: IResizable;
+    viewModelStore:IViewModelModalStore
+}
 export interface ILegionsProModalProps extends ModalProps{
-    store?: InstanceType<typeof LegionsStoreModal>,
-    onReady?: (instance: InstanceProModal) => void
+    store?: InstanceType<typeof ModalStore>,
+    onReady?: (ref: ILegionsProModal['ref']) => void
 
     /**
      * 组件类型，默认modal，也可以设置Drawer 抽屉形式

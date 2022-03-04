@@ -138,7 +138,12 @@ export default class TabPaneViewStore extends LegionsStore.StoreBase {
     this.setActiveKey(panes.key);
     setStorageItems(storageKeysData.panesStorageKeys,this.panes); //同步缓存
   }
-
+  @action popstateAsyncData(panes: legionsProLayoutInterface['panes'],menuList: legionsProLayoutInterface['menuList']) {
+    let curr_menu = menuList.find(item => item.key === panes.key);
+    //@ts-ignore
+    this.updateBreadcrumbs({ keyPath: curr_menu?.deep || [] },menuList);
+    this.setActiveKey(panes.key);
+  }
   /**
    * 打开指定菜单
    * @param defaultItem 即将打开菜单页签数据
@@ -189,7 +194,6 @@ export default class TabPaneViewStore extends LegionsStore.StoreBase {
     setStorageItems(storageKeysData.panesStorageKeys,this.panes); //同步缓存
     this.setActiveKey(defaultItem.key);
   }
-
   /**
    * 设置默认展开菜单信息
    * @param defaultItem 默认打开菜单项数据

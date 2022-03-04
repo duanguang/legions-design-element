@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.21
+  *  legions-pro-design v0.0.25
   * (c) 2022 duanguang
   * @license MIT
   */
@@ -16,10 +16,9 @@ import { debounce } from 'legions-utils-tool/debounce';
 import moment from 'moment';
 import LegionsProTableCustomColumns from '../LegionsProTableCustomColumns';
 import LegionsProLineOverflow from '../LegionsProLineOverflow';
-import { toJS, isObservable, runInAction } from 'mobx';
 import { runScriptsSdk } from 'legions-thirdparty-plugin';
-import { cloneDeep } from 'lodash';
 import { observable, action } from 'legions/store';
+import { toJS } from 'mobx';
 import { mobxVersion } from 'brain-store-utils';
 
 /*! *****************************************************************************
@@ -63,18 +62,6 @@ var __assign = function() {
     };
     return __assign.apply(this, arguments);
 };
-
-function __rest(s, e) {
-    var t = {};
-    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
-        t[p] = s[p];
-    if (s != null && typeof Object.getOwnPropertySymbols === "function")
-        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
-                t[p[i]] = s[p[i]];
-        }
-    return t;
-}
 
 function __decorate(decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -148,335 +135,6 @@ function __spread() {
         ar = ar.concat(__read(arguments[i]));
     return ar;
 }
-
-/**
-  * legions-lunar v0.0.9
-  * (c) 2021 duanguang
-  * @license MIT
-  */
-/*! *****************************************************************************
-Copyright (c) Microsoft Corporation.
-
-Permission to use, copy, modify, and/or distribute this software for any
-purpose with or without fee is hereby granted.
-
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
-AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
-LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
-OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-PERFORMANCE OF THIS SOFTWARE.
-***************************************************************************** */
-
-var __assign$1 = function() {
-    __assign$1 = Object.assign || function __assign(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign$1.apply(this, arguments);
-};
-
-/**
-  * legions-utils-tool v0.0.10
-  * (c) 2021 duanguang
-  * @license MIT
-  */
-function getBrowser() {
-    var userAgent = navigator.userAgent; //取得浏览器的userAgent字符串
-    var isIE11 = userAgent.toLowerCase().match(/rv:([\d.]+)\) like gecko/); // IE 11中userAgent已经不包含'msie'所以用'msie'不能判断IE 11
-    var isOpera = userAgent.indexOf('Opera') > -1; //判断是否Opera浏览器
-    var isIE = (userAgent.indexOf('compatible') > -1 &&
-        userAgent.indexOf('MSIE') > -1 &&
-        !isOpera) ||
-        isIE11; //判断是否IE浏览器
-    var isEdge = userAgent.indexOf('Edge') > -1; //判断是否IE的Edge浏览器
-    var isFF = userAgent.indexOf('Firefox') > -1; //判断是否Firefox浏览器
-    var isSafari = userAgent.indexOf('Safari') > -1 && userAgent.indexOf('Chrome') == -1; //判断是否Safari浏览器
-    var isChrome = userAgent.indexOf('Chrome') > -1 && userAgent.indexOf('Safari') > -1; //判断Chrome浏览器
-    if (isIE) {
-        var reIE = new RegExp('MSIE (\\d+\\.\\d+);');
-        reIE.test(userAgent);
-        var fIEVersion = parseFloat(RegExp['$1']);
-        if (fIEVersion == 7) {
-            return 'IE7';
-        }
-        else if (fIEVersion == 8) {
-            return 'IE8';
-        }
-        else if (fIEVersion == 9) {
-            return 'IE9';
-        }
-        else if (fIEVersion == 10) {
-            return 'IE10';
-        }
-        else if (isIE11) {
-            // IE 11中userAgent已经不包含'msie'所以用'msie'不能判断IE 11
-            return 'IE11';
-        }
-        else {
-            return 'IE';
-        } //IE版本过低
-    }
-    if (isOpera) {
-        return 'Opera';
-    }
-    if (isEdge) {
-        return 'Edge';
-    }
-    if (isFF) {
-        return 'Firefox';
-    }
-    if (isSafari) {
-        return 'Safari';
-    }
-    if (isChrome) {
-        return 'Chrome';
-    }
-    return '--';
-}
-var BrowserMatch = {
-    browser: '',
-    version: '',
-    OS: '',
-    init: function () {
-        //@ts-ignore
-        this.browser = this.getBrowser().browser || '未知浏览器'; //获取浏览器名
-        //@ts-ignore
-        this.version = this.getBrowser().version || '未知浏览器版本号'; //获取浏览器版本
-        //@ts-ignore
-        this.OS = this.getOS() + ' ' + this.getDigits() || '未知操作系统'; //系统版本号
-    },
-    getOS: function () {
-        //判断所处操作系统
-        var sUserAgent = navigator.userAgent.toLowerCase();
-        var isWin = navigator.platform == 'Win32' ||
-            navigator.platform == 'Win64' ||
-            navigator.platform == 'wow64';
-        var isMac = navigator.platform == 'Mac68K' ||
-            navigator.platform == 'MacPPC' ||
-            navigator.platform == 'Macintosh' ||
-            navigator.platform == 'MacIntel';
-        if (isMac)
-            return 'Mac';
-        var isUnix = navigator.platform == 'X11' && !isWin && !isMac;
-        if (isUnix)
-            return 'Unix';
-        var isLinux = String(navigator.platform).indexOf('Linux') > -1;
-        //@ts-ignore
-        var bIsAndroid = sUserAgent.toLowerCase().match(/android/i) == 'android';
-        if (isLinux) {
-            if (bIsAndroid)
-                return 'Android';
-            else
-                return 'Linux';
-        }
-        if (isWin) {
-            var isWin2K = sUserAgent.indexOf('Windows nt 5.0') > -1 ||
-                sUserAgent.indexOf('Windows 2000') > -1;
-            if (isWin2K)
-                return 'Win2000';
-            var isWinXP = sUserAgent.indexOf('Windows nt 5.1') > -1 ||
-                sUserAgent.indexOf('Windows XP') > -1;
-            sUserAgent.indexOf('Windows XP') > -1;
-            if (isWinXP)
-                return 'WinXP';
-            var isWin2003 = sUserAgent.indexOf('Windows nt 5.2') > -1 ||
-                sUserAgent.indexOf('Windows 2003') > -1;
-            if (isWin2003)
-                return 'Win2003';
-            var isWinVista = sUserAgent.indexOf('Windows nt 6.0') > -1 ||
-                sUserAgent.indexOf('Windows Vista') > -1;
-            if (isWinVista)
-                return 'WinVista';
-            var isWin7 = sUserAgent.indexOf('windows nt 6.1') > -1 ||
-                sUserAgent.indexOf('Windows 7') > -1;
-            if (isWin7)
-                return 'Win7';
-            var isWin8 = sUserAgent.indexOf('windows nt 6.2') > -1 ||
-                sUserAgent.indexOf('Windows 8') > -1;
-            if (isWin8)
-                return 'Win8';
-            var isWin10 = sUserAgent.indexOf('windows nt 10.0') > -1 ||
-                sUserAgent.indexOf('Windows 10') > -1;
-            if (isWin10)
-                return 'Win10';
-        }
-        return '其他';
-    },
-    getDigits: function () {
-        //判断当前操作系统的版本号
-        var sUserAgent = navigator.userAgent.toLowerCase();
-        var is64 = sUserAgent.indexOf('win64') > -1 || sUserAgent.indexOf('wow64') > -1;
-        var rSafari = /mac os x ([\w.]+).*()\)/;
-        if (is64) {
-            return '64位';
-        }
-        else {
-            var matchBS = rSafari.exec(sUserAgent);
-            if (matchBS !== null) {
-                return matchBS[1];
-            }
-            return '32位';
-        }
-    },
-    getBrowser: function () {
-        // 获取浏览器名
-        var rEdge = /(chrome)\/([\w.]+)/; //IE
-        var rFirefox = /(firefox)\/([\w.]+)/; //火狐
-        var rOpera = /(opera).+version\/([\w.]+)/; //旧Opera
-        var rNewOpera = /(opr)\/(.+)/; //新Opera 基于谷歌
-        var rChrome = /(chrome)\/([\w.]+)/; //谷歌
-        //let rMetasr =  /(metasr)\/([\w.]+)/;//搜狗
-        var rSafari = /version\/([\w.]+).*(safari)/;
-        var ua = navigator.userAgent.toLowerCase();
-        var matchBS, matchBS2;
-        var browserVersion = getBrowser();
-        //IE 低版
-        if (browserVersion.indexOf('IE') > -1) {
-            switch (browserVersion) {
-                case 'IE7':
-                    return {
-                        browser: 'Microsoft IE',
-                        desc: 'IE: 7',
-                        version: 7, //内核版本号
-                    };
-                case 'IE8':
-                    return {
-                        browser: 'Microsoft IE',
-                        desc: 'IE: 8',
-                        version: 8,
-                    };
-                case 'IE9':
-                    return {
-                        browser: 'Microsoft IE',
-                        desc: 'IE: 9',
-                        version: 9,
-                    };
-                case 'IE10':
-                    return {
-                        browser: 'Microsoft IE',
-                        version: 10,
-                        desc: 'IE: 10',
-                    };
-                case 'IE11':
-                    return {
-                        browser: 'Microsoft IE',
-                        desc: 'IE: 11',
-                        version: 11,
-                    };
-                default:
-                    return {
-                        browser: 'Microsoft IE',
-                        desc: 'Undefined',
-                        version: 11,
-                    };
-            }
-        }
-        if (browserVersion === 'Chrome') {
-            matchBS = rChrome.exec(ua);
-            //@ts-ignore
-            if (matchBS != null && !window.attachEvent) {
-                matchBS2 = rNewOpera.exec(ua);
-                if (matchBS2 == null) {
-                    return {
-                        browser: '谷歌',
-                        desc: 'Chrome/' + matchBS[2] || '0',
-                        version: matchBS[2],
-                    };
-                }
-                else {
-                    return {
-                        browser: 'Opera',
-                        desc: 'opr/' + matchBS2[2] || '0',
-                        version: matchBS2[2],
-                    };
-                }
-            }
-        }
-        if (browserVersion === 'Opera') {
-            //Oper浏览器
-            matchBS = rOpera.exec(ua);
-            //@ts-ignore
-            if (matchBS != null && !window.attachEvent) {
-                return {
-                    browser: 'Opera',
-                    desc: 'Chrome/' + matchBS[2] || '0',
-                    version: matchBS[2],
-                };
-            }
-        }
-        //IE最新版
-        if (browserVersion === 'Edge') {
-            matchBS = rEdge.exec(ua);
-            //@ts-ignore
-            if (matchBS != null && !window.attachEvent) {
-                return {
-                    browser: 'Microsoft Edge',
-                    desc: 'Chrome/' + matchBS[2] || '0',
-                    version: matchBS[2],
-                };
-            }
-        }
-        //火狐浏览器
-        if (browserVersion === 'Firefox') {
-            matchBS = rFirefox.exec(ua);
-            //@ts-ignore
-            if (matchBS != null && !window.attachEvent) {
-                return {
-                    browser: '火狐',
-                    desc: 'Firefox/' + matchBS[2] || '0',
-                    version: matchBS[2],
-                };
-            }
-        }
-        if (browserVersion === 'Safari') {
-            matchBS = rSafari.exec(ua);
-            if (matchBS != null &&
-                //@ts-ignore
-                !window.attachEvent &&
-                //@ts-ignore
-                !window.chrome &&
-                //@ts-ignore
-                !window.opera) {
-                return {
-                    browser: 'Safari',
-                    desc: 'Safari/' + matchBS[1] || '0',
-                    version: matchBS[1],
-                };
-            }
-        }
-        return {
-            browser: '',
-            version: null,
-        };
-    },
-};
-
-/** 日志记录 */
-var LoggerManager = {
-    consoleLog: function (options) {
-        var logConent = options.logConent || {};
-        console.warn("" + options.type, logConent);
-    },
-    /** 采集数据上报到数仓 */
-    report: function (options, reportApi) {
-        BrowserMatch.init();
-        var params = __assign$1(__assign$1({}, options), { browserEnvironment: JSON.stringify({
-                platform: navigator.platform,
-                OS: BrowserMatch.OS,
-                browser: BrowserMatch.browser,
-                version: BrowserMatch.version,
-            }) });
-        /// 上报代码   实时上报
-        if (typeof reportApi === 'function') {
-            reportApi && reportApi(params);
-        }
-    },
-};
 
 /**
  * 列表组件基类
@@ -685,17 +343,9 @@ var LegionsProTable = /** @class */ (function (_super) {
         var _this = _super.call(this, props) || this;
         _this.timeId = new Date().getTime();
         _this.uid = '';
-        /**
-         * uid 的值绝对唯一，且每次初始生成table都是相同值
-         *
-         * @memberof HLForm
-         */
+        /** uid 的值绝对唯一，且每次初始生成table都是相同值 */
         _this.freezeuid = '';
-        /**
-         *
-         * 未加密的freezeuid 值
-         * @memberof HLForm
-         */
+        /**  未加密的freezeuid 值 */
         _this.decryptionfreezeuid = '';
         _this.viewModel = null;
         _this.tableThead = "table-thead" + _this.uid;
@@ -703,32 +353,18 @@ var LegionsProTable = /** @class */ (function (_super) {
         _this.modalRef = null;
         _this.customColumnsModalRef = null;
         _this.selections = [];
-        /** 全链路监控跟踪id */
-        _this.traceId = '';
-        _this.log = function (uid) {
-            if (_this.getLocalViewStore && !_this.getLocalViewStore.obState.isPending && _this.props.autoQuery && _this.getLocalViewStore.computedRequest === 'pending') {
-                runInAction(function () {
-                    _this.getLocalViewStore._setLoadingState(false);
-                    _this.getLocalViewStore._setRequestState('complete');
-                    var data = _this.props.autoQuery.transform(_this.getLocalViewStore.obState);
-                    if (data) {
-                        var newData = data.data.slice();
-                        _this.getLocalViewStore._obStateMap.set(_this.getViewStore.pageIndex.toString(), {
-                            data: newData,
-                            total: data.total,
-                        });
-                        _this.props.store.TableContainer.get(uid)._renderData = newData;
-                        _this.props.store.TableContainer.get(uid).setTotal(data.total);
-                    }
-                });
-                _this.consoleLog('watchData', { uid: uid });
-                _this.logger('watchData', {
-                    uid: uid,
-                    apiResult: toJS(_this.getLocalViewStore.obState),
-                    apiParams: _this.props.autoQuery.params(_this.getViewStore.pageIndex, _this.getViewStore.pageSize),
-                });
-            }
-        };
+        /** th列表,保存th的相对距离 */
+        _this.dragThList = [];
+        /** 鼠标拖动距离 */
+        _this.dragX = 0;
+        /** 当前操作的th */
+        _this.dragTh = null;
+        /** 创建拖动标识线 */
+        _this.dragLine = document.createElement('div');
+        /** 创建拖动标识区域 */
+        _this.dragArea = document.createElement('div');
+        /** 可拖动的表头 */
+        _this.cantDragThQuery = '.ant-table-content > div:not(.ant-table-fixed-left):not(.ant-table-fixed-right) table th';
         _this.subscription = null;
         _this.node = null;
         _this.resize = debounce(function () {
@@ -755,7 +391,7 @@ var LegionsProTable = /** @class */ (function (_super) {
         };
         _this.onSelectChange = function (selectedRowKeys, selectedRows) {
             var dataleng = _this.props.dataSource ? _this.props.dataSource.length : 0;
-            if (_this.props.autoQuery) {
+            if (_this.props.request) {
                 dataleng = _this.getViewStore._renderData.length;
             }
             if (_this.getViewStore._renderData.length === dataleng) {
@@ -784,7 +420,6 @@ var LegionsProTable = /** @class */ (function (_super) {
             _this.timeId = new Date().getTime();
             _this.uid = _this.uuid;
         }
-        _this.traceId = _this.uid;
         _this.freezeuid = _this.uid;
         _this.tableThead = "table-thead" + _this.uid;
         var keys = 'uniqueUid';
@@ -799,23 +434,11 @@ var LegionsProTable = /** @class */ (function (_super) {
             if (!_this.props.store.TableContainer.has(_this.freezeuid)) {
                 _this.props.store.add(_this.freezeuid, _this.props.tableModulesName, _this.uid);
             }
-            var isShowLoading = false;
-            if (_this.getLocalViewStore && _this.getLocalViewStore.obState && _this.getLocalViewStore.obState.state === 'none') {
-                isShowLoading = true;
-            }
-            if (_this.props.autoQuery && _this.getLocalViewStore && (_this.props.autoQuery.isDefaultLoad === void 0 || _this.props.autoQuery.isDefaultLoad)) {
-                _this.getLocalViewStore.dispatchRequest(_this.props.autoQuery, {
-                    pageIndex: _this.getViewStore.pageIndex,
-                    pageSize: _this.getViewStore.pageSize,
-                    isShowLoading: isShowLoading,
-                });
-            }
         }
         _this.initPagination();
         _this.initProps();
         _this.onReady();
         _this.inintSelectedRows();
-        _this.consoleLog('constructor');
         return _this;
     }
     LegionsProTable_1 = LegionsProTable;
@@ -840,65 +463,30 @@ var LegionsProTable = /** @class */ (function (_super) {
         enumerable: false,
         configurable: true
     });
-    LegionsProTable.prototype.consoleLog = function (type, logObj) {
-        if (!this.props.debugger) {
-            return;
-        }
-        var obj = logObj || {};
-        var logConent = __assign(__assign({ storeView: __assign({}, this.getViewStore) }, obj), { store: this.props.store, that: toJS(this), props: toJS(this.props) });
-        this.props.debugger && LoggerManager.consoleLog({
-            //@ts-ignore
-            type: "LegionsProTable-" + type,
-            logConent: logConent,
-        });
-    };
-    LegionsProTable.prototype.logger = function (type, logObj) {
+    LegionsProTable.prototype._dispatchRequest = function (pageIndex, pageSize) {
         var _this = this;
-        if (typeof this.props.onLogRecord === 'function') {
-            var obj = logObj || {};
-            var viewStoreKeys = ['calculateBody', 'bodyContainerHeight',
-                'bodyExternalHeight', 'computedRenderColumns', '_tableContainerWidth', '_renderData', 'tableBodyDomClientHeight', 'tableXAutoWidth'];
-            var viewStore_1 = {};
-            viewStoreKeys.map(function (item) {
-                if (isObservable(_this.getViewStore[item])) {
-                    viewStore_1[item] = cloneDeep(toJS(_this.getViewStore[item]));
-                }
-                else {
-                    viewStore_1[item] = cloneDeep(_this.getViewStore[item]);
-                }
+        if (this.props.request) {
+            this.getLocalViewStore._setLoadingState(true);
+            this.props.request(pageIndex, pageSize).then(function (res) {
+                _this.viewModel._renderData = res.data;
+                _this.viewModel.setTotal(res.total);
+            }).finally(function () {
+                _this.getLocalViewStore._setLoadingState(false);
             });
-            var _a = this.props, store = _a.store, columns = _a.columns, props = __rest(_a, ["store", "columns"]);
-            var logConent = __assign(__assign({}, viewStore_1), obj);
-            /* LoggerManager.report({
-                //@ts-ignore
-                type,
-                content: serialize(logConent,{ ignoreFunction: false }),
-                traceId: this.traceId,
-                modulesName: this.props.tableModulesName,
-                modulesPath: this.props['uniqueUid'],
-            },this.props.onLogRecord) */
         }
     };
     LegionsProTable.prototype.search = function (options) {
-        if (this.props.autoQuery && this.getLocalViewStore) {
-            var isShowLoading = true;
+        if (this.getLocalViewStore) {
             if (options) {
                 if (options.pageIndex) { /** 如果主动设置页码，则以主动设置为准 */
                     this.getViewStore.pageIndex = options.pageIndex;
-                }
-                if (typeof options.isShowLoading === 'boolean') {
-                    isShowLoading = options.isShowLoading;
                 }
             }
             else {
                 this.getViewStore.pageIndex = 1;
             }
             this.getViewStore.selectedRowKeys = [];
-            this.getLocalViewStore.dispatchRequest(this.props.autoQuery, Object.assign({
-                pageIndex: this.getViewStore.pageIndex,
-                pageSize: this.getViewStore.pageSize,
-                isShowLoading: isShowLoading,
-            }, options));
+            this._dispatchRequest(this.getViewStore.pageIndex, this.getViewStore.pageSize);
         }
     };
     /**
@@ -977,7 +565,7 @@ var LegionsProTable = /** @class */ (function (_super) {
         if ((typeof paginationProps === 'boolean')) {
             store._pagination = paginationProps;
         }
-        else if (this.props.autoQuery) {
+        else if (this.props.request) {
             store._pagination = true;
         }
         else if (this.props.onPagingQuery && paginationProps === void 0) {
@@ -1036,12 +624,8 @@ var LegionsProTable = /** @class */ (function (_super) {
                 }
             }
         });
-        if (this.props.autoQuery) {
-            this.subscription = this.props.store.schedule([this.log.bind(this, this.freezeuid)]);
-        }
     };
     LegionsProTable.prototype.componentWillMount = function () {
-        this.consoleLog('componentWillMount');
         /* this.subscription.unsubscribe() */
     };
     LegionsProTable.prototype.destroyPortal = function () {
@@ -1107,11 +691,10 @@ var LegionsProTable = /** @class */ (function (_super) {
         window.removeEventListener && window.removeEventListener('resize', this.resize.bind(this));
         this.subscription && this.subscription.unsubscribe();
         this.destroyPortal();
-        this.consoleLog('componentWillUnmount');
     };
     LegionsProTable.prototype.componentDidMount = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var table, _index, data, keys, result, UniqueKey, Repeat, anttablefixed, thead, span, RootContainer, spanth;
+            var table, _index, data, UniqueKey, Repeat, anttablefixed, thead, span, RootContainer, spanth;
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -1158,15 +741,9 @@ var LegionsProTable = /** @class */ (function (_super) {
                         if (findDOMNode(this).getElementsByClassName('ant-table-body')) ;
                         this.setTableContainerWidth();
                         data = this.props.dataSource;
-                        if (this.props.autoQuery) {
+                        if (this.props.request) {
                             if (this.getLocalViewStore && this.getViewStore) {
-                                keys = this.getViewStore.pageIndex.toString();
-                                if (this.getLocalViewStore._obStateMap.has(keys)) {
-                                    result = this.getLocalViewStore._obStateMap.get(keys);
-                                    //@ts-ignore
-                                    data = result.data;
-                                    this.getViewStore.setTotal(result.total);
-                                }
+                                this._dispatchRequest(this.viewModel.pageIndex, this.viewModel.pageSize);
                             }
                         }
                         else {
@@ -1205,7 +782,6 @@ var LegionsProTable = /** @class */ (function (_super) {
                                 }
                             }
                         }
-                        this.consoleLog('componentDidMount');
                         return [2 /*return*/];
                 }
             });
@@ -1292,14 +868,13 @@ var LegionsProTable = /** @class */ (function (_super) {
             this.setTabletBody();
         }
         this.node && this.renderPortal();
-        this.consoleLog('componentDidUpdate');
     };
     //@ts-ignore
     LegionsProTable.prototype.componentWillReceiveProps = function (nextProps) {
         var _this = this;
         if (this.props.selectedRowKeys && this.props.selectedRowKeys !== nextProps.selectedRowKeys) {
             var data = [];
-            if (this.props.autoQuery && this.props.displayType === 'smallData') {
+            if (this.props.request && this.props.displayType === 'smallData') {
                 data = (this.getViewStore._renderData && this.getViewStore._renderData.length) ? this.getViewStore._renderData : [];
             }
             else {
@@ -1314,10 +889,10 @@ var LegionsProTable = /** @class */ (function (_super) {
         if (this.props.bodyStyle && !this.deepComparisonObject(this.props.bodyStyle, nextProps.bodyStyle)) {
             this.viewModel.bodyStyle = nextProps.bodyStyle;
         }
-        if (nextProps.dataSource !== this.props.dataSource && nextProps.dataSource && !this.props.autoQuery) {
+        if (nextProps.dataSource !== this.props.dataSource && nextProps.dataSource && !this.props.request) {
             /**  主要解决当渲染数据和传入数据不一致时，无需通过传入数据值来刷新渲染数据 */
             if (this.props.displayType === 'smallData') {
-                this.getViewStore._renderData = __spread(this.props.autoQuery ? [] : nextProps.dataSource);
+                this.getViewStore._renderData = __spread(this.props.request ? [] : nextProps.dataSource);
             }
             if (this.getViewStore._renderData.length) {
                 var UniqueKey = this.isHasUniqueKeyData();
@@ -1329,7 +904,6 @@ var LegionsProTable = /** @class */ (function (_super) {
         if (this.props.columns !== nextProps.columns) {
             this.getViewStore.columns = this.tranMapColumns(nextProps.columns);
         }
-        this.consoleLog('componentWillReceiveProps');
     };
     /**
      *
@@ -1433,49 +1007,15 @@ var LegionsProTable = /** @class */ (function (_super) {
     };
     //@ts-ignore
     LegionsProTable.prototype.renderlocale = function () {
-        if (this.props.autoQuery) {
-            if (this.getLocalViewStore && this.props.autoQuery.isDefaultLoad === false) {
-                return {
-                    emptyText: React.createElement("div", { className: "no-data-tip" },
-                        React.createElement(Icon, { style: { color: '#95cef9', fontSize: '20px', paddingRight: '5px', verticalAlign: 'middle' }, type: "search" }),
-                        "\u521D\u6B21\u6253\u5F00\u9875\u9762\u4E0D\u52A0\u8F7D\u6570\u636E\uFF0C\u8BF7\u7EC4\u5408\u6761\u4EF6\u8FDB\u884C\u641C\u7D22")
-                };
-            }
-            else if (this.getLocalViewStore && this.getLocalViewStore.obState.isResolved && this.getViewStore._renderData.length === 0) {
-                if (this.getLocalViewStore.obState.value && !this.getLocalViewStore.obState.value.success && this.getLocalViewStore.obState.value.message) {
-                    return {
-                        emptyText: React.createElement("div", { className: "no-data-tip" },
-                            React.createElement(Icon, { style: { color: '#95cef9', fontSize: '20px', paddingRight: '5px', verticalAlign: 'middle' }, type: "search" }),
-                            this.getLocalViewStore.obState.value.message)
-                    };
-                }
-                return {
-                    emptyText: React.createElement("div", { className: "no-data-tip" },
-                        React.createElement(Icon, { style: { color: '#95cef9', fontSize: '20px', paddingRight: '5px', verticalAlign: 'middle' }, type: "search" }),
-                        "\u6CA1\u6709\u7B26\u5408\u6761\u4EF6\u7684\u6570\u636E\uFF0C\u8BF7\u5C1D\u8BD5\u5176\u4ED6\u641C\u7D22\u6761\u4EF6")
-                };
-            }
-            else {
-                return {
-                    emptyText: React.createElement("div", { className: "no-data-tip" },
-                        React.createElement(Icon, { style: { color: '#95cef9', fontSize: '20px', paddingRight: '5px', verticalAlign: 'middle' }, type: "search" }),
-                        "\u6682\u65E0\u6570\u636E")
-                };
-            }
-        }
+        return __assign({ emptyText: React.createElement("div", { className: "no-data-tip" },
+                React.createElement(Icon, { style: { color: '#95cef9', fontSize: '20px', paddingRight: '5px', verticalAlign: 'middle' }, type: "search" }),
+                "\u6682\u65E0\u6570\u636E") }, this.props.locale);
     };
     LegionsProTable.prototype.render = function () {
         var _this = this;
         var store = this.getViewStore;
         var selectedRowKeys = store.selectedRowKeys;
         var alreadyRowsLen = store.computedSelectedRows.length;
-        var locale = null;
-        if (this.props.autoQuery) {
-            locale = {
-                locale: this.renderlocale(),
-            };
-        }
-        this.consoleLog('render');
         var rowSelection = (this.getViewStore._isOpenRowSelection) ? __assign(__assign({}, this.props.rowSelection), { selectedRowKeys: __spread(selectedRowKeys), hideDefaultSelections: true, type: this.props.type, selections: this.selections, onChange: this.onSelectChange.bind(this), onSelectAll: function (selected, selectedRows, changeRows) {
                 if (_this.getViewStore._renderData.length <= _this.props.dataSource.length) { // 主要用于大数据table 性能问题，每次只加载部分数据，这时全选时自动选择全部数据
                     if (selected) {
@@ -1498,7 +1038,7 @@ var LegionsProTable = /** @class */ (function (_super) {
         var paginationProps = this.props.pagination;
         var pagination = {
             pageSizeOptions: this.props.pageSizeOptions,
-            total: this.props.autoQuery ? this.getViewStore.computedTotal : this.props.total,
+            total: this.props.request ? this.getViewStore.computedTotal : this.props.total,
             current: store.pageIndex,
             showQuickJumper: true,
             pageSize: store.pageSize,
@@ -1509,19 +1049,8 @@ var LegionsProTable = /** @class */ (function (_super) {
                 _this.props.store.get(_this.freezeuid).pageIndex = pageIndex;
                 _this.props.store.get(_this.freezeuid).pageSize = pageSize;
                 _this.props.onPagingQuery && _this.props.onPagingQuery(pageIndex, pageSize, false);
-                if (_this.props.autoQuery && _this.getLocalViewStore) {
-                    var isShowLoading = true;
-                    var result = _this.getLocalViewStore._obStateMap.get(_this.getViewStore.pageIndex.toString());
-                    if (result) {
-                        isShowLoading = false;
-                        _this.getViewStore._renderData = __spread(result.data);
-                        _this.getViewStore.setTotal(result.total);
-                    }
-                    _this.getLocalViewStore.dispatchRequest(_this.props.autoQuery, {
-                        pageIndex: pageIndex,
-                        pageSize: pageSize,
-                        isShowLoading: isShowLoading,
-                    });
+                if (_this.props.request && _this.getLocalViewStore) {
+                    _this._dispatchRequest(pageIndex, pageSize);
                 }
             },
             onShowSizeChange: function (current, pageSize) {
@@ -1529,12 +1058,8 @@ var LegionsProTable = /** @class */ (function (_super) {
                 _this.props.store.get(_this.freezeuid).pageIndex = current;
                 _this.props.store.get(_this.freezeuid).pageSize = pageSize;
                 _this.props.onPagingQuery && _this.props.onPagingQuery(current, pageSize, true);
-                if (_this.props.autoQuery && _this.getLocalViewStore) {
-                    _this.getLocalViewStore.dispatchRequest(_this.props.autoQuery, {
-                        pageIndex: current,
-                        pageSize: pageSize,
-                        isShowLoading: true,
-                    });
+                if (_this.props.request && _this.getLocalViewStore) {
+                    _this._dispatchRequest(current, pageSize);
                 }
             },
             showTotal: function (total) { return (alreadyRowsLen > 0 ? "\u5DF2\u9009\u62E9" + alreadyRowsLen + "\u6761\u6570\u636E" : '') + " \u5171 " + total + " \u6761\u6570\u636E"; }
@@ -1546,10 +1071,12 @@ var LegionsProTable = /** @class */ (function (_super) {
                 React.createElement("div", { className: "pro-table-containers " + this.uid + " " + (this.viewModel.isAdaptiveHeight ? 'table-adaptive-height' : '') },
                     React.createElement(Table
                     /* size="small" */
-                    , __assign({}, locale, this.props, { scroll: __assign({
+                    , __assign({ 
+                        /* size="small" */
+                        locale: this.renderlocale() }, this.props, { scroll: __assign({
                             x: store.tableXAutoWidth,
                             y: 300,
-                        }, this.props.scroll), columns: this.viewModel.computedRenderColumns, bordered: true, bodyStyle: bodyStyle, rowClassName: this.onRowClassName.bind(this), pagination: (this.getViewStore._pagination) ? pagination : false, loading: { tip: 'loading', spinning: this.props.autoQuery ? this.getLocalViewStore.computedLoading : this.props.loading }, rowKey: this.props.uniqueKey, 
+                        }, this.props.scroll), columns: this.viewModel.computedRenderColumns, bordered: true, bodyStyle: bodyStyle, rowClassName: this.onRowClassName.bind(this), pagination: (this.getViewStore._pagination) ? pagination : false, loading: { tip: 'loading', spinning: this.props.request ? this.getLocalViewStore.computedLoading : this.props.loading }, rowKey: this.props.uniqueKey, 
                         // locale={{emptyText:<span>2222</span>}}
                         onRowClick: this.onRowClick.bind(this), rowSelection: rowSelection, dataSource: __spread(this.getViewStore._renderData), onChange: function (pagination, filters, sorter) {
                             if (sorter.column && sorter.column.sorter && typeof sorter.column.sorter === 'boolean' && _this.props.displayType === 'smallData') {

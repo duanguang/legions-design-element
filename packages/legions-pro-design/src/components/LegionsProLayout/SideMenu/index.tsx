@@ -10,6 +10,7 @@ import { page } from 'legions-lunar/mobx-decorator';
 import LegionsCrossModule from '../../LegionsCrossModule';
 import { inject } from 'legions/store';
 import { TypeMenuBaseModel } from '../model';
+import get from 'lodash/get'
 import { legionsProLayoutInterface,legionsProLayoutProps } from '../interface';
 const { Sider } = Layout;
 const SubMenu = Menu.SubMenu;
@@ -41,6 +42,31 @@ export default class MenuParts extends React.Component<legionsProLayoutProps['me
     this.props.store.getMenuList(this.props.onQueryPromiseMenus);
     this.initGlobalVariableValue();
     this.setOpenKesInDidMountcycle();
+    this.addListenerPopstate()
+  }
+  componentWillUnmount(): void {
+      this.removeListenerPopstate()
+  }
+  addListenerPopstate() {
+    if (window.history && window.history.pushState) {
+      history.pushState(null, null, document.URL);
+      window.addEventListener('popstate',this.listenerPopState.bind(this),false)
+    }
+  }
+  removeListenerPopstate() {
+    window.removeEventListener('popstate',this.listenerPopState.bind(this),false)
+  }
+  listenerPopState(evt:PopStateEvent) {
+    //响应前进、后退的回调方法
+    history.pushState(null,null,document.URL);
+    const target = evt.currentTarget as Window
+    const path = get(target,'location.pathname','');
+    const menu_list = this.props.store.getAllMenuList();
+    const panes = this.props.store.context.TabPaneApp.panes
+    const index = panes.findIndex((item) => path.indexOf(item.path) > -1&&item.path)
+    if (index > -1) {
+      this.props.store.context.TabPaneApp.popstateAsyncData(panes[index],menu_list);
+    }
   }
   initGlobalVariableValue() {
     const openTabPane = (pane: Pick<legionsProLayoutInterface['panes'],'key' | 'title' | 'path' | 'params' | 'forceRefresh'> & { keyPath?: Array<string> }) => {
@@ -289,7 +315,6 @@ export default class MenuParts extends React.Component<legionsProLayoutProps['me
   onClick = (selected: ClickParam) => {
     let store = this.props.store;
     const newItem = store.getMenuByKey(selected.key);
-    const oldActiveKey = store.context.TabPaneApp.activeKey;
     //@ts-ignore
     store.context.TabPaneApp.addTabPanes(selected,store.getAllMenuList());
     if (newItem) {

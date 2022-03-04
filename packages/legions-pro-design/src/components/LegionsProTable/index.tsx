@@ -5,7 +5,7 @@ import './style/index.less';
 import { TableColumnConfig,TableProps,TableRowSelection } from 'antd/lib/table/Table';
 import { observer,bind } from 'legions/store-react';
 import LegionsStoreTable from '../LegionsStoreTable';
-import { IViewModelProTableStore,ILocalViewModelProTableStore,ITableAutoQuery } from '../LegionsStoreTable/interface';
+import { IViewModelProTableStore } from '../LegionsStoreTable/interface';
 import {
     compare,
 } from 'legions-utils-tool/object.utils';
@@ -17,19 +17,15 @@ import {
     SelectionDecorator,
     PaginationProps
 } from '../interface/antd';
-import { ITableColumnConfig,IExportCsv, IProTableProps, ICustomColumnsConfig } from './interface';
+import { ITableColumnConfig,IExportCsv,IProTableProps,ICustomColumnsConfig } from './interface';
 import { legionsStoreInterface } from '../LegionsStore/interface';
 import moment from 'moment';
 import LegionsProTableCustomColumns from '../LegionsProTableCustomColumns';
 import LegionsProLineOverflow from '../LegionsProLineOverflow';
 import throttle from 'lodash.throttle';
-import { InstanceProModal } from '../LegionsProModal/interface';
-import { observable,runInAction,toJS,isObservable } from 'mobx'
-import { observableViewModel } from 'legions/store-utils'
+import { ILegionsProModal } from '../LegionsProModal/interface';
 import { runScriptsSdk } from 'legions-thirdparty-plugin';
-import { LoggerManager } from 'legions-lunar/dw.report';
 import { cloneDeep } from 'lodash';
-import { InstanceProTable } from './interface';
 import { ProTableBaseClass } from './ProTableBaseClass';
 import invariant from 'invariant';
 const serialize = require('serialize-javascript');
@@ -50,50 +46,28 @@ const errorMessage = {
 export default class LegionsProTable<TableRow = {},Model = {}> extends React.Component<IProTableProps<TableRow,Model>,IState>{
     timeId = new Date().getTime()
     uid = ''
-    /**
-     * uid 的值绝对唯一，且每次初始生成table都是相同值
-     *
-     * @memberof HLForm
-     */
+    /** uid 的值绝对唯一，且每次初始生成table都是相同值 */
     freezeuid = ''
-    /**
-     *
-     * 未加密的freezeuid 值
-     * @memberof HLForm
-     */
+    /**  未加密的freezeuid 值 */
     decryptionfreezeuid = '';
     viewModel: IViewModelProTableStore = null;
     tableThead = `table-thead${this.uid}`;
     clientHeight = document.body.clientHeight;
-    modalRef: InstanceProModal = null;
-    customColumnsModalRef: InstanceProModal = null;
+    modalRef: ILegionsProModal['ref'] = null;
+    customColumnsModalRef: ILegionsProModal['ref'] = null;
     selections: SelectionDecorator[] = [];
-    /** 全链路监控跟踪id */
-    traceId: string = '';
-    log = (uid) => {
-        if (this.getLocalViewStore && !this.getLocalViewStore.obState.isPending && this.props.autoQuery&&this.getLocalViewStore.computedRequest==='pending') {
-            runInAction(() => {
-                this.getLocalViewStore._setLoadingState(false);
-                this.getLocalViewStore._setRequestState('complete');
-                const data = this.props.autoQuery.transform(this.getLocalViewStore.obState);
-                if (data) {
-                    const newData = data.data.slice();
-                    this.getLocalViewStore._obStateMap.set(this.getViewStore.pageIndex.toString(),{
-                        data: newData,
-                        total:data.total,
-                    });
-                    this.props.store.TableContainer.get(uid)._renderData = newData;
-                    this.props.store.TableContainer.get(uid).setTotal(data.total)
-                }
-            })
-            this.consoleLog('watchData',{ uid });
-            this.logger('watchData',{
-                uid,apiResult: toJS(this.getLocalViewStore.obState),
-                apiParams: this.props.autoQuery.params(this.getViewStore.pageIndex,this.getViewStore.pageSize),
-                },
-            );
-        }
-    }
+    /** th列表,保存th的相对距离 */
+    dragThList: { title: string,left: number }[] = [];
+    /** 鼠标拖动距离 */
+    dragX: number = 0;
+    /** 当前操作的th */
+    dragTh: HTMLDivElement = null;
+    /** 创建拖动标识线 */
+    dragLine: HTMLDivElement = document.createElement('div');
+    /** 创建拖动标识区域 */
+    dragArea: HTMLDivElement = document.createElement('div');
+    /** 可拖动的表头 */
+    cantDragThQuery: string = '.ant-table-content > div:not(.ant-table-fixed-left):not(.ant-table-fixed-right) table th';
     subscription: legionsStoreInterface['schedule'] = null;
     node: Element = null;
     resize = debounce(() => {
@@ -115,14 +89,14 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
      * 同步数据到服务端所需要的查询和保存接口地址信息 */
     static customColumnsConfig: ICustomColumnsConfig = {
         editApi: '',
-        queryApi:'',
+        queryApi: '',
     }
     /** 开启自定义列数据同步接口信息-局部配置(当全局和局部存在冲突时，优先局部配置数据)
      *
      * 同步数据到服务端所需要的查询和保存接口地址信息 */
     customColumnsConfig: ICustomColumnsConfig = {
         editApi: '',
-        queryApi:'',
+        queryApi: '',
     }
     /**
      * 列表组件基类
@@ -144,7 +118,6 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
             this.timeId = new Date().getTime()
             this.uid = this.uuid;
         }
-        this.traceId = this.uid;
         this.freezeuid = this.uid;
         this.tableThead = `table-thead${this.uid}`;
         const keys = 'uniqueUid'
@@ -159,24 +132,12 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
             if (!this.props.store.TableContainer.has(this.freezeuid)) {
                 this.props.store.add(this.freezeuid,this.props.tableModulesName,this.uid)
             }
-            let isShowLoading = false;
-            if (this.getLocalViewStore && this.getLocalViewStore.obState && this.getLocalViewStore.obState.state === 'none') {
-                isShowLoading = true;
-            }
-            if (this.props.autoQuery &&this.getLocalViewStore && (this.props.autoQuery.isDefaultLoad === void 0 || this.props.autoQuery.isDefaultLoad)) {
-                this.getLocalViewStore.dispatchRequest(this.props.autoQuery,{
-                    pageIndex: this.getViewStore.pageIndex,
-                    pageSize: this.getViewStore.pageSize,
-                    isShowLoading,
-                })
-            }
         }
 
         this.initPagination();
         this.initProps();
         this.onReady();
         this.inintSelectedRows()
-        this.consoleLog('constructor');
     }
     get uuid() {
         return `table${this.props.store.TableContainer.size}${shortHash(`${this.timeId}${this.props.store.TableContainer.size}`)}`
@@ -187,76 +148,31 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
     get getLocalViewStore() {
         return this.props.store.HlTableLocalStateContainer.get(this.freezeuid)
     }
-    consoleLog(type: string,logObj?: Object) {
-        if (!this.props.debugger) {
-          return
-        }
-        const obj = logObj || {}
-        const logConent = {
-            storeView: { ...this.getViewStore },
-            ...obj,
-            store: this.props.store,
-            that: toJS(this),
-            props: toJS(this.props),
-        }
-        this.props.debugger&&LoggerManager.consoleLog({
-            //@ts-ignore
-            type:`LegionsProTable-${type}`,
-            logConent,
-        })
-
-    }
-    logger(type: Parameters<LegionsProTable['consoleLog']>[0],logObj?: Object) {
-        if (typeof this.props.onLogRecord === 'function') {
-            const obj = logObj || {}
-            const viewStoreKeys = ['calculateBody','bodyContainerHeight',
-                'bodyExternalHeight','computedRenderColumns','_tableContainerWidth','_renderData','tableBodyDomClientHeight','tableXAutoWidth']
-            const viewStore = {}
-            viewStoreKeys.map((item) => {
-                if (isObservable(this.getViewStore[item])) {
-                    viewStore[item] = cloneDeep(toJS(this.getViewStore[item]));
-                } else {
-                    viewStore[item] = cloneDeep(this.getViewStore[item]);
-                }
+    private _dispatchRequest(pageIndex: number,pageSize: number) {
+        if (this.props.request) {
+            this.getLocalViewStore._setLoadingState(true)
+            this.props.request(pageIndex,pageSize).then((res) => {
+                this.viewModel._renderData = res.data;
+                this.viewModel.setTotal(res.total)
+            }).finally(() => {
+                this.getLocalViewStore._setLoadingState(false)
             })
-            const { store,columns,...props } = this.props
-            const logConent = {
-                ...viewStore,
-                ...obj,
-            }
-            /* LoggerManager.report({
-                //@ts-ignore
-                type,
-                content: serialize(logConent,{ ignoreFunction: false }),
-                traceId: this.traceId,
-                modulesName: this.props.tableModulesName,
-                modulesPath: this.props['uniqueUid'],
-            },this.props.onLogRecord) */
         }
-
     }
     search(options?: {
         pageIndex?: number;
         isShowLoading?: boolean;
     }) {
-        if (this.props.autoQuery && this.getLocalViewStore) {
-            let isShowLoading = true;
+        if (this.getLocalViewStore) {
             if (options) {
                 if (options.pageIndex) {/** 如果主动设置页码，则以主动设置为准 */
                     this.getViewStore.pageIndex = options.pageIndex;
-                }
-                if (typeof options.isShowLoading === 'boolean') {
-                    isShowLoading = options.isShowLoading;
                 }
             } else {
                 this.getViewStore.pageIndex = 1;
             }
             this.getViewStore.selectedRowKeys = [];
-            this.getLocalViewStore.dispatchRequest(this.props.autoQuery,Object.assign({
-                pageIndex: this.getViewStore.pageIndex,
-                pageSize: this.getViewStore.pageSize,
-                isShowLoading,
-            },options))
+            this._dispatchRequest(this.getViewStore.pageIndex,this.getViewStore.pageSize)
         }
     }
     /**
@@ -313,11 +229,11 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
             ele.firstElementChild.insertBefore(div,ele.firstElementChild.firstElementChild)
         }
     }
-    inintSelectedRows(selectedRows:string[]|number[]=this.props.selectedRowKeys) {
+    inintSelectedRows(selectedRows: string[] | number[] = this.props.selectedRowKeys) {
         if (Array.isArray(selectedRows) && selectedRows.length) {
             const store = this.getViewStore;
             store.selectedRowKeys = [];
-            selectedRows.forEach((item:string|number) => {
+            selectedRows.forEach((item: string | number) => {
                 if (typeof item === 'string' || typeof item === 'number') {
                     //@ts-ignore
                     store.selectedRowKeys.push(item);
@@ -333,7 +249,7 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
         if ((typeof paginationProps === 'boolean')) {
             store._pagination = paginationProps
         }
-        else if (this.props.autoQuery) {
+        else if (this.props.request) {
             store._pagination = true
         }
         else if (this.props.onPagingQuery && paginationProps === void 0) {
@@ -378,7 +294,6 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
                 },
                 onSearch: (options?: {
                     pageIndex: number;
-                    isShowLoading?: boolean;
                 }) => {
                     this.search(options)
                 },
@@ -395,14 +310,10 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
                 }
             }
         })
-        if (this.props.autoQuery) {
-            this.subscription = this.props.store.schedule([this.log.bind(this,this.freezeuid)])
-        }
     }
     componentWillMount() {
 
-        
-        this.consoleLog('componentWillMount')
+
         /* this.subscription.unsubscribe() */
     }
     destroyPortal() {
@@ -458,7 +369,6 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
         window.removeEventListener && window.removeEventListener('resize',this.resize.bind(this))
         this.subscription && this.subscription.unsubscribe()
         this.destroyPortal()
-        this.consoleLog('componentWillUnmount')
     }
     async componentDidMount() {
         const table = document.querySelector(`.${this.uid}`);
@@ -499,15 +409,9 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
         }
         this.setTableContainerWidth();
         const data = this.props.dataSource;
-        if (this.props.autoQuery) {
+        if (this.props.request) {
             if (this.getLocalViewStore && this.getViewStore) {
-                const keys = this.getViewStore.pageIndex.toString();
-                if (this.getLocalViewStore._obStateMap.has(keys)) {
-                    const result = this.getLocalViewStore._obStateMap.get(keys)
-                    //@ts-ignore
-                    data = result.data;
-                    this.getViewStore.setTotal(result.total);
-                }
+                this._dispatchRequest(this.viewModel.pageIndex,this.viewModel.pageSize);
             }
         }
         else {
@@ -545,7 +449,6 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
                 }
             }
         }
-        this.consoleLog('componentDidMount');
     }
 
     setTableContainerWidth() {
@@ -641,13 +544,12 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
             this.setTabletBody()
         }
         this.node && this.renderPortal();
-        this.consoleLog('componentDidUpdate')
     }
     //@ts-ignore
     componentWillReceiveProps(nextProps: IProTableProps) {
         if (this.props.selectedRowKeys && this.props.selectedRowKeys !== nextProps.selectedRowKeys) {
             let data = []
-            if (this.props.autoQuery && this.props.displayType === 'smallData') {
+            if (this.props.request && this.props.displayType === 'smallData') {
                 data = (this.getViewStore._renderData && this.getViewStore._renderData.length) ? this.getViewStore._renderData : [];
             }
             else {
@@ -662,11 +564,11 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
         if (this.props.bodyStyle && !this.deepComparisonObject(this.props.bodyStyle,nextProps.bodyStyle)) {
             this.viewModel.bodyStyle = nextProps.bodyStyle
         }
-        if (nextProps.dataSource !== this.props.dataSource && nextProps.dataSource && !this.props.autoQuery) {
-            
+        if (nextProps.dataSource !== this.props.dataSource && nextProps.dataSource && !this.props.request) {
+
             /**  主要解决当渲染数据和传入数据不一致时，无需通过传入数据值来刷新渲染数据 */
             if (this.props.displayType === 'smallData') {
-                this.getViewStore._renderData = [...this.props.autoQuery ? [] : nextProps.dataSource]
+                this.getViewStore._renderData = [...this.props.request ? [] : nextProps.dataSource]
             }
             if (this.getViewStore._renderData.length) {
                 const UniqueKey = this.isHasUniqueKeyData()
@@ -678,7 +580,6 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
         if (this.props.columns !== nextProps.columns) {
             this.getViewStore.columns = this.tranMapColumns(nextProps.columns);
         }
-        this.consoleLog('componentWillReceiveProps');
     }
 
     /**
@@ -724,7 +625,7 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
     }
     onSelectChange = (selectedRowKeys,selectedRows) => {
         let dataleng = this.props.dataSource ? this.props.dataSource.length : 0;
-        if (this.props.autoQuery) {
+        if (this.props.request) {
             dataleng = this.getViewStore._renderData.length
         }
         if (this.getViewStore._renderData.length === dataleng) {
@@ -741,7 +642,7 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
     onRowClassName(record,index): string {
         const RowIndex = this.getViewStore.selectedRowKeys.findIndex((item) => item === record[this.props.uniqueKey]);
         const getCheckboxPropsItem = this.getCheckboxPropsItem(record)
-        if(this.props.rowClassName){
+        if (this.props.rowClassName) {
             return this.props.rowClassName(record,index)
         }
         else if (RowIndex > -1) {
@@ -782,7 +683,7 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
             }
             selectedRows.push(record);
         }
-        this.getViewStore.selectedRowKeys = selectedRowKeys as string[]|number[];
+        this.getViewStore.selectedRowKeys = selectedRowKeys as string[] | number[];
         this.props.onRowChange && this.props.onRowChange(selectedRows)
     }
     selectRow = record => {
@@ -804,48 +705,19 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
     }
     //@ts-ignore
     renderlocale() {
-        if (this.props.autoQuery) {
-            if (this.getLocalViewStore && this.props.autoQuery.isDefaultLoad === false) {
-                return {
-                    emptyText: <div className="no-data-tip"><Icon style={{ color: '#95cef9',fontSize: '20px',paddingRight: '5px',verticalAlign: 'middle' }} type="search" />
-                    初次打开页面不加载数据，请组合条件进行搜索</div>
-                }
-            }
-            else if (this.getLocalViewStore && this.getLocalViewStore.obState.isResolved && this.getViewStore._renderData.length === 0) {
-                if (this.getLocalViewStore.obState.value&&!this.getLocalViewStore.obState.value.success && this.getLocalViewStore.obState.value.message) {
-                    return {
-                        emptyText: <div className="no-data-tip"><Icon style={{ color: '#95cef9',fontSize: '20px',paddingRight: '5px',verticalAlign: 'middle' }} type="search" />
-                            {this.getLocalViewStore.obState.value.message}</div>
-                    }
-                }
-                return {
-                    emptyText: <div className="no-data-tip"><Icon style={{ color: '#95cef9',fontSize: '20px',paddingRight: '5px',verticalAlign: 'middle' }} type="search" />
-                    没有符合条件的数据，请尝试其他搜索条件</div>
-                }
-            }
-            else {
-                return {
-                    emptyText: <div className="no-data-tip"><Icon style={{ color: '#95cef9',fontSize: '20px',paddingRight: '5px',verticalAlign: 'middle' }} type="search" />
-                    暂无数据</div>
-                }
-            }
+        return {
+            emptyText: <div className="no-data-tip"><Icon style={{ color: '#95cef9',fontSize: '20px',paddingRight: '5px',verticalAlign: 'middle' }} type="search" />
+                暂无数据</div>,
+            ...this.props.locale
         }
     }
     render() {
         const store = this.getViewStore;
         const { selectedRowKeys } = store;
         const alreadyRowsLen = store.computedSelectedRows.length
-        let locale = null
-        if (this.props.autoQuery) {
-            locale = {
-                locale: this.renderlocale(),
-            }
-        }
-
-        this.consoleLog('render');
         const rowSelection: TableRowSelection<{}> = (this.getViewStore._isOpenRowSelection) ? {
             ...this.props.rowSelection,
-            selectedRowKeys:[...selectedRowKeys] as string[]|number[],
+            selectedRowKeys: [...selectedRowKeys] as string[] | number[],
             hideDefaultSelections: true,
             type: this.props.type,
             selections: this.selections as SelectionDecorator[],
@@ -870,11 +742,11 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
             onSelectInvert: () => {
                 store.selectedRowKeys = [];
             },
-        }:null;
+        } : null;
         const paginationProps: PaginationProps | boolean = this.props.pagination
         const pagination: PaginationProps | boolean = {
             pageSizeOptions: this.props.pageSizeOptions,
-            total: this.props.autoQuery ? this.getViewStore.computedTotal : this.props.total,
+            total: this.props.request ? this.getViewStore.computedTotal : this.props.total,
             current: store.pageIndex,
             showQuickJumper: true,
             pageSize: store.pageSize,
@@ -885,19 +757,8 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
                 this.props.store.get(this.freezeuid).pageIndex = pageIndex
                 this.props.store.get(this.freezeuid).pageSize = pageSize
                 this.props.onPagingQuery && this.props.onPagingQuery(pageIndex,pageSize,false)
-                if (this.props.autoQuery && this.getLocalViewStore) {
-                    let isShowLoading = true;
-                    const result = this.getLocalViewStore._obStateMap.get(this.getViewStore.pageIndex.toString())
-                    if (result) {
-                        isShowLoading = false;
-                        this.getViewStore._renderData = [...result.data];
-                        this.getViewStore.setTotal(result.total);
-                    }
-                    this.getLocalViewStore.dispatchRequest(this.props.autoQuery,{
-                        pageIndex,
-                        pageSize,
-                        isShowLoading,
-                    })
+                if (this.props.request && this.getLocalViewStore) {
+                    this._dispatchRequest(pageIndex,pageSize)
                 }
             },
             onShowSizeChange: (current: number,pageSize) => {
@@ -905,12 +766,8 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
                 this.props.store.get(this.freezeuid).pageIndex = current
                 this.props.store.get(this.freezeuid).pageSize = pageSize
                 this.props.onPagingQuery && this.props.onPagingQuery(current,pageSize,true)
-                if (this.props.autoQuery && this.getLocalViewStore) {
-                    this.getLocalViewStore.dispatchRequest(this.props.autoQuery,{
-                        pageIndex: current,
-                        pageSize,
-                        isShowLoading:true,
-                    })
+                if (this.props.request && this.getLocalViewStore) {
+                    this._dispatchRequest(current,pageSize)
                 }
             },
             showTotal: total => `${alreadyRowsLen > 0 ? `已选择${alreadyRowsLen}条数据` : ''} 共 ${total} 条数据`
@@ -922,18 +779,20 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
                 <div className={`pro-table-containers ${this.uid} ${this.viewModel.isAdaptiveHeight ? 'table-adaptive-height' : ''}`}>
                     <Table
                         /* size="small" */
-                        {...locale}
+                        locale={this.renderlocale()}
                         {...this.props}
-                        scroll={{...{
-                            x: store.tableXAutoWidth,
-                            y: 300,
-                        },...this.props.scroll}}
+                        scroll={{
+                            ...{
+                                x: store.tableXAutoWidth,
+                                y: 300,
+                            },...this.props.scroll
+                        }}
                         columns={this.viewModel.computedRenderColumns}
                         bordered
                         bodyStyle={bodyStyle}
                         rowClassName={this.onRowClassName.bind(this)}
                         pagination={(this.getViewStore._pagination) ? pagination : false}
-                        loading={{ tip: 'loading',spinning: this.props.autoQuery ? this.getLocalViewStore.computedLoading : this.props.loading }}
+                        loading={{ tip: 'loading',spinning: this.props.request ? this.getLocalViewStore.computedLoading : this.props.loading }}
                         rowKey={this.props.uniqueKey}
                         // locale={{emptyText:<span>2222</span>}}
                         onRowClick={this.onRowClick.bind(this)}
@@ -956,7 +815,7 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
             {this.props.isOpenCustomColumns && <LegionsProTableCustomColumns
                 customColumnsConfig={{
                     queryApi: LegionsProTable.customColumnsConfig.queryApi,
-                    editApi:LegionsProTable.customColumnsConfig.editApi,
+                    editApi: LegionsProTable.customColumnsConfig.editApi,
                 }}
                 tableUid={this.freezeuid}
                 onReady={(value) => {

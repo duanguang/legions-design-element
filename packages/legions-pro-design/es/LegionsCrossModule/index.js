@@ -1,9 +1,9 @@
 /**
-  *  legions-pro-design v0.0.21
+  *  legions-pro-design v0.0.23
   * (c) 2022 duanguang
   * @license MIT
   */
-import { initGlobalState } from 'legions-micro-service';
+import { initGlobalState } from 'qiankun';
 import { postMessage } from 'legions-utils-tool/dom';
 import { resource, StoreModules, inject } from 'legions/store';
 import LegionsStore from '../LegionsStore';
@@ -166,21 +166,19 @@ var MasterGlobalStateStore = /** @class */ (function (_super) {
         return resource("master/resource/" + event_key);
     };
     MasterGlobalStateStore.prototype.listeningGlobalStateChange = function (options) {
-        this.onGlobalStateChange(function (value, prev, event) {
+        this.onGlobalStateChange(function (value, prev) {
             if (options.callback && typeof options.callback === 'function') {
-                options.callback(value, prev, event);
+                options.callback(value, prev);
             }
             if (process.env.NODE_ENV !== 'production') {
-                console.log('[onGlobalStateChange - master]:', value, prev, event);
+                console.log('[onGlobalStateChange - master]:', value, prev);
             }
-        }, {
-            eventScopes: options.eventScopes,
-        });
+        }, true);
     };
     MasterGlobalStateStore.prototype.setUserGlobalState = function (state) {
         this.setGlobalState({
             user: state,
-        }, this.masterEventScopes.userEvent.created);
+        });
     };
     MasterGlobalStateStore.meta = __assign({}, LegionsStore.StoreBase.meta);
     MasterGlobalStateStore = __decorate([
@@ -239,17 +237,14 @@ var WorkerGlobalStateStore = /** @class */ (function (_super) {
         var _this = this;
         //@ts-ignore
         this._syncUpdateGlobalState(options.props);
-        this.onGlobalStateChange(function (value, prev, event) {
-            if (!event && (value.user || value.methods)) {
+        this.onGlobalStateChange(function (value, prev) {
+            if ((value.user || value.methods)) {
                 _this._setLayoutData(value);
             }
             if (options.callback && typeof options.callback === 'function') {
-                options.callback(value, prev, event);
+                options.callback(value, prev);
             }
-        }, {
-            fireImmediately: true,
-            eventScopes: options.eventScopes,
-        });
+        }, true);
     };
     /** 监听广播数据(主要用于基座跟子应用不在同一个容器，比如iframe) */
     WorkerGlobalStateStore.prototype.listeningIframeGlobalStateChange = function (options) {
@@ -257,20 +252,17 @@ var WorkerGlobalStateStore = /** @class */ (function (_super) {
         this.subscribeLegionsProGlobal(function (values) {
             //@ts-ignore
             _this._syncUpdateGlobalState(values);
-            _this.onGlobalStateChange(function (value, prev, event) {
-                if (!event && (value.user || value.methods)) {
+            _this.onGlobalStateChange(function (value, prev) {
+                if ((value.user || value.methods)) {
                     _this._setLayoutData(value);
                 }
                 if (options.callback && typeof options.callback === 'function') {
-                    options.callback(value, prev, event);
+                    options.callback(value, prev);
                 }
                 if (process.env.NODE_ENV !== 'production') {
-                    console.log("[onGlobalStateChange - " + values.appId + "]:", value, prev, event);
+                    console.log("[onGlobalStateChange - " + values.appId + "]:", value, prev);
                 }
-            }, {
-                fireImmediately: true,
-                eventScopes: options.eventScopes,
-            });
+            }, true);
         });
     };
     WorkerGlobalStateStore.prototype._syncUpdateGlobalState = function (props) {
@@ -280,8 +272,8 @@ var WorkerGlobalStateStore = /** @class */ (function (_super) {
             };
         }
         if (!this.setGlobalState) {
-            this.setGlobalState = function (state, event) {
-                props.setGlobalState(state, event);
+            this.setGlobalState = function (state) {
+                props.setGlobalState(state);
             };
         }
         this.appId = props.name;

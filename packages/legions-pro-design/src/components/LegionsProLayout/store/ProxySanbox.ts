@@ -1,13 +1,14 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-31 15:04:38
- * @LastEditTime: 2022-02-28 16:24:56
+ * @LastEditTime: 2022-03-02 16:36:54
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProLayout/store/ProxySanbox.ts
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
-import { loadMicroApp } from 'legions-micro-service';
+// import { loadMicroApp } from 'legions-micro-service';
+import { loadMicroApp } from 'qiankun';
 import {  legionsProLayoutInterface  } from '../interface';
 import { History } from '../../interface/history';
 import { shortHash } from 'legions-lunar/object-hash';
@@ -47,7 +48,7 @@ export class ProxySanbox {
           experimentalStyleIsolation:
             mountPane.sandbox.experimentalStyleIsolation,
         },
-        isMerge: mountPane.sandbox.isMerge,
+        // isMerge: mountPane.sandbox.isMerge,
       }
     );
     const mount = () => {
@@ -76,13 +77,13 @@ export class ProxySanbox {
   mountSanboxMicroApp(mountPane: legionsProLayoutInterface['panes']) {
     if (mountPane.loadingMode === 'sandbox') {
       const path =
-        this.microSanboxRoute.get(mountPane.key) ||
+        // this.microSanboxRoute.get(mountPane.key) ||
         this.getRouterPath(mountPane);
       if (this.isEnabledTabs) {
         this.history.replace(path); // 如果启动了页签模式，则切换路由使用替换模式，防止回退导致路由错乱
       }
       else {
-        this.history.push(path);
+        this.history.replace(path);
       }
     }
   }
@@ -91,7 +92,7 @@ export class ProxySanbox {
       if (this.isEnabledTabs) {
         this.history.replace('/');
       } else {
-        this.history.push('/');
+        this.history.replace('/');
       }
     }
   }

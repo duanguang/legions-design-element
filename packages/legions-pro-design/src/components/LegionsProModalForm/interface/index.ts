@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-29 10:57:31
- * @LastEditTime: 2021-11-16 23:49:24
+ * @LastEditTime: 2022-03-04 09:52:23
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProModalForm/interface/index.ts
@@ -10,19 +10,10 @@
 import { InstanceProForm } from '../../LegionsProForm/interface';
 import { InstanceProModal } from '../../LegionsProModal/interface';
 
-export interface InstanceLegionsModalForm<Model> {
-    
-    formInstance: InstanceProForm;
+export interface ILegionsModalForm {
+    /** 表单实例  */
+    form_ref: InstanceProForm;
 
-    modalInstance: InstanceProModal;
-    /**
-     * 暴露一些组件操作方法
-     *
-     * @memberof LegionsInstanceModalForm
-     */
-    methods?: IMethods<Model>;
-    
-}
-interface IMethods<Model> {
-
+    /** 对话框实例 */
+    modal_ref: InstanceProModal;
 }

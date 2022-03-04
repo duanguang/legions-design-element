@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.21
+  *  legions-pro-design v0.0.25
   * (c) 2022 duanguang
   * @license MIT
   */
@@ -68,7 +68,6 @@ var LegionsProModalForm = /** @class */ (function (_super) {
     __extends(LegionsProModalForm, _super);
     function LegionsProModalForm(props) {
         var _this = _super.call(this, props) || this;
-        _this.timeId = new Date().getTime();
         _this.formInstance = null;
         _this.modalInstance = null;
         _this.onVisibleChange = function (value) {
@@ -86,16 +85,16 @@ var LegionsProModalForm = /** @class */ (function (_super) {
                     _this.modalInstance = value;
                     _this.modalInstance.viewModel.width = width;
                     _this.props.onReady && _this.props.onReady({
-                        formInstance: _this.formInstance,
-                        modalInstance: _this.modalInstance
+                        form_ref: _this.formInstance,
+                        modal_ref: _this.modalInstance
                     });
                 } }),
                 React.createElement(React.Fragment, null,
                     React.createElement(LegionsProForm, { size: size, colCount: colCount, InputDataModel: InputDataModel, onReady: function (_, formInstance) {
                             _this.formInstance = __assign(__assign({}, formInstance), { that: _this });
                             _this.props.onReady && _this.props.onReady({
-                                formInstance: _this.formInstance,
-                                modalInstance: _this.modalInstance
+                                form_ref: _this.formInstance,
+                                modal_ref: _this.modalInstance
                             });
                         }, group: group, controls: controls }))));
     };

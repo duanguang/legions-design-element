@@ -1,9 +1,9 @@
-import LegionsStore from '../LegionsStore';
-import { legionsStoreInterface } from '../LegionsStore/interface';
+import LegionsStore from '../../LegionsStore';
+import { legionsStoreInterface } from '../../LegionsStore/interface';
 import { ModalView } from './modalView';
-import { Proxify } from './interface';
 import { ViewModel } from 'brain-store-utils/types/create-view-model';
-export default class LegionsStoreModal extends LegionsStore.StoreBase {
+import { Proxify } from '../interface';
+export default class ModalStore extends LegionsStore.StoreBase {
     static meta: legionsStoreInterface['storeBaseMeta'];
     constructor(context: any);
     ModalContainer: import("mobx").ObservableMap<string, ViewModel<ModalView> & Proxify<ModalView>>;

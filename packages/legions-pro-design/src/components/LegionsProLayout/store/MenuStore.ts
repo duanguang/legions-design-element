@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-31 10:34:43
- * @LastEditTime: 2022-03-01 15:52:09
+ * @LastEditTime: 2022-03-02 13:39:28
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProLayout/store/MenuStore.ts
@@ -150,11 +150,9 @@ export default class MenuStore extends LegionsStore.StoreBase<IContext> {
   triggerClearStorageEvent() {
     this.context.dispatch(LegionsStore.MenuPanesStorageResource.removed,{});
   }
-  /**
-   *
+  /*
    * 设置菜单面包屑信息(点击tabs页签切换)
-   * @param {{ keyPath: string[] }} panesKeyPath
-   * @memberof MenuStore
+   * @param  panesKeyPath
    */
   triggerSetBreadCrumbsEven(router?: Array<legionsProLayoutInterface['router']>) {
     this.context.dispatch(LegionsStore.BreadCrumbsResourceEven.created,{

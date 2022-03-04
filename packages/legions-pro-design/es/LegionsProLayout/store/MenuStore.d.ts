@@ -73,12 +73,6 @@ export default class MenuStore extends LegionsStore.StoreBase<IContext> {
     triggerSyncCollapsedEvent(payload: legionsProLayoutInterface['triggerEventPrams']): void;
     /** 清理菜单及页签缓存数据触发器 */
     triggerClearStorageEvent(): void;
-    /**
-     *
-     * 设置菜单面包屑信息(点击tabs页签切换)
-     * @param {{ keyPath: string[] }} panesKeyPath
-     * @memberof MenuStore
-     */
     triggerSetBreadCrumbsEven(router?: Array<legionsProLayoutInterface['router']>): void;
     /** 调用接口查询菜单数据 */
     getMenuList(func: () => Promise<any>): void;

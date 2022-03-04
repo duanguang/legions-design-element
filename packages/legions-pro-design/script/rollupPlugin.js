@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-10 16:14:09
- * @LastEditTime: 2021-03-04 14:39:18
+ * @LastEditTime: 2022-03-02 16:38:04
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/script/rollupPlugin.js
@@ -80,6 +80,7 @@ const externalLib = [
   '../../LegionsProTable',
   '../../LegionsProModal',
   'legions-micro-service',
+  'qiankun',
   'lodash/cloneDeep',
   'path-to-regexp',
   '../../LegionsProIframe',

@@ -12,6 +12,10 @@ export default class MenuParts extends React.Component<legionsProLayoutProps['me
         router: any[];
     };
     componentDidMount(): void;
+    componentWillUnmount(): void;
+    addListenerPopstate(): void;
+    removeListenerPopstate(): void;
+    listenerPopState(evt: PopStateEvent): void;
     initGlobalVariableValue(): void;
     /** 在did mount 生命周期内设置菜单展开项数据 */
     setOpenKesInDidMountcycle(): void;

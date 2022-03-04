@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.21
+  *  legions-pro-design v0.0.23
   * (c) 2022 duanguang
   * @license MIT
   */
@@ -11,7 +11,7 @@ import { observable, action, StoreModules, inject } from 'legions/store';
 import { setStorageItems, getStorageItem } from 'legions-utils-tool/storage';
 import { observableViewModel, observablePromise } from 'legions/store-utils';
 import { RegExChk, validatorType } from 'legions-utils-tool/regex';
-import { loadMicroApp, getMicroAppStateActions } from 'legions-micro-service';
+import { loadMicroApp } from 'qiankun';
 import { shortHash } from 'legions-lunar/object-hash';
 import { computed, observable as observable$1, isObservableArray } from 'mobx';
 import ReactDOM from 'react-dom';
@@ -23,9 +23,11 @@ import LegionsProIframe from '../LegionsProIframe';
 import { NProgress } from 'legions-nprogress';
 import pathToRegexp from 'path-to-regexp';
 import cloneDeep from 'lodash/cloneDeep';
+import { getMicroAppStateActions } from 'legions-micro-service';
 import LegionsCrossModule from '../LegionsCrossModule';
 import './style/memu.less';
 import { page } from 'legions-lunar/mobx-decorator';
+import get from 'lodash/get';
 import LegionsProSelect from '../LegionsProSelect';
 import { MapperEntity, JsonProperty } from 'json-mapper-object';
 import './style/index.less';
@@ -152,7 +154,6 @@ var ProxySanbox = /** @class */ (function () {
             sandbox: {
                 experimentalStyleIsolation: mountPane.sandbox.experimentalStyleIsolation,
             },
-            isMerge: mountPane.sandbox.isMerge,
         });
         var mount = function () {
             return app.mount().catch(function (err) {
@@ -179,13 +180,14 @@ var ProxySanbox = /** @class */ (function () {
     };
     ProxySanbox.prototype.mountSanboxMicroApp = function (mountPane) {
         if (mountPane.loadingMode === 'sandbox') {
-            var path = this.microSanboxRoute.get(mountPane.key) ||
-                this.getRouterPath(mountPane);
+            var path = 
+            // this.microSanboxRoute.get(mountPane.key) ||
+            this.getRouterPath(mountPane);
             if (this.isEnabledTabs) {
                 this.history.replace(path); // 如果启动了页签模式，则切换路由使用替换模式，防止回退导致路由错乱
             }
             else {
-                this.history.push(path);
+                this.history.replace(path);
             }
         }
     };
@@ -195,7 +197,7 @@ var ProxySanbox = /** @class */ (function () {
                 this.history.replace('/');
             }
             else {
-                this.history.push('/');
+                this.history.replace('/');
             }
         }
     };
@@ -447,6 +449,12 @@ var TabPaneViewStore = /** @class */ (function (_super) {
         this.setActiveKey(panes.key);
         setStorageItems(storageKeysData.panesStorageKeys, this.panes); //同步缓存
     };
+    TabPaneViewStore.prototype.popstateAsyncData = function (panes, menuList) {
+        var curr_menu = menuList.find(function (item) { return item.key === panes.key; });
+        //@ts-ignore
+        this.updateBreadcrumbs({ keyPath: (curr_menu === null || curr_menu === void 0 ? void 0 : curr_menu.deep) || [] }, menuList);
+        this.setActiveKey(panes.key);
+    };
     /**
      * 打开指定菜单
      * @param defaultItem 即将打开菜单页签数据
@@ -665,6 +673,12 @@ var TabPaneViewStore = /** @class */ (function (_super) {
         __metadata("design:type", Function),
         __metadata("design:paramtypes", [Object, Object]),
         __metadata("design:returntype", void 0)
+    ], TabPaneViewStore.prototype, "popstateAsyncData", null);
+    __decorate([
+        action,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [Object, Object]),
+        __metadata("design:returntype", void 0)
     ], TabPaneViewStore.prototype, "openAppoint", null);
     __decorate([
         action,
@@ -806,7 +820,7 @@ var MenuViewStore = /** @class */ (function () {
 /*
  * @Author: duanguang
  * @Date: 2020-12-31 10:34:43
- * @LastEditTime: 2022-03-01 15:52:09
+ * @LastEditTime: 2022-03-02 13:39:28
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProLayout/store/MenuStore.ts
@@ -923,11 +937,9 @@ var MenuStore = /** @class */ (function (_super) {
     MenuStore.prototype.triggerClearStorageEvent = function () {
         this.context.dispatch(LegionsStore.MenuPanesStorageResource.removed, {});
     };
-    /**
-     *
+    /*
      * 设置菜单面包屑信息(点击tabs页签切换)
-     * @param {{ keyPath: string[] }} panesKeyPath
-     * @memberof MenuStore
+     * @param  panesKeyPath
      */
     MenuStore.prototype.triggerSetBreadCrumbsEven = function (router) {
         this.context.dispatch(LegionsStore.BreadCrumbsResourceEven.created, {
@@ -1156,7 +1168,7 @@ var LayoutContentUtils = /** @class */ (function () {
                     removeTablePane: LayoutContentUtils.masterGlobalStateStore.removeTablePane,
                 },
                 menuList: LayoutContentUtils.masterGlobalStateStore.menuList,
-            }, LayoutContentUtils.masterGlobalStateStore.masterEventScopes.userEvent.created);
+            });
             return LayoutContentUtils.renderProxySanboxDom(newPane, that, src, that.props.store.proxySanbox);
         }
         else {
@@ -1189,7 +1201,7 @@ var LayoutContentUtils = /** @class */ (function () {
                                     removeTablePane: LayoutContentUtils.masterGlobalStateStore.removeTablePane,
                                 },
                                 menuList: LayoutContentUtils.masterGlobalStateStore.menuList,
-                            }, LayoutContentUtils.masterGlobalStateStore.masterEventScopes.userEvent.created);
+                            });
                         }
                     };
                     var count = 0;
@@ -1655,7 +1667,6 @@ var MenuParts = /** @class */ (function (_super) {
         _this.onClick = function (selected) {
             var store = _this.props.store;
             var newItem = store.getMenuByKey(selected.key);
-            var oldActiveKey = store.context.TabPaneApp.activeKey;
             //@ts-ignore
             store.context.TabPaneApp.addTabPanes(selected, store.getAllMenuList());
             if (newItem) {
@@ -1682,6 +1693,31 @@ var MenuParts = /** @class */ (function (_super) {
         this.props.store.getMenuList(this.props.onQueryPromiseMenus);
         this.initGlobalVariableValue();
         this.setOpenKesInDidMountcycle();
+        this.addListenerPopstate();
+    };
+    MenuParts.prototype.componentWillUnmount = function () {
+        this.removeListenerPopstate();
+    };
+    MenuParts.prototype.addListenerPopstate = function () {
+        if (window.history && window.history.pushState) {
+            history.pushState(null, null, document.URL);
+            window.addEventListener('popstate', this.listenerPopState.bind(this), false);
+        }
+    };
+    MenuParts.prototype.removeListenerPopstate = function () {
+        window.removeEventListener('popstate', this.listenerPopState.bind(this), false);
+    };
+    MenuParts.prototype.listenerPopState = function (evt) {
+        //响应前进、后退的回调方法
+        history.pushState(null, null, document.URL);
+        var target = evt.currentTarget;
+        var path = get(target, 'location.pathname', '');
+        var menu_list = this.props.store.getAllMenuList();
+        var panes = this.props.store.context.TabPaneApp.panes;
+        var index = panes.findIndex(function (item) { return path.indexOf(item.path) > -1 && item.path; });
+        if (index > -1) {
+            this.props.store.context.TabPaneApp.popstateAsyncData(panes[index], menu_list);
+        }
     };
     MenuParts.prototype.initGlobalVariableValue = function () {
         var _this = this;

@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-02-02 10:10:12
- * @LastEditTime: 2021-03-02 14:09:21
+ * @LastEditTime: 2022-03-04 10:28:49
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProModal/LegionsProModalContext.tsx
@@ -18,7 +18,7 @@ interface IProps{
     // @ts-ignore
     children?:any;
 }
-export class LegionsProModalContext extends React.Component<IProps> {
+export class ProModalContext extends React.Component<IProps> {
     renderMobXProviderContext() {
         return <MobXProviderContext.Consumer>
             {
@@ -39,4 +39,4 @@ export class LegionsProModalContext extends React.Component<IProps> {
       );
     }
 }
-LegionsProModalContext.contextType= MobXProviderContext
+ProModalContext.contextType= MobXProviderContext

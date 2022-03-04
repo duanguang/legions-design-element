@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-07 17:21:19
- * @LastEditTime: 2021-08-09 23:42:48
+ * @LastEditTime: 2022-03-04 00:07:35
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreTable/ProTableLocalView.ts
@@ -18,19 +18,6 @@ import {
   observable, action,
 } from 'mobx';
 export class ProTableLocalView {
-  /**
-   *
-   * 表格接口数据
-   * @memberof ProTableLocalView
-   */
-  @observable obState = observablePromise<PageListEntity<any>>(null);
-
-  @observable _obStateMap= observable.map<string,
-    {
-      data: any[];
-      total: number;
-    }
-  >()
 
   /** 查询数据状态
    * 
@@ -38,88 +25,13 @@ export class ProTableLocalView {
    */
   @observable private _loading = false;
 
-  /** http 请求状态 */
-  @observable private _request: 'none' | 'pending' | 'complete' = 'none';
 
   /** 数据请求状态 */
   @computed get computedLoading() {
     return this._loading;
   }
-  /** http 请求状态 */
-  @computed get computedRequest() {
-    return this._request;
-  }
   /** 更新动画状态,组件内部私有方法 */
   @action _setLoadingState(_loading: boolean) {
     this._loading = _loading;
-  }
-  /** 更新http请求接口状态,组件内部私有方法  */
-  @action _setRequestState(request: 'none' | 'pending' | 'complete') {
-    this._request = request;
-  }
-  @action dispatchRequest(
-    autoQuery: ITableAutoQuery,
-    options: {
-      pageIndex: number;
-      pageSize: number;
-      isShowLoading: boolean;
-    }
-  ) {
-    if (autoQuery) {
-      const server = new LegionsCore.LegionsFetch();
-      //@ts-ignore
-      const apiServer = () => {
-        let params = cloneDeep(
-          autoQuery.params(options.pageIndex, options.pageSize)
-        );
-        // @ts-ignore
-        let model: any = {};
-        if (autoQuery.mappingEntity) {
-          model = {
-            model: PageListEntity,
-            onBeforTranform: (value) => {
-              return {
-                responseData: value,
-                mappingEntity:autoQuery['mappingEntity'],
-              }
-            }
-          }
-        }
-        let headers = {};
-        if (autoQuery.token) {
-            if (typeof autoQuery.token === 'string') {
-                headers={'api-cookie': autoQuery.token}
-            }
-            else if (typeof autoQuery.token === 'function') {
-                headers={'api-cookie': autoQuery.token()}
-            }
-        }
-        if (autoQuery.method === 'post') {
-          return server.post<PageListEntity<any>, any>({
-            url: autoQuery.ApiUrl,
-            parameter: params,
-            headers: { ...autoQuery.options, ...headers },
-            ...model,
-          });
-        } else if (autoQuery.method === 'get') {
-          return server.get<PageListEntity<any>, any>({
-            url: autoQuery.ApiUrl,
-            parameter: params,
-            headers: {
-              ...autoQuery.options,
-              ...headers
-            },
-            ...model,
-          });
-        }
-      };
-      if (options.isShowLoading) {
-        this._setLoadingState(true);
-      }
-      this._request = 'none';
-      // @ts-ignore
-      this.obState = observablePromise<{}>(apiServer());
-      this._request = 'pending';
-    }
   }
 }

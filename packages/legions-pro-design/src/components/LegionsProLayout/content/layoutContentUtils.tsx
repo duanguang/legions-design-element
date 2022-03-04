@@ -102,7 +102,7 @@ export class LayoutContentUtils {
           removeTablePane: LayoutContentUtils.masterGlobalStateStore.removeTablePane,
         },
         menuList: LayoutContentUtils.masterGlobalStateStore.menuList,
-      },LayoutContentUtils.masterGlobalStateStore.masterEventScopes.userEvent.created)
+      })
       return LayoutContentUtils.renderProxySanboxDom(newPane,that,src,that.props.store.proxySanbox);
     }
     else {
@@ -151,7 +151,7 @@ export class LayoutContentUtils {
                     removeTablePane: LayoutContentUtils.masterGlobalStateStore.removeTablePane,
                   },
                   menuList: LayoutContentUtils.masterGlobalStateStore.menuList,
-                },LayoutContentUtils.masterGlobalStateStore.masterEventScopes.userEvent.created)
+                })
               }
             }
             let count = 0;

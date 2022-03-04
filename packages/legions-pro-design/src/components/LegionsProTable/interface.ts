@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-26 17:07:34
- * @LastEditTime: 2021-12-01 21:48:29
+ * @LastEditTime: 2022-03-04 00:09:25
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProTable/interface.ts
@@ -332,26 +332,6 @@ export interface IProTableProps<TableRow = {},Model = {}> extends TableProps<Tab
 
 
   /**
-   * 传入此配置信息将自动托管请求接口
-   *
-   * 注意
-   * 
-   * 1: 如果传入此函数，搜索方法会自动挂载到 onReady 函数变量上接收
-   * 
-   * 2：将不需要onPagingQuery 函数
-   * 
-   * 3: 维护好搜索条件即可
-   * 
-   * 4: loading 不需要传递，total 传递0即可
-   * 
-   * 5: 默认会在HLTable组件构造函数触发搜索方法，可以通过设置isDefaultLoad = false 来手动控制触发时机
-   * @type {ITableAutoQuery<Model>}
-   * @memberof IHLTableProps
-   */
-  autoQuery?: ITableAutoQuery<Model>
-
-
-  /**
    * 是否开启自定义列设置
    *
    * 注意：需要开启行选中才可以
@@ -395,7 +375,17 @@ export interface IProTableProps<TableRow = {},Model = {}> extends TableProps<Tab
       traceId: string;
       browserEnvironment: string;
   }) => void;
-  debugger?:boolean
+   /**
+     * 请求托管，异步dataSource和分页管理
+     * @param pageIndex 当前页
+     * @param pageSize 每页条数
+     */
+    request?: (pageIndex: number, pageSize: number) => Promise<{
+      /** 列表数据 */
+      data: TableRow[],
+      /** 总数量 */
+      total?: number,
+  }>
 }
 export interface ICustomColumnsConfig{
   /** 编辑自定义信息同步到服务端接口地址 */

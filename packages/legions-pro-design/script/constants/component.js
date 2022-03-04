@@ -1,21 +1,25 @@
 /*
  * @Author: duanguang
  * @Date: 2021-09-28 23:07:31
- * @LastEditTime: 2022-03-01 17:43:44
+ * @LastEditTime: 2022-03-04 10:37:53
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/script/constants/component.js
  * 「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
-const TableComponent = ['LegionsStoreTable','LegionsProTableCustomColumns',
-'LegionsProTableForm','LegionsProTable','LegionsProVirtualTable']//
-const FormComponent = [
-    'LegionsStoreForm',
-     'LegionsProModalForm',
-     'LegionsProTabsForm',
-    'LegionsProForm',
+const TableComponent = [
+    // 'LegionsStoreTable','LegionsProTableCustomColumns',
+    // 'LegionsProTableForm',
+    'LegionsProTable',
+    //'LegionsProVirtualTable'
 ]//
-const ModalComponet = ['LegionsStoreModal','LegionsProModal']//
+const FormComponent = [
+    //'LegionsStoreForm',
+     'LegionsProModalForm',
+     //'LegionsProTabsForm',
+   // 'LegionsProForm',
+]//
+const ModalComponet = ['LegionsProModal']//
 const ConditionsComponent = ['LegionsStoreConditions','LegionsProConditions'] //
 const GeneralComponent = ['LegionsProBreadcrumb','LegionsProInput',
     'LegionsProNumericInput','LegionsProTextArea','LegionsProSelect']//
@@ -28,7 +32,11 @@ const StoreModules = ['LegionsStore']//
 const DataModules = ['db','LegionsModels','services']//
 const CommonModules = ['LegionsCore','LegionsCrossModule'] //
 const EntityModules = ['index']
-const LayoutComponent = ['LegionsProIframe','LegionsProLayout','LegionsProPageContainer']
+const LayoutComponent = [
+    // 'LegionsProIframe',
+    // 'LegionsProPageContainer',
+    'LegionsProLayout',
+]
 
 const BUILD_TYPE = {
     TableComponent,

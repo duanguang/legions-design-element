@@ -1,38 +1,42 @@
 import React from 'react';
 import './style/index.less';
 import { TableColumnConfig } from 'antd/lib/table/Table';
-import { IViewModelProTableStore, ITableAutoQuery } from '../LegionsStoreTable/interface';
+import { IViewModelProTableStore } from '../LegionsStoreTable/interface';
 import { SelectionDecorator } from '../interface/antd';
 import { ITableColumnConfig, IExportCsv, IProTableProps, ICustomColumnsConfig } from './interface';
 import { legionsStoreInterface } from '../LegionsStore/interface';
-import { InstanceProModal } from '../LegionsProModal/interface';
+import { ILegionsProModal } from '../LegionsProModal/interface';
 import { ProTableBaseClass } from './ProTableBaseClass';
 interface IState {
 }
 export default class LegionsProTable<TableRow = {}, Model = {}> extends React.Component<IProTableProps<TableRow, Model>, IState> {
     timeId: number;
     uid: string;
-    /**
-     * uid 的值绝对唯一，且每次初始生成table都是相同值
-     *
-     * @memberof HLForm
-     */
+    /** uid 的值绝对唯一，且每次初始生成table都是相同值 */
     freezeuid: string;
-    /**
-     *
-     * 未加密的freezeuid 值
-     * @memberof HLForm
-     */
+    /**  未加密的freezeuid 值 */
     decryptionfreezeuid: string;
     viewModel: IViewModelProTableStore;
     tableThead: string;
     clientHeight: number;
-    modalRef: InstanceProModal;
-    customColumnsModalRef: InstanceProModal;
+    modalRef: ILegionsProModal['ref'];
+    customColumnsModalRef: ILegionsProModal['ref'];
     selections: SelectionDecorator[];
-    /** 全链路监控跟踪id */
-    traceId: string;
-    log: (uid: any) => void;
+    /** th列表,保存th的相对距离 */
+    dragThList: {
+        title: string;
+        left: number;
+    }[];
+    /** 鼠标拖动距离 */
+    dragX: number;
+    /** 当前操作的th */
+    dragTh: HTMLDivElement;
+    /** 创建拖动标识线 */
+    dragLine: HTMLDivElement;
+    /** 创建拖动标识区域 */
+    dragArea: HTMLDivElement;
+    /** 可拖动的表头 */
+    cantDragThQuery: string;
     subscription: legionsStoreInterface['schedule'];
     node: Element;
     resize: () => void;
@@ -125,23 +129,10 @@ export default class LegionsProTable<TableRow = {}, Model = {}> extends React.Co
         updateOpenRowSelection: (isOpenRowSelection: boolean) => void;
     };
     get getLocalViewStore(): import("brain-store-utils/types/create-view-model").ViewModel<import("../LegionsStoreTable/ProTableLocalView").ProTableLocalView> & {
-        obState: import("legions/store-utils").ObservablePromiseModel<import("../LegionsStoreTable/pageListEntity").PageListEntity<any>>;
-        _obStateMap: import("mobx").ObservableMap<string, {
-            data: any[];
-            total: number;
-        }>;
         readonly computedLoading: boolean;
-        readonly computedRequest: "none" | "pending" | "complete";
         _setLoadingState: (_loading: boolean) => void;
-        _setRequestState: (request: "none" | "pending" | "complete") => void;
-        dispatchRequest: (autoQuery: ITableAutoQuery<{}>, options: {
-            pageIndex: number;
-            pageSize: number;
-            isShowLoading: boolean;
-        }) => void;
     };
-    consoleLog(type: string, logObj?: Object): void;
-    logger(type: Parameters<LegionsProTable['consoleLog']>[0], logObj?: Object): void;
+    private _dispatchRequest;
     search(options?: {
         pageIndex?: number;
         isShowLoading?: boolean;
@@ -222,6 +213,13 @@ export default class LegionsProTable<TableRow = {}, Model = {}> extends React.Co
     selectRow: (record: any) => void;
     getSorterFn: (sortOrder: string, sorter: any) => (a: any, b: any) => any;
     renderlocale(): {
+        constructor: Function;
+        toString(): string;
+        toLocaleString(): string;
+        valueOf(): Object;
+        hasOwnProperty(v: string | number | symbol): boolean;
+        isPrototypeOf(v: Object): boolean;
+        propertyIsEnumerable(v: string | number | symbol): boolean;
         emptyText: JSX.Element;
     };
     render(): JSX.Element;

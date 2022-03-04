@@ -1,5 +1,5 @@
 /// <reference types="react" />
-import { IResizable } from './interface';
+import { ILegionsProModal } from '../interface';
 export declare class ModalView {
     _modalType: 'drawer' | 'modal' | 'fullscreen';
     /**
@@ -100,7 +100,7 @@ export declare class ModalView {
     _footerHeight: number;
     /** 拖拽移动样式信息 */
     get computedDraggableContentStyles(): {};
-    get computedResizable(): IResizable;
+    get computedResizable(): import("../interface").IResizable;
     /**
      * 模态框大小缩放时 ，body 内容区样式值
      *
@@ -1683,7 +1683,7 @@ export declare class ModalView {
      * 在拖拽移动结束时触发
      */
     _asyncResizableData(): void;
-    _updateEnabledResizable(resizable: IResizable): void;
+    _updateEnabledResizable(resizable: ILegionsProModal['resizable']): void;
     /**
      * 重置模态框位置，回到居中状态
      *

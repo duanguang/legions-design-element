@@ -2,18 +2,17 @@ import React,{ Component } from 'react'
 import { findDOMNode,unstable_renderSubtreeIntoContainer,unmountComponentAtNode } from 'react-dom'
 import { Modal,message } from 'antd';
 import { bind,observer } from 'legions/store-react'
-import LegionsStoreModal from '../LegionsStoreModal';
-import { ILegionsProModalProps } from './interface';
-import { IViewModelModalStore } from '../LegionsStoreModal/interface';
+import ModalStore from './store';
+import { ILegionsProModalProps,ILegionsProModal } from './interface';
 import { legionsStoreInterface } from '../LegionsStore/interface';
 import { shortHash } from 'legions-lunar/object-hash';
 import './style/index.less';
 import { runInAction,autorun } from 'mobx';
-import { LegionsProModalContext } from './LegionsProModalContext';
+import { ProModalContext } from './LegionsProModalContext';
 const maximizeSrc = 'https://gitee.com/duanguang/figure-bed/raw/master/oss/maximize.png'
 const undoSrc = 'https://gitee.com/duanguang/figure-bed/raw/master/oss/undo.png'
 const antPrefix = 'ant';
-type typeDirection= "" | "top" | "upperLeft" | "upperRight" | "leftLower" | "lowRight" | "bottom" | "left" | "right"
+type typeDirection = "" | "top" | "upperLeft" | "upperRight" | "leftLower" | "lowRight" | "bottom" | "left" | "right"
 
 interface IProps extends ILegionsProModalProps {
     children?: React.ReactNode
@@ -74,7 +73,7 @@ const off = (function () {
         };
     }
 })();
-let watchVisibleChange:(visible:boolean)=>void = null
+let watchVisibleChange: (visible: boolean) => void = null
 const DrawerPositionWrap = {
     top: 'legions-pro-modal-DrawerPositionX',
     bottom: 'legions-pro-modal-DrawerPositionBottom',
@@ -82,9 +81,9 @@ const DrawerPositionWrap = {
     right: 'legions-pro-modal-drawerPositionY',
 }
 
-@bind({ store: LegionsStoreModal })
+@bind({ store: ModalStore })
 @observer
- class ProModal extends Component<IProps,IState> {
+class ProModal extends Component<IProps,IState> {
     timeId = new Date().getTime()
     uid = ''
     modalContent: Element = null;
@@ -125,7 +124,7 @@ const DrawerPositionWrap = {
     draggableLocationLeftY: number = null;
     clientHeight = 0;
     clientWidth = 0;
-    viewStore: IViewModelModalStore = null;
+    viewStore: ILegionsProModal['viewModelStore'] = null;
     getModalDOM: Element = null;
     /** 左侧拖拽缩放节点 */
     leftBarNode: Element = null;
@@ -139,7 +138,7 @@ const DrawerPositionWrap = {
         draggable: false,
         resizable: false,
     }
-    static LegionsProModalContext = LegionsProModalContext
+    static ProModalContext = ProModalContext
     constructor(props) {
         super(props)
         this.handleCancel = this.handleCancel.bind(this);
@@ -156,7 +155,7 @@ const DrawerPositionWrap = {
             },0)
         }
     }
-    
+
     watchVisibleChange = (n) => {
         const visible = this.viewStore.visible;
         if (visible) {
@@ -168,7 +167,7 @@ const DrawerPositionWrap = {
             },100)
         }
         this.props.onVisibleChange && this.props.onVisibleChange(visible);
-        if(watchVisibleChange){
+        if (watchVisibleChange) {
             watchVisibleChange(visible)
             watchVisibleChange = null;
         }
@@ -251,8 +250,8 @@ const DrawerPositionWrap = {
         const modalNode = this.getModalDOM;
         if (modalNode) {
             const antdModal = modalNode.querySelector('.ant-modal');
-            if (antdModal&&this.props.resizable) {
-                const createZoomabNode = (direction: typeDirection)=>{
+            if (antdModal && this.props.resizable) {
+                const createZoomabNode = (direction: typeDirection) => {
                     const div = document.createElement('div');
                     div.setAttribute('class',`zoom-bar ${direction}-bar`);
                     this[`${direction}BarNode`] = div;
@@ -269,8 +268,8 @@ const DrawerPositionWrap = {
                     createZoomabNode('bottom')
                 }
             }
-            
-            
+
+
         }
     }
     componentWillMount() {
@@ -551,7 +550,7 @@ const DrawerPositionWrap = {
 
     }
 
-/**  拖拽缩放移动坐标轴，触发在window对象*/
+    /**  拖拽缩放移动坐标轴，触发在window对象*/
     //@ts-ignore
     handleResizableMoveMove = (event: MouseEvent) => {
         runInAction(() => {
@@ -567,7 +566,7 @@ const DrawerPositionWrap = {
                 x: distance.x - this.viewStore._resizableData.resizableX,
                 y: distance.y - this.viewStore._resizableData.resizableY
             };
-            
+
             /*  console.log('准备拖拽缩放移动坐标轴====satrt====')
              console.log('this.viewStore.resizableData',this.viewStore.resizableData)
              console.log('this.topLocation',this.topLocation)
@@ -636,10 +635,10 @@ const DrawerPositionWrap = {
                     console.log('distance',distance)
                     console.log('rect',rect)
                     console.log('开始缩放====end====') */
-                    
+
                     this.viewStore._operaModel = 'resizable';
                     this.viewStore.computedResizable.enabled = true;
-                    this.viewStore.computedResizable.direction=direction
+                    this.viewStore.computedResizable.direction = direction
                 })
                 this.bindingResizableMoveMoveEven();
                 this.bindingResizableMouseupEven();
@@ -707,7 +706,7 @@ const DrawerPositionWrap = {
         }
         if (this.props.resizable) {
             defultZoomableProps = {
-                mask:true,
+                mask: true,
             }
         }
         const drawerStyles: React.CSSProperties = Object.assign({ ...this.props.style },{ paddingBottom: '0px' },placement[this.props.placement],this.viewStore.computedResizableContentStyles)
@@ -758,12 +757,13 @@ const DrawerPositionWrap = {
 
 const LegionsProModal = (props: IProps) => {
     const { children,...prop } = props;
-    return <ProModal.LegionsProModalContext content={<React.Fragment>
+    return <ProModal.ProModalContext content={<React.Fragment>
         {children}
     </React.Fragment>}>
         <ProModal
-         {...prop}
+            {...prop}
         ></ProModal>
-    </ProModal.LegionsProModalContext>
+    </ProModal.ProModalContext>
 }
+LegionsProModal['store'] = ModalStore
 export default LegionsProModal;

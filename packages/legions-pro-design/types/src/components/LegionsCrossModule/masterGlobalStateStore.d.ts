@@ -1,7 +1,6 @@
 import LegionsStore from '../LegionsStore';
 import { legionsStoreInterface } from '../LegionsStore/interface';
 import { legionsProLayoutInterface } from '../LegionsProLayout/interface';
-import { legionsCrossModuleInterface } from './interface';
 interface IContext {
 }
 /** 主应用全局数据基类
@@ -12,7 +11,7 @@ export declare class MasterGlobalStateStore extends LegionsStore.StoreBase<ICont
     /** 创建主应用事件 */
     static createEventScopes(event_key: string): import("brain-store/types/api/resourceEvent").IResource;
     private onGlobalStateChange;
-    setGlobalState: <state = {}>(state: legionsProLayoutInterface['GlobalStates'] & state, event: legionsCrossModuleInterface['GlobalStateEvent']) => void;
+    setGlobalState: <state = {}>(state: legionsProLayoutInterface['GlobalStates'] & state) => void;
     openTabPane: (pane: legionsProLayoutInterface['openPaneParames']) => void;
     removeTablePane: (targetKey: string | string[]) => void;
     menuList: legionsProLayoutInterface['menuList'];
@@ -23,7 +22,7 @@ export declare class MasterGlobalStateStore extends LegionsStore.StoreBase<ICont
                 cmd: string;
                 value: any;
             };
-            origin?: any; /** 创建主应用事件 */
+            origin?: any;
         }) => void;
         sendMessageToChildrenWin: (options: {
             data: {
@@ -40,10 +39,8 @@ export declare class MasterGlobalStateStore extends LegionsStore.StoreBase<ICont
     };
     constructor(context: IContext);
     listeningGlobalStateChange(options: {
-        /** 监听事件队列数据 */
-        eventScopes: legionsStoreInterface['resource'][];
         /** 监听回调执行函数 */
-        callback: (value: legionsProLayoutInterface['GlobalStates'], prev: legionsProLayoutInterface['GlobalStates'], event: legionsCrossModuleInterface['GlobalStateEvent']) => void;
+        callback: (value: legionsProLayoutInterface['GlobalStates'], prev: legionsProLayoutInterface['GlobalStates']) => void;
     }): void;
     setUserGlobalState(state: any): void;
 }

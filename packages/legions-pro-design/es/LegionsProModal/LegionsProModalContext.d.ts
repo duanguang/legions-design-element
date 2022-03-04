@@ -6,7 +6,7 @@ interface IProps {
     modal?: React.ReactNode;
     children?: any;
 }
-export declare class LegionsProModalContext extends React.Component<IProps> {
+export declare class ProModalContext extends React.Component<IProps> {
     renderMobXProviderContext(): JSX.Element;
     renderContextType(): React.DetailedReactHTMLElement<any, HTMLElement>;
     render(): React.DetailedReactHTMLElement<any, HTMLElement>;

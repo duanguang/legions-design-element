@@ -1,12 +1,10 @@
-import LegionsStoreForm from '../LegionsStoreForm';
 import React from 'react';
 import { IProFormFields } from '../LegionsStoreForm/interface';
 import { ClassOf } from 'legions-lunar/api/typescript';
-import { IGroup, InstanceProForm } from '../LegionsProForm/interface';
-import { InstanceLegionsModalForm } from './interface';
-import { ILegionsProModalProps, InstanceProModal } from '../LegionsProModal/interface';
+import { IGroup } from '../LegionsProForm/interface';
+import { ILegionsModalForm } from './interface';
+import { ILegionsProModalProps } from '../LegionsProModal/interface';
 interface IProps<Model> {
-    store?: InstanceType<typeof LegionsStoreForm>;
     /**
      * 主要用于当父组件中存在多个表单组件时，标记key 来保证父级组件中表单组件唯一
      * 注意，建议一定传递
@@ -27,7 +25,8 @@ interface IProps<Model> {
     controls: Array<IProFormFields['componentModel']>;
     group?: Array<IGroup>;
     modalProps?: ILegionsProModalProps;
-    onReady: (formRef?: InstanceLegionsModalForm<Model>) => void;
+    /** 注意此方法会执行两次，第一次是对话框组件完成时。第二次是打开对话框首次初始化表单 */
+    onReady: (formRef?: ILegionsModalForm) => void;
     size?: 'default' | 'small' | 'table';
     /**
      * 等分栅格 默认2
@@ -40,9 +39,8 @@ interface IProps<Model> {
  * 业务场景主要通过弹窗放置表单信息
  */
 export default class LegionsProModalForm<Model> extends React.Component<IProps<Model>> {
-    timeId: number;
-    formInstance: InstanceProForm;
-    modalInstance: InstanceProModal;
+    private formInstance;
+    private modalInstance;
     constructor(props: any);
     onVisibleChange: (value: boolean) => void;
     render(): JSX.Element;

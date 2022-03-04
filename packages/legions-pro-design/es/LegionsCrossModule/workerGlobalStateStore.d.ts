@@ -1,6 +1,6 @@
 import LegionsStore from '../LegionsStore';
 import { legionsStoreInterface } from '../LegionsStore/interface';
-import { MicroAppStateActions } from 'legions-micro-service/types/interfaces';
+import { MicroAppStateActions } from 'qiankun';
 import { subscribeLegionsProGlobal } from './globalStateEven';
 import { legionsProLayoutInterface } from '../LegionsProLayout/interface';
 import { legionsCrossModuleInterface } from './interface';
@@ -23,7 +23,7 @@ export default class WorkerGlobalStateStore<IGlobalState, User = {}> extends Leg
     private userInfo;
     private menuList;
     /** 监听全局数据，发生改变时触发,最基础监听函数 */
-    protected onGlobalStateChange: (callback: (value: legionsProLayoutInterface['GlobalStates'] & IGlobalState, prev: legionsProLayoutInterface['GlobalStates'] & IGlobalState, event: legionsCrossModuleInterface['GlobalStateEvent']) => void, options: Parameters<MicroAppStateActions['onGlobalStateChange']>[1]) => void;
+    protected onGlobalStateChange: (callback: (value: legionsProLayoutInterface['GlobalStates'] & IGlobalState, prev: legionsProLayoutInterface['GlobalStates'] & IGlobalState) => void, options: Parameters<MicroAppStateActions['onGlobalStateChange']>[1]) => void;
     /**订阅子应用iframe挂载在全局的变量 */
     protected subscribeLegionsProGlobal: typeof subscribeLegionsProGlobal;
     masterEventScopes: {
@@ -36,7 +36,7 @@ export default class WorkerGlobalStateStore<IGlobalState, User = {}> extends Leg
     /** 更新全局数据方法
      * 此函数在执行时，微应用全局监听事件都会接收到数据变化通知。 譬如listeningSanboxGlobalStateChange
      */
-    setGlobalState: (state: legionsProLayoutInterface['GlobalStates'] & IGlobalState, event: legionsCrossModuleInterface['GlobalStateEvent']) => void;
+    setGlobalState: (state: legionsProLayoutInterface['GlobalStates'] & IGlobalState) => void;
     /** postmessage 通信 */
     iframePostMessage: {
         sendMessageToParentWin: (options: {
@@ -68,17 +68,15 @@ export default class WorkerGlobalStateStore<IGlobalState, User = {}> extends Leg
             setGlobalState: (state: any, event: legionsCrossModuleInterface['GlobalStateEvent']) => void;
             name?: string;
         };
-        /** 监听事件队列数据 */
-        eventScopes: legionsStoreInterface['resource'][];
         /** 监听回调执行函数 */
-        callback: (value: legionsProLayoutInterface['GlobalStates'] & IGlobalState, prev: legionsProLayoutInterface['GlobalStates'] & IGlobalState, event: legionsCrossModuleInterface['GlobalStateEvent']) => void;
+        callback: (value: legionsProLayoutInterface['GlobalStates'] & IGlobalState, prev: legionsProLayoutInterface['GlobalStates'] & IGlobalState) => void;
     }): void;
     /** 监听广播数据(主要用于基座跟子应用不在同一个容器，比如iframe) */
     listeningIframeGlobalStateChange(options: {
         /** 监听事件队列数据 */
         eventScopes: legionsStoreInterface['resource'][];
         /** 监听回调执行函数 */
-        callback: (value: legionsProLayoutInterface['GlobalStates'] & IGlobalState, prev: legionsProLayoutInterface['GlobalStates'] & IGlobalState, event: legionsCrossModuleInterface['GlobalStateEvent']) => void;
+        callback: (value: legionsProLayoutInterface['GlobalStates'] & IGlobalState, prev: legionsProLayoutInterface['GlobalStates'] & IGlobalState) => void;
     }): void;
     private _syncUpdateGlobalState;
     /** 写入用户数据 */

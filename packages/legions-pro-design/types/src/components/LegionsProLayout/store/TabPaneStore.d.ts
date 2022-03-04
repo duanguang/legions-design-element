@@ -24,6 +24,7 @@ export default class TabPaneViewStore extends LegionsStore.StoreBase {
     /** 同步设置面包屑导航信息*/
     private updateBreadcrumbs;
     addTabPanes(panes: legionsProLayoutInterface['panes'], menu_list: legionsProLayoutInterface['menuList']): void;
+    popstateAsyncData(panes: legionsProLayoutInterface['panes'], menuList: legionsProLayoutInterface['menuList']): void;
     /**
      * 打开指定菜单
      * @param defaultItem 即将打开菜单页签数据
