@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.23
+  *  legions-pro-design v0.0.25
   * (c) 2022 duanguang
   * @license MIT
   */
@@ -173,7 +173,7 @@ var MasterGlobalStateStore = /** @class */ (function (_super) {
             if (process.env.NODE_ENV !== 'production') {
                 console.log('[onGlobalStateChange - master]:', value, prev);
             }
-        }, true);
+        }, false);
     };
     MasterGlobalStateStore.prototype.setUserGlobalState = function (state) {
         this.setGlobalState({
@@ -262,7 +262,7 @@ var WorkerGlobalStateStore = /** @class */ (function (_super) {
                 if (process.env.NODE_ENV !== 'production') {
                     console.log("[onGlobalStateChange - " + values.appId + "]:", value, prev);
                 }
-            }, true);
+            }, false);
         });
     };
     WorkerGlobalStateStore.prototype._syncUpdateGlobalState = function (props) {

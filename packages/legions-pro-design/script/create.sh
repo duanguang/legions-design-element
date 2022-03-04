@@ -35,8 +35,6 @@ cp -r -f types/src/components/LegionsStoreForm/* lib/LegionsStoreForm/
 
 
 
-cp -r -f types/src/components/LegionsStoreModal/* es/LegionsStoreModal/
-cp -r -f types/src/components/LegionsStoreModal/* lib/LegionsStoreModal/
 
 cp -r -f types/src/components/LegionsStoreTable/* es/LegionsStoreTable/
 cp -r -f types/src/components/LegionsStoreTable/* lib/LegionsStoreTable/

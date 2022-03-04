@@ -101,7 +101,7 @@ export default class WorkerGlobalStateStore<IGlobalState,User={}> extends Legion
                 if (process.env.NODE_ENV !== 'production') {
                     console.log(`[onGlobalStateChange - ${values.appId}]:`,value,prev)
                 }
-              },true)
+              },false)
         })
     }
     private _syncUpdateGlobalState(props: {

@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-05 13:57:53
- * @LastEditTime: 2022-03-02 17:08:34
+ * @LastEditTime: 2022-03-04 10:42:02
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsCrossModule/masterGlobalStateStore.ts
@@ -60,7 +60,7 @@ export class MasterGlobalStateStore extends LegionsStore.StoreBase<IContext>{
             if (process.env.NODE_ENV !== 'production') {
                 console.log('[onGlobalStateChange - master]:',value,prev)
             }
-        },true);
+        },false);
     }
     setUserGlobalState(state) {
         this.setGlobalState({
