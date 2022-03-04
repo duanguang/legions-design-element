@@ -1,6 +1,6 @@
 /// <reference types="react" />
 import { IProTabsFormAddTabsMap, ITabsFormViewModelStore } from '../../LegionsStoreForm/interface';
-export interface InstanceTabsForm<Model> {
+interface IProTabsFormRef<Model> {
     /**
      * 表单UI数据
      *
@@ -43,5 +43,8 @@ interface IMethods<Model> {
     getFormFields: (key: string) => Model;
     /** 添加表单按钮事件 */
     onTabAdd: (options?: IProTabsFormAddTabsMap['options']) => string;
+}
+export interface IProTabsForm<M = {}> {
+    ref: IProTabsFormRef<M>;
 }
 export {};

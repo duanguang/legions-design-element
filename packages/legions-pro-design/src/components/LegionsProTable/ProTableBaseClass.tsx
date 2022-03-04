@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-13 11:06:29
- * @LastEditTime: 2021-11-17 22:42:59
+ * @LastEditTime: 2022-03-04 12:01:49
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProTable/ProTableBaseClass.tsx
@@ -10,10 +10,7 @@
 import React from 'react';
 import { observable,action,StoreModules, } from 'legions/store';
 import { ObservableMap,toJS } from 'mobx';
-import * as mobx from 'mobx';
-import { TableColumnConfig } from '../interface/antd';
-import { InstanceProTable, ITableColumnConfigProps,IProTableFormColumnConfigProps } from './interface';
-import LegionsStoreTable from '../LegionsStoreTable';
+import { IProTable, ITableColumnConfigProps } from './interface';
 import {mobxVersion} from 'brain-store-utils'
 /**
  * 列表组件基类
@@ -28,8 +25,7 @@ import {mobxVersion} from 'brain-store-utils'
  * @template QueryParams 搜索条件对象类型约束结构 默认any类型
  */
 export class ProTableBaseClass<P,S,Columns = {},QueryParams = any> extends React.Component<P,S>{
-    static pageListEntity = LegionsStoreTable.pageListEntity;
-    tableRef: InstanceProTable = null;
+    tableRef: IProTable['ref'] = null;
     //@ts-ignore
     queryPrams: QueryParams = {}
     @observable private columnsDataMap = observable.map<string,ITableColumnConfigProps<Columns>>();

@@ -4,8 +4,7 @@ import { Table,Row,Col,Button,Icon,Input,message,Menu,Dropdown } from 'antd';
 import './style/index.less';
 import { TableColumnConfig,TableProps,TableRowSelection } from 'antd/lib/table/Table';
 import { observer,bind } from 'legions/store-react';
-import LegionsStoreTable from '../LegionsStoreTable';
-import { IViewModelProTableStore } from '../LegionsStoreTable/interface';
+import LegionsStoreTable from './store';
 import {
     compare,
 } from 'legions-utils-tool/object.utils';
@@ -17,7 +16,7 @@ import {
     SelectionDecorator,
     PaginationProps
 } from '../interface/antd';
-import { ITableColumnConfig,IExportCsv,IProTableProps,ICustomColumnsConfig } from './interface';
+import { IProTableProps,IProTable, IViewModelProTableStore } from './interface';
 import { legionsStoreInterface } from '../LegionsStore/interface';
 import moment from 'moment';
 import LegionsProTableCustomColumns from '../LegionsProTableCustomColumns';
@@ -28,7 +27,7 @@ import { runScriptsSdk } from 'legions-thirdparty-plugin';
 import { cloneDeep } from 'lodash';
 import { ProTableBaseClass } from './ProTableBaseClass';
 import invariant from 'invariant';
-const serialize = require('serialize-javascript');
+
 const baseCls = `legions-pro-table`
 
 
@@ -87,14 +86,15 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
     /** 开启自定义列数据同步接口信息-全局配置(当全局和局部存在冲突时，优先局部配置数据)
      *
      * 同步数据到服务端所需要的查询和保存接口地址信息 */
-    static customColumnsConfig: ICustomColumnsConfig = {
+    static customColumnsConfig: IProTable['customColumnsConfig'] = {
         editApi: '',
         queryApi: '',
     }
+    static store = LegionsStoreTable;
     /** 开启自定义列数据同步接口信息-局部配置(当全局和局部存在冲突时，优先局部配置数据)
      *
      * 同步数据到服务端所需要的查询和保存接口地址信息 */
-    customColumnsConfig: ICustomColumnsConfig = {
+    customColumnsConfig: IProTable['customColumnsConfig'] = {
         editApi: '',
         queryApi: '',
     }
@@ -181,7 +181,7 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
      * @param {Partial<Parameters<typeof exportCsv>[0]>} prams
      * @memberof HLTable
      */
-    exportCsv(prams: Partial<IExportCsv> = {}) {
+    exportCsv(prams: Partial<IProTable['exportCsv']> = {}) {
         if (!runScriptsSdk.plugins.xlsx) {
             message.warning('Plugin is not ready to excel, Please install at the entrance(legionsThirdpartyPlugin.use({name:"excel",url:"xxxx"}))');
             return;
@@ -207,7 +207,7 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
         runScriptsSdk.plugins.xlsx.exportJsonToExcel({ data: datas,columns: newColumns,filename: prams.filename,autoWidth: true })
     }
     //@ts-ignore
-    tranMapColumns(columns: (TableColumnConfig<{}> & ITableColumnConfig)[] = this.props.columns) {
+    tranMapColumns(columns: IProTable['tableColumnConfig'][] = this.props.columns) {
         return columns.map((item) => {
             if (!item.render && item.tooltip) {
                 let newItem = { key: item.dataIndex,...item };
@@ -289,7 +289,7 @@ export default class LegionsProTable<TableRow = {},Model = {}> extends React.Com
             freezeuid: this.freezeuid,
             decryptionfreezeuid: this.decryptionfreezeuid,
             methods: {
-                exportCsv: (prams: Partial<IExportCsv>) => {
+                exportCsv: (prams: Partial<IProTable['exportCsv']>) => {
                     this.exportCsv(prams)
                 },
                 onSearch: (options?: {

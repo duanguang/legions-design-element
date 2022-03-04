@@ -1,5 +1,5 @@
 import React from 'react';
-import { InstanceProTable, ITableColumnConfigProps } from './interface';
+import { IProTable, ITableColumnConfigProps } from './interface';
 /**
  * 列表组件基类
  *
@@ -13,8 +13,7 @@ import { InstanceProTable, ITableColumnConfigProps } from './interface';
  * @template QueryParams 搜索条件对象类型约束结构 默认any类型
  */
 export declare class ProTableBaseClass<P, S, Columns = {}, QueryParams = any> extends React.Component<P, S> {
-    static pageListEntity: typeof import("../LegionsStoreTable/pageListEntity").PageListEntity;
-    tableRef: InstanceProTable;
+    tableRef: IProTable['ref'];
     queryPrams: QueryParams;
     private columnsDataMap;
     /** 列描述数据对象*/

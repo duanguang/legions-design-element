@@ -5,7 +5,7 @@ import { ClassOf } from 'legions-lunar/api/typescript';
 import { IGroup } from '../LegionsProForm/interface';
 import { TabPaneProps, TabsProps } from 'antd/lib/tabs';
 import { Weaken } from '../interface';
-import { InstanceTabsForm } from './interface';
+import { IProTabsForm } from './interface';
 import { TabsItemView } from '../LegionsStoreForm/tabsView';
 interface IProps<Model> {
     store?: InstanceType<typeof LegionsStoreForm>;
@@ -30,7 +30,7 @@ interface IProps<Model> {
     group?: Array<IGroup>;
     tabsProps?: TabsProps;
     tabPaneProps?: ITabPaneProps;
-    onReady: (formRef?: InstanceTabsForm<Model>) => void;
+    onReady: (ref?: IProTabsForm<Model>) => void;
     /**
      * 添加页签项成功后触发回调钩子
      *@param {uid} 添加页签项唯一key

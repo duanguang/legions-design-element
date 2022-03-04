@@ -1,17 +1,17 @@
 /*
  * @Author: duanguang
  * @Date: 2021-09-28 23:07:31
- * @LastEditTime: 2022-03-04 10:37:53
+ * @LastEditTime: 2022-03-04 13:50:18
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/script/constants/component.js
  * 「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
 const TableComponent = [
-    // 'LegionsStoreTable','LegionsProTableCustomColumns',
-    // 'LegionsProTableForm',
+     'LegionsProTableCustomColumns',
+     'LegionsProTableForm',
     'LegionsProTable',
-    //'LegionsProVirtualTable'
+    'LegionsProVirtualTable'
 ]//
 const FormComponent = [
     //'LegionsStoreForm',

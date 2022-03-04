@@ -1,12 +1,12 @@
 /**
-  *  legions-pro-design v0.0.21
+  *  legions-pro-design v0.0.25
   * (c) 2022 duanguang
   * @license MIT
   */
 import React, { Component } from 'react';
 import { Row, Col, Card, message } from 'antd';
 import LegionsProModal from '../LegionsProModal';
-import LegionsStoreTable from '../LegionsStoreTable';
+import LegionsProTable from '../LegionsProTable';
 import { bind, observer } from 'legions/store-react';
 import LegionsProDragger from '../LegionsProDragger';
 import './style/index.less';
@@ -239,7 +239,7 @@ var LegionsProTableCustomColumns = /** @class */ (function (_super) {
                         }))))))));
     };
     LegionsProTableCustomColumns = __decorate([
-        bind({ store: LegionsStoreTable }),
+        bind({ store: LegionsProTable['store'] }),
         observer,
         __metadata("design:paramtypes", [Object])
     ], LegionsProTableCustomColumns);

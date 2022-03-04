@@ -4,15 +4,12 @@ import { Table } from 'antd'
 import throttle from 'lodash.throttle'
 import LegionsProTable from '../LegionsProTable';
 import {IProTableProps} from '../LegionsProTable/interface';
-import {InstanceProTable,ITableColumnConfig} from '../LegionsProTable/interface'
+import {IProTable} from '../LegionsProTable/interface'
 import {
     compare,sort
 } from 'legions-utils-tool/object.utils';
 import { shortHash } from 'legions-lunar/object-hash'
 import { observer,bind } from 'legions/store-react'
-import {
-    TableColumnConfig,
-} from '../interface/antd';
 import { legionsStoreInterface} from '../LegionsStore/interface';
 import LegionsProLineOverflow from '../LegionsProLineOverflow';
 import { observable,runInAction } from 'mobx';
@@ -24,7 +21,7 @@ interface IState {
     topBlankHeight: number;
     bottomBlankHeight: number;
     maxTotalHeight: number;
-    columns: (TableColumnConfig<{}> & ITableColumnConfig)[];
+    columns: (IProTable['tableColumnConfig'])[];
     data: any[];
 }
 interface IFillNode {
@@ -38,8 +35,7 @@ interface IFillNode {
  * 应对展示大量数据时，对性能的优化,主要用于报表展示，
  * 请勿开启左右固定列设置,行高也请固定，否则会计算错误
  *
- * @class HlVirtualTable
- * @extends {Component<IHLTableProps, IState>}
+ * @class 
  */
 @observer
 export default class LegionsProVirtualTable extends Component<IProTableProps,IState> {
@@ -59,7 +55,7 @@ export default class LegionsProVirtualTable extends Component<IProTableProps,ISt
     refScroll: Element = null
     listenEvent = null
     refTable: Element = null
-    tabelRef: InstanceProTable = null
+    tabelRef: IProTable['ref'] = null
     refLeftTable: Element = null
     lastSlideUpHeight = 0;
     sameSlideHeightCount = 0;
@@ -83,7 +79,8 @@ export default class LegionsProVirtualTable extends Component<IProTableProps,ISt
         }
     }
     ticking = false; // rAF 触发锁
-    tranMapColumns(columns: (TableColumnConfig<{}> & ITableColumnConfig)[] = this.props.columns) {
+    //@ts-ignore
+    tranMapColumns(columns: (IProTable['tableColumnConfig'])[] = this.props.columns) {
         return columns.map((item) => {
             let newItem = { sorter: true,key: item.dataIndex,...item };
             if (!item.render) {
@@ -112,28 +109,6 @@ export default class LegionsProVirtualTable extends Component<IProTableProps,ISt
             });
         };
     }
-    log = (n) => {
-        if (this.tabelRef && this.props.autoQuery && this.tabelRef.localViewModel && this.tabelRef.localViewModel.obState.isPending) {
-            runInAction(() => {
-                this.loading = true;
-            })
-        }
-        if (this.tabelRef && this.tabelRef.localViewModel && !this.tabelRef.localViewModel.obState.isPending && this.props.autoQuery && this.loading) {
-            const data = this.props.autoQuery.transform(this.tabelRef.localViewModel.obState);
-            if (data) {
-                this.setState({ data: data.data,thresholdCount: 40 },() => {
-                    this.refScroll.scrollTop = 0
-                    console.log(data)
-                    this.handleScroll(data.data.length)
-                })
-                runInAction(() => {
-                    this.total = data.total
-                    this.loading = false;
-                })
-            }
-
-        }
-    }
     componentWillMount() {
     }
     componentDidMount() {
@@ -153,17 +128,14 @@ export default class LegionsProVirtualTable extends Component<IProTableProps,ISt
         // 初始化设置滚动条
         this.setRowHeight()
         this.handleScrollEvent()
-        if (this.tabelRef && this.props.autoQuery && this.tabelRef.localViewModel) {
-            if (this.props.autoQuery.isDefaultLoad === void 0 || this.props.autoQuery.isDefaultLoad) {
-                this.tabelRef.methods.onSearch()
-            }
-            this.subscription = this.tabelRef.store.schedule([this.log.bind(this)])
+        if (this.tabelRef && this.props.request && this.tabelRef.localViewModel) {
+            this.tabelRef.methods.onSearch()
         }
     }
     componentWillReceiveProps(nextProps) {
         const { data } = nextProps
         const { dataSource: tdataSource } = this.props
-        if (data && data !== tdataSource && !this.props.autoQuery) {
+        if (data && data !== tdataSource && !this.props.request) {
             this.setState({ data: data,thresholdCount: 40 },() => {
                 this.refScroll.scrollTop = 0
                 this.handleScroll(data.length)
@@ -230,7 +202,7 @@ export default class LegionsProVirtualTable extends Component<IProTableProps,ISt
 
     handleScrollEvent = (even?) => {
         const { dataSource } = this.props
-        this.handleScroll((this.props.autoQuery ? this.state.data : dataSource || []).length)
+        this.handleScroll((this.props.request ? this.state.data : dataSource || []).length)
         /* this.lodaMore() */
         // this.ticking =false
     }
@@ -342,9 +314,9 @@ export default class LegionsProVirtualTable extends Component<IProTableProps,ISt
         }
         return val
     }
-    onReady(value: InstanceProTable) {
+    onReady(value: IProTable['ref']) {
         this.tabelRef = value;
-        if (this.props.autoQuery) {
+        if (this.props.request) {
             this.tabelRef.methods.onSearch = (options?: {
                 pageIndex?: number;
             }) => {
@@ -353,11 +325,7 @@ export default class LegionsProVirtualTable extends Component<IProTableProps,ISt
                 } else {
                     value.viewModel.pageIndex = 1;
                 }
-                value.localViewModel.dispatchRequest(this.props.autoQuery,Object.assign({
-                    pageIndex: value.viewModel.pageIndex,
-                    pageSize: value.viewModel.pageSize,
-                    isShowLoading:true,
-                },options))
+                this.props.request(value.viewModel.pageIndex,value.viewModel.pageSize)
             }
         }
         this.props.onReady && this.props.onReady(value)
@@ -373,12 +341,12 @@ export default class LegionsProVirtualTable extends Component<IProTableProps,ISt
     }
     onPagingQuery = (pageIndex: number,pageSize: number,isChangePageSize?: boolean) => {
         this.props.onPagingQuery && this.props.onPagingQuery(pageIndex,pageSize,isChangePageSize)
-        if (this.props.autoQuery && this.tabelRef) {
+        if (this.props.request && this.tabelRef) {
             this.tabelRef.methods.onSearch({ pageIndex })
         }
     }
     render() {
-        const { autoQuery,...rest } = this.props;
+        const { request,...rest } = this.props;
         const { data } = this.state;
         const { topBlankHeight,bottomBlankHeight,startIndex,visibleRowCount,rowHeight,thresholdCount } = this.state
         const { length } = data || []
@@ -400,14 +368,14 @@ export default class LegionsProVirtualTable extends Component<IProTableProps,ISt
 
                 <LegionsProTable
                     {...rest}
-                    loading={this.props.autoQuery ? this.loading : rest.loading}
-                    total={this.props.autoQuery ? this.total : rest.total}
+                    loading={this.props.request ? this.loading : rest.loading}
+                    total={this.props.request ? this.total : rest.total}
                     columns={this.state.columns}
                     displayType="bigData"
                     onPagingQuery={this.onPagingQuery}
                     onReady={this.onReady.bind(this)}
                     pageSizeOptions={['100','500','1000','2000','3000','5000','10000']}
-                    dataSource={this.props.autoQuery ? this.state.data : this.props.dataSource}
+                    dataSource={this.props.request ? this.state.data : this.props.dataSource}
                     //@ts-ignore
                     onChange={(pagination,filters,sorter: { column: { sorter: boolean | ((a: any,b: any) => number) }; columnKey: string; field: string; order: "ascend" | "descend" }) => {
                         if (sorter.column && sorter.column.sorter && typeof sorter.column.sorter === 'boolean') {

@@ -1,8 +1,15 @@
-import { IViewModelProTableStore, ILocalViewModelProTableStore } from '../LegionsStoreTable/interface';
-import LegionsStoreTable from '../LegionsStoreTable';
+import LegionsStoreTable from './store';
 import { TableColumnConfig } from '../interface/antd';
 import { TableProps } from 'antd/lib/table/Table';
-export interface ITableColumnConfig {
+import { ProTableView } from './store/ProTableView';
+import { ProTableLocalView } from './store/ProTableLocalView';
+import { ViewModel } from 'brain-store-utils/types/create-view-model';
+declare type Proxify<T> = {
+    [P in keyof T]: T[P];
+};
+export declare type IViewModelProTableStore = ViewModel<ProTableView> & Proxify<ProTableView>;
+declare type ILocalViewModelProTableStore = ViewModel<ProTableLocalView> & Proxify<ProTableLocalView>;
+interface ITableColumnConfig {
     /** 当传入的title不为string类型时，可传label作为checkbox的label展示 */
     label?: string;
     /** 默认不选中 不选中：true 选中：false */
@@ -33,7 +40,11 @@ export interface ITableColumnConfig {
  */
 export interface ITableColumnConfigProps<T = {}> extends TableColumnConfig<T & IProTableFormColumnConfigGenProps>, ITableColumnConfig {
 }
-export interface IExportCsv {
+interface IScroll {
+    x?: string | number | boolean;
+    y?: string | number | boolean;
+}
+interface IExportCsv {
     /**
      *
      * 文件名，默认为 table.csv
@@ -84,7 +95,7 @@ export interface IExportCsv {
      */
     quoted?: boolean;
 }
-export interface InstanceProTable {
+interface IProTableRef {
     store: InstanceType<typeof LegionsStoreTable>;
     readonly uid: string;
     /**
@@ -174,7 +185,30 @@ interface IMethods {
      */
     openCustomColumns: () => void;
 }
-export declare type IViewModelProTable = IViewModelProTableStore;
+interface ICustomColumnsConfig {
+    /** 编辑自定义信息同步到服务端接口地址 */
+    editApi: string;
+    /** 从服务端查询自定义列信息接口地址 */
+    queryApi: string;
+}
+export interface IProTableFormColumnConfigGenProps {
+    /** 表格行状态
+     *
+     * true 编辑状态
+     *
+     * false 非编辑状态
+     */
+    readonly isRecordEdit?: boolean;
+    /** 表格行key */
+    readonly legionsTableFormItemKey?: string;
+}
+export interface IProTable {
+    tableColumnConfig: ITableColumnConfigProps;
+    exportCsv: IExportCsv;
+    customColumnsConfig: ICustomColumnsConfig;
+    ref: IProTableRef;
+    scroll: IScroll;
+}
 export interface IProTableProps<TableRow = {}, Model = {}> extends TableProps<TableRow> {
     readonly store?: InstanceType<typeof LegionsStoreTable>;
     pageSize?: number;
@@ -242,7 +276,7 @@ export interface IProTableProps<TableRow = {}, Model = {}> extends TableProps<Ta
      *
      * @memberof IHLTableProps
      */
-    onReady?: (instance: InstanceProTable) => void;
+    onReady?: (ref: IProTableRef) => void;
     /**
      * table 模块名称，如果设置此值，请保持绝对唯一
      *
@@ -326,24 +360,5 @@ export interface IProTableProps<TableRow = {}, Model = {}> extends TableProps<Ta
         /** 总数量 */
         total?: number;
     }>;
-}
-export interface ICustomColumnsConfig {
-    /** 编辑自定义信息同步到服务端接口地址 */
-    editApi: string;
-    /** 从服务端查询自定义列信息接口地址 */
-    queryApi: string;
-}
-export interface IProTableFormColumnConfigGenProps {
-    /** 表格行状态
-     *
-     * true 编辑状态
-     *
-     * false 非编辑状态
-     */
-    readonly isRecordEdit?: boolean;
-    /** 表格行key */
-    readonly legionsTableFormItemKey?: string;
-}
-export interface IProTableFormColumnConfigProps<T> extends ITableColumnConfigProps<T & IProTableFormColumnConfigGenProps> {
 }
 export {};

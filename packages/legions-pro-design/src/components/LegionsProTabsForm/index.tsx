@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-28 15:58:15
- * @LastEditTime: 2021-11-18 23:52:21
+ * @LastEditTime: 2022-03-04 13:49:00
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProTabsForm/index.tsx
@@ -18,7 +18,7 @@ import { ClassOf } from 'legions-lunar/api/typescript';
 import { IGroup,InstanceProForm } from '../LegionsProForm/interface';
 import { TabPaneProps, TabsProps } from 'antd/lib/tabs';
 import { Weaken } from '../interface';
-import { InstanceTabsForm } from './interface';
+import { IProTabsForm } from './interface';
 import { ValidateCallback } from 'antd/lib/form/Form';
 import { TabsItemView } from '../LegionsStoreForm/tabsView';
 import invariant from 'invariant';
@@ -46,7 +46,7 @@ interface IProps<Model> {
 
     tabsProps?: TabsProps;
     tabPaneProps?: ITabPaneProps;
-    onReady: (formRef?: InstanceTabsForm<Model>) => void;
+    onReady: (ref?: IProTabsForm<Model>) => void;
     /**
      * 添加页签项成功后触发回调钩子
      *@param {uid} 添加页签项唯一key
@@ -101,6 +101,7 @@ export default class LegionsProTabsForm<Model> extends React.Component<IProps<Mo
     }
     componentWillMount() {
         this.props.onReady && this.props.onReady({
+            //@ts-ignore
             viewModel: this.storeView,
             freezeUid: this.freezeUid,
             decryptionFreezeUid: this.decryptionFreezeUid,

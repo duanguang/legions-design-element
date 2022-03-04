@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.21
+  *  legions-pro-design v0.0.25
   * (c) 2022 duanguang
   * @license MIT
   */
@@ -11,7 +11,7 @@ import { compare } from 'legions-utils-tool/object.utils';
 import { shortHash } from 'legions-lunar/object-hash';
 import { observer } from 'legions/store-react';
 import LegionsProLineOverflow from '../LegionsProLineOverflow';
-import { observable, runInAction } from 'mobx';
+import { observable } from 'mobx';
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -106,8 +106,7 @@ function __spread() {
  * 应对展示大量数据时，对性能的优化,主要用于报表展示，
  * 请勿开启左右固定列设置,行高也请固定，否则会计算错误
  *
- * @class HlVirtualTable
- * @extends {Component<IHLTableProps, IState>}
+ * @class
  */
 var LegionsProVirtualTable = /** @class */ (function (_super) {
     __extends(LegionsProVirtualTable, _super);
@@ -143,30 +142,9 @@ var LegionsProVirtualTable = /** @class */ (function (_super) {
                 });
             };
         };
-        _this.log = function (n) {
-            if (_this.tabelRef && _this.props.autoQuery && _this.tabelRef.localViewModel && _this.tabelRef.localViewModel.obState.isPending) {
-                runInAction(function () {
-                    _this.loading = true;
-                });
-            }
-            if (_this.tabelRef && _this.tabelRef.localViewModel && !_this.tabelRef.localViewModel.obState.isPending && _this.props.autoQuery && _this.loading) {
-                var data_1 = _this.props.autoQuery.transform(_this.tabelRef.localViewModel.obState);
-                if (data_1) {
-                    _this.setState({ data: data_1.data, thresholdCount: 40 }, function () {
-                        _this.refScroll.scrollTop = 0;
-                        console.log(data_1);
-                        _this.handleScroll(data_1.data.length);
-                    });
-                    runInAction(function () {
-                        _this.total = data_1.total;
-                        _this.loading = false;
-                    });
-                }
-            }
-        };
         _this.handleScrollEvent = function (even) {
             var dataSource = _this.props.dataSource;
-            _this.handleScroll((_this.props.autoQuery ? _this.state.data : dataSource || []).length);
+            _this.handleScroll((_this.props.request ? _this.state.data : dataSource || []).length);
             /* this.lodaMore() */
             // this.ticking =false
         };
@@ -195,7 +173,7 @@ var LegionsProVirtualTable = /** @class */ (function (_super) {
         };
         _this.onPagingQuery = function (pageIndex, pageSize, isChangePageSize) {
             _this.props.onPagingQuery && _this.props.onPagingQuery(pageIndex, pageSize, isChangePageSize);
-            if (_this.props.autoQuery && _this.tabelRef) {
+            if (_this.props.request && _this.tabelRef) {
                 _this.tabelRef.methods.onSearch({ pageIndex: pageIndex });
             }
         };
@@ -220,6 +198,7 @@ var LegionsProVirtualTable = /** @class */ (function (_super) {
         return (React.createElement("div", { id: uid },
             React.createElement("div", { style: { height: height + "px", marginTop: marginTop + "px", marginBottom: marginBottom + "px" } })));
     };
+    //@ts-ignore
     LegionsProVirtualTable.prototype.tranMapColumns = function (columns) {
         if (columns === void 0) { columns = this.props.columns; }
         return columns.map(function (item) {
@@ -251,18 +230,15 @@ var LegionsProVirtualTable = /** @class */ (function (_super) {
         // 初始化设置滚动条
         this.setRowHeight();
         this.handleScrollEvent();
-        if (this.tabelRef && this.props.autoQuery && this.tabelRef.localViewModel) {
-            if (this.props.autoQuery.isDefaultLoad === void 0 || this.props.autoQuery.isDefaultLoad) {
-                this.tabelRef.methods.onSearch();
-            }
-            this.subscription = this.tabelRef.store.schedule([this.log.bind(this)]);
+        if (this.tabelRef && this.props.request && this.tabelRef.localViewModel) {
+            this.tabelRef.methods.onSearch();
         }
     };
     LegionsProVirtualTable.prototype.componentWillReceiveProps = function (nextProps) {
         var _this = this;
         var data = nextProps.data;
         var tdataSource = this.props.dataSource;
-        if (data && data !== tdataSource && !this.props.autoQuery) {
+        if (data && data !== tdataSource && !this.props.request) {
             this.setState({ data: data, thresholdCount: 40 }, function () {
                 _this.refScroll.scrollTop = 0;
                 _this.handleScroll(data.length);
@@ -415,7 +391,7 @@ var LegionsProVirtualTable = /** @class */ (function (_super) {
     LegionsProVirtualTable.prototype.onReady = function (value) {
         var _this = this;
         this.tabelRef = value;
-        if (this.props.autoQuery) {
+        if (this.props.request) {
             this.tabelRef.methods.onSearch = function (options) {
                 if (options && options.pageIndex) {
                     value.viewModel.pageIndex = options.pageIndex;
@@ -423,18 +399,14 @@ var LegionsProVirtualTable = /** @class */ (function (_super) {
                 else {
                     value.viewModel.pageIndex = 1;
                 }
-                value.localViewModel.dispatchRequest(_this.props.autoQuery, Object.assign({
-                    pageIndex: value.viewModel.pageIndex,
-                    pageSize: value.viewModel.pageSize,
-                    isShowLoading: true,
-                }, options));
+                _this.props.request(value.viewModel.pageIndex, value.viewModel.pageSize);
             };
         }
         this.props.onReady && this.props.onReady(value);
     };
     LegionsProVirtualTable.prototype.render = function () {
         var _this = this;
-        var _a = this.props, autoQuery = _a.autoQuery, rest = __rest(_a, ["autoQuery"]);
+        var _a = this.props, request = _a.request, rest = __rest(_a, ["request"]);
         var data = this.state.data;
         var _b = this.state, topBlankHeight = _b.topBlankHeight, bottomBlankHeight = _b.bottomBlankHeight, startIndex = _b.startIndex, visibleRowCount = _b.visibleRowCount, rowHeight = _b.rowHeight, thresholdCount = _b.thresholdCount;
         var length = (data || []).length;
@@ -452,16 +424,16 @@ var LegionsProVirtualTable = /** @class */ (function (_super) {
         }
         return (React.createElement("div", { className: this.uid },
             this.FillNode({ height: topBlankHeight, uid: this.uid + "topBlank" }),
-            React.createElement(LegionsProTable, __assign({}, rest, { loading: this.props.autoQuery ? this.loading : rest.loading, total: this.props.autoQuery ? this.total : rest.total, columns: this.state.columns, displayType: "bigData", onPagingQuery: this.onPagingQuery, onReady: this.onReady.bind(this), pageSizeOptions: ['100', '500', '1000', '2000', '3000', '5000', '10000'], dataSource: this.props.autoQuery ? this.state.data : this.props.dataSource, 
+            React.createElement(LegionsProTable, __assign({}, rest, { loading: this.props.request ? this.loading : rest.loading, total: this.props.request ? this.total : rest.total, columns: this.state.columns, displayType: "bigData", onPagingQuery: this.onPagingQuery, onReady: this.onReady.bind(this), pageSizeOptions: ['100', '500', '1000', '2000', '3000', '5000', '10000'], dataSource: this.props.request ? this.state.data : this.props.dataSource, 
                 //@ts-ignore
                 onChange: function (pagination, filters, sorter) {
                     if (sorter.column && sorter.column.sorter && typeof sorter.column.sorter === 'boolean') {
                         var sorterFn = _this.getSorterFn(sorter.order, function (a, b) {
                             return compare(a[sorter.columnKey], b[sorter.columnKey]);
                         });
-                        var data_2 = _this.state.data;
+                        var data_1 = _this.state.data;
                         _this.setState({
-                            data: data_2.sort(sorterFn)
+                            data: data_1.sort(sorterFn)
                         });
                     }
                 } })),

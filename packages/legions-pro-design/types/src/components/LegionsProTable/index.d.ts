@@ -1,9 +1,8 @@
 import React from 'react';
 import './style/index.less';
-import { TableColumnConfig } from 'antd/lib/table/Table';
-import { IViewModelProTableStore } from '../LegionsStoreTable/interface';
+import LegionsStoreTable from './store';
 import { SelectionDecorator } from '../interface/antd';
-import { ITableColumnConfig, IExportCsv, IProTableProps, ICustomColumnsConfig } from './interface';
+import { IProTableProps, IProTable, IViewModelProTableStore } from './interface';
 import { legionsStoreInterface } from '../LegionsStore/interface';
 import { ILegionsProModal } from '../LegionsProModal/interface';
 import { ProTableBaseClass } from './ProTableBaseClass';
@@ -54,11 +53,12 @@ export default class LegionsProTable<TableRow = {}, Model = {}> extends React.Co
     /** 开启自定义列数据同步接口信息-全局配置(当全局和局部存在冲突时，优先局部配置数据)
      *
      * 同步数据到服务端所需要的查询和保存接口地址信息 */
-    static customColumnsConfig: ICustomColumnsConfig;
+    static customColumnsConfig: IProTable['customColumnsConfig'];
+    static store: typeof LegionsStoreTable;
     /** 开启自定义列数据同步接口信息-局部配置(当全局和局部存在冲突时，优先局部配置数据)
      *
      * 同步数据到服务端所需要的查询和保存接口地址信息 */
-    customColumnsConfig: ICustomColumnsConfig;
+    customColumnsConfig: IProTable['customColumnsConfig'];
     /**
      * 列表组件基类
      *
@@ -74,7 +74,7 @@ export default class LegionsProTable<TableRow = {}, Model = {}> extends React.Co
     static ProTableBaseClass: typeof ProTableBaseClass;
     constructor(props: any);
     get uuid(): string;
-    get getViewStore(): import("brain-store-utils/types/create-view-model").ViewModel<import("../LegionsStoreTable/ProTableView").ProTableView> & {
+    get getViewStore(): import("brain-store-utils/types/create-view-model").ViewModel<import("./store/ProTableView").ProTableView> & {
         userInfo: {
             userName: string;
             userUid: string;
@@ -86,12 +86,12 @@ export default class LegionsProTable<TableRow = {}, Model = {}> extends React.Co
         pageSize: number;
         selectedRowKeys: string[] | number[];
         _expandRow?: string;
-        _type?: "checkbox" | "radio";
+        _type?: "radio" | "checkbox";
         _rowSelectionClickType?: "radio" | "check";
-        columns?: (TableColumnConfig<{}> & import("../LegionsStoreTable/interface").ITableColumnConfig)[];
+        columns?: import("./interface").ITableColumnConfigProps<{}>[];
         _obTableListCustom: import("../LegionsModels/pro.table.model").TableColumnsContainerEntity;
         tableBodyDomClientHeight: number;
-        bodyExternalContainer: import("../LegionsStoreTable/interface").IObservableMap<string, {
+        bodyExternalContainer: import("./store/ProTableView").IObservableMap<string, {
             height: number;
         }>;
         isAdaptiveHeight: boolean;
@@ -108,10 +108,10 @@ export default class LegionsProTable<TableRow = {}, Model = {}> extends React.Co
         _uniqueKey: string;
         readonly computedSelectedRows: any[];
         readonly calculateBody: {};
-        readonly computedShowColumns: import("../LegionsStoreTable/interface").IShowColumns[];
-        readonly computedUnShowColumns: import("../LegionsStoreTable/interface").IShowColumns[];
+        readonly computedShowColumns: import("./store/ProTableView").IShowColumns[];
+        readonly computedUnShowColumns: import("./store/ProTableView").IShowColumns[];
         readonly computedStorageShowColumnsKeys: string;
-        readonly computedRenderColumns: (TableColumnConfig<{}> & import("../LegionsStoreTable/interface").ITableColumnConfig)[];
+        readonly computedRenderColumns: import("./interface").ITableColumnConfigProps<{}>[];
         readonly tableXAutoWidth: React.ReactText;
         readonly computedTotal: number;
         _filterColumns: () => void;
@@ -120,7 +120,7 @@ export default class LegionsProTable<TableRow = {}, Model = {}> extends React.Co
         _orderSortRightShowColumns: (Columns: string[]) => void;
         _orderSortLeftShowColumns: (Columns: string[]) => void;
         _setLocalStorageShowColumnsKeys: (modulesName: string, uid: string) => void;
-        _getLocalStorageShowColumns: () => import("../LegionsStoreTable/interface").IShowColumns[];
+        _getLocalStorageShowColumns: () => import("./store/ProTableView").IShowColumns[];
         _setLocalStorageShowColumns: (url: string) => void;
         _editTableColumns: (modulesUid: string, customColumns: import("../LegionsModels/pro.table.model").TableListColumns[], url: any) => Promise<void>;
         _queryTableColumns: (modulesUid: string, url: any) => Promise<void>;
@@ -128,7 +128,7 @@ export default class LegionsProTable<TableRow = {}, Model = {}> extends React.Co
         updateOpenRowChange: (isOpenRowChange: boolean) => void;
         updateOpenRowSelection: (isOpenRowSelection: boolean) => void;
     };
-    get getLocalViewStore(): import("brain-store-utils/types/create-view-model").ViewModel<import("../LegionsStoreTable/ProTableLocalView").ProTableLocalView> & {
+    get getLocalViewStore(): import("brain-store-utils/types/create-view-model").ViewModel<import("./store/ProTableLocalView").ProTableLocalView> & {
         readonly computedLoading: boolean;
         _setLoadingState: (_loading: boolean) => void;
     };
@@ -143,8 +143,8 @@ export default class LegionsProTable<TableRow = {}, Model = {}> extends React.Co
      * @param {Partial<Parameters<typeof exportCsv>[0]>} prams
      * @memberof HLTable
      */
-    exportCsv(prams?: Partial<IExportCsv>): void;
-    tranMapColumns(columns?: (TableColumnConfig<{}> & ITableColumnConfig)[]): (TableColumnConfig<{}> & ITableColumnConfig)[];
+    exportCsv(prams?: Partial<IProTable['exportCsv']>): void;
+    tranMapColumns(columns?: IProTable['tableColumnConfig'][]): import("./interface").ITableColumnConfigProps<{}>[];
     createHeaderInnerNode(): void;
     inintSelectedRows(selectedRows?: string[] | number[]): void;
     initPagination(): void;

@@ -1,8 +1,16 @@
 /// <reference types="react" />
-import LegionsModels from '../LegionsModels';
-import { editTableColumns } from '../services';
-import { IShowColumns, ITableColumnConfig, IObservableMap } from './interface';
-import { TableColumnConfig } from '../interface/antd';
+import { ObservableMap } from 'mobx';
+import LegionsModels from '../../LegionsModels';
+import { editTableColumns } from '../../services';
+import { IProTable } from '../interface';
+export interface IObservableMap<K, V> extends ObservableMap<K, V> {
+}
+export interface IObservableMap<K, V> extends ObservableMap<V> {
+}
+export interface IShowColumns {
+    dataIndex: string;
+    title: string;
+}
 export declare class ProTableView {
     userInfo: {
         userName: string;
@@ -54,7 +62,7 @@ export declare class ProTableView {
      *
      * @memberof ModalView
      */
-    columns?: (TableColumnConfig<{}> & ITableColumnConfig)[];
+    columns?: (IProTable['tableColumnConfig'])[];
     /**
      * 用于显示列信息列表  table组件内部处理，外部请勿修改数据
      *
@@ -200,7 +208,7 @@ export declare class ProTableView {
      * @readonly
      * @memberof ProTableView
      */
-    get computedRenderColumns(): (TableColumnConfig<{}> & ITableColumnConfig)[];
+    get computedRenderColumns(): (IProTable['tableColumnConfig'])[];
     /**
      * 表格x轴长度计算 scroll{x:计算}
      *

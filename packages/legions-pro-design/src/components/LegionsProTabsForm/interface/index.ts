@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-29 10:57:31
- * @LastEditTime: 2021-11-18 23:41:17
+ * @LastEditTime: 2022-03-04 13:46:53
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProTabsForm/interface/index.ts
@@ -11,7 +11,7 @@ import  {
     IProTabsFormAddTabsMap,
     ITabsFormViewModelStore,
   } from '../../LegionsStoreForm/interface';
-export interface InstanceTabsForm<Model> {
+interface IProTabsFormRef<Model> {
   
   
     /**
@@ -57,4 +57,7 @@ interface IMethods<Model> {
     getFormFields: (key: string) => Model;
     /** 添加表单按钮事件 */
     onTabAdd: (options?:IProTabsFormAddTabsMap['options']) => string;
+}
+export interface IProTabsForm<M = {}>{
+    ref:IProTabsFormRef<M>
 }

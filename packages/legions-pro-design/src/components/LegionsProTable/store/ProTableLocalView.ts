@@ -7,12 +7,6 @@
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreTable/ProTableLocalView.ts
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
-import {  StoreModules } from 'legions/store';
-import LegionsCore from '../LegionsCore';
-import { cloneDeep } from 'lodash';
-import { observableViewModel, observablePromise } from 'legions/store-utils';
-import { ITableAutoQuery } from './interface';
-import { PageListEntity } from './pageListEntity';
 import {
   computed,
   observable, action,

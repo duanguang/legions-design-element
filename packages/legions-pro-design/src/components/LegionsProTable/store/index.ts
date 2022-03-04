@@ -1,15 +1,15 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-26 11:35:17
- * @LastEditTime: 2022-02-28 17:15:34
+ * @LastEditTime: 2022-03-04 11:59:55
  * @LastEditors: duanguang
  * @Description: 
- * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreTable/index.ts
+ * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProTable/store/index.ts
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
 /** @format */
 
-import LegionsStore from '../LegionsStore';
+import LegionsStore from '../../LegionsStore';
 import ReactDOM from 'react-dom';
 /* import {
   findDOMNode,
@@ -21,9 +21,7 @@ import { observableViewModel, observablePromise } from 'legions/store-utils';
 import { shortHash } from 'legions-lunar/object-hash';
 import { ProTableView } from './ProTableView';
 import { ProTableLocalView } from './ProTableLocalView';
-import {legionsStoreInterface} from '../LegionsStore/interface';
-import { ObservableMap } from 'mobx';
-import { PageListEntity } from './pageListEntity';
+import {legionsStoreInterface} from '../../LegionsStore/interface';
 import { ViewModel } from 'brain-store-utils/types/create-view-model';
 
 type Proxify<T> = {
@@ -35,7 +33,6 @@ export default class LegionsStoreTable extends LegionsStore.StoreBase {
   static meta: legionsStoreInterface['storeBaseMeta'] = {
     ...LegionsStore.StoreBase.meta,
   };
-  static pageListEntity = PageListEntity;
   constructor(context) {
     super(context);
   }

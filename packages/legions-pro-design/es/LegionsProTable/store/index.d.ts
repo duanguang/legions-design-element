@@ -1,17 +1,14 @@
 /** @format */
-import LegionsStore from '../LegionsStore';
+import LegionsStore from '../../LegionsStore';
 import { ProTableView } from './ProTableView';
 import { ProTableLocalView } from './ProTableLocalView';
-import { legionsStoreInterface } from '../LegionsStore/interface';
-import { ObservableMap } from 'mobx';
-import { PageListEntity } from './pageListEntity';
+import { legionsStoreInterface } from '../../LegionsStore/interface';
 import { ViewModel } from 'brain-store-utils/types/create-view-model';
 declare type Proxify<T> = {
     [P in keyof T]: T[P];
 };
 export default class LegionsStoreTable extends LegionsStore.StoreBase {
     static meta: legionsStoreInterface['storeBaseMeta'];
-    static pageListEntity: typeof PageListEntity;
     constructor(context: any);
     userInfo: {
         userName: string;
@@ -24,14 +21,14 @@ export default class LegionsStoreTable extends LegionsStore.StoreBase {
      *
      * @memberof HLTableStore
      */
-    TableContainer: ObservableMap<string, ViewModel<ProTableView> & Proxify<ProTableView>>;
-    TableContainerModules: ObservableMap<string, any>;
+    TableContainer: import("mobx").ObservableMap<string, ViewModel<ProTableView> & Proxify<ProTableView>>;
+    TableContainerModules: import("mobx").ObservableMap<string, any>;
     /**
      *
      *  数据生命周期，应用重新数据前有效
      * @memberof HLTableStore
      */
-    HlTableLocalStateContainer: ObservableMap<string, ViewModel<ProTableLocalView> & Proxify<ProTableLocalView>>;
+    HlTableLocalStateContainer: import("mobx").ObservableMap<string, ViewModel<ProTableLocalView> & Proxify<ProTableLocalView>>;
     add(uid: string, modulesName: string, timeuid: string): void;
     init(uid: string, options: ProTableView): void;
     delete(uid: string): void;

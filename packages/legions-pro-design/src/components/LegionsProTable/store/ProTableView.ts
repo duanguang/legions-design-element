@@ -1,13 +1,12 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-07 17:16:35
- * @LastEditTime: 2021-09-20 14:45:09
+ * @LastEditTime: 2022-03-04 11:59:09
  * @LastEditors: duanguang
  * @Description:
- * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreTable/ProTableView.ts
+ * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProTable/store/ProTableView.ts
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
-import {  StoreModules } from 'legions/store';
 import {
   computed,
   autorun,
@@ -18,18 +17,20 @@ import {
   action,
   isObservableArray,
 } from 'mobx';
-import * as mobx from 'mobx';
-import LegionsModels from '../LegionsModels';
+import LegionsModels from '../../LegionsModels';
 import { shortHash } from 'legions-lunar/object-hash';
-import { queryTableColumns, editTableColumns } from '../services';
+import { queryTableColumns, editTableColumns } from '../../services';
 import {
-  IScroll,
-  IShowColumns,
-  ITableColumnConfig,
-  IObservableMap,
-} from './interface';
-import { TableColumnConfig } from '../interface/antd';
-import {mobxVersion} from 'brain-store-utils'
+  IProTable,
+} from '../interface';
+import { mobxVersion } from 'brain-store-utils'
+// @ts-ignore
+export interface IObservableMap<K, V> extends ObservableMap<K, V> {}
+export interface IObservableMap<K,V> extends ObservableMap<V> { }
+export interface IShowColumns {
+  dataIndex: string;
+  title: string;
+}
 export class ProTableView {
   @observable userInfo: {
     userName: string;
@@ -129,7 +130,7 @@ export class ProTableView {
    *
    * @memberof ModalView
    */
-  @observable columns?: (TableColumnConfig<{}> & ITableColumnConfig)[] = null;
+  @observable columns?: (IProTable['tableColumnConfig'])[] = null;
 
   /**
    * 用于显示列信息列表  table组件内部处理，外部请勿修改数据
@@ -333,8 +334,7 @@ export class ProTableView {
    * @readonly
    * @memberof ProTableView
    */
-  @computed get computedRenderColumns(): (TableColumnConfig<{}> &
-    ITableColumnConfig)[] {
+  @computed get computedRenderColumns(): (IProTable['tableColumnConfig'])[] {
     const setTableContainerWidth = (): number => {
       const table = document.querySelector(`.${this.uid}`);
       if (table && table.getElementsByClassName('ant-table-body')) {

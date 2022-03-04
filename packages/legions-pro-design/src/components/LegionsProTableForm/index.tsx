@@ -13,7 +13,7 @@ import {
     ,TableColumnConfig,WrappedFormUtils
 } from '../interface/antd';
 import {Weaken,ClassOf} from '../interface'
-import { IProTableProps,InstanceProTable,ITableColumnConfigProps,ITableColumnConfig} from '../LegionsProTable/interface';
+import { IProTableProps,ITableColumnConfigProps} from '../LegionsProTable/interface';
 
 import LegionsProForm from '../LegionsProForm'
 import { InstanceProForm } from '../LegionsProForm/interface';

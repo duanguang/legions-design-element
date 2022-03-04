@@ -1,21 +1,29 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-26 17:07:34
- * @LastEditTime: 2022-03-04 00:09:25
+ * @LastEditTime: 2022-03-04 12:13:03
  * @LastEditors: duanguang
  * @Description:
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProTable/interface.ts
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
-import  {
-  IViewModelProTableStore,
-  ILocalViewModelProTableStore,
-  ITableAutoQuery,
-} from '../LegionsStoreTable/interface';
-import LegionsStoreTable from '../LegionsStoreTable';
+import LegionsStoreTable from './store';
 import { TableColumnConfig,TableRowSelection } from '../interface/antd';
-import {  TableProps} from 'antd/lib/table/Table';
-export interface ITableColumnConfig {
+import { TableProps } from 'antd/lib/table/Table';
+import { ProTableView } from './store/ProTableView';
+import { ProTableLocalView } from './store/ProTableLocalView';
+import { ViewModel } from 'brain-store-utils/types/create-view-model';
+type Proxify<T> = {
+  [P in keyof T]: T[P];
+  //[P in keyof T]: Proxy<T[P]>;
+};
+export declare type IViewModelProTableStore = ViewModel<ProTableView> &
+  Proxify<ProTableView>;
+declare type ILocalViewModelProTableStore = ViewModel<
+  ProTableLocalView
+> &
+  Proxify<ProTableLocalView>;
+interface ITableColumnConfig {
   /** 当传入的title不为string类型时，可传label作为checkbox的label展示 */
   label?: string;
   /** 默认不选中 不选中：true 选中：false */
@@ -51,11 +59,14 @@ export interface ITableColumnConfig {
  * @template T
  */
 export interface ITableColumnConfigProps<T = {}>
-  extends TableColumnConfig<T&IProTableFormColumnConfigGenProps>,
+  extends TableColumnConfig<T & IProTableFormColumnConfigGenProps>,
   ITableColumnConfig {
-  }
-
-export interface IExportCsv {
+}
+interface IScroll {
+  x?: string | number | boolean;
+  y?: string | number | boolean;
+}
+interface IExportCsv {
   /**
    *
    * 文件名，默认为 table.csv
@@ -113,7 +124,7 @@ export interface IExportCsv {
   quoted?: boolean;
 }
 
-export interface InstanceProTable {
+interface IProTableRef {
   store: InstanceType<typeof LegionsStoreTable>;
   readonly uid: string;
 
@@ -208,9 +219,36 @@ IE9暂时只支持英文，中文会显示为乱码。
   openCustomColumns: () => void;
 }
 
-export declare type IViewModelProTable = IViewModelProTableStore;
+declare type IViewModelProTable = IViewModelProTableStore;
 
 
+interface ICustomColumnsConfig {
+  /** 编辑自定义信息同步到服务端接口地址 */
+  editApi: string;
+  /** 从服务端查询自定义列信息接口地址 */
+  queryApi: string;
+}
+export interface IProTableFormColumnConfigGenProps {
+  /** 表格行状态
+   * 
+   * true 编辑状态
+   * 
+   * false 非编辑状态
+   */
+  readonly isRecordEdit?: boolean;
+  /** 表格行key */
+  readonly legionsTableFormItemKey?: string;
+}
+
+interface IProTableFormColumnConfigProps<T> extends ITableColumnConfigProps<T & IProTableFormColumnConfigGenProps> { }
+
+export interface IProTable {
+  tableColumnConfig: ITableColumnConfigProps;
+  exportCsv: IExportCsv;
+  customColumnsConfig: ICustomColumnsConfig;
+  ref: IProTableRef;
+  scroll: IScroll;
+}
 export interface IProTableProps<TableRow = {},Model = {}> extends TableProps<TableRow> {
   readonly store?: InstanceType<typeof LegionsStoreTable>,
   pageSize?: number,
@@ -288,7 +326,7 @@ export interface IProTableProps<TableRow = {},Model = {}> extends TableProps<Tab
    *
    * @memberof IHLTableProps
    */
-  onReady?: (instance: InstanceProTable) => void;
+  onReady?: (ref: IProTableRef) => void;
 
   /**
    * table 模块名称，如果设置此值，请保持绝对唯一
@@ -367,41 +405,23 @@ export interface IProTableProps<TableRow = {},Model = {}> extends TableProps<Tab
      * 同步数据到服务端所需要的查询和保存接口地址信息 */
   customColumnsConfig?: ICustomColumnsConfig
   onLogRecord?: (params: {
-      modulesPath?: string;
-      type: string;
-      content: string;
-      modulesName?: string;
-      userInfo: string;
-      traceId: string;
-      browserEnvironment: string;
+    modulesPath?: string;
+    type: string;
+    content: string;
+    modulesName?: string;
+    userInfo: string;
+    traceId: string;
+    browserEnvironment: string;
   }) => void;
-   /**
-     * 请求托管，异步dataSource和分页管理
-     * @param pageIndex 当前页
-     * @param pageSize 每页条数
-     */
-    request?: (pageIndex: number, pageSize: number) => Promise<{
-      /** 列表数据 */
-      data: TableRow[],
-      /** 总数量 */
-      total?: number,
+  /**
+    * 请求托管，异步dataSource和分页管理
+    * @param pageIndex 当前页
+    * @param pageSize 每页条数
+    */
+  request?: (pageIndex: number,pageSize: number) => Promise<{
+    /** 列表数据 */
+    data: TableRow[],
+    /** 总数量 */
+    total?: number,
   }>
 }
-export interface ICustomColumnsConfig{
-  /** 编辑自定义信息同步到服务端接口地址 */
-  editApi: string;
-  /** 从服务端查询自定义列信息接口地址 */
-  queryApi: string;
-}
-export interface IProTableFormColumnConfigGenProps{
-  /** 表格行状态
-   * 
-   * true 编辑状态
-   * 
-   * false 非编辑状态
-   */
-  readonly isRecordEdit?: boolean;
-  /** 表格行key */
-  readonly legionsTableFormItemKey?: string;
-}
-export interface IProTableFormColumnConfigProps<T> extends ITableColumnConfigProps<T & IProTableFormColumnConfigGenProps>{}

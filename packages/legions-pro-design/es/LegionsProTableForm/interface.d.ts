@@ -1,1 +1,1 @@
-export { IProTableFormColumnConfigProps, IProTableFormColumnConfigGenProps } from "../LegionsProTable/interface";
+export {};
