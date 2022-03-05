@@ -1,13 +1,13 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-08 12:00:22
- * @LastEditTime: 2022-03-05 21:56:08
+ * @LastEditTime: 2022-03-06 01:42:15
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProConditions/interface/index.ts
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
-import {StoreConditions} from '../store';
+import { StoreConditions } from '../store';
 import { LegionsLabeledValue } from 'legions-lunar/model';
 import { Weaken } from '../../interface'
 import {
@@ -23,7 +23,7 @@ import {
     CheckboxProps,
     IAntdSelectOption,
 } from '../../interface/antd';
-import {IProSelectProps} from '../../LegionsProSelect/interface'
+import { IProSelectProps } from '../../LegionsProSelect/interface'
 import { CheckboxValueType } from 'antd/lib/checkbox/Group';
 import { IProConditions } from '../ProConditionsUtils';
 import { IProDraggerProps } from '../../LegionsProDragger/interface';
@@ -32,6 +32,7 @@ import LegionsModels from '../../LegionsModels';
 import { ObservablePromiseModel } from 'legions/store-utils';
 import { ViewModel } from 'brain-store-utils/types/create-view-model';
 import { ConditionView } from '../store/conditionView';
+import {ProSelect} from '../../LegionsProSelect/interface'
 type Proxify<T> = { [P in keyof T]: T[P] };
 export declare type IViewQueryConditionStore<Query = {}> = ViewModel<ConditionView<Query>> & Proxify<ConditionView<Query>>;
 interface ColProps {
@@ -145,10 +146,6 @@ export interface ISelectAutoQuery<Model = {}> {
     */
     isInitialize?: boolean;
 }
-interface ISelectProps {
-    value: string
-    key: string
-}
 interface IMethods {
 
 
@@ -159,9 +156,9 @@ interface IMethods {
      */
     reset: () => void;
 
-    setFieldsValues?:<T extends IProConditions['componentModel']>(name: string,callback: (value: T) => void)=>void
+    setFieldsValues?: <T extends IProConditions['componentModel']>(name: string,callback: (value: T) => void) => void
     /** 查询指定下拉组件数据项 */
-    getQuerySelectOption: (/** 下拉组件name值 */name: string,/** 下拉选项key值*/optionKey: string) => { readonly item: LegionsLabeledValue,readonly options: Array<ISelectProps> };
+    getQuerySelectOption: (/** 下拉组件name值 */name: string,/** 下拉选项key值*/optionKey: string) => { readonly item: LegionsLabeledValue,readonly options: Array<ProSelect['options']> };
 
     /** 下拉远程搜索
      * 主要同于手动触发下拉组件搜索函数 */
@@ -210,7 +207,7 @@ interface ProConditionsRef<Query = {}> {
      */
     methods?: IMethods
 }
-interface IData{
+interface IData {
     /** 组件内部值 */
     viewState: any;
     /** 查询条件对象 */
@@ -218,7 +215,7 @@ interface IData{
 }
 
 interface IQueryTextProps extends IQueryProps,Weaken<InputProps,'onChange'> {
-   readonly onChange?: (even: React.ChangeEvent<HTMLInputElement>,data:IData,viewStore:IViewQueryConditionStore) => void;
+    readonly onChange?: (even: React.ChangeEvent<HTMLInputElement>,data: IData,viewStore: IViewQueryConditionStore) => void;
 }
 interface IQueryTextAreaProps extends IQueryProps,TextAreaProps {
     maxlength?: number;
@@ -229,43 +226,50 @@ interface IQueryRadioButtonProps extends IQueryProps,Weaken<RadioGroupProps,'onC
     readonly onChange?: (event: React.FormEvent<any>,value: IData,viewStore: IViewQueryConditionStore) => void;
 }
 interface IQueryTextNumberProps extends IQueryProps,Weaken<InputNumberProps,'onChange'> {
-    readonly onChange?: (value: number,model: IData,viewStore:IViewQueryConditionStore) => void;
+    readonly onChange?: (value: number,model: IData,viewStore: IViewQueryConditionStore) => void;
 }
 interface IQuerySelectProps extends IQueryProps,Weaken<IProSelectProps,'onChange'> {
     multiple?: boolean,
     loading?: boolean,
-    /** 自动托管下拉数据请求，在下拉框组件中使用,只支持一次性查询全部数据
-     * 不支持远程根据关键词搜索
+     /**
+     * 请求托管，异步dataSource和分页管理
+     * @param pageIndex 当前页
+     * @param pageSize 每页条数
      */
-    readonly  autoQuery?: ISelectAutoQuery;
-    readonly onChange?: (value: IData,viewStore:IViewQueryConditionStore) => void;
+    request?: (pageIndex: number, pageSize: number) => Promise<{
+        /** 列表数据 */
+        data: ProSelect['options'][],
+        /** 总数量 */
+        total?: number,
+    }>
+    readonly onChange?: (value: IData,viewStore: IViewQueryConditionStore) => void;
 }
-interface IQueryDateProps extends IQueryProps ,Weaken<DatePickerProps,'onChange'>{
+interface IQueryDateProps extends IQueryProps,Weaken<DatePickerProps,'onChange'> {
     format: 'YYYY-MM-DD HH:mm:ss' | 'YYYY-MM-DD' | 'YYYY-MM-DD HH:mm'
     showTime: boolean | { format: 'HH:mm' }
     /** 只读 */
-    readonly  onChange?: (originValue: {
-        date: moment.Moment, dateString: string
-    },value: IData,viewStore:IViewQueryConditionStore) => void;
+    readonly onChange?: (originValue: {
+        date: moment.Moment,dateString: string
+    },value: IData,viewStore: IViewQueryConditionStore) => void;
 }
-interface IQueryRangePickerProps extends IQueryProps, Weaken<RangePickerProps,'onChange'|'placeholder'>{
+interface IQueryRangePickerProps extends IQueryProps,Weaken<RangePickerProps,'onChange' | 'placeholder'> {
     placeholder?: [string,string]
     /** 取值时对日期进行格式化 参数详情见moment.js官方文档: http://momentjs.cn/docs/#/displaying/format/ */
     transformFormat?: string
     /** 只读 */
     readonly onChange?: (originValue: {
-        date: [moment.Moment,moment.Moment], dateString: [string, string]
-    },value: IData,viewStore:IViewQueryConditionStore) => void;
+        date: [moment.Moment,moment.Moment],dateString: [string,string]
+    },value: IData,viewStore: IViewQueryConditionStore) => void;
 }
-interface IQueryCheckBoxProps extends IQueryProps,Weaken<CheckboxProps,'onChange'>{
+interface IQueryCheckBoxProps extends IQueryProps,Weaken<CheckboxProps,'onChange'> {
     /** 只读 */
-    readonly onChange?: (even: React.ChangeEvent<HTMLInputElement>,value: IData,viewStore:IViewQueryConditionStore) => void;
+    readonly onChange?: (even: React.ChangeEvent<HTMLInputElement>,value: IData,viewStore: IViewQueryConditionStore) => void;
 }
-interface IQueryGroupCheckBoxProps extends Omit<IQueryProps,'label'>,Weaken<CheckboxGroupProps,'onChange'>{
+interface IQueryGroupCheckBoxProps extends Omit<IQueryProps,'label'>,Weaken<CheckboxGroupProps,'onChange'> {
     /** 只读 */
-    readonly onChange?: (checkedValue: Array<CheckboxValueType>,value: IData,viewStore:IViewQueryConditionStore) => void;
+    readonly onChange?: (checkedValue: Array<CheckboxValueType>,value: IData,viewStore: IViewQueryConditionStore) => void;
 }
-export interface IQuerySearchConfigProps{
+export interface IQuerySearchConfigProps {
     /**查询按钮的文本 */
     searchText?: string;
     /** 重置按钮的文本*/
@@ -274,14 +278,13 @@ export interface IQuerySearchConfigProps{
     readonly collapseRender?: (collapsed: boolean,showCollapseButton?: boolean,) => React.ReactNode
     /** 自定义操作栏 */
     /* optionRender?: ((searchConfig: IQuerySearchConfigProps) => React.ReactNode[]) | false */
-    
-    readonly onSearch:(params:any,viewEntity?: IViewQueryConditionStore)=>void
+
+    readonly onSearch: (params: any,viewEntity?: IViewQueryConditionStore) => void
     readonly onReset?: (params: any,viewEntity?: IViewQueryConditionStore) => void
-    readonly onRefresh?:(params: any,viewEntity?: IViewQueryConditionStore)=>void
+    readonly onRefresh?: (params: any,viewEntity?: IViewQueryConditionStore) => void
 }
 interface IQueryProps extends IFieldsState {
     label: string;
-    labelSpan?: number;
     /**
      *是否允许重置 TRUE 不重置
      *
@@ -300,13 +303,18 @@ interface IQueryProps extends IFieldsState {
     readonly onReset?: <T extends {}>(fieldName: string,vlaue: T) => T;
     /** 只读 */
     readonly onPaste?: (event) => void;
-/** 只读 */
+    /** 只读 */
     readonly onEnter?: (value,viewEntity?: IViewQueryConditionStore) => void
-    
+
 }
-interface IContainerProps{
-    col: ColProps;
+interface IContainerProps {
+    col?: ColProps;
     name: string;
+    /**
+     * 占多少列
+     * @default 1
+     */
+    colNum?: number;
     /** 单击时触发 */
     onClick?: (value: {
         uid: string,name: string;
@@ -323,20 +331,21 @@ interface IConfigParams<T> {
      * @type {containerProps}
      * @memberof IRenderComponentParams
      */
-     container: IContainerProps,
+    container: IContainerProps,
 
-     /**
-      * 组件参数
-      *
-      * @type {T}
-      */
+    /**
+     * 组件参数
+     *
+     * @type {T}
+     */
     props: T
     /** 映射查询接口字段名 */
     jsonProperty?: string;
 }
-export interface ProConditions{
+export interface ProConditions {
     ref: ProConditionsRef;
     selectAutoQuery: ISelectAutoQuery;
+    /** 组件props约束类型 */
     component_props: {
         text: IQueryTextProps;
         checkBox: IQueryCheckBoxProps;
@@ -349,6 +358,7 @@ export interface ProConditions{
         textArea: IQueryTextAreaProps;
         search: IQuerySearchConfigProps;
     }
+    /** 组件配置约束类型 */
     configs: {
         text: IConfigParams<IQueryTextProps>;
         checkBox: IConfigParams<IQueryCheckBoxProps>;
@@ -361,9 +371,26 @@ export interface ProConditions{
         textArea: IConfigParams<IQueryTextAreaProps>;
         search: IConfigParams<IQuerySearchConfigProps>;
     }
-    config_container:IConfigParams<any>['container']
+    /** 组件类型 */
+    component_type:{
+        text: 'text';
+        checkBox: 'checkBox';
+        groupCheckBox: 'groupCheckBox';
+        rangePicker: 'rangePicker';
+        date: 'date';
+        select: 'select';
+        textNumber: 'textNumber';
+        radioButton: 'radioButton';
+        textArea: 'textArea';
+        search: 'search';
+    }
+    /** 配置类型集合 */
+    config_types: 'text' | 'checkBox' | 'groupCheckBox'
+    | 'rangePicker' | 'date' | 'select' | 'textNumber' | 'radioButton'
+    |'textArea'|'search'
+    config_container: IConfigParams<any>['container']
 }
-export interface ProConditionsProps{
+export interface ProConditionsProps {
     query: Array<IProConditions['componentModel']>,
     store?: InstanceType<typeof StoreConditions>,
     /**
@@ -413,9 +440,21 @@ export interface ProConditionsProps{
     isDragSort?: boolean;
 
     /** 拖拽移动组件props */
-    draggerProps?:IProDraggerProps
+    draggerProps?: IProDraggerProps
     /** 收起按钮的事件 */
     onCollapse?: (collapsed: boolean,viewEntity?: IViewQueryConditionStore) => void;
-    debugger?:boolean
+    /** 栅格比例，默认col=6, eg: col=6，24/6=4，则分为4列 */
+    col?: number | {
+        /** xs: 宽度<768px 响应式栅格，可为栅格数或一个包含其他属性的对象 */
+        xs?: number;
+        /** sm:宽度≥768px 响应式栅格，可为栅格数或一个包含其他属性的对象 */
+        sm?: number;
+        /** md: 宽度≥992px 响应式栅格，可为栅格数或一个包含其他属性的对象 */
+        md?: number;
+        /** lg: 宽度≥1200px 响应式栅格，可为栅格数或一个包含其他属性的对象 */
+        lg?: number;
+        /** xl:宽度≥1600px 响应式栅格，可为栅格数或一个包含其他属性的对象 */
+        xl?: number;
+    }
 }
 

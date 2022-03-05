@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-08 15:19:23
- * @LastEditTime: 2022-03-05 21:47:52
+ * @LastEditTime: 2022-03-06 01:38:57
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProConditions/ProConditionsUtils.tsx
@@ -82,17 +82,8 @@ export interface IProConditions {
     componentModel: ConditionSelectModel | ConditionTextNumberModel | ConditionRadioButtonModel | ConditionTextAreaModel |
     ConditionTextModel | ConditionDateModel | ConditionRangePickerModel |ConditionSearchModel|ConditionGroupCheckBoxModel
 }
-type componentType = 'text' | 'select'
-type componentConfigType<T> = T extends  componentType ? IComponent[T]: {}
-interface IComponent{
-    text: ProConditions['component_props']['text'];
-    select:ProConditions['component_props']['select']
-}
-interface IComponentType{
-    text: 'text';
-    select:'select'
-}
-type aaa =InstanceType<typeof ProConditionsBase>['renderConfig']
+type componentConfigType<T> = T extends  ProConditions['config_types'] ? ProConditions['configs'][T]: {}
+
 export class ProConditionsBase<Store,global = {}>{
 
     readonly global: global = null
@@ -126,63 +117,74 @@ export class ProConditionsBase<Store,global = {}>{
         if (!this[id]) {
             return {...props,uuid:this.createUid(id)}
         }
-        return this[id]['containerProps'];
+        return this[id]['container'];
+    }
+    private configs = {
+        text: this.renderTextConfig.bind(this),
+        checkBox: this.renderCheckBoxConfig.bind(this),
+        groupCheckBox: this.renderGroupCheckBoxConfig.bind(this),
+        rangePicker: this.renderRangePickerConfig.bind(this),
+        date: this.renderDateConfig.bind(this),
+        select: this.renderSelectConfig.bind(this),
+        textNumber: this.renderTextNumberConfig.bind(this),
+        radioButton: this.renderRadioButtonConfig.bind(this),
+        textArea: this.renderTextAreaConfig.bind(this),
+        search: this.renderSearchConfig.bind(this),
     }
     getConditionsConfig(componentConfigKey: string): IProConditions['componentModel'] {
         return this[componentConfigKey]
     }
-    renderConfig<T extends componentType>(type: 'text' | 'select',options: componentConfigType<T>) {
-        
+    renderConfig<T extends ProConditions['config_types']>(type: T,options: componentConfigType<T>) {
+        //@ts-ignore
+        return this.configs[type](options)
     }
-    aa() {
-        this.renderConfig<IComponentType['select']>('select',null)
-    }
-    renderSelectConfig(options: ProConditions['configs']['select']): ConditionSelectModel {
+    
+    private renderSelectConfig(options: ProConditions['configs']['select']): ConditionSelectModel {
         const id = options.container.name;
         this[id] = new ConditionSelectModel(this.createContainerProps(options.container),options.props,options.jsonProperty)
         return this[id];
     }
-    renderTextNumberConfig(options: ProConditions['configs']['textNumber']): ConditionTextNumberModel {
+    private renderTextNumberConfig(options: ProConditions['configs']['textNumber']): ConditionTextNumberModel {
         const id = options.container.name;
         this[id] = new ConditionTextNumberModel(this.createContainerProps(options.container),options.props,options.jsonProperty)
         return this[id];
     }
-    renderRadioButtonConfig(options: ProConditions['configs']['radioButton']): ConditionRadioButtonModel {
+    private renderRadioButtonConfig(options: ProConditions['configs']['radioButton']): ConditionRadioButtonModel {
         const id = options.container.name;
         this[id] = new ConditionRadioButtonModel(this.createContainerProps(options.container),options.props,options.jsonProperty)
         return this[id];
     }
-    renderTextAreaConfig(options: ProConditions['configs']['textArea']): ConditionTextAreaModel {
+    private renderTextAreaConfig(options: ProConditions['configs']['textArea']): ConditionTextAreaModel {
         const id = options.container.name;
         this[id] = new ConditionTextAreaModel(this.createContainerProps(options.container),options.props,options.jsonProperty)
         return this[id];
     }
-    renderTextConfig(options: ProConditions['configs']['text']): ConditionTextModel {
+    private renderTextConfig(options: ProConditions['configs']['text']): ConditionTextModel {
         const id = options.container.name;
         this[id] = new ConditionTextModel(this.createContainerProps(options.container),options.props,options.jsonProperty)
         return this[id];
     }
-    renderDateConfig(options: ProConditions['configs']['date']): ConditionDateModel {
+    private renderDateConfig(options: ProConditions['configs']['date']): ConditionDateModel {
         const id = options.container.name;
         this[id] = new ConditionDateModel(this.createContainerProps(options.container),options.props,options.jsonProperty)
         return this[id];
     }
-    renderRangePickerConfig(options: ProConditions['configs']['rangePicker']): ConditionRangePickerModel {
+    private renderRangePickerConfig(options: ProConditions['configs']['rangePicker']): ConditionRangePickerModel {
         const id = options.container.name;
         this[id] = new ConditionRangePickerModel(this.createContainerProps(options.container),options.props,options.jsonProperty)
         return this[id];
     }
-    renderCheckBoxConfig(options: ProConditions['configs']['checkBox']): ConditionCheckBoxModel {
+    private renderCheckBoxConfig(options: ProConditions['configs']['checkBox']): ConditionCheckBoxModel {
         const id = options.container.name;
         this[id] = new ConditionCheckBoxModel(this.createContainerProps(options.container),options.props,options.jsonProperty)
         return this[id];
     }
-    renderGroupCheckBoxConfig(options: ProConditions['configs']['groupCheckBox']): ConditionGroupCheckBoxModel {
+    private renderGroupCheckBoxConfig(options: ProConditions['configs']['groupCheckBox']): ConditionGroupCheckBoxModel {
         const id = options.container.name;
         this[id] = new ConditionGroupCheckBoxModel(this.createContainerProps(options.container),options.props,options.jsonProperty)
         return this[id];
     }
-    renderSearchConfig(options: ProConditions['configs']['search']): ConditionSearchModel {
+    private renderSearchConfig(options: ProConditions['configs']['search']): ConditionSearchModel {
         const id = options.container.name;
         this[id] = new ConditionSearchModel(this.createContainerProps(options.container),options.props)
         return this[id];

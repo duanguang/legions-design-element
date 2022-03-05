@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-07 16:49:31
- * @LastEditTime: 2022-03-05 21:58:21
+ * @LastEditTime: 2022-03-05 22:42:53
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProConditions/store/conditionView.ts
@@ -80,7 +80,6 @@ export class ConditionView<Query = {}> {
 
     @observable private size: 'small' | 'default' = 'default';
 
-    @observable selectOptions: IObservableMap<string,ISelectOptions> = observable.map()
     @computed get computedQuery(): Array<IProConditions['componentModel']> {
         const value: Array<IProConditions['componentModel']> = [];
         for (let item of this.query.values()) {
@@ -204,67 +203,6 @@ export class ConditionView<Query = {}> {
     }
     @action _setSize(size: 'small' | 'default') {
         this.size = size;
-    }
-    @action _dispatchRequest(name: string,autoQuery: ProConditions['selectAutoQuery'],options: {
-        pageIndex: number;
-        pageSize?: number;
-        keyWords?: string;
-        /** 接口请求完成触发 */
-        callback?: (value: any) => void;
-    } = { pageIndex: 1,pageSize: 30 }) {
-        if (autoQuery) {
-            const server = new LegionsCore.LegionsFetch()
-            //@ts-ignore
-            const apiServer = () => {
-                const { pageIndex,pageSize,keyWords = '',...props } = options
-                let params = cloneDeep(autoQuery.params(options.pageIndex,options.pageSize,keyWords,props))
-                delete params.pageIndex;
-                delete params.pageSize
-                delete params.defaultKeyWords;
-                let headers = {};
-                if (autoQuery.token) {
-                    if (typeof autoQuery.token === 'string') {
-                        headers = { 'api-cookie': autoQuery.token }
-                    }
-                    else if (typeof autoQuery.token === 'function') {
-                        headers = { 'api-cookie': autoQuery.token() }
-                    }
-                }
-                if (autoQuery.requestBeforeTransformParams) {
-                    params = autoQuery.requestBeforeTransformParams({ ...params,pageIndex: options.pageIndex,pageSize: options.pageSize })
-                }
-                let model = {
-                    onBeforTranform: (value) => {
-                        options.callback && options.callback(value);
-                        return {
-                            responseData: value,
-                            mappingEntity: autoQuery.mappingEntity,
-                        }
-                    },
-                }
-                if (autoQuery.method === 'post') {
-                    return server.post<any,any>({
-                        url: autoQuery.ApiUrl,
-                        parameter: params,
-                        headers: { ...autoQuery.options,...headers },
-                        model: LegionsModels.SelectKeyValue,
-                        ...model,
-                    })
-                }
-                else if (autoQuery.method === 'get') {
-                    return server.get<any,any>({
-                        url: autoQuery.ApiUrl,
-                        parameter: params,
-                        headers: { ...autoQuery.options,...headers },
-                        model: LegionsModels.SelectKeyValue,
-                        ...model,
-                    })
-                }
-            }
-            this.selectOptions.set(name,{
-                obData: observablePromise<{}>(apiServer()),
-            })
-        }
     }
     /** 移除指定搜索条件项  */
     @action _removeQuery(uuid: string) {

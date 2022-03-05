@@ -21,20 +21,20 @@ const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 import { bind,observer } from 'legions/store-react'
 import LegionsProSelect from '../LegionsProSelect';
-import {StoreConditions} from './store'
+import { StoreConditions } from './store'
 import { shortHash } from 'legions-lunar/object-hash';
 import ReactDOM,{ findDOMNode } from "react-dom";
 import { debounce } from 'legions-utils-tool/debounce'
-import { cloneDeep } from 'lodash'
+import { cloneDeep,isNumber } from 'lodash'
 import { LegionsLabeledValue } from 'legions-lunar/model';
-import {  ProConditionsProps,ProConditions } from './interface';
+import { ProConditionsProps,ProConditions } from './interface';
 import { ConditionCheckBoxModel,ConditionDateModel,ConditionGroupCheckBoxModel,ConditionRadioButtonModel,ConditionRangePickerModel,ConditionSearchModel,ConditionSelectModel,ConditionTextAreaModel,ConditionTextModel,ConditionTextNumberModel,IProConditions,ProConditionsBase } from './ProConditionsUtils';
-import { isArray } from 'legions-utils-tool/type.validation';
+import { isArray,isObject } from 'legions-utils-tool/type.validation';
 import { CheckboxValueType } from 'antd/lib/checkbox/Group';
 import LegionsProDragger from '../LegionsProDragger';
-import { IProDraggerOptions, IProDraggerProps } from '../LegionsProDragger/interface';
-import { LoggerManager } from 'legions-lunar/dw.report';
+import { IProDraggerOptions,IProDraggerProps } from '../LegionsProDragger/interface';
 import { toJS } from 'mobx'
+import {ProSelect} from '../LegionsProSelect/interface'
 const { RangePicker } = DatePicker;
 const Option = Select.Option;
 const { TextArea } = Input;
@@ -44,12 +44,8 @@ interface IRadioButtonProps {
     label: string,
     disabled?: boolean
 }
-interface ISelectProps {
-    value: string
-    key: string
-}
-interface IProps extends ProConditionsProps{
-    
+interface IProps extends ProConditionsProps {
+
 }
 interface IState {
     collapsed: boolean
@@ -98,37 +94,20 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
                 this.uid = `Query${this.props.store.ConditionContainer.size}${shortHash(`${this.timeId}${this.props.store.ConditionContainer.size}`)}`
             }
         }
-        this.consoleLog('constructor')
     }
     //@ts-ignore
     get viewStore() {
         return this.props.store.ConditionContainer.get(this.uid)
     }
     get vmModel() {
-       return this.viewStore.computedVmModel;
+        return this.viewStore.computedVmModel;
     }
     static defaultProps = {
         size: 'default',
-        defaultCollapsed:true,
+        col: 6,
+        defaultCollapsed: true,
     }
-    consoleLog(type: string,logObj?: Object) {
-        if (!this.props.debugger) {
-            return
-        }
-        const obj = logObj || {}
-        const logConent = {
-            state: this.state,
-            ...obj,
-            store: this.viewStore,
-            that: toJS(this),
-            props: toJS(this.props),
-        }
-        this.props.debugger&&LoggerManager.consoleLog({
-            //@ts-ignore
-            type:`LegionsConditions-${type}`,
-            logConent,
-        })
-    }
+
     componentWillMount() {
         if (!this.props.store.ConditionContainer.has(this.uid)) {
             this.props.store.add(this.uid);
@@ -149,23 +128,22 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
                 removeQuery: (uuid) => {
                     return this.viewStore._removeQuery(uuid);
                 },
-                setFieldsValues: (name: string,callback: (value) => void)=>{
+                setFieldsValues: (name: string,callback: (value) => void) => {
                     this.setFieldsValues(name,callback);
                 },
                 getQuerySelectOption: (name: string,optionKey: string) => {
                     const selectConfigs = this.props.query.filter((item) => item instanceof ConditionSelectModel);
                     const index = selectConfigs.findIndex((item) => item.container.name === name);
-                    let newData = [] as Array<ISelectProps>
+                    let newData = [] as Array<ProSelect['options']>
                     let optionItem = new LegionsLabeledValue();
                     if (index > -1) {
                         const item = selectConfigs[index].props as ProConditions['component_props']['select'];
-                        newData = item.options as Array<ISelectProps>
-                        if (item.autoQuery) {
-                            const autoObData = this.viewStore.selectOptions.get(name);
-                            if (autoObData) {
-                                const autoData = item.autoQuery.transform(autoObData.obData)
-                                newData = autoData.data;
-                            }
+                        newData = item.options as Array<ProSelect['options']>
+                        if (item.request) {
+                            // const autoObData = this.viewStore.selectOptions.get(name);
+                            // if (autoObData) {
+                               
+                            // }
                         }
                         const option = newData.find((item) => item.key === optionKey)
                         optionItem = {
@@ -187,14 +165,10 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
                     const index = selectConfigs.findIndex((item) => item.container.name === name);
                     if (index > -1) {
                         const item = selectConfigs[index].props as ProConditions['component_props']['select'];
-                        if (item.autoQuery) {
-                            this.viewStore._dispatchRequest(name,item.autoQuery,params)
-                        }
                     }
                 }
             }
         })
-        this.consoleLog('componentWillMount')
     }
     componentDidMount() {
         const queryDom = document.querySelector(`.${this.uid}`);
@@ -204,30 +178,24 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
             window.addEventListener && window.addEventListener('resize',this.resize.bind(this))
         }
         this.dispatchRequest();
-        this.consoleLog('componentDidMount')
     }
     componentWillReceiveProps(nextProps: IProps) {
-        this.consoleLog('componentWillReceiveProps')
     }
     componentWillUnmount() {
         if (!this.props['uniqueUid']) {
             this.props.store.delete(this.uid)
         }
         window.removeEventListener && window.removeEventListener('resize',this.resize.bind(this))
-        this.consoleLog('componentWillUnmount')
     }
     componentDidUpdate() {
         this.onDidMount()
-        this.consoleLog('componentDidUpdate')
     }
-    dispatchRequest(query=this.props.query) {
+    dispatchRequest(query = this.props.query) {
         query.map((item) => {
             if (item instanceof ConditionSelectModel) {
                 const props = item.props as ProConditions['component_props']['select'];
-                if (props.autoQuery && (props.autoQuery.isInitialize === void 0 || props.autoQuery.isInitialize)) {
-                    this.viewStore._dispatchRequest(item.container.name,props.autoQuery,{
-                        pageIndex: 1,
-                    })
+                if (props.request ) {
+                    
                 }
             }
         })
@@ -243,12 +211,12 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
             }
         }
     }
-    setFieldsValues<T extends IProConditions['componentModel']>(name: string,callback: (value:T) => void) {
+    setFieldsValues<T extends IProConditions['componentModel']>(name: string,callback: (value: T) => void) {
         this.viewStore._setQueryState<T>(name,(value) => {
             callback(value);
         });
     }
-    mapPrams(item: Exclude<IProConditions['componentModel'], ConditionSearchModel>, data: any, prams: {}) {
+    mapPrams(item: Exclude<IProConditions['componentModel'],ConditionSearchModel>,data: any,prams: {}) {
         if (item.jsonProperty.includes(',')) {
             const paramslist = item.jsonProperty.split(',')
             if (item instanceof ConditionRangePickerModel) {
@@ -276,7 +244,7 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
         }
         return prams
     }
-    initVModel(query=this.props.query) {
+    initVModel(query = this.props.query) {
         let data = {}
         let prams = {}
         query.map((item) => {
@@ -286,7 +254,7 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
                     if (item instanceof ConditionRangePickerModel) {
                         data[name] = item.props.defaultValue.map((m) => {
                             if (moment.isMoment(m)) {
-                                return moment(m).format(item.props.format||'YYYY-MM-DD HH:mm:ss')
+                                return moment(m).format(item.props.format || 'YYYY-MM-DD HH:mm:ss')
                             }
                             return m;
                         })
@@ -304,23 +272,23 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
 
                     let newValue = null;
                     if (item instanceof ConditionDateModel) {
-                        const  format= item.props.format||'YYYY-MM-DD HH:mm:ss'
+                        const format = item.props.format || 'YYYY-MM-DD HH:mm:ss'
                         if (moment.isMoment(defaultValue)) {
                             newValue = moment(defaultValue).format(format)
                         }
                         else if (moment.isMoment(value)) {
-                            newValue =moment(value).format(format)
+                            newValue = moment(value).format(format)
                         }
                         data[name] = newValue;
                     }
                     else if (item instanceof ConditionRangePickerModel) {
-                        data[name] = ['', ''];
+                        data[name] = ['',''];
                     }
                     else {
                         data[name] = defaultValue || value
                     }
                 }
-                prams = this.mapPrams(item, data[name], prams)
+                prams = this.mapPrams(item,data[name],prams)
             }
         })
         this.queryPrams = prams;
@@ -336,14 +304,14 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
         let prams = this.queryPrams
         computedQuery.map((item) => {
             if (!(item instanceof ConditionSearchModel)) {
-                prams = this.mapPrams(item, this.vmModel[item.container.name], prams)
+                prams = this.mapPrams(item,this.vmModel[item.container.name],prams)
             }
         })
         this.queryPrams = prams;
     }
     reset() {
         let data = this.vmModel
-    /* let data = {...this.viewStore.computedVmModel} */
+        /* let data = {...this.viewStore.computedVmModel} */
         const { computedQuery } = this.viewStore
         Object.keys(data).forEach((key) => {
             let entity = computedQuery.find((item) => item.container.name === key)
@@ -352,16 +320,16 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
                     data[key] = entity.props.onReset(key,data[key]);
                 }
                 else {
-                    let  defaultValue = entity.props.defaultValue;
+                    let defaultValue = entity.props.defaultValue;
                     const format = entity.props['format'] || 'YYYY-MM-DD';
                     if (moment.isMoment(defaultValue)) {
                         data[key] = moment(defaultValue).format(format)
-                    } else if (Array.isArray(defaultValue) && defaultValue.length>=2) {
-                        data[key]=[ moment(defaultValue[0]).format(format), moment(defaultValue[1]).format(format)]
+                    } else if (Array.isArray(defaultValue) && defaultValue.length >= 2) {
+                        data[key] = [moment(defaultValue[0]).format(format),moment(defaultValue[1]).format(format)]
                     }
                     else if (entity instanceof ConditionCheckBoxModel) {
                         data[key] = entity.props.defaultChecked;
-                        defaultValue= data[key]
+                        defaultValue = data[key]
                     }
                     else {
                         data[key] = defaultValue || ''
@@ -390,18 +358,18 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
         data[name] = dateString
         if (component instanceof ConditionDateModel) {
             component.props.onChange && component.props.onChange.call(this,{
-                date:datas,dateString
+                date: datas,dateString
             },{
                 viewState: cloneDeep(data),
-                parameter:cloneDeep(this.queryPrams),
+                parameter: cloneDeep(this.queryPrams),
             },this.viewStore)
         }
         else if (component instanceof ConditionRangePickerModel) {
             component.props.onChange && component.props.onChange.call(this,{
-                date:datas,dateString
+                date: datas,dateString
             },{
                 viewState: cloneDeep(data),
-                parameter:cloneDeep(this.queryPrams),
+                parameter: cloneDeep(this.queryPrams),
             },this.viewStore)
         }
         this.viewStore._setVmModel(data);
@@ -409,15 +377,15 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
     handleChangeChx(component: ConditionCheckBoxModel,even: React.ChangeEvent<HTMLInputElement>) {
         let value = even.target.checked;
         let data = this.vmModel;
-        const name=component.container.name
+        const name = component.container.name
         data[name] = value;
 
-        this.setFieldsValues(name,(values:ConditionCheckBoxModel) => {
+        this.setFieldsValues(name,(values: ConditionCheckBoxModel) => {
             values.props.checked = value;
         })
         component.props.onChange && component.props.onChange.call(this,even,{
             viewState: cloneDeep(data),
-            parameter:cloneDeep(this.queryPrams),
+            parameter: cloneDeep(this.queryPrams),
         },this.viewStore)
         this.viewStore._setVmModel(data);
     }
@@ -457,12 +425,12 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
                 data[name] = '';
             }
         }
-        this.setFieldsValues(name,(value:ConditionSelectModel) => {
+        this.setFieldsValues(name,(value: ConditionSelectModel) => {
             value.props.value = data[name];
         })
         props.onChange && props.onChange.call(this,{
             viewState: cloneDeep(data),
-            parameter:cloneDeep(this.queryPrams),
+            parameter: cloneDeep(this.queryPrams),
         },this.viewStore);
         this.viewStore._setVmModel(data);
     }
@@ -474,7 +442,7 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
     handleReset() {
         this.reset();
         this.mapQueryValue();
-        const item =this.viewStore.computedQuery.find((item) => item instanceof ConditionSearchModel);
+        const item = this.viewStore.computedQuery.find((item) => item instanceof ConditionSearchModel);
         if (item && item instanceof ConditionSearchModel) {
             item.props.onReset && item.props.onReset.call(this,cloneDeep(this.queryPrams),this.viewStore)
         }
@@ -491,7 +459,6 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
         if (item && item instanceof ConditionSearchModel) {
             item.props.onSearch && item.props.onSearch.call(this,cloneDeep(this.queryPrams),this.viewStore)
         }
-        this.consoleLog('handleSearch',{ stateParams: cloneDeep(this.queryPrams) })
     }
     /**
      * 回车搜索
@@ -503,12 +470,12 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
         const onEnter = com.props['onEnter'];
         onEnter && onEnter.call(this,{
             viewState: cloneDeep(this.vmModel),
-            parameter:cloneDeep(this.queryPrams),
+            parameter: cloneDeep(this.queryPrams),
         },this.viewStore)
         this.handleSearch()
     }
     handleToggle() {
-        const onToggle = (toggle:boolean) => {
+        const onToggle = (toggle: boolean) => {
             const queryDom = document.querySelector(`.${this.uid}`);
             const height = findDOMNode(queryDom).clientHeight;
             this.viewStore.domHeight = height;
@@ -519,7 +486,7 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
             this.setState({
                 collapsed: false
             },() => {
-                    onToggle(false);
+                onToggle(false);
             })
         } else {
             this.setState({
@@ -548,24 +515,24 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
             data[name] = this.formatTrim(value)
         }
         this.setFieldsValues(name,(value) => {
-            value.props['value']= data[name]
+            value.props['value'] = data[name]
         })
-        props['onChange']&&props.onChange.call(this,even,{
+        props['onChange'] && props.onChange.call(this,even,{
             viewState: cloneDeep(data),
-            parameter:cloneDeep(this.queryPrams),
+            parameter: cloneDeep(this.queryPrams),
         },this.viewStore)
         this.viewStore._setVmModel(data);
     }
-    handleGroupChxBox(component:ConditionGroupCheckBoxModel,checkedValue: Array<CheckboxValueType>) {
+    handleGroupChxBox(component: ConditionGroupCheckBoxModel,checkedValue: Array<CheckboxValueType>) {
         let data = this.vmModel;
         const name = component.container.name
         data[name] = checkedValue;
-        this.setFieldsValues(name,(value:ConditionGroupCheckBoxModel) => {
+        this.setFieldsValues(name,(value: ConditionGroupCheckBoxModel) => {
             value.props.value = checkedValue;
         })
         component.props.onChange && component.props.onChange.call(this,checkedValue,{
             viewState: cloneDeep(data),
-            parameter:cloneDeep(this.queryPrams),
+            parameter: cloneDeep(this.queryPrams),
         },this.viewStore)
         this.viewStore._setVmModel(data);
     }
@@ -607,7 +574,7 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
     }
     renderGroupChxBox(component: ConditionGroupCheckBoxModel) {
         const { props,container,jsonProperty } = component;
-        const { labelSpan,defaultValue,visable,display,value=defaultValue,...prop } = props
+        const { defaultValue,visable,display,value = defaultValue,...prop } = props
         return <Checkbox.Group {...prop}
             value={value}
             onChange={this.handleGroupChxBox.bind(this,component)} />
@@ -618,12 +585,12 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
         if (this.viewStore && this.viewStore.computedSize === 'small') {
             placeholder = ''
         }
-        const { labelSpan,defaultValue,value=defaultValue,visable,display,...prop } = props
+        const { defaultValue,value = defaultValue,visable,display,...prop } = props
         const suffix = value ? <Icon type="close-circle" onClick={() => {
             let state = this.vmModel;
             state[container.name] = ''
-            this.setFieldsValues(container.name,(value:ConditionTextModel) => {
-                value.props.value=''
+            this.setFieldsValues(container.name,(value: ConditionTextModel) => {
+                value.props.value = ''
             })
             this.viewStore._setVmModel(state)
             this.mapQueryValue()
@@ -652,7 +619,7 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
         if (this.viewStore && this.viewStore.computedSize === 'small') {
             placeholder = ''
         }
-        const { labelSpan,defaultValue,value=defaultValue,visable,display,...prop } = props
+        const { defaultValue,value = defaultValue,visable,display,...prop } = props
         const { onReset,...themProps } = prop;
         const onEnter = props.onEnter;
         return (
@@ -684,14 +651,14 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
             }
         }
         const placeholder = props.placeholder as string
-        let newData = props.options as Array<ISelectProps>
-        const { labelSpan,defaultValue,visable,display,value=defaultValue,...prop } = props
+        let newData = props.options as Array<ProSelect['options']>
+        const { defaultValue,visable,display,value = defaultValue,...prop } = props
         const firstActiveValue = newData.length > 0 ? [`${newData[0].key}`] : ''
-        const autoObData = this.viewStore.selectOptions.get(container.name);
-        if (autoObData && prop.autoQuery) {
-            const autoData = prop.autoQuery.transform(autoObData.obData)
-            newData = autoData.data;
-        }
+        // const autoObData = this.viewStore.selectOptions.get(container.name);
+        // if (autoObData && prop.autoQuery) {
+        //     const autoData = prop.autoQuery.transform(autoObData.obData)
+        //     newData = autoData.data;
+        // }
         return (
             // @ts-ignore mode 为tags时，可以把随意输入的条目作为 tag，输入项不需要与下拉选项匹配
             <div>
@@ -717,7 +684,7 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
     renderDate(component: ConditionDateModel) {
         const { props,jsonProperty } = component;
         const placeholder = props.placeholder as string
-        const { labelSpan,defaultValue,visable,display,value=defaultValue,...prop } = props
+        const { defaultValue,visable,display,value = defaultValue,...prop } = props
         return (<DatePicker
             {...prop}
             style={{ width: '100%' }}
@@ -729,10 +696,10 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
     }
     renderDateRange(component: ConditionRangePickerModel) {
         const { props,jsonProperty } = component;
-        const { labelSpan,defaultValue,visable,display,value=defaultValue,...prop } = props
-        let placeholder = {placeholder:['',''] as [string,string]};
+        const { defaultValue,visable,display,value = defaultValue,...prop } = props
+        let placeholder = { placeholder: ['',''] as [string,string] };
         if (props.placeholder) {
-            placeholder = {placeholder:props.placeholder}
+            placeholder = { placeholder: props.placeholder }
         }
         return (<RangePicker
             allowClear={true}
@@ -746,7 +713,7 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
     }
     renderChxBox(component: ConditionCheckBoxModel) {
         const { props,jsonProperty } = component;
-        const { labelSpan,visable,display,value,defaultChecked,...prop } = props
+        const { visable,display,value,defaultChecked,...prop } = props
         return (<Checkbox
             {...prop}
             defaultChecked={defaultChecked}
@@ -758,7 +725,7 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
     }
     renderInputNumber(component: ConditionTextNumberModel) {
         const { props,jsonProperty } = component;
-        const { labelSpan,defaultValue,display,visable,...prop } = props
+        const { defaultValue,display,visable,...prop } = props
         let placeholder = props.placeholder as string
         if (this.viewStore && this.viewStore.computedSize === 'small') {
             placeholder = ''
@@ -782,7 +749,7 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
     }
     renderRadioButton(component: ConditionRadioButtonModel) {
         const { props,container,jsonProperty } = component;
-        const { labelSpan,defaultValue,display,options,visable,...prop } = props
+        const { defaultValue,display,options,visable,...prop } = props
         const newData = options as Array<IRadioButtonProps>
         return (
             <RadioGroup
@@ -800,69 +767,38 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
         )
     }
     renderSearch(component: ConditionSearchModel) {
-        const { props } = component;
-        const { ...prop } = props;
-        const menu = (
-            <Menu selectedKeys={[this.viewStore.computedSize]} onClick={(item) => {
-                const size = item.key as "default" | "small"
-                this.viewStore._setSize(size);
-            }}>
-                <Menu.Item key="small">紧凑</Menu.Item>
-                <Menu.Item key="default">舒适</Menu.Item>
-            </Menu>
-        );
         return <React.Fragment>
-            <Row gutter={8} type="flex" style={{ flexWrap: 'nowrap' }}>
-                <Col>
-                    <Button
-                        type="primary"
-                        icon={'search'}
-                        onClick={this.handleSearch.bind(this)}
-                    >{component.props.searchText||'搜索'}
+            <div className="legions-pro-query-search">
+                <Button
+                    type="primary"
+                    icon={'search'}
+                    onClick={this.handleSearch.bind(this)}
+                >{component.props.searchText || '搜索'}
                 </Button>
-                </Col>
-                <Col className="legions-pro-query-reset">
-                    {/* <Dropdown.Button type="primary" onClick={this.handleReset.bind(this)} overlay={menu}>
-                        {component.props.resetText||'重置'}
-                    </Dropdown.Button> */}
-                    <Button className="query-reset-btn" type="primary" ghost onClick={this.handleReset.bind(this)}>{component.props.resetText||'重置'}</Button>
-                    <Dropdown overlay={menu}>
-                        <Button type="primary" ghost icon="down"></Button>
-                    </Dropdown>
-                </Col>
-                {component.props.onRefresh && <Col>
-                    <Button
-                        onClick={() => {
-                            //@ts-ignore
-                            const item = this.props.query.find((item) => item instanceof ConditionSearchModel);
-                            if (item && item instanceof ConditionSearchModel) {
-                                item.props.onRefresh && item.props.onRefresh.call(this,cloneDeep(this.queryPrams),this.viewStore)
-                            }
-                         }}
-                         /* style={{ width: '100%',padding: '0 2px' }} */
-                        //@ts-ignore
-                        title="刷新">
-                        <Icon type="sync" title="刷新" />
-                    </Button>
-                </Col>}
-                <Col>
-                    <Button
-                        type="primary"
-                        ghost
-                        icon={this.state.collapsed ? 'down' : 'up'}
-                        onClick={this.handleToggle.bind(this)}>
-                        {this.state.collapsed ? '收起' : '展开'}
-                    </Button>
-                </Col>
-            </Row>
+
+                <Button
+                    className="query-reset-btn"
+                    type="primary"
+                    ghost
+                    icon="sync"
+                    onClick={this.handleReset.bind(this)}
+                >{component.props.resetText || '重置'}</Button>
+                <Button
+                    type="primary"
+                    ghost
+                    icon={this.state.collapsed ? 'down' : 'up'}
+                    onClick={this.handleToggle.bind(this)}>
+                    {this.state.collapsed ? '收起' : '展开'}
+                </Button>
+            </div>
         </React.Fragment>
     }
-    renderLabel(component: IProConditions['componentModel'],labelSpan: number) {
-        if (!(component instanceof ConditionSearchModel) && !(component instanceof ConditionCheckBoxModel)&&!(component instanceof ConditionGroupCheckBoxModel)) {
+    renderLabel(component: IProConditions['componentModel']) {
+        if (!(component instanceof ConditionSearchModel) && !(component instanceof ConditionCheckBoxModel) && !(component instanceof ConditionGroupCheckBoxModel)) {
             let label = component.props.label;
             const name = component.container.name;
             return (
-                this.viewStore.computedSize !== 'small' ? <Col className="legions-pro-query-label" span={labelSpan}>
+                this.viewStore.computedSize !== 'small' ? <Col className="legions-pro-query-label" >
                     <label
                         htmlFor={name}
                         title={label} style={{ lineHeight: '28px',right: '0px' }}>
@@ -888,22 +824,27 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
 
     }
     getQueryItemSpan(item: IProConditions['componentModel']) {
-        const defaultCol = {
-            xs: 8,
-            sm: 8,
-            md: 6,
-            lg: 6,
-            xl: 4,
+        /** 直接从query组件传入的全局col属性计算 */
+        const parentColCompute = () => {
+            const { col } = this.props;
+            if (isNumber(col)) {
+                return col as number * (item.container.colNum || 1)
+            } else {
+                return col[this.viewStore.compuedResolution] * (item.container.colNum || 1)
+            }
         }
-        const Resolution = item.container.col[this.viewStore.compuedResolution];
-        if (typeof Resolution === 'number') {
-            return Resolution
-        }
-        else if (typeof Resolution === 'object') {
-            return Resolution.span || defaultCol[this.viewStore.compuedResolution]
-        }
-        else {
-            return defaultCol[this.viewStore.compuedResolution];
+        // 如果子项有传递col属性，则取子项配置，没有则取组件props中的col属性
+        if (item.container.col) {
+            const Resolution = item.container.col[this.viewStore.compuedResolution];
+            if (isNumber(Resolution)) {
+                return Resolution
+            } else if (isObject(Resolution)) {
+                return Resolution['span']
+            } else {
+                return parentColCompute()
+            }
+        } else {
+            return parentColCompute()
         }
     }
     renderSearchComponent() {
@@ -926,7 +867,7 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
             const currSpan = this.getQueryItemSpan(item);
             let visable: boolean = item.props['visable']
             visable = visable === void 0 ? true : visable;
-            if (unUsedSpan >= currSpan&&visable) {
+            if (unUsedSpan >= currSpan && visable) {
                 show.push(item);
                 unUsedSpan = unUsedSpan - currSpan;
             } else {
@@ -948,47 +889,43 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
     }
     renderQueryComponent(list: IProConditions['componentModel'][]) {
         return list.map((item) => {
-            let labelSpan = (item instanceof ConditionCheckBoxModel || (item instanceof ConditionSearchModel)) ? 1 : (item.props.labelSpan || 4)
-            if (this.viewStore.computedSize === 'small') {
-                labelSpan = 0;
-            }
-            const { offset,pull,push,md,xl,lg,sm,xs,...col } = item.container.col;
+            const { offset,pull,push,md,xl,lg,sm,xs,...col } = item.container.col||{};
             const span = this.getQueryItemSpan(item)
             const colspan = { span };
             const uid = item.container.uuid;
             const { className = '',style = {},onClick } = item.container;
             const click = {};
             if (onClick) {
-                click['onClick'] = onClick.bind(this,{uid:uid,name:item.container.name});
+                click['onClick'] = onClick.bind(this,{ uid: uid,name: item.container.name });
             }
             return <Col {...col} {...colspan}
                 {...click}
-                className={className}
+                className={`legions-pro-query-item ${className}`}
                 data-id={uid}
                 data-name={item.container.name}
-                key={uid} style={{ paddingBottom: '10px',paddingLeft:'5px',...style }}>
-                        {this.renderLabel(item,labelSpan)}
-                        <Col style={{ lineHeight: '28px' }}  span={24 - labelSpan}>
-                            {this.renderComponent(item)}
-                        </Col>
-                    </Col>
+                key={uid} style={{ ...style }}>
+                {this.renderLabel(item)}
+                <div style={{ lineHeight: '28px' }} className="legions-pro-query-field">
+                    {this.renderComponent(item)}
+                </div>
+            </Col>
         })
     }
     renderContent() {
         let hide: IProConditions['componentModel'][] = []
         return <React.Fragment>
-           {this.renderShowComponent(hide)}
-                {this.renderSearchComponent()}
-                {this.state.collapsed && this.renderCollapsed(hide)}
+            {this.renderShowComponent(hide)}
+            {this.renderSearchComponent()}
+            {this.state.collapsed && this.renderCollapsed(hide)}
         </React.Fragment>
     }
     render() {
         const { draggerProps = {} as IProDraggerProps } = this.props;
-        const {options={} as IProDraggerOptions,onChange,...prop} = draggerProps
+        const { options = {} as IProDraggerOptions,onChange,...prop } = draggerProps
         return (
             <Row className={`${baseCls} ${this.uid}`} gutter={8} type="flex">
-                {this.props.isDragSort?<LegionsProDragger
-                      options={{
+                {this.props.isDragSort ? <LegionsProDragger
+                    options={{
                         animation: 150,
                         ...draggerProps.options,
                         group: {
@@ -1017,8 +954,8 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
                     }}
                     {...prop}
                 >
-                     {this.renderContent()}
-                </LegionsProDragger>:this.renderContent()}
+                    {this.renderContent()}
+                </LegionsProDragger> : this.renderContent()}
 
 
             </Row>

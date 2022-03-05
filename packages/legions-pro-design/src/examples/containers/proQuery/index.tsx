@@ -3,7 +3,7 @@ import { bind,observer } from 'legions/store-react'
 import { Button, Row } from 'antd';
 import { LegionsProConditions, LegionsProModalForm,LegionsProPageContainer } from '../../../components';
 import { observablePromise } from 'legions/store-utils';
-import {  InstanceQueryConditions } from 'components/LegionsProConditions/interface';
+import {  ProConditions } from 'components/LegionsProConditions/interface';
 import moment from 'moment';
 import { observable } from 'legions/store';
 import { ObservableMap,runInAction } from 'mobx';
@@ -14,7 +14,7 @@ interface Istate{
 
 @observer
 export default class QueryDemo extends React.Component<{},Istate>{
-    queryRef: InstanceQueryConditions = null
+    queryRef: ProConditions['ref'] = null
     @observable smp:ObservableMap<string,{a:{b:number}}>=observable.map()
     constructor(props:{}) {
         super(props)
@@ -33,22 +33,16 @@ export default class QueryDemo extends React.Component<{},Istate>{
         ]) */
     }
     createConfig() {
-        const formUtils = new LegionsProConditions.ProConditions();
-        formUtils.renderTextConfig({
-            containerProps: {
-                col: {
-                    md: 6,
-                    lg: 4,
-                    xl: 4,
-                },
+        const formUtils = new LegionsProConditions.ProConditionsBase();
+        formUtils.renderConfig('text',{
+            container: {
                 name: 'vmOrderNo',
                 onClick: (value) => {
                     console.log(value);
                 }
             },
-            conditionsProps: {
+            props: {
                 label: '司机姓名',
-                labelSpan: 5,
                 defaultValue:'司机姓名',
                 onChange: (event,value,viewStore) => {
                     console.log(event,value,viewStore,'司机姓名');
@@ -56,18 +50,13 @@ export default class QueryDemo extends React.Component<{},Istate>{
             },
             jsonProperty:'orderNo'
         })
-        formUtils.renderTextAreaConfig({
-            containerProps: {
-                col: {
-                    md: 6,
-                    lg: 4,
-                    xl: 4,
-                },
+        formUtils.renderConfig('textArea',{
+            container: {
+            
                 name:'vmOrderNo1'
             },
-            conditionsProps: {
+            props: {
                 label: '企业全称',
-                labelSpan: 5,
                 defaultValue:'企业全称',
                 onChange: (event,value,viewStore) => {
                     console.log(event,value,viewStore,'企业全称');
@@ -75,43 +64,31 @@ export default class QueryDemo extends React.Component<{},Istate>{
             },
             jsonProperty:'orderNo1'
         })
-        formUtils.renderSelectConfig({
-            containerProps: {
-                col: {
-                    md: 6,
-                    lg: 4,
-                    xl: 4,
-                },
+        formUtils.renderConfig('select',{
+            container: {
                 name:'vmOrderNo2'
             },
-            conditionsProps: {
+            props: {
                 label: '企业',
-                labelSpan: 3,
                 multiple: false,
                 labelInValue: true,
                 defaultValue:{key:'111',label:''},
                 onChange: (value,viewStore) => {
                     console.log(value,viewStore,'企业');
                 },
-                options: [{ key: '111',value: '昊链科技' },
-                    { key: '222',value: '昊链科技1' },
-                    { key: '333',value: '昊链科技3' },
-                    { key: '444',value: '昊链科技4' }]
+                options: [{ key: '111',value: '昊链科技',label:'昊链科技(111)' },
+                    { key: '222',value: '昊链科技1',label:'昊链科技1(222)' },
+                    { key: '333',value: '昊链科技3',label:'昊链科技3(333)' },
+                    { key: '444',value: '昊链科技4' ,label:'昊链科技4(444)'}]
             },
             jsonProperty:'companyCode,companyName'
         })
-        formUtils.renderDateConfig({
-            containerProps: {
-                col: {
-                    md: 6,
-                    lg: 4,
-                    xl: 4,
-                },
+        formUtils.renderConfig('date',{
+            container: {
                 name:'vmOrderNo3'
             },
-            conditionsProps: {
+            props: {
                 label: '创建日期',
-                labelSpan: 5,
                 /* format: 'YYYY-MM-DD HH:mm:ss', */
                 format: 'YYYY-MM-DD',
                 showTime: true,
@@ -123,19 +100,13 @@ export default class QueryDemo extends React.Component<{},Istate>{
             },
             jsonProperty:'orderNo3'
         })
-        formUtils.renderRangePickerConfig({
-            containerProps: {
-                col: {
-                    md: 6,
-                    lg: 4,
-                    xl: 4,
-                },
+        formUtils.renderConfig('rangePicker',{
+            container: {
                 name: 'vmOrderNo4',
                 
             },
-            conditionsProps: {
+            props: {
                 label: '日期范围',
-                labelSpan: 5,
                 /* placeholder: ['开始日期','结束日期'], */
                 onChange: (originValue,value,viewStore) => {
                     console.log(originValue,value,viewStore,'日期范围');
@@ -147,18 +118,12 @@ export default class QueryDemo extends React.Component<{},Istate>{
             },
             jsonProperty: 'createTimeStart,createTimeEnd',
         })
-        formUtils.renderCheckBoxConfig({
-            containerProps: {
-                col: {
-                    md: 2,
-                    lg: 2,
-                    xl: 1,
-                },
+        formUtils.renderConfig('checkBox',{
+            container: {
                 name:'vmOrderNo5'
             },
-            conditionsProps: {
+            props: {
                 label: '删除',
-                labelSpan: 5,
                 defaultChecked: true,
                 onChange: (event,value) => {
                     console.log(event,value,'数量');
@@ -166,18 +131,12 @@ export default class QueryDemo extends React.Component<{},Istate>{
             },
             jsonProperty:'orderNo5'
         })
-        formUtils.renderTextNumberConfig({
-            containerProps: {
-                col: {
-                    md: 6,
-                    lg: 4,
-                    xl: 4,
-                },
+        formUtils.renderConfig('textNumber',{
+            container: {
                 name:'vmOrderNo6'
             },
-            conditionsProps: {
+            props: {
                 label: '数量',
-                labelSpan: 5,
                 onChange: (event,value,viewStore) => {
                     console.log(event,value,viewStore,'数量');
                 },
@@ -185,18 +144,12 @@ export default class QueryDemo extends React.Component<{},Istate>{
             },
             jsonProperty:'orderNo6'
         })
-        formUtils.renderRadioButtonConfig({
-            containerProps: {
-                col: {
-                    md: 6,
-                    lg: 4,
-                    xl: 4,
-                },
+        formUtils.renderConfig('radioButton',{
+            container: {
                 name:'vmOrderNo7'
             },
-            conditionsProps: {
+            props: {
                 label: '城市',
-                labelSpan: 5,
                 defaultValue:'b',
                 onChange: (event,value,viewStore) => {
                     console.log(event,value,viewStore,'城市');
@@ -205,102 +158,77 @@ export default class QueryDemo extends React.Component<{},Istate>{
             },
             jsonProperty:'orderNo7'
         })
-        formUtils.renderSearchConfig({
-            containerProps: {
-                name: 'search',
-                col: {
-                    md: 6,
-                    lg: 4,
-                    xl: 4,
-                }
-            },
-            conditionsProps: {
-                onSearch: (value,view) => {
-                    console.log(value);
-                },
-            }
-        })
-        formUtils.renderGroupCheckBoxConfig({
-            containerProps: {
-                col: {
-                    md: 5,
-                    lg: 2,
-                    xl: 4,
-                },
+        
+        formUtils.renderConfig('groupCheckBox',{
+            container: {
                 name:'vmOrderNo8'
             },
-            conditionsProps: {
+            props: {
                 defaultValue:['Apple'],
-                labelSpan: 5,
                 options: [{ label: 'Apple', value: 'Apple' },
                 { label: 'Pear', value: 'Pear' },
                 { label: 'Orange', value: 'Orange' }]
             },
             jsonProperty:'orderNo8'
         })
-        formUtils.renderSelectConfig({
-            containerProps: {
-                col: {
-                    md: 5,
-                    lg: 2,
-                    xl: 4,
-                },
+        formUtils.renderConfig('select',{
+            container: {
+                
                 name:'vmOrderNo9'
             },
-            conditionsProps: {
+            props: {
                 paging: true,
                 label: '远程下拉',
                 options: [],
-                labelSpan: 5,
-                autoQuery: {
-                    params: (pageIndex,pageSize,keywords,params) => {
-                        return {
-                            keyword: keywords,
-                            current: pageIndex,
-                            size: 300,
-                            templateCode: 'Country',
-                            pageIndex: 1,
-                            pageSize,
-                            defaultKeyWords:'',
-                        }
-                    },
-                    options: {
-                        'api-target': 'https://qa-scm.hoolinks.com//jg/basic/cusinfo/search.json'
-                    },
-                    isInitialize: false,
-                    ApiUrl: 'https://gateway.hoolinks.com/api/gateway',
-                    method: 'post',
-                    token: (function token(){    /** 权限字符串自行输入*/    return 'token'})(),
-                    mappingEntity: (that,res) => {
-                        that.total = res['total'];
-                        that.current = res['current'];
-                        that.pageSize = res['size'];
-                        const data = res['data'] as [] || []
-                        return data.map((item) => {
-                            return {
-                                key: item['code'],
-                                value: item['name'],
-                            }
-                        });
-                    },
-                    transform: (value) => {
-                        let arr = value.value ? value.value.result : []
-                        return {
-                            data: arr.map((item) => {
-                                return {
-                                    key: item.key,
-                                    value: '(' + item.key + ')' + item.value,
-                                }
-                            }),
-                            total: value.value ? value.value.total : 0,
-                        }
-                    },
-                },
+                // autoQuery: {
+                //     params: (pageIndex,pageSize,keywords,params) => {
+                //         return {
+                //             keyword: keywords,
+                //             current: pageIndex,
+                //             size: 300,
+                //             templateCode: 'Country',
+                //             pageIndex: 1,
+                //             pageSize,
+                //             defaultKeyWords:'',
+                //         }
+                //     },
+                //     options: {
+                //         'api-target': 'https://qa-scm.hoolinks.com//jg/basic/cusinfo/search.json'
+                //     },
+                //     isInitialize: false,
+                //     ApiUrl: 'https://gateway.hoolinks.com/api/gateway',
+                //     method: 'post',
+                //     token: (function token(){    /** 权限字符串自行输入*/    return 'token'})(),
+                //     mappingEntity: (that,res) => {
+                //         that.total = res['total'];
+                //         that.current = res['current'];
+                //         that.pageSize = res['size'];
+                //         const data = res['data'] as [] || []
+                //         return data.map((item) => {
+                //             return {
+                //                 key: item['code'],
+                //                 value: item['name'],
+                //             }
+                //         });
+                //     },
+                //     transform: (value) => {
+                //         let arr = value.value ? value.value.result : []
+                //         return {
+                //             data: arr.map((item) => {
+                //                 return {
+                //                     key: item.key,
+                //                     value: '(' + item.key + ')' + item.value,
+                //                 }
+                //             }),
+                //             total: value.value ? value.value.total : 0,
+                //         }
+                //     },
+                // },
             },
             jsonProperty:'orderNo9'
         })
-        formUtils.renderSearchConfig({
-            containerProps: {
+        formUtils.renderConfig('search',{
+            container: {
                 name: 'search',
                 col: {
                     md: 6,
@@ -308,7 +236,7 @@ export default class QueryDemo extends React.Component<{},Istate>{
                     xl: 4,
                 },
             },
-            conditionsProps: {
+            props: {
                 
                 onSearch: (value,view) => {
 
@@ -344,8 +272,8 @@ export default class QueryDemo extends React.Component<{},Istate>{
                         value:2,
                     }]) */
                     this.queryRef.methods.setFieldsValues<InstanceType<typeof LegionsProConditions.ConditionTextModel>>('vmOrderNo',(value) => {
-                            value.conditionsProps.label = 'sss';
-                            value.conditionsProps.value = '222';
+                            value.props.label = 'sss';
+                            value.props.value = '222';
                     })
 
                 }}> 设置指定数据值{this.smp.get('ss').a.b}</Button>
@@ -362,10 +290,10 @@ export default class QueryDemo extends React.Component<{},Istate>{
                 <Button onClick={() => {
                     this.setState({visable:!this.state.visable})
                     this.queryRef.methods.setFieldsValues<InstanceType<typeof LegionsProConditions.ConditionRadioButtonModel>>('vmOrderNo7',(value) => {
-                        if(value.conditionsProps.visable ===void 0){
-                            value.conditionsProps.visable =true
+                        if(value.props.visable ===void 0){
+                            value.props.visable =true
                         }
-                        value.conditionsProps.visable = !value.conditionsProps.visable;
+                        value.props.visable = !value.props.visable;
                     })
                 }}>设置指定元素隐藏/隐藏</Button>
                 <Row style={{ marginTop: '10px' }}><LegionsProConditions

@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-09-28 23:07:31
- * @LastEditTime: 2022-03-04 14:40:57
+ * @LastEditTime: 2022-03-05 22:03:31
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/script/constants/component.js
@@ -19,7 +19,7 @@ const FormComponent = [
    // 'LegionsProForm',
 ]//
 const ModalComponet = ['LegionsProModal']//
-const ConditionsComponent = ['LegionsStoreConditions','LegionsProConditions'] //
+const ConditionsComponent = ['LegionsProConditions'] //
 const GeneralComponent = ['LegionsProBreadcrumb','LegionsProInput',
     'LegionsProNumericInput','LegionsProTextArea','LegionsProSelect']//
 const DataEntryCompoent = ['LegionsProDataImport','LegionsProUpload','LgeionsProVirtualList']//

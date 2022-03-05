@@ -27,8 +27,6 @@ cp -r -f types/src/components/services/* lib/services/
 cp -r -f types/src/components/LegionsStore/* es/LegionsStore/
 cp -r -f types/src/components/LegionsStore/* lib/LegionsStore/
 
-cp -r -f types/src/components/LegionsStoreConditions/* es/LegionsStoreConditions/
-cp -r -f types/src/components/LegionsStoreConditions/* lib/LegionsStoreConditions/
 
 cp -r -f types/src/components/LegionsStoreForm/* es/LegionsStoreForm/
 cp -r -f types/src/components/LegionsStoreForm/* lib/LegionsStoreForm/
