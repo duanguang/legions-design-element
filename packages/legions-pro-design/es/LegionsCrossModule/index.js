@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.25
+  *  legions-pro-design v0.0.26
   * (c) 2022 duanguang
   * @license MIT
   */
@@ -7,7 +7,7 @@ import { initGlobalState } from 'qiankun';
 import { postMessage } from 'legions-utils-tool/dom';
 import { resource, StoreModules, inject } from 'legions/store';
 import LegionsStore from '../LegionsStore';
-import LegionsStoreTable from '../LegionsStoreTable';
+import LegionsProTable from '../LegionsProTable';
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -302,7 +302,7 @@ var WorkerGlobalStateStore = /** @class */ (function (_super) {
     };
     WorkerGlobalStateStore.meta = __assign({}, LegionsStore.StoreBase.meta);
     __decorate([
-        inject(LegionsStoreTable),
+        inject(LegionsProTable['store']),
         __metadata("design:type", void 0)
     ], WorkerGlobalStateStore.prototype, "proTableStore", void 0);
     WorkerGlobalStateStore = __decorate([

@@ -215,7 +215,7 @@ export declare class ProTableView {
      * @readonly
      * @memberof ProTableView
      */
-    get tableXAutoWidth(): import("react").ReactText;
+    get tableXAutoWidth(): string | number;
     get computedTotal(): number;
     /**
      *

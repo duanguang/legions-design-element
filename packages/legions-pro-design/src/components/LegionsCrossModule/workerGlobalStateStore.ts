@@ -2,7 +2,7 @@ import LegionsStore from '../LegionsStore';
 import { legionsStoreInterface } from '../LegionsStore/interface'
 import { MicroAppStateActions } from 'qiankun'
 import { inject, resource, StoreModules } from 'legions/store';
-import LegionsStoreTable from '../LegionsStoreTable';
+import LegionsProTable from '../LegionsProTable';
 import { IframePostMessage, masterEventScopes, subscribeLegionsProGlobal } from './globalStateEven';
 import { legionsProLayoutInterface } from '../LegionsProLayout/interface'
 import {legionsCrossModuleInterface} from './interface'
@@ -28,8 +28,8 @@ export default class WorkerGlobalStateStore<IGlobalState,User={}> extends Legion
     static createEventScopes(event_key: string) {
         return resource(`worker/resource/${event_key}`);
     }
-    @inject(LegionsStoreTable)
-    private proTableStore: InstanceType<typeof LegionsStoreTable>
+    @inject(LegionsProTable['store'])
+    private proTableStore: InstanceType<typeof LegionsProTable['store']>
     private userInfo: InterfaceUer<User>;
     private menuList: legionsProLayoutInterface['menuList'] = [];
     /** 监听全局数据，发生改变时触发,最基础监听函数 */

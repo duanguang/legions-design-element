@@ -1,25 +1,24 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-29 16:44:16
- * @LastEditTime: 2022-02-28 17:14:28
+ * @LastEditTime: 2022-03-05 21:48:49
  * @LastEditors: duanguang
  * @Description: 
- * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreConditions/index.ts
+ * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProConditions/store/index.ts
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
 /** @format */
 
-import LegionsStore from '../LegionsStore';
-import {legionsStoreInterface} from '../LegionsStore/interface';
+import LegionsStore from '../../LegionsStore';
+import {legionsStoreInterface} from '../../LegionsStore/interface';
 import { observable, action, StoreModules } from 'legions/store';
 import { observableViewModel, observablePromise } from 'legions/store-utils';
-import { computed,ObservableMap } from 'mobx';
 import { ConditionView } from './conditionView';
 import { ViewModel } from 'brain-store-utils/types/create-view-model';
 type Proxify<T> = { [P in keyof T]: T[P] };
 
 @StoreModules
-export default class LegionsStoreConditions<Query = {}> extends LegionsStore.StoreBase {
+export class StoreConditions<Query = {}> extends LegionsStore.StoreBase {
     static meta: legionsStoreInterface['storeBaseMeta'] = {
         ...LegionsStore.StoreBase.meta,
     };

@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-08 15:19:23
- * @LastEditTime: 2021-11-16 23:46:52
+ * @LastEditTime: 2022-03-05 21:47:52
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProConditions/ProConditionsUtils.tsx
@@ -9,163 +9,91 @@
  */
 import React from 'react';
 import { getInjector } from 'legions/store';
-import { IQueryCheckBoxProps, IQueryDateProps, IQueryGroupCheckBoxProps, IQueryProps, IQueryRadioButtonProps, IQueryRangePickerProps, IQuerySelectProps, IQueryTextAreaProps, IQueryTextNumberProps, IQueryTextProps } from './interface';
-import { ColSize } from 'antd/lib/grid/col';
-import { IViewQueryConditionStore } from '../LegionsStoreConditions/interface';
+
 import { shortHash } from 'legions-lunar/object-hash';
-interface ColProps {
-    className?: string;
-    span?: number;
-    order?: number;
-    offset?: number;
-    push?: number;
-    pull?: number;
-    /** 宽度<768px 响应式栅格，可为栅格数或一个包含其他属性的对象  */
-    xs?: number | ColSize;
-    /** 宽度≥768px 响应式栅格，可为栅格数或一个包含其他属性的对象 */
-    sm?: number | ColSize;
-    /** 宽度≥992px 响应式栅格，可为栅格数或一个包含其他属性的对象 */
-    md: number | ColSize;
-    /** 宽度≥1200px 响应式栅格，可为栅格数或一个包含其他属性的对象 */
-    lg: number | ColSize;
-    /** 宽度≥1600px 响应式栅格，可为栅格数或一个包含其他属性的对象 */
-    xl: number | ColSize;
-    prefixCls?: string;
-    style?: React.CSSProperties;
-}
-interface IContainerProps{
-    col: ColProps;
-    name: string;
-    /** 单击时触发 */
-    onClick?: (value: {
-        uid: string,name: string;
-    }) => void;
-    style?: React.CSSProperties;
-    className?: string;
-    /** 只读 */
-    readonly uuid?: string;
-}
+import {ProConditions} from './interface'
+
+
 
 export class ConditionSelectModel {
-    constructor(public containerProps: IContainerProps,
-        public conditionsProps: IQuerySelectProps&IQueryProps,
+    constructor(public container: ProConditions['config_container'],
+        public props: ProConditions['component_props']['select'],
         public jsonProperty: string) {
 
     }
 }
 export class ConditionTextNumberModel{
-    constructor(public containerProps: IContainerProps,
-        public conditionsProps: IQueryTextNumberProps&IQueryProps,
+    constructor(public container:ProConditions['config_container'],
+        public props: ProConditions['component_props']['textNumber'],
         public jsonProperty: string) {
     }
 }
 export class ConditionRadioButtonModel{
-    constructor(public containerProps: IContainerProps,
-        public conditionsProps: IQueryRadioButtonProps&IQueryProps,
+    constructor(public container:ProConditions['config_container'],
+        public props: ProConditions['component_props']['radioButton'],
         public jsonProperty: string) {
     }
 }
 export class ConditionTextAreaModel{
-    constructor(public containerProps: IContainerProps,
-        public conditionsProps: IQueryTextAreaProps&IQueryProps,
+    constructor(public container:ProConditions['config_container'],
+        public props: ProConditions['component_props']['textArea'],
         public jsonProperty: string) {
     }
 }
 export class ConditionTextModel{
-    constructor(public containerProps: IContainerProps,
-        public conditionsProps: IQueryTextProps&IQueryProps,
+    constructor(public container:ProConditions['config_container'],
+        public props: ProConditions['component_props']['text'],
         public jsonProperty: string) {
     }
 }
 export class ConditionDateModel{
-    constructor(public containerProps: IContainerProps,
-        public conditionsProps: IQueryDateProps&IQueryProps,
+    constructor(public container: ProConditions['config_container'],
+        public props: ProConditions['component_props']['date'],
         public jsonProperty: string) {
     }
 }
-interface IQuerySearchConfigProps{
-    /**查询按钮的文本 */
-    searchText?: string;
-    /** 重置按钮的文本*/
-    resetText?: string;
-    /**收起按钮的 render */
-    readonly collapseRender?: (collapsed: boolean,showCollapseButton?: boolean,) => React.ReactNode
-    /** 自定义操作栏 */
-    /* optionRender?: ((searchConfig: IQuerySearchConfigProps) => React.ReactNode[]) | false */
-    
-    readonly onSearch:(params:any,viewEntity?: IViewQueryConditionStore)=>void
-    readonly onReset?: (params: any,viewEntity?: IViewQueryConditionStore) => void
-    readonly onRefresh?:(params: any,viewEntity?: IViewQueryConditionStore)=>void
-}
+
 export class ConditionSearchModel{
     constructor(
-        public containerProps: IContainerProps,
-        public conditionsProps: IQuerySearchConfigProps) {
+        public container:ProConditions['config_container'],
+        public props: ProConditions['component_props']['search']) {
     }
 }
 export class ConditionRangePickerModel{
-    constructor(public containerProps: IContainerProps,
-        public conditionsProps: IQueryRangePickerProps&IQueryProps,
+    constructor(public container:ProConditions['config_container'],
+        public props: ProConditions['component_props']['rangePicker'],
         public jsonProperty: string) {
     }
 }
 export class ConditionCheckBoxModel{
-    constructor(public containerProps: IContainerProps,
-        public conditionsProps: IQueryCheckBoxProps&IQueryProps,
+    constructor(public container:ProConditions['config_container'],
+        public props: ProConditions['component_props']['checkBox'],
         public jsonProperty: string) {
     }
 }
 export class ConditionGroupCheckBoxModel{
-    constructor(public containerProps: IContainerProps,
-        public conditionsProps: IQueryGroupCheckBoxProps&Omit<IQueryProps,'label'>,
+    constructor(public container:ProConditions['config_container'],
+        public props: ProConditions['component_props']['groupCheckBox'],
         public jsonProperty: string) {
     }
 }
-interface IRenderComponentBaseParams<T> {
 
-    /**
-     *
-     * 容器参数
-     * @type {containerProps}
-     * @memberof IRenderComponentParams
-     */
-    containerProps: IContainerProps,
-
-    /**
-     * 组件参数
-     *
-     * @type {T}
-     * @memberof IRenderComponentParams
-     */
-    conditionsProps: T
-
-}
-interface IRenderComponentParams<T> extends IRenderComponentBaseParams<T> {
-
-    /**
-     * 映射查询接口字段名
-     *
-     * @memberof IRenderComponentParams
-     */
-    jsonProperty: string;
-}
-interface IRangTimeComponentParams<T> extends IRenderComponentBaseParams<T> {
-
-    /**
-     * 映射查询接口字段名
-     *
-     * @memberof IRangTimeComponentParams
-     */
-    jsonProperty: {
-        startTime: string;
-        endTime: string;
-    };
-}
 export interface IProConditions {
     componentModel: ConditionSelectModel | ConditionTextNumberModel | ConditionRadioButtonModel | ConditionTextAreaModel |
     ConditionTextModel | ConditionDateModel | ConditionRangePickerModel |ConditionSearchModel|ConditionGroupCheckBoxModel
 }
-export class ProConditions<Store,global = {}>{
+type componentType = 'text' | 'select'
+type componentConfigType<T> = T extends  componentType ? IComponent[T]: {}
+interface IComponent{
+    text: ProConditions['component_props']['text'];
+    select:ProConditions['component_props']['select']
+}
+interface IComponentType{
+    text: 'text';
+    select:'select'
+}
+type aaa =InstanceType<typeof ProConditionsBase>['renderConfig']
+export class ProConditionsBase<Store,global = {}>{
 
     readonly global: global = null
     readonly mobxStore: Store = null
@@ -193,7 +121,7 @@ export class ProConditions<Store,global = {}>{
         const uid = `${name}-${shortHash(`${timeId}${name}`)}`
         return uid;
     }
-    private createContainerProps(props: IContainerProps) {
+    private createContainerProps(props: ProConditions['config_container']) {
         const id = props.name;
         if (!this[id]) {
             return {...props,uuid:this.createUid(id)}
@@ -203,54 +131,60 @@ export class ProConditions<Store,global = {}>{
     getConditionsConfig(componentConfigKey: string): IProConditions['componentModel'] {
         return this[componentConfigKey]
     }
-    renderSelectConfig(options: IRenderComponentParams<IQuerySelectProps>): ConditionSelectModel {
-        const id = options.containerProps.name;
-        this[id] = new ConditionSelectModel(this.createContainerProps(options.containerProps),options.conditionsProps,options.jsonProperty)
+    renderConfig<T extends componentType>(type: 'text' | 'select',options: componentConfigType<T>) {
+        
+    }
+    aa() {
+        this.renderConfig<IComponentType['select']>('select',null)
+    }
+    renderSelectConfig(options: ProConditions['configs']['select']): ConditionSelectModel {
+        const id = options.container.name;
+        this[id] = new ConditionSelectModel(this.createContainerProps(options.container),options.props,options.jsonProperty)
         return this[id];
     }
-    renderTextNumberConfig(options: IRenderComponentParams<IQueryTextNumberProps>): ConditionTextNumberModel {
-        const id = options.containerProps.name;
-        this[id] = new ConditionTextNumberModel(this.createContainerProps(options.containerProps),options.conditionsProps,options.jsonProperty)
+    renderTextNumberConfig(options: ProConditions['configs']['textNumber']): ConditionTextNumberModel {
+        const id = options.container.name;
+        this[id] = new ConditionTextNumberModel(this.createContainerProps(options.container),options.props,options.jsonProperty)
         return this[id];
     }
-    renderRadioButtonConfig(options: IRenderComponentParams<IQueryRadioButtonProps>): ConditionRadioButtonModel {
-        const id = options.containerProps.name;
-        this[id] = new ConditionRadioButtonModel(this.createContainerProps(options.containerProps),options.conditionsProps,options.jsonProperty)
+    renderRadioButtonConfig(options: ProConditions['configs']['radioButton']): ConditionRadioButtonModel {
+        const id = options.container.name;
+        this[id] = new ConditionRadioButtonModel(this.createContainerProps(options.container),options.props,options.jsonProperty)
         return this[id];
     }
-    renderTextAreaConfig(options: IRenderComponentParams<IQueryTextAreaProps>): ConditionTextAreaModel {
-        const id = options.containerProps.name;
-        this[id] = new ConditionTextAreaModel(this.createContainerProps(options.containerProps),options.conditionsProps,options.jsonProperty)
+    renderTextAreaConfig(options: ProConditions['configs']['textArea']): ConditionTextAreaModel {
+        const id = options.container.name;
+        this[id] = new ConditionTextAreaModel(this.createContainerProps(options.container),options.props,options.jsonProperty)
         return this[id];
     }
-    renderTextConfig(options: IRenderComponentParams<IQueryTextProps>): ConditionTextModel {
-        const id = options.containerProps.name;
-        this[id] = new ConditionTextModel(this.createContainerProps(options.containerProps),options.conditionsProps,options.jsonProperty)
+    renderTextConfig(options: ProConditions['configs']['text']): ConditionTextModel {
+        const id = options.container.name;
+        this[id] = new ConditionTextModel(this.createContainerProps(options.container),options.props,options.jsonProperty)
         return this[id];
     }
-    renderDateConfig(options: IRenderComponentParams<IQueryDateProps>): ConditionDateModel {
-        const id = options.containerProps.name;
-        this[id] = new ConditionDateModel(this.createContainerProps(options.containerProps),options.conditionsProps,options.jsonProperty)
+    renderDateConfig(options: ProConditions['configs']['date']): ConditionDateModel {
+        const id = options.container.name;
+        this[id] = new ConditionDateModel(this.createContainerProps(options.container),options.props,options.jsonProperty)
         return this[id];
     }
-    renderRangePickerConfig(options: IRenderComponentParams<IQueryRangePickerProps>): ConditionRangePickerModel {
-        const id = options.containerProps.name;
-        this[id] = new ConditionRangePickerModel(this.createContainerProps(options.containerProps),options.conditionsProps,options.jsonProperty)
+    renderRangePickerConfig(options: ProConditions['configs']['rangePicker']): ConditionRangePickerModel {
+        const id = options.container.name;
+        this[id] = new ConditionRangePickerModel(this.createContainerProps(options.container),options.props,options.jsonProperty)
         return this[id];
     }
-    renderCheckBoxConfig(options: IRenderComponentParams<IQueryCheckBoxProps>): ConditionCheckBoxModel {
-        const id = options.containerProps.name;
-        this[id] = new ConditionCheckBoxModel(this.createContainerProps(options.containerProps),options.conditionsProps,options.jsonProperty)
+    renderCheckBoxConfig(options: ProConditions['configs']['checkBox']): ConditionCheckBoxModel {
+        const id = options.container.name;
+        this[id] = new ConditionCheckBoxModel(this.createContainerProps(options.container),options.props,options.jsonProperty)
         return this[id];
     }
-    renderGroupCheckBoxConfig(options: IRenderComponentParams<IQueryGroupCheckBoxProps>): ConditionGroupCheckBoxModel {
-        const id = options.containerProps.name;
-        this[id] = new ConditionGroupCheckBoxModel(this.createContainerProps(options.containerProps),options.conditionsProps,options.jsonProperty)
+    renderGroupCheckBoxConfig(options: ProConditions['configs']['groupCheckBox']): ConditionGroupCheckBoxModel {
+        const id = options.container.name;
+        this[id] = new ConditionGroupCheckBoxModel(this.createContainerProps(options.container),options.props,options.jsonProperty)
         return this[id];
     }
-    renderSearchConfig(options: IRenderComponentBaseParams<IQuerySearchConfigProps>): ConditionSearchModel {
-        const id = options.containerProps.name;
-        this[id] = new ConditionSearchModel(this.createContainerProps(options.containerProps),options.conditionsProps)
+    renderSearchConfig(options: ProConditions['configs']['search']): ConditionSearchModel {
+        const id = options.container.name;
+        this[id] = new ConditionSearchModel(this.createContainerProps(options.container),options.props)
         return this[id];
     }
 }

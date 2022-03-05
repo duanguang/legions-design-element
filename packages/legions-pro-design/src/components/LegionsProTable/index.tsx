@@ -19,7 +19,7 @@ import {
 import { IProTableProps,IProTable, IViewModelProTableStore } from './interface';
 import { legionsStoreInterface } from '../LegionsStore/interface';
 import moment from 'moment';
-import LegionsProTableCustomColumns from '../LegionsProTableCustomColumns';
+import LegionsProTableCustomColumns from './ProTableCustomColumns';
 import LegionsProLineOverflow from '../LegionsProLineOverflow';
 import throttle from 'lodash.throttle';
 import { ILegionsProModal } from '../LegionsProModal/interface';

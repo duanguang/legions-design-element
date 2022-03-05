@@ -142,10 +142,6 @@ cp -r -f types/src/components/LegionsProTable/* lib/LegionsProTable/
 cp -r -f src/components/LegionsProTable/style/* lib/LegionsProTable/style/
 cp -r -f src/components/LegionsProTable/style/* es/LegionsProTable/style/
 
-cp -r -f types/src/components/LegionsProTableCustomColumns/* es/LegionsProTableCustomColumns/
-cp -r -f types/src/components/LegionsProTableCustomColumns/* lib/LegionsProTableCustomColumns/
-cp -r -f src/components/LegionsProTableCustomColumns/style/* lib/LegionsProTableCustomColumns/style/
-cp -r -f src/components/LegionsProTableCustomColumns/style/* es/LegionsProTableCustomColumns/style/
 
 cp -r -f types/src/components/LegionsProTableForm/* es/LegionsProTableForm/
 cp -r -f types/src/components/LegionsProTableForm/* lib/LegionsProTableForm/

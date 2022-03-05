@@ -1,42 +1,54 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-07 16:49:31
- * @LastEditTime: 2021-09-28 00:17:00
+ * @LastEditTime: 2022-03-05 21:58:21
  * @LastEditors: duanguang
  * @Description: 
- * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsStoreConditions/conditionView.ts
+ * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProConditions/store/conditionView.ts
  * @「扫去窗上的尘埃，才可以看到窗外的美景。」
  */
 
-import { observable, action, StoreModules } from 'legions/store';
-import { observableViewModel, observablePromise } from 'legions/store-utils';
+import { observable,action,StoreModules } from 'legions/store';
+import { observableViewModel,observablePromise,ObservablePromiseModel } from 'legions/store-utils';
 import { computed,ObservableMap } from 'mobx';
-import LegionsCore from '../LegionsCore'
-import { IObservableMap,ISelectAutoQuery,ISelectOptions } from './interface';
+import LegionsCore from '../../LegionsCore'
 import { cloneDeep } from 'lodash'
-import { IProConditions } from '../LegionsProConditions/ProConditionsUtils';
-import LegionsModels from '../LegionsModels';
-import { runScriptsSdk   } from 'legions-thirdparty-plugin';
-import {setStorageItems,getStorageItem} from 'legions-utils-tool/storage'
+import { IProConditions } from '../ProConditionsUtils';
+import LegionsModels from '../../LegionsModels';
+import { runScriptsSdk } from 'legions-thirdparty-plugin';
+import { setStorageItems,getStorageItem } from 'legions-utils-tool/storage'
+
+import {ProConditions} from '../interface'
+
+
+
+export interface ISelectOptions {
+    keywords?: string,
+    // @ts-ignore
+    obData: ObservablePromiseModel<any>
+}
+// @ts-ignore
+export interface IObservableMap<K,V> extends ObservableMap<K,V> { }
+export interface IObservableMap<K,V> extends ObservableMap<V> { }
 export class ConditionView<Query = {}> {
-    constructor(uid: string='') {
+    constructor(uid: string = '') {
         this.uid = uid;
     }
-    @observable private uid=''
+    @observable private uid = ''
     /**
      * 查询条件
      *
      * @type {Object}
      * @memberof ConditionView
      */
-    @observable private query:  IObservableMap<string,IProConditions['componentModel']> = observable.map();
+    @observable private query: IObservableMap<string,IProConditions['componentModel']> = observable.map();
     /**
      *
      * 转换成接口所需数据
      * @type {Query}
      * @memberof ConditionView
      */
-    @observable tranQuery:Query
+    @observable tranQuery: Query
 
     /**
      * 组件在 dom 树的真实高度
@@ -54,7 +66,7 @@ export class ConditionView<Query = {}> {
      * @type {number}
      * @memberof ConditionView
      */
-    @observable widthContainer:number =document.body.clientWidth
+    @observable widthContainer: number = document.body.clientWidth
 
 
     /**
@@ -69,19 +81,19 @@ export class ConditionView<Query = {}> {
     @observable private size: 'small' | 'default' = 'default';
 
     @observable selectOptions: IObservableMap<string,ISelectOptions> = observable.map()
-    @computed get computedQuery():Array<IProConditions['componentModel']> {
+    @computed get computedQuery(): Array<IProConditions['componentModel']> {
         const value: Array<IProConditions['componentModel']> = [];
         for (let item of this.query.values()) {
-          value.push(item);
+            value.push(item);
         }
         return value
     }
-    @computed get computedVmModel(){
+    @computed get computedVmModel() {
         return JSON.parse(this.vmModel)
     }
 
-    @computed get computedSize(){
-       return this.size
+    @computed get computedSize() {
+        return this.size
     }
     /**
      * xs: 宽度<768px 响应式栅格，可为栅格数或一个包含其他属性的对象 
@@ -126,16 +138,16 @@ export class ConditionView<Query = {}> {
         this.query.clear();
     }
     @action _firstInitQuery(query: Array<IProConditions['componentModel']>) {
-        let caches:string[] = JSON.parse(getStorageItem(this.uid,'[]'))
+        let caches: string[] = JSON.parse(getStorageItem(this.uid,'[]'))
         console.log(caches,'caches');
-        const newQuery :Array<IProConditions['componentModel']>= [];
+        const newQuery: Array<IProConditions['componentModel']> = [];
         query.map((item) => {
             newQuery.push(void 0)
         })
         if (caches.length) {
-            caches = caches.filter((item)=>query.find((id)=>id.containerProps.uuid==item));
+            caches = caches.filter((item) => query.find((id) => id.container.uuid == item));
             caches.map((item,_index) => {
-                const itmIndex = query.findIndex((w) => item === w.containerProps.uuid);
+                const itmIndex = query.findIndex((w) => item === w.container.uuid);
                 if (_index === itmIndex) {
                     newQuery[_index] = query[_index]
                 }
@@ -155,9 +167,9 @@ export class ConditionView<Query = {}> {
         isCache: boolean;
 
     }) {
-        const caches:string[]=[]
+        const caches: string[] = []
         query.map((item) => {
-            const id = item.containerProps.uuid;
+            const id = item.container.uuid;
             if (!this.query.has(id)) {
                 this.query.set(id,item);
             }
@@ -169,20 +181,20 @@ export class ConditionView<Query = {}> {
         }
     }
     /** 改变搜索条件配置数据 */
-    @action _setQueryState<T extends IProConditions['componentModel']>(name:string,callback: (value: T) => void) {
+    @action _setQueryState<T extends IProConditions['componentModel']>(name: string,callback: (value: T) => void) {
         const item = this._getQueryItem(name);
         if (item) {
             //@ts-ignore
             callback && callback(item)
-            if (this.query.has(item.containerProps.uuid)) {
-                this.query.set(item.containerProps.uuid,cloneDeep(item))
+            if (this.query.has(item.container.uuid)) {
+                this.query.set(item.container.uuid,cloneDeep(item))
             }
         }
     }
-    @action private _getQueryItem(name:string) {
-        let item = this.computedQuery.find((item) => item.containerProps.name === name);
+    @action private _getQueryItem(name: string) {
+        let item = this.computedQuery.find((item) => item.container.name === name);
         if (item) {
-           return this.query.get(item.containerProps.uuid)
+            return this.query.get(item.container.uuid)
         } else {
             if (this.query.has(name)) {
                 return this.query.get(name)
@@ -193,18 +205,18 @@ export class ConditionView<Query = {}> {
     @action _setSize(size: 'small' | 'default') {
         this.size = size;
     }
-    @action _dispatchRequest(name:string,autoQuery: ISelectAutoQuery,options: {
+    @action _dispatchRequest(name: string,autoQuery: ProConditions['selectAutoQuery'],options: {
         pageIndex: number;
         pageSize?: number;
         keyWords?: string;
         /** 接口请求完成触发 */
-      callback?: (value:any) => void;
+        callback?: (value: any) => void;
     } = { pageIndex: 1,pageSize: 30 }) {
         if (autoQuery) {
             const server = new LegionsCore.LegionsFetch()
             //@ts-ignore
             const apiServer = () => {
-                const {pageIndex, pageSize,keyWords='',...props} = options
+                const { pageIndex,pageSize,keyWords = '',...props } = options
                 let params = cloneDeep(autoQuery.params(options.pageIndex,options.pageSize,keyWords,props))
                 delete params.pageIndex;
                 delete params.pageSize
@@ -212,24 +224,24 @@ export class ConditionView<Query = {}> {
                 let headers = {};
                 if (autoQuery.token) {
                     if (typeof autoQuery.token === 'string') {
-                        headers={'api-cookie': autoQuery.token}
+                        headers = { 'api-cookie': autoQuery.token }
                     }
                     else if (typeof autoQuery.token === 'function') {
-                        headers={'api-cookie': autoQuery.token()}
+                        headers = { 'api-cookie': autoQuery.token() }
                     }
                 }
                 if (autoQuery.requestBeforeTransformParams) {
-                    params = autoQuery.requestBeforeTransformParams({...params,pageIndex:options.pageIndex,pageSize:options.pageSize})
+                    params = autoQuery.requestBeforeTransformParams({ ...params,pageIndex: options.pageIndex,pageSize: options.pageSize })
                 }
                 let model = {
                     onBeforTranform: (value) => {
-                      options.callback && options.callback(value);
-                      return {
-                        responseData: value,
-                        mappingEntity:autoQuery.mappingEntity,
-                      }
+                        options.callback && options.callback(value);
+                        return {
+                            responseData: value,
+                            mappingEntity: autoQuery.mappingEntity,
+                        }
                     },
-                  }
+                }
                 if (autoQuery.method === 'post') {
                     return server.post<any,any>({
                         url: autoQuery.ApiUrl,
@@ -244,18 +256,18 @@ export class ConditionView<Query = {}> {
                         url: autoQuery.ApiUrl,
                         parameter: params,
                         headers: { ...autoQuery.options,...headers },
-                        model:LegionsModels.SelectKeyValue,
+                        model: LegionsModels.SelectKeyValue,
                         ...model,
                     })
                 }
             }
             this.selectOptions.set(name,{
-                obData:observablePromise<{}>(apiServer()),
+                obData: observablePromise<{}>(apiServer()),
             })
         }
     }
     /** 移除指定搜索条件项  */
-    @action _removeQuery(uuid:string) {
-       return this.query.delete(uuid);
+    @action _removeQuery(uuid: string) {
+        return this.query.delete(uuid);
     }
 }

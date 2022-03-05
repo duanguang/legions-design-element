@@ -1,3 +1,12 @@
+/*
+ * @Author: duanguang
+ * @Date: 2021-11-21 13:18:00
+ * @LastEditTime: 2022-03-04 14:41:53
+ * @LastEditors: duanguang
+ * @Description: 
+ * @FilePath: /legions-design-element/packages/legions-pro-design/es/index.js
+ * 「扫去窗上的尘埃，才可以看到窗外的美景。」
+ */
 /**
   *  legions-pro-design v0.0.21
   * (c) 2022 duanguang
@@ -22,7 +31,6 @@ export { default as LegionsProConditions } from './LegionsProConditions';
 export { default as LegionsProScrawl } from './LegionsProScrawl';
 export { default as LegionsProSelect } from './LegionsProSelect';
 export { default as LegionsProTable } from './LegionsProTable';
-export { default as LegionsProTableCustomColumns } from './LegionsProTableCustomColumns';
 export { default as LegionsProTableForm } from './LegionsProTableForm';
 export { default as LegionsProTextArea } from './LegionsProTextArea';
 export { default as LegionsProUEditor } from './LegionsProUEditor';
@@ -33,8 +41,6 @@ export { default as LegionsProTabsForm } from './LegionsProTabsForm';
 export { default as LegionsStore } from './LegionsStore';
 export { default as LegionsStoreConditions } from './LegionsStoreConditions';
 export { default as LegionsStoreForm } from './LegionsStoreForm';
-export { default as LegionsStoreModal } from './LegionsStoreModal';
-export { default as LegionsStoreTable } from './LegionsStoreTable';
 export { default as LegionsCore } from './LegionsCore';
 export { default as LegionsModels } from './LegionsModels';
 export { default as LegionsCrossModule } from './LegionsCrossModule';

@@ -52,7 +52,7 @@ export default class WorkerGlobalStateStore<IGlobalState, User = {}> extends Leg
                 value: any;
             };
             origin?: any;
-            childrenId: string;
+            childrenId: string; /** 监听全局数据，发生改变时触发,最基础监听函数 */
         }) => void;
         receiveMessage: (receive: any) => void;
     };

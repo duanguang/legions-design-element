@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { IProTableProps } from '../LegionsProTable/interface';
 import { IProTable } from '../LegionsProTable/interface';
 import { legionsStoreInterface } from '../LegionsStore/interface';
@@ -58,7 +58,7 @@ export default class LegionsProVirtualTable extends Component<IProTableProps, IS
         onFilterDropdownVisibleChange?: (visible: boolean) => void;
         sorter: boolean | ((a: any, b: any) => number);
         colSpan?: number;
-        width?: React.ReactText;
+        width?: string | number;
         className?: string;
         fixed?: boolean | "left" | "right";
         filterIcon?: import("react").ReactNode;

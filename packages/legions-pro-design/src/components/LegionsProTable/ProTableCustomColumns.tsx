@@ -1,8 +1,17 @@
+/*
+ * @Author: duanguang
+ * @Date: 2022-03-04 14:38:24
+ * @LastEditTime: 2022-03-04 14:40:25
+ * @LastEditors: duanguang
+ * @Description: 
+ * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProTable/ProTableCustomColumns.tsx
+ * 「扫去窗上的尘埃，才可以看到窗外的美景。」
+ */
 import React, { Component } from 'react'
 import { Button, Row, Col, Card, Tooltip, message, Icon } from 'antd';
 import LegionsProModal from  '../LegionsProModal';
 import { ILegionsProModal} from '../LegionsProModal/interface'
-import LegionsProTable from '../LegionsProTable';
+import LegionsStoreTable from './store';
 import { observer, bind } from 'legions/store-react'
 import LegionsProDragger from '../LegionsProDragger';
 import './style/index.less';
@@ -15,7 +24,7 @@ interface IProps {
      * @memberof IProps
      */
     tableUid: string;
-    store?: InstanceType<typeof LegionsProTable['store']>;
+    store?: InstanceType<typeof LegionsStoreTable>;
      /**
      *  组件componentWillMount 执行
      *
@@ -34,7 +43,7 @@ interface IProps {
 interface IState {
     columns?: { dataIndex: string; title: string }[]
 }
-@bind({ store: LegionsProTable['store'] })
+@bind({ store: LegionsStoreTable })
 @observer
 export default class LegionsProTableCustomColumns extends Component<IProps, IState> {
     modalRef: ILegionsProModal['ref'] = null

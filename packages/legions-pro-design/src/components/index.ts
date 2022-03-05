@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-25 18:42:42
- * @LastEditTime: 2022-03-01 14:09:54
+ * @LastEditTime: 2022-03-04 14:41:41
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/index.ts
@@ -29,7 +29,6 @@ export { default as LegionsProConditions } from './LegionsProConditions';
 export { default as LegionsProScrawl } from './LegionsProScrawl';
 export { default as LegionsProSelect } from './LegionsProSelect';
 export { default as LegionsProTable } from './LegionsProTable';
-export { default as LegionsProTableCustomColumns } from './LegionsProTableCustomColumns';
 export { default as LegionsProTableForm } from './LegionsProTableForm';
 export { default as LegionsProTextArea } from './LegionsProTextArea';
 export { default as LegionsProUEditor } from './LegionsProUEditor';
@@ -42,8 +41,6 @@ export { default as LegionsProTabsForm } from './LegionsProTabsForm';
 export { default as LegionsStore } from './LegionsStore';
 export { default as LegionsStoreConditions } from './LegionsStoreConditions';
 export { default as LegionsStoreForm } from './LegionsStoreForm';
-export { default as LegionsStoreModal } from './LegionsStoreModal';
-export { default as LegionsStoreTable } from './LegionsStoreTable';
 export { default as LegionsCore } from './LegionsCore';
 export { default as LegionsModels } from './LegionsModels';
 export { default as LegionsCrossModule } from './LegionsCrossModule';
