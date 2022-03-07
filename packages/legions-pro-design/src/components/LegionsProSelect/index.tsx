@@ -30,13 +30,12 @@ function transformlabelInValue(value: SelectValue,props: IProSelectProps,options
             // 多选模式
             const arr: LabeledValue[] = []
             value.forEach((item: string) => {
-                const entity = options.find((moedl) => moedl.key === item)
+                const entity = options.find((moedl) => moedl.value === item)
                 if (entity) {
                     arr.push({
                         ...entity,
-                        key: item,
+                        key: entity.key,
                         label: entity.label,
-                        title: entity.title,
                         value: entity.value,
                     })
                 }
@@ -44,11 +43,11 @@ function transformlabelInValue(value: SelectValue,props: IProSelectProps,options
             return arr
         }
         if (typeof value === 'string' || typeof value === 'number') { //单选
-            const entity = options.find((moedl) => moedl.key === value)
+            const entity = options.find((moedl) => moedl.value === value)
             if (entity) {
                 const values: LabeledValue = {
                     ...entity,
-                    key: value,
+                    key: entity.key,
                     label: entity.label,
                     title: entity.title,
                     value: entity.value,
@@ -60,12 +59,12 @@ function transformlabelInValue(value: SelectValue,props: IProSelectProps,options
         if (Array.isArray(value)) {
             const arr: LabeledValue[] = []
             value.forEach((item: LabeledValue) => {
-                const entity = options.find((moedl) => moedl.key === item.key)
+                const entity = options.find((moedl) => moedl.value === item.key)
                 if (entity) {
                     arr.push({
-                        ...value,
+                        ...item,
                         ...entity,
-                        key: item.key,
+                        key: entity.key,
                         label: entity.label,
                         title: entity.title,
                         value: entity.value,
@@ -75,7 +74,7 @@ function transformlabelInValue(value: SelectValue,props: IProSelectProps,options
             return arr
         }
         if (typeof value === 'object' && !Array.isArray(value)) {
-            let entity = options.find((moedl) => moedl.key === value.key)
+            let entity = options.find((moedl) => moedl.value === value.key)
             if (entity) {
                 return { ...value,...entity,value: entity.value }
             }

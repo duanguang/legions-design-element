@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-08 15:19:23
- * @LastEditTime: 2022-03-06 01:38:57
+ * @LastEditTime: 2022-03-06 22:38:27
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProConditions/ProConditionsUtils.tsx
@@ -17,39 +17,33 @@ import {ProConditions} from './interface'
 
 export class ConditionSelectModel {
     constructor(public container: ProConditions['config_container'],
-        public props: ProConditions['component_props']['select'],
-        public jsonProperty: string) {
+        public props: ProConditions['component_props']['select']) {
 
     }
 }
 export class ConditionTextNumberModel{
     constructor(public container:ProConditions['config_container'],
-        public props: ProConditions['component_props']['textNumber'],
-        public jsonProperty: string) {
+        public props: ProConditions['component_props']['textNumber']) {
     }
 }
 export class ConditionRadioButtonModel{
     constructor(public container:ProConditions['config_container'],
-        public props: ProConditions['component_props']['radioButton'],
-        public jsonProperty: string) {
+        public props: ProConditions['component_props']['radioButton']) {
     }
 }
 export class ConditionTextAreaModel{
     constructor(public container:ProConditions['config_container'],
-        public props: ProConditions['component_props']['textArea'],
-        public jsonProperty: string) {
+        public props: ProConditions['component_props']['textArea']) {
     }
 }
 export class ConditionTextModel{
     constructor(public container:ProConditions['config_container'],
-        public props: ProConditions['component_props']['text'],
-        public jsonProperty: string) {
+        public props: ProConditions['component_props']['text']) {
     }
 }
 export class ConditionDateModel{
     constructor(public container: ProConditions['config_container'],
-        public props: ProConditions['component_props']['date'],
-        public jsonProperty: string) {
+        public props: ProConditions['component_props']['date']) {
     }
 }
 
@@ -61,20 +55,17 @@ export class ConditionSearchModel{
 }
 export class ConditionRangePickerModel{
     constructor(public container:ProConditions['config_container'],
-        public props: ProConditions['component_props']['rangePicker'],
-        public jsonProperty: string) {
+        public props: ProConditions['component_props']['rangePicker']) {
     }
 }
 export class ConditionCheckBoxModel{
     constructor(public container:ProConditions['config_container'],
-        public props: ProConditions['component_props']['checkBox'],
-        public jsonProperty: string) {
+        public props: ProConditions['component_props']['checkBox']) {
     }
 }
 export class ConditionGroupCheckBoxModel{
     constructor(public container:ProConditions['config_container'],
-        public props: ProConditions['component_props']['groupCheckBox'],
-        public jsonProperty: string) {
+        public props: ProConditions['component_props']['groupCheckBox']) {
     }
 }
 
@@ -141,47 +132,47 @@ export class ProConditionsBase<Store,global = {}>{
     
     private renderSelectConfig(options: ProConditions['configs']['select']): ConditionSelectModel {
         const id = options.container.name;
-        this[id] = new ConditionSelectModel(this.createContainerProps(options.container),options.props,options.jsonProperty)
+        this[id] = new ConditionSelectModel(this.createContainerProps(options.container),options.props)
         return this[id];
     }
     private renderTextNumberConfig(options: ProConditions['configs']['textNumber']): ConditionTextNumberModel {
         const id = options.container.name;
-        this[id] = new ConditionTextNumberModel(this.createContainerProps(options.container),options.props,options.jsonProperty)
+        this[id] = new ConditionTextNumberModel(this.createContainerProps(options.container),options.props)
         return this[id];
     }
     private renderRadioButtonConfig(options: ProConditions['configs']['radioButton']): ConditionRadioButtonModel {
         const id = options.container.name;
-        this[id] = new ConditionRadioButtonModel(this.createContainerProps(options.container),options.props,options.jsonProperty)
+        this[id] = new ConditionRadioButtonModel(this.createContainerProps(options.container),options.props)
         return this[id];
     }
     private renderTextAreaConfig(options: ProConditions['configs']['textArea']): ConditionTextAreaModel {
         const id = options.container.name;
-        this[id] = new ConditionTextAreaModel(this.createContainerProps(options.container),options.props,options.jsonProperty)
+        this[id] = new ConditionTextAreaModel(this.createContainerProps(options.container),options.props)
         return this[id];
     }
     private renderTextConfig(options: ProConditions['configs']['text']): ConditionTextModel {
         const id = options.container.name;
-        this[id] = new ConditionTextModel(this.createContainerProps(options.container),options.props,options.jsonProperty)
+        this[id] = new ConditionTextModel(this.createContainerProps(options.container),options.props)
         return this[id];
     }
     private renderDateConfig(options: ProConditions['configs']['date']): ConditionDateModel {
         const id = options.container.name;
-        this[id] = new ConditionDateModel(this.createContainerProps(options.container),options.props,options.jsonProperty)
+        this[id] = new ConditionDateModel(this.createContainerProps(options.container),options.props)
         return this[id];
     }
     private renderRangePickerConfig(options: ProConditions['configs']['rangePicker']): ConditionRangePickerModel {
         const id = options.container.name;
-        this[id] = new ConditionRangePickerModel(this.createContainerProps(options.container),options.props,options.jsonProperty)
+        this[id] = new ConditionRangePickerModel(this.createContainerProps(options.container),options.props)
         return this[id];
     }
     private renderCheckBoxConfig(options: ProConditions['configs']['checkBox']): ConditionCheckBoxModel {
         const id = options.container.name;
-        this[id] = new ConditionCheckBoxModel(this.createContainerProps(options.container),options.props,options.jsonProperty)
+        this[id] = new ConditionCheckBoxModel(this.createContainerProps(options.container),options.props)
         return this[id];
     }
     private renderGroupCheckBoxConfig(options: ProConditions['configs']['groupCheckBox']): ConditionGroupCheckBoxModel {
         const id = options.container.name;
-        this[id] = new ConditionGroupCheckBoxModel(this.createContainerProps(options.container),options.props,options.jsonProperty)
+        this[id] = new ConditionGroupCheckBoxModel(this.createContainerProps(options.container),options.props)
         return this[id];
     }
     private renderSearchConfig(options: ProConditions['configs']['search']): ConditionSearchModel {

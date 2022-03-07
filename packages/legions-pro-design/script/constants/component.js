@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-09-28 23:07:31
- * @LastEditTime: 2022-03-05 22:03:31
+ * @LastEditTime: 2022-03-07 17:17:34
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/script/constants/component.js
@@ -20,8 +20,12 @@ const FormComponent = [
 ]//
 const ModalComponet = ['LegionsProModal']//
 const ConditionsComponent = ['LegionsProConditions'] //
-const GeneralComponent = ['LegionsProBreadcrumb','LegionsProInput',
-    'LegionsProNumericInput','LegionsProTextArea','LegionsProSelect']//
+const GeneralComponent = [
+    // 'LegionsProBreadcrumb','LegionsProInput',
+    // 'LegionsProNumericInput',
+    // 'LegionsProTextArea',
+     'LegionsProSelect'
+   ]//
 const DataEntryCompoent = ['LegionsProDataImport','LegionsProUpload','LgeionsProVirtualList']//
 const DataDisplayTypeComponent = [
     'LegionsProException','LegionsProLineOverflow','LegionsProDragger','LegionsProBaiduMap',

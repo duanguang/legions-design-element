@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-07 16:49:31
- * @LastEditTime: 2022-03-05 22:42:53
+ * @LastEditTime: 2022-03-07 16:29:14
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProConditions/store/conditionView.ts
@@ -17,15 +17,17 @@ import { IProConditions } from '../ProConditionsUtils';
 import LegionsModels from '../../LegionsModels';
 import { runScriptsSdk } from 'legions-thirdparty-plugin';
 import { setStorageItems,getStorageItem } from 'legions-utils-tool/storage'
-
+import { ProSelect } from '../../LegionsProSelect/interface'
 import {ProConditions} from '../interface'
 
 
 
-export interface ISelectOptions {
+export interface ISelectFetchData {
     keywords?: string,
-    // @ts-ignore
-    obData: ObservablePromiseModel<any>
+     /** 列表数据 */
+    data: ProSelect['options'][],
+     /** 总数量 */
+    total?: number,
 }
 // @ts-ignore
 export interface IObservableMap<K,V> extends ObservableMap<K,V> { }
@@ -80,6 +82,8 @@ export class ConditionView<Query = {}> {
 
     @observable private size: 'small' | 'default' = 'default';
 
+    /** 下拉选择器接口请求数据 */
+    @observable _select_data: IObservableMap<string,ISelectFetchData> = observable.map()
     @computed get computedQuery(): Array<IProConditions['componentModel']> {
         const value: Array<IProConditions['componentModel']> = [];
         for (let item of this.query.values()) {
@@ -207,5 +211,9 @@ export class ConditionView<Query = {}> {
     /** 移除指定搜索条件项  */
     @action _removeQuery(uuid: string) {
         return this.query.delete(uuid);
+    }
+    /** 设置下拉数据 */
+    @action _setSelectData(key:string,value:ISelectFetchData) {
+        this._select_data.set(key,value)
     }
 }

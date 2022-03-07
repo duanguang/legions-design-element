@@ -1,5 +1,17 @@
-import { IObservableMap, ISelectAutoQuery, ISelectOptions } from './interface';
-import { IProConditions } from '../LegionsProConditions/ProConditionsUtils';
+import { ObservableMap } from 'mobx';
+import { IProConditions } from '../ProConditionsUtils';
+import { ProSelect } from '../../LegionsProSelect/interface';
+export interface ISelectFetchData {
+    keywords?: string;
+    /** 列表数据 */
+    data: ProSelect['options'][];
+    /** 总数量 */
+    total?: number;
+}
+export interface IObservableMap<K, V> extends ObservableMap<K, V> {
+}
+export interface IObservableMap<K, V> extends ObservableMap<V> {
+}
 export declare class ConditionView<Query = {}> {
     constructor(uid?: string);
     private uid;
@@ -42,10 +54,11 @@ export declare class ConditionView<Query = {}> {
      */
     private vmModel;
     private size;
-    selectOptions: IObservableMap<string, ISelectOptions>;
+    /** 下拉选择器接口请求数据 */
+    _select_data: IObservableMap<string, ISelectFetchData>;
     get computedQuery(): Array<IProConditions['componentModel']>;
     get computedVmModel(): any;
-    get computedSize(): "small" | "default";
+    get computedSize(): "default" | "small";
     /**
      * xs: 宽度<768px 响应式栅格，可为栅格数或一个包含其他属性的对象
      *
@@ -74,13 +87,8 @@ export declare class ConditionView<Query = {}> {
     _setQueryState<T extends IProConditions['componentModel']>(name: string, callback: (value: T) => void): void;
     private _getQueryItem;
     _setSize(size: 'small' | 'default'): void;
-    _dispatchRequest(name: string, autoQuery: ISelectAutoQuery, options?: {
-        pageIndex: number;
-        pageSize?: number;
-        keyWords?: string;
-        /** 接口请求完成触发 */
-        callback?: (value: any) => void;
-    }): void;
     /** 移除指定搜索条件项  */
     _removeQuery(uuid: string): boolean;
+    /** 设置下拉数据 */
+    _setSelectData(key: string, value: ISelectFetchData): void;
 }

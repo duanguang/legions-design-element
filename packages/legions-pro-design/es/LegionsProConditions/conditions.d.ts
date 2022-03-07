@@ -1,67 +1,16 @@
 import React from 'react';
 import './style/index.less';
 import moment from 'moment';
-import LegionsStoreConditions from '../LegionsStoreConditions';
-import { IViewQueryConditionStore, ISelectAutoQuery } from '../LegionsStoreConditions/interface';
-import { InstanceQueryConditions } from './interface';
-import { ConditionCheckBoxModel, ConditionDateModel, ConditionGroupCheckBoxModel, ConditionRadioButtonModel, ConditionRangePickerModel, ConditionSearchModel, ConditionSelectModel, ConditionTextAreaModel, ConditionTextModel, ConditionTextNumberModel, IProConditions, ProConditions } from './ProConditionsUtils';
+import { ProConditionsProps, ProConditions } from './interface';
+import { ConditionCheckBoxModel, ConditionDateModel, ConditionGroupCheckBoxModel, ConditionRadioButtonModel, ConditionRangePickerModel, ConditionSearchModel, ConditionSelectModel, ConditionTextAreaModel, ConditionTextModel, ConditionTextNumberModel, IProConditions, ProConditionsBase } from './ProConditionsUtils';
 import { CheckboxValueType } from 'antd/lib/checkbox/Group';
-import { IProDraggerProps } from '../LegionsProDragger/interface';
-interface IProps {
-    query: Array<IProConditions['componentModel']>;
-    store?: InstanceType<typeof LegionsStoreConditions>;
-    /**
-     *
-     * 组件完成渲染时执行，有DOM结构，执行的钩子函数
-     * @memberof IProps
-     */
-    onDidMount?: (value: {
-        /**
-         *
-         * 组件真实高度
-         * @type {number}
-         */
-        height: number;
-        /**
-         *
-         * 组件唯一UID
-         * @type {string}
-         */
-        uid: string;
-    }) => void;
-    /**
-      *  组件componentWillMount 执行
-      */
-    onReady?: (instance: InstanceQueryConditions) => void;
-    size?: 'default' | 'small';
-    /**
-     * 默认是否展开 折叠区域内容
-     *
-     * @type {boolean}
-     * @memberof IProps
-     */
-    defaultCollapsed?: boolean;
-    /**
-     * 主要用于当父组件中存在多个搜索组件时，标记key 来保证父级组件中搜索组件唯一
-     * 持久化查询输入值时，保证值绝对唯一，生成hash 存入数据库，并且作为查询主键
-     * 如果不传，则系统默认生成，此时如果在数据库持久化查询条件，则需要保证搜索组件唯一，及父级组件路径不能产生变化
-     * @type {string}
-     * @memberof IProps
-     */
-    uniqueKeys?: string;
-    /** 是否拖拽排序 */
-    isDragSort?: boolean;
-    /** 拖拽移动组件props */
-    draggerProps?: IProDraggerProps;
-    /** 收起按钮的事件 */
-    onCollapse?: (collapsed: boolean, viewEntity?: IViewQueryConditionStore) => void;
-    debugger?: boolean;
+interface IProps extends ProConditionsProps {
 }
 interface IState {
     collapsed: boolean;
 }
 export default class LegionsProConditions<Query = {}> extends React.Component<IProps, IState> {
-    static ProConditions: typeof ProConditions;
+    static ProConditionsBase: typeof ProConditionsBase;
     static ConditionSelectModel: typeof ConditionSelectModel;
     static ConditionTextNumberModel: typeof ConditionTextNumberModel;
     static ConditionRadioButtonModel: typeof ConditionRadioButtonModel;
@@ -77,14 +26,14 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
     uid: string;
     queryPrams: {};
     constructor(props: any);
-    get viewStore(): import("brain-store-utils/types/create-view-model").ViewModel<import("../LegionsStoreConditions/conditionView").ConditionView<unknown>> & {
+    get viewStore(): import("brain-store-utils/types/create-view-model").ViewModel<import("./store/conditionView").ConditionView<unknown>> & {
         tranQuery: unknown;
         domHeight: number;
         widthContainer: number;
-        selectOptions: import("../LegionsStoreConditions/interface").IObservableMap<string, import("../LegionsStoreConditions/interface").ISelectOptions>;
+        _select_data: import("./store/conditionView").IObservableMap<string, import("./store/conditionView").ISelectFetchData>;
         readonly computedQuery: (ConditionSelectModel | ConditionTextNumberModel | ConditionRadioButtonModel | ConditionTextAreaModel | ConditionTextModel | ConditionDateModel | ConditionSearchModel | ConditionRangePickerModel | ConditionGroupCheckBoxModel)[];
         readonly computedVmModel: any;
-        readonly computedSize: "small" | "default";
+        readonly computedSize: "default" | "small";
         readonly compuedResolution: "xs" | "sm" | "md" | "lg" | "xl";
         _setVmModel: (model: Object) => void;
         _clearQuery: () => void;
@@ -93,27 +42,26 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
             isCache: boolean;
         }) => void;
         _setQueryState: <T extends ConditionSelectModel | ConditionTextNumberModel | ConditionRadioButtonModel | ConditionTextAreaModel | ConditionTextModel | ConditionDateModel | ConditionSearchModel | ConditionRangePickerModel | ConditionGroupCheckBoxModel>(name: string, callback: (value: T) => void) => void;
-        _setSize: (size: "small" | "default") => void;
-        _dispatchRequest: (name: string, autoQuery: ISelectAutoQuery<{}>, options?: {
-            pageIndex: number;
-            pageSize?: number;
-            keyWords?: string;
-            callback?: (value: any) => void;
-        }) => void;
+        _setSize: (size: "default" | "small") => void;
         _removeQuery: (uuid: string) => boolean;
+        _setSelectData: (key: string, value: import("./store/conditionView").ISelectFetchData) => void;
     };
     get vmModel(): any;
     static defaultProps: {
         size: string;
+        col: number;
         defaultCollapsed: boolean;
     };
-    consoleLog(type: string, logObj?: Object): void;
     componentWillMount(): void;
     componentDidMount(): void;
     componentWillReceiveProps(nextProps: IProps): void;
     componentWillUnmount(): void;
     componentDidUpdate(): void;
-    dispatchRequest(query?: (ConditionSelectModel | ConditionTextNumberModel | ConditionRadioButtonModel | ConditionTextAreaModel | ConditionTextModel | ConditionDateModel | ConditionSearchModel | ConditionRangePickerModel | ConditionGroupCheckBoxModel)[]): void;
+    _dispatchFetch(props: ProConditions['component_props']['select'], params?: any): Promise<{
+        data: import("../LegionsProSelect/interface").IOptions[];
+        total?: number;
+    }>;
+    dispatchRequest(query?: (ConditionSelectModel | ConditionTextNumberModel | ConditionRadioButtonModel | ConditionTextAreaModel | ConditionTextModel | ConditionDateModel | ConditionSearchModel | ConditionRangePickerModel | ConditionGroupCheckBoxModel)[]): Promise<Promise<void>[]>;
     onDidMount(): void;
     setFieldsValues<T extends IProConditions['componentModel']>(name: string, callback: (value: T) => void): void;
     mapPrams(item: Exclude<IProConditions['componentModel'], ConditionSearchModel>, data: any, prams: {}): {};
@@ -128,7 +76,7 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
     handleChangeDate(component: ConditionDateModel | ConditionRangePickerModel, datas: moment.Moment | [moment.Moment, moment.Moment], dateString: string): void;
     handleChangeChx(component: ConditionCheckBoxModel, even: React.ChangeEvent<HTMLInputElement>): void;
     handleSelectSearch(component: ConditionSelectModel, value: any): void;
-    handleChangeSelect(component: ConditionSelectModel, even: any): void;
+    handleChangeSelect(component: ConditionSelectModel, value: any, packingValue: any): void;
     /**
      * 重置数据
      *
@@ -163,8 +111,8 @@ export default class LegionsProConditions<Query = {}> extends React.Component<IP
     renderInputNumber(component: ConditionTextNumberModel): JSX.Element;
     renderRadioButton(component: ConditionRadioButtonModel): JSX.Element;
     renderSearch(component: ConditionSearchModel): JSX.Element;
-    renderLabel(component: IProConditions['componentModel'], labelSpan: number): JSX.Element;
-    getQueryItemSpan(item: IProConditions['componentModel']): number;
+    renderLabel(component: IProConditions['componentModel']): JSX.Element;
+    getQueryItemSpan(item: IProConditions['componentModel']): any;
     renderSearchComponent(): JSX.Element[];
     renderShowComponent(hide: IProConditions['componentModel'][]): JSX.Element[];
     renderCollapsed(list: IProConditions['componentModel'][]): JSX.Element[];

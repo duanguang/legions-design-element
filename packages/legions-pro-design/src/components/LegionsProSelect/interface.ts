@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2020-12-26 22:43:04
- * @LastEditTime: 2022-03-06 00:42:55
+ * @LastEditTime: 2022-03-07 15:18:50
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProSelect/interface.ts
@@ -113,6 +113,7 @@ export interface IOptions extends OptionProps {
     key?: string;
     label: string;
     group_key?: string;
+    value: any;
     /** 扩展字段，如果下拉数据项还需要保存其他数据时，可使用此选项 */
     extendedField?:any
 }

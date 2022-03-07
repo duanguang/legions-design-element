@@ -1,5 +1,5 @@
 /**
-  *  legions-pro-design v0.0.21
+  *  legions-pro-design v0.0.28
   * (c) 2022 duanguang
   * @license MIT
   */
@@ -85,32 +85,21 @@ var Option = Select.Option;
 function transformlabelInValue(value, props, options) {
     if (options === void 0) { options = []; }
     if (!props['labelInValue']) {
-        if (Array.isArray(value)) { // 开启多选
+        if (Array.isArray(value)) {
+            // 多选模式
             var arr_1 = [];
             value.forEach(function (item) {
-                var entity = options.find(function (moedl) { return moedl.key === item; });
+                var entity = options.find(function (moedl) { return moedl.value === item; });
                 if (entity) {
-                    arr_1.push({
-                        key: item,
-                        label: void 0,
-                        title: entity.title,
-                        extendedField: entity.extendedField,
-                        value: entity.value,
-                    });
+                    arr_1.push(__assign(__assign({}, entity), { key: entity.key, label: entity.label, value: entity.value }));
                 }
             });
             return arr_1;
         }
         if (typeof value === 'string' || typeof value === 'number') { //单选
-            var entity = options.find(function (moedl) { return moedl.key === value; });
+            var entity = options.find(function (moedl) { return moedl.value === value; });
             if (entity) {
-                var values = {
-                    key: value,
-                    label: void 0,
-                    title: entity.title,
-                    value: entity.value,
-                    extendedField: entity.extendedField,
-                };
+                var values = __assign(__assign({}, entity), { key: entity.key, label: entity.label, title: entity.title, value: entity.value });
                 return values;
             }
         }
@@ -119,17 +108,17 @@ function transformlabelInValue(value, props, options) {
         if (Array.isArray(value)) {
             var arr_2 = [];
             value.forEach(function (item) {
-                var entity = options.find(function (moedl) { return moedl.key === item.key; });
+                var entity = options.find(function (moedl) { return moedl.value === item.key; });
                 if (entity) {
-                    arr_2.push(__assign(__assign({}, value), { key: item.key, label: item.label, title: entity.title, value: entity.value, extendedField: entity.extendedField }));
+                    arr_2.push(__assign(__assign(__assign({}, item), entity), { key: entity.key, label: entity.label, title: entity.title, value: entity.value }));
                 }
             });
             return arr_2;
         }
         if (typeof value === 'object' && !Array.isArray(value)) {
-            var entity = options.find(function (moedl) { return moedl.key === value.key; });
+            var entity = options.find(function (moedl) { return moedl.value === value.key; });
             if (entity) {
-                return __assign(__assign({}, value), { extendedField: entity.extendedField, value: entity.value });
+                return __assign(__assign(__assign({}, value), entity), { value: entity.value });
             }
         }
     }
@@ -187,13 +176,15 @@ var LegionsProSelect = /** @class */ (function (_super) {
             var res = _this.setValue(value, _this.props.options);
             _this.props.onChange && _this.props.onChange(value, res);
             if (value === undefined) { // 执行清空选项时触发
+                _this.setState({
+                    keyWords: ''
+                });
                 if (_this.props.paging) {
                     _this.setState({
                         pageIndex: 1,
-                        keyWords: '',
                     }); /**  重新搜索页码重置*/
                     /** 当开启分页且查询全部数据做本地分页时，清空选择，重新检索本地数据 */
-                    if (!_this.props.remote) {
+                    if (!_this.props.onSearch) {
                         //@ts-ignore
                         _this.localSearch(_this.props, '');
                     }
@@ -208,30 +199,15 @@ var LegionsProSelect = /** @class */ (function (_super) {
             pageIndex: 1,
             data: new Map(),
         };
-        _this.consoleLog('constructor');
         return _this;
     }
-    LegionsProSelect.prototype.onGeneralSearch = function (props, val) {
-        var value = formatTrim(val);
-        props && props.onSearch && props.onSearch(value);
-        this.setState({
-            keyWords: value,
-        });
-    };
     LegionsProSelect.prototype.componentWillMount = function () {
         this.props.onReady && this.props.onReady(this.uid);
-        this.consoleLog('componentWillMount');
         this.initPageData();
-    };
-    LegionsProSelect.prototype.consoleLog = function (type, logObj) {
-        var name = 'proSelectDebug';
-        if (window && window[name] && typeof window[name] === 'function') {
-            window[name]({ that: this }, "proSelect-" + type);
-        }
     };
     /** 是否远程搜索 */
     LegionsProSelect.prototype.isRemoteSearch = function () {
-        if (this.props.remote) {
+        if (this.props.onSearch) {
             return true;
         }
         return false;
@@ -243,7 +219,7 @@ var LegionsProSelect = /** @class */ (function (_super) {
      */
     LegionsProSelect.prototype.queryLocalPageIndexByKeyWords = function () {
         var _this = this;
-        if (this.props.paging && !this.isRemoteSearch() && this.state.data.size > 0 && this.props.mode !== 'multiple' && this.state.value) {
+        if (this.props.paging && this.state.data.size > 0 && this.props.mode !== 'multiple' && this.state.value) {
             for (var i = 1; i <= this.state.data.size; i++) {
                 var index = this.state.data.get(i.toString()).findIndex(function (item) { return item.key === _this.state.value['key']; });
                 if (index > -1) {
@@ -253,13 +229,23 @@ var LegionsProSelect = /** @class */ (function (_super) {
             }
         }
     };
+    /**
+     * 触发分页数据初始化条件
+     *
+     * 1. 失去焦点，且state.data数据为0时
+     *
+     * 2. 初始化组件时，触发
+     *
+     * 3. 组件options数据更新时
+     */
     LegionsProSelect.prototype.initPageData = function (datas, total, pageIndex, paging) {
         var _this = this;
         if (datas === void 0) { datas = this.props.options || []; }
         if (total === void 0) { total = this.props.total || datas.length || 0; }
         if (pageIndex === void 0) { pageIndex = this.state.pageIndex || 1; }
         if (paging === void 0) { paging = this.props.paging; }
-        if (paging && !this.props.remote) {
+        if (paging) {
+            // 开启了分页且当前数据项大于等于总数量，如果是静态数据，则以静态写死数据分页，如果是动态数据，则表示一次性请求全部数据回来
             var totalPage = parseInt(((total + this.pageSize - 1) / this.pageSize).toString());
             var data = this.state.data;
             data.clear();
@@ -278,13 +264,6 @@ var LegionsProSelect = /** @class */ (function (_super) {
                     _this.appendPageDom();
                 });
             }
-        }
-        if (paging && this.props.remote) {
-            this.setState({
-                total: total,
-            }, function () {
-                _this.appendPageDom();
-            });
         }
     };
     LegionsProSelect.prototype.getLabel = function () {
@@ -328,7 +307,6 @@ var LegionsProSelect = /** @class */ (function (_super) {
         }
     };
     LegionsProSelect.prototype.componentDidMount = function () {
-        this.consoleLog('componentDidMount');
         this.appendMaxTagDom();
         var inputDom = document.querySelector("." + this.SelectInputUid);
         if (inputDom) {
@@ -347,10 +325,7 @@ var LegionsProSelect = /** @class */ (function (_super) {
         if (this.props.value !== nextProps.value || this.props.options !== nextProps.options) {
             this.setValue(nextProps.value, nextProps.options);
         }
-        if (nextProps.value === void 0 && nextProps.paging && !nextProps.remote) {
-            //@ts-ignore
-            this.localSearch(nextProps, '');
-        }
+        if (nextProps.value === void 0 && nextProps.paging) ;
         if (this.props.options !== nextProps.options) {
             this.initPageData(nextProps.options, nextProps.total, this.state.pageIndex, nextProps.paging);
         }
@@ -359,10 +334,8 @@ var LegionsProSelect = /** @class */ (function (_super) {
                 this.antdSelectRef.setOpenState && this.antdSelectRef.setOpenState(nextProps.open);
             }
         }
-        this.consoleLog('componentWillReceiveProps');
     };
     LegionsProSelect.prototype.componentDidUpdate = function () {
-        this.consoleLog('componentDidUpdate');
         this.appendPageDom();
         this.appendMaxTagDom();
         this.renderIconCopyPortal(this.props);
@@ -458,14 +431,13 @@ var LegionsProSelect = /** @class */ (function (_super) {
         return div;
     };
     LegionsProSelect.prototype.handleChangePage = function (pageIndex, pageSize) {
-        if (this.props.remote) {
+        if (this.props.onSearch) {
             this.props.onPagingQuery && this.props.onPagingQuery(pageIndex, pageSize, this.state.keyWords);
         }
     };
     /**
      *
      *
-     * @memberof HLSelect
      */
     LegionsProSelect.prototype.antdSelectedValueDom = function () {
         var selDom = document.querySelector("." + this.SelectInputUid);
@@ -526,33 +498,48 @@ var LegionsProSelect = /** @class */ (function (_super) {
         }
     };
     LegionsProSelect.prototype.componentWillUnmount = function () {
-        this.consoleLog('componentWillUnmount');
         this.removeEventListener();
         this.destroyIconCopyPortal();
     };
     LegionsProSelect.prototype.onBlur = function () {
-        if (this.props.paging && !this.props.remote && this.state.data.size === 0) { // 当执行搜索时，查询不到数据，在失去焦点时，重新分配分页数据
+        if (this.props.paging && this.state.data.size === 0) { // 在失去焦点时，重新分配分页数据
             this.initPageData();
         }
         this.props.onBlur && this.props.onBlur();
     };
     LegionsProSelect.prototype.onFocus = function () {
         var _this = this;
-        setTimeout(function () {
-            _this.appendPageDom();
-        }, 200);
+        if (this.props.paging) {
+            setTimeout(function () {
+                _this.appendPageDom();
+            }, 200);
+        }
         this.props.onFocus && this.props.onFocus();
     };
+    LegionsProSelect.prototype.onGeneralSearch = function (props, val) {
+        var value = formatTrim(val);
+        props && props.onSearch && props.onSearch(value);
+        this.setState({
+            keyWords: value,
+        });
+    };
     LegionsProSelect.prototype.onSearch = function (value) {
-        if (!this.props.paging || this.props.remote) { // 没有开启分页或者开启远程搜索时，才触发上层onSearch
-            this.onGeneralSearch(this.props, value);
+        var _this = this;
+        if (this.props.onSearch) { // 开启远程搜索时，才触发上层onSearch
             if (this.props.paging) {
+                // 如果开启分页了，则需要重置页码后，在去触发远程搜索函数
                 this.setState({
                     pageIndex: 1,
+                }, function () {
+                    _this.onGeneralSearch(_this.props, value);
                 }); /**  重新搜索页码重置*/
+            }
+            else {
+                this.onGeneralSearch(this.props, value);
             }
         }
         else {
+            // 没有开启远程搜索，则走本地数据搜索
             //@ts-ignore
             this.localSearch(this.props, value);
         }
@@ -572,17 +559,17 @@ var LegionsProSelect = /** @class */ (function (_super) {
     };
     LegionsProSelect.prototype.setValue = function (value, options, callback) {
         if (options === void 0) { options = this.props.options; }
-        var values = this.translabelInValue(value, options);
-        this.setState({ value: values }, function () {
-            callback && callback(values);
+        var res = this.translabelInValue(value, options);
+        this.setState({ value: res }, function () {
+            callback && callback(res);
         });
-        return values;
+        return res;
     };
     LegionsProSelect.prototype.renderOption = function () {
         var _this = this;
         var _a = this.props, optGroups = _a.optGroups, options = _a.options, total = _a.total, onPagingQuery = _a.onPagingQuery;
         var newData = [];
-        if (this.props.paging && !this.props.remote) {
+        if (this.props.paging && !this.props.onSearch) {
             var data = this.state.data.get(this.state.pageIndex.toString());
             if (data && data.length) {
                 newData = __spread(data);
@@ -593,14 +580,14 @@ var LegionsProSelect = /** @class */ (function (_super) {
         }
         if (optGroups) {
             return optGroups.map(function (item, index) {
-                var option = newData.filter(function (entity) { return entity.groupKey === item.key; });
+                var option = newData.filter(function (entity) { return entity.group_key === item.key; });
                 return React.createElement(OptGroup, { label: item.label, key: "" + item.label + item.key }, option.map(function (option, key) {
-                    React.createElement(Option, __assign({}, option, { value: option.key, disabled: option.disabled, title: option.key, key: "" + _this.uid + option.key }), option.value);
+                    React.createElement(Option, __assign({}, option, { value: option.value, disabled: option.disabled, title: option.title || option.label || option.value, key: "" + _this.uid + (option.key || option.value) }), option.label || option.value);
                 }));
             });
         }
         return newData.map(function (option, key) {
-            return React.createElement(Option, __assign({}, option, { key: "" + _this.uid + option.key, disabled: option.disabled, value: "" + option.key, title: option.key }), option.value);
+            return React.createElement(Option, __assign({}, option, { key: "" + _this.uid + (option.key || option.value), disabled: option.disabled, value: "" + option.value, title: option.title || option.label || option.value }), option.label || option.value);
         });
     };
     LegionsProSelect.prototype.copyText = function (value) {
@@ -623,7 +610,7 @@ var LegionsProSelect = /** @class */ (function (_super) {
                 if (!_this.antdSelectRef && ref && ref['_reactInternalInstance'] && ref['_reactInternalInstance']['_renderedComponent'] && ref['_reactInternalInstance']['_renderedComponent']['_instance']) {
                     _this.antdSelectRef = ref['_reactInternalInstance']['_renderedComponent']['_instance'];
                 }
-            }, optionLabelProp: "children", optionFilterProp: "children", className: this.SelectInputUid + " " + (this.props.selectAllClass || '') + " " + (label ? 'legions-pro-select-copy' : '') + " " + (this.state.value ? 'legions-pro-select' : ''), filterOption: this.props.mode === 'combobox' ? false : this.state.keyWords ? true : false, notFoundContent: loading ? React.createElement(Spin, { size: "small" }) : options.length === 0 ? '暂无数据' : '' }, this.props, { getPopupContainer: function (t) {
+            }, optionLabelProp: "children", optionFilterProp: "children", className: this.SelectInputUid + " " + (this.props.selectAllClass || '') + " " + (label ? 'legions-pro-select-copy' : '') + " " + (this.state.value ? 'legions-pro-select' : ''), notFoundContent: loading ? React.createElement(Spin, { size: "small" }) : options.length === 0 ? '暂无数据' : '' }, this.props, { filterOption: this.props.mode === 'combobox' ? false : this.state.keyWords ? true : false, getPopupContainer: function (t) {
                 if (_this.props.getPopupContainer && typeof _this.props.getPopupContainer === 'function') {
                     return _this.props.getPopupContainer(t);
                 }
@@ -631,12 +618,9 @@ var LegionsProSelect = /** @class */ (function (_super) {
                     return document.getElementById(_this.SelectInputUid);
                 }
                 return document.body;
-            }, 
-            /* filterOption={this.props.mode==='combobox'?false:true} */
-            dropdownClassName: this.uid + " " + (window['proxy'] ? 'legions-pro-select-line' : ''), placeholder: placeholder, onChange: this.onChange, onFocus: this.onFocus.bind(this), onSelect: this.onSelect.bind(this), onDeselect: this.onDeselect.bind(this), onBlur: this.onBlur.bind(this), allowClear: true, showSearch: true, onSearch: this.onSearch.bind(this), defaultActiveFirstOption: true }), this.renderOption());
+            }, dropdownClassName: this.uid + " " + (window['proxy'] ? 'legions-pro-select-line' : ''), placeholder: placeholder, onChange: this.onChange, onFocus: this.onFocus.bind(this), onSelect: this.onSelect.bind(this), onDeselect: this.onDeselect.bind(this), onBlur: this.onBlur.bind(this), allowClear: true, showSearch: true, onSearch: this.onSearch.bind(this), defaultActiveFirstOption: true }), this.renderOption());
     };
     LegionsProSelect.prototype.render = function () {
-        this.consoleLog('componentWillUnmount-render');
         return ((window['proxy']) ? React.createElement("div", { style: { position: 'relative', display: 'unset' }, id: this.SelectInputUid },
             "  ",
             this.renderSelelt(),

@@ -122,8 +122,8 @@ export declare class LegionsProForm<mapProps = {}> extends React.Component<IProF
         readonly computedAllElementList: string[];
         readonly computedFormFields: (LabelWithInputModel | LabelWithInputNumberModel | LabelWithSelectModel | LabelWithDatePickerModel | LabelWithMonthPickerModel | LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel | LabelWithRadioButtonModel | LabelWithTextModel | LabelWithCascaderModel | LabelWithCheckboxModel)[];
         readonly computedAllFormFields: (LabelWithInputModel | LabelWithInputNumberModel | LabelWithSelectModel | LabelWithDatePickerModel | LabelWithMonthPickerModel | LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel | LabelWithRadioButtonModel | LabelWithTextModel | LabelWithCascaderModel | LabelWithCheckboxModel)[];
-        readonly computedFormSize: "small" | "table" | "default";
-        updateFormSize: (size: "small" | "table" | "default") => void;
+        readonly computedFormSize: "default" | "small" | "table";
+        updateFormSize: (size: "default" | "small" | "table") => void;
         _addAllElementKeys: (keys: string) => void;
         getFormItemField: <T extends LabelWithInputModel | LabelWithInputNumberModel | LabelWithSelectModel | LabelWithDatePickerModel | LabelWithMonthPickerModel | LabelWithRangePickerModel | LabelWithUploadModel | LabelWithSwitchModel | LabelWithRadioButtonModel | LabelWithTextModel | LabelWithCascaderModel | LabelWithCheckboxModel>(key: string) => {
             value: T;

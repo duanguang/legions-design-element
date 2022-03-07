@@ -1,7 +1,7 @@
 /*
  * @Author: duanguang
  * @Date: 2021-01-08 12:00:22
- * @LastEditTime: 2022-03-06 01:42:15
+ * @LastEditTime: 2022-03-07 17:10:36
  * @LastEditors: duanguang
  * @Description: 
  * @FilePath: /legions-design-element/packages/legions-pro-design/src/components/LegionsProConditions/interface/index.ts
@@ -23,7 +23,7 @@ import {
     CheckboxProps,
     IAntdSelectOption,
 } from '../../interface/antd';
-import { IProSelectProps } from '../../LegionsProSelect/interface'
+import { IProSelectProps, LabeledValue } from '../../LegionsProSelect/interface'
 import { CheckboxValueType } from 'antd/lib/checkbox/Group';
 import { IProConditions } from '../ProConditionsUtils';
 import { IProDraggerProps } from '../../LegionsProDragger/interface';
@@ -32,7 +32,8 @@ import LegionsModels from '../../LegionsModels';
 import { ObservablePromiseModel } from 'legions/store-utils';
 import { ViewModel } from 'brain-store-utils/types/create-view-model';
 import { ConditionView } from '../store/conditionView';
-import {ProSelect} from '../../LegionsProSelect/interface'
+import { ProSelect } from '../../LegionsProSelect/interface'
+import { SelectValue } from 'antd/lib/select';
 type Proxify<T> = { [P in keyof T]: T[P] };
 export declare type IViewQueryConditionStore<Query = {}> = ViewModel<ConditionView<Query>> & Proxify<ConditionView<Query>>;
 interface ColProps {
@@ -158,17 +159,12 @@ interface IMethods {
 
     setFieldsValues?: <T extends IProConditions['componentModel']>(name: string,callback: (value: T) => void) => void
     /** 查询指定下拉组件数据项 */
-    getQuerySelectOption: (/** 下拉组件name值 */name: string,/** 下拉选项key值*/optionKey: string) => { readonly item: LegionsLabeledValue,readonly options: Array<ProSelect['options']> };
+    getQuerySelectOption: (/** 下拉组件name值 */name: string,/** 下拉选项值*/option_key: string) => { readonly curr_item: LegionsLabeledValue,readonly data: Array<ProSelect['options']> };
 
     /** 下拉远程搜索
      * 主要同于手动触发下拉组件搜索函数 */
-    onRrmoteSearch: (
-        /** 下拉组件name值 */name: string,
-        params: {
-            pageIndex: number;
-            pageSize?: number;
-            keyWords?: string;
-        } & Object) => void;
+    onSelectRequest: (
+        /** 下拉组件name值 */name: string,params?:any) => ReturnType<IQuerySelectProps['request']>;
     /** 添加新的搜索条件项 */
     addQuery: (list: Array<IProConditions['componentModel']>) => void;
     /** 移除指定搜索条件项 */
@@ -209,9 +205,10 @@ interface ProConditionsRef<Query = {}> {
 }
 interface IData {
     /** 组件内部值 */
-    viewState: any;
+    readonly state: any;
     /** 查询条件对象 */
-    parameter: any;
+    readonly parameter: any;
+    readonly packingValue?: LabeledValue | LabeledValue[]
 }
 
 interface IQueryTextProps extends IQueryProps,Weaken<InputProps,'onChange'> {
@@ -231,18 +228,17 @@ interface IQueryTextNumberProps extends IQueryProps,Weaken<InputNumberProps,'onC
 interface IQuerySelectProps extends IQueryProps,Weaken<IProSelectProps,'onChange'> {
     multiple?: boolean,
     loading?: boolean,
-     /**
-     * 请求托管，异步dataSource和分页管理
-     * @param pageIndex 当前页
-     * @param pageSize 每页条数
-     */
-    request?: (pageIndex: number, pageSize: number) => Promise<{
+    /**
+    * 请求托管，异步dataSource和分页管理
+    * @param params 查询条件
+    */
+    request?: (params?:any) => Promise<{
         /** 列表数据 */
         data: ProSelect['options'][],
         /** 总数量 */
         total?: number,
     }>
-    readonly onChange?: (value: IData,viewStore: IViewQueryConditionStore) => void;
+    readonly onChange?: (value: SelectValue,data: IData,store: IViewQueryConditionStore) => void;
 }
 interface IQueryDateProps extends IQueryProps,Weaken<DatePickerProps,'onChange'> {
     format: 'YYYY-MM-DD HH:mm:ss' | 'YYYY-MM-DD' | 'YYYY-MM-DD HH:mm'
@@ -292,7 +288,12 @@ interface IQueryProps extends IFieldsState {
      * @memberof IQueryProps
      */
     isNotReset?: boolean;
-
+    /** 映射查询接口字段名 ,
+     * 不传则为默认，日期范围传数组
+     * 
+     * 如果是下拉组件多选的话，请勿传入数组
+    */
+    jsonProperty?: string|[string,string];
     /**
      *
      * 自定义重置方法,返回一个新值
@@ -339,8 +340,7 @@ interface IConfigParams<T> {
      * @type {T}
      */
     props: T
-    /** 映射查询接口字段名 */
-    jsonProperty?: string;
+
 }
 export interface ProConditions {
     ref: ProConditionsRef;
@@ -372,7 +372,7 @@ export interface ProConditions {
         search: IConfigParams<IQuerySearchConfigProps>;
     }
     /** 组件类型 */
-    component_type:{
+    component_type: {
         text: 'text';
         checkBox: 'checkBox';
         groupCheckBox: 'groupCheckBox';
@@ -387,7 +387,7 @@ export interface ProConditions {
     /** 配置类型集合 */
     config_types: 'text' | 'checkBox' | 'groupCheckBox'
     | 'rangePicker' | 'date' | 'select' | 'textNumber' | 'radioButton'
-    |'textArea'|'search'
+    | 'textArea' | 'search'
     config_container: IConfigParams<any>['container']
 }
 export interface ProConditionsProps {

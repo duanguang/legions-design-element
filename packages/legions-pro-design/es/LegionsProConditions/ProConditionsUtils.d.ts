@@ -1,139 +1,59 @@
-import React from 'react';
-import { IQueryCheckBoxProps, IQueryDateProps, IQueryGroupCheckBoxProps, IQueryProps, IQueryRadioButtonProps, IQueryRangePickerProps, IQuerySelectProps, IQueryTextAreaProps, IQueryTextNumberProps, IQueryTextProps } from './interface';
-import { ColSize } from 'antd/lib/grid/col';
-import { IViewQueryConditionStore } from '../LegionsStoreConditions/interface';
-interface ColProps {
-    className?: string;
-    span?: number;
-    order?: number;
-    offset?: number;
-    push?: number;
-    pull?: number;
-    /** 宽度<768px 响应式栅格，可为栅格数或一个包含其他属性的对象  */
-    xs?: number | ColSize;
-    /** 宽度≥768px 响应式栅格，可为栅格数或一个包含其他属性的对象 */
-    sm?: number | ColSize;
-    /** 宽度≥992px 响应式栅格，可为栅格数或一个包含其他属性的对象 */
-    md: number | ColSize;
-    /** 宽度≥1200px 响应式栅格，可为栅格数或一个包含其他属性的对象 */
-    lg: number | ColSize;
-    /** 宽度≥1600px 响应式栅格，可为栅格数或一个包含其他属性的对象 */
-    xl: number | ColSize;
-    prefixCls?: string;
-    style?: React.CSSProperties;
-}
-interface IContainerProps {
-    col: ColProps;
-    name: string;
-    /** 单击时触发 */
-    onClick?: (value: {
-        uid: string;
-        name: string;
-    }) => void;
-    style?: React.CSSProperties;
-    className?: string;
-    /** 只读 */
-    readonly uuid?: string;
-}
+import { ProConditions } from './interface';
 export declare class ConditionSelectModel {
-    containerProps: IContainerProps;
-    conditionsProps: IQuerySelectProps & IQueryProps;
-    jsonProperty: string;
-    constructor(containerProps: IContainerProps, conditionsProps: IQuerySelectProps & IQueryProps, jsonProperty: string);
+    container: ProConditions['config_container'];
+    props: ProConditions['component_props']['select'];
+    constructor(container: ProConditions['config_container'], props: ProConditions['component_props']['select']);
 }
 export declare class ConditionTextNumberModel {
-    containerProps: IContainerProps;
-    conditionsProps: IQueryTextNumberProps & IQueryProps;
-    jsonProperty: string;
-    constructor(containerProps: IContainerProps, conditionsProps: IQueryTextNumberProps & IQueryProps, jsonProperty: string);
+    container: ProConditions['config_container'];
+    props: ProConditions['component_props']['textNumber'];
+    constructor(container: ProConditions['config_container'], props: ProConditions['component_props']['textNumber']);
 }
 export declare class ConditionRadioButtonModel {
-    containerProps: IContainerProps;
-    conditionsProps: IQueryRadioButtonProps & IQueryProps;
-    jsonProperty: string;
-    constructor(containerProps: IContainerProps, conditionsProps: IQueryRadioButtonProps & IQueryProps, jsonProperty: string);
+    container: ProConditions['config_container'];
+    props: ProConditions['component_props']['radioButton'];
+    constructor(container: ProConditions['config_container'], props: ProConditions['component_props']['radioButton']);
 }
 export declare class ConditionTextAreaModel {
-    containerProps: IContainerProps;
-    conditionsProps: IQueryTextAreaProps & IQueryProps;
-    jsonProperty: string;
-    constructor(containerProps: IContainerProps, conditionsProps: IQueryTextAreaProps & IQueryProps, jsonProperty: string);
+    container: ProConditions['config_container'];
+    props: ProConditions['component_props']['textArea'];
+    constructor(container: ProConditions['config_container'], props: ProConditions['component_props']['textArea']);
 }
 export declare class ConditionTextModel {
-    containerProps: IContainerProps;
-    conditionsProps: IQueryTextProps & IQueryProps;
-    jsonProperty: string;
-    constructor(containerProps: IContainerProps, conditionsProps: IQueryTextProps & IQueryProps, jsonProperty: string);
+    container: ProConditions['config_container'];
+    props: ProConditions['component_props']['text'];
+    constructor(container: ProConditions['config_container'], props: ProConditions['component_props']['text']);
 }
 export declare class ConditionDateModel {
-    containerProps: IContainerProps;
-    conditionsProps: IQueryDateProps & IQueryProps;
-    jsonProperty: string;
-    constructor(containerProps: IContainerProps, conditionsProps: IQueryDateProps & IQueryProps, jsonProperty: string);
-}
-interface IQuerySearchConfigProps {
-    /**查询按钮的文本 */
-    searchText?: string;
-    /** 重置按钮的文本*/
-    resetText?: string;
-    /**收起按钮的 render */
-    readonly collapseRender?: (collapsed: boolean, showCollapseButton?: boolean) => React.ReactNode;
-    /** 自定义操作栏 */
-    readonly onSearch: (params: any, viewEntity?: IViewQueryConditionStore) => void;
-    readonly onReset?: (params: any, viewEntity?: IViewQueryConditionStore) => void;
-    readonly onRefresh?: (params: any, viewEntity?: IViewQueryConditionStore) => void;
+    container: ProConditions['config_container'];
+    props: ProConditions['component_props']['date'];
+    constructor(container: ProConditions['config_container'], props: ProConditions['component_props']['date']);
 }
 export declare class ConditionSearchModel {
-    containerProps: IContainerProps;
-    conditionsProps: IQuerySearchConfigProps;
-    constructor(containerProps: IContainerProps, conditionsProps: IQuerySearchConfigProps);
+    container: ProConditions['config_container'];
+    props: ProConditions['component_props']['search'];
+    constructor(container: ProConditions['config_container'], props: ProConditions['component_props']['search']);
 }
 export declare class ConditionRangePickerModel {
-    containerProps: IContainerProps;
-    conditionsProps: IQueryRangePickerProps & IQueryProps;
-    jsonProperty: string;
-    constructor(containerProps: IContainerProps, conditionsProps: IQueryRangePickerProps & IQueryProps, jsonProperty: string);
+    container: ProConditions['config_container'];
+    props: ProConditions['component_props']['rangePicker'];
+    constructor(container: ProConditions['config_container'], props: ProConditions['component_props']['rangePicker']);
 }
 export declare class ConditionCheckBoxModel {
-    containerProps: IContainerProps;
-    conditionsProps: IQueryCheckBoxProps & IQueryProps;
-    jsonProperty: string;
-    constructor(containerProps: IContainerProps, conditionsProps: IQueryCheckBoxProps & IQueryProps, jsonProperty: string);
+    container: ProConditions['config_container'];
+    props: ProConditions['component_props']['checkBox'];
+    constructor(container: ProConditions['config_container'], props: ProConditions['component_props']['checkBox']);
 }
 export declare class ConditionGroupCheckBoxModel {
-    containerProps: IContainerProps;
-    conditionsProps: IQueryGroupCheckBoxProps & Omit<IQueryProps, 'label'>;
-    jsonProperty: string;
-    constructor(containerProps: IContainerProps, conditionsProps: IQueryGroupCheckBoxProps & Omit<IQueryProps, 'label'>, jsonProperty: string);
-}
-interface IRenderComponentBaseParams<T> {
-    /**
-     *
-     * 容器参数
-     * @type {containerProps}
-     * @memberof IRenderComponentParams
-     */
-    containerProps: IContainerProps;
-    /**
-     * 组件参数
-     *
-     * @type {T}
-     * @memberof IRenderComponentParams
-     */
-    conditionsProps: T;
-}
-interface IRenderComponentParams<T> extends IRenderComponentBaseParams<T> {
-    /**
-     * 映射查询接口字段名
-     *
-     * @memberof IRenderComponentParams
-     */
-    jsonProperty: string;
+    container: ProConditions['config_container'];
+    props: ProConditions['component_props']['groupCheckBox'];
+    constructor(container: ProConditions['config_container'], props: ProConditions['component_props']['groupCheckBox']);
 }
 export interface IProConditions {
     componentModel: ConditionSelectModel | ConditionTextNumberModel | ConditionRadioButtonModel | ConditionTextAreaModel | ConditionTextModel | ConditionDateModel | ConditionRangePickerModel | ConditionSearchModel | ConditionGroupCheckBoxModel;
 }
-export declare class ProConditions<Store, global = {}> {
+declare type componentConfigType<T> = T extends ProConditions['config_types'] ? ProConditions['configs'][T] : {};
+export declare class ProConditionsBase<Store, global = {}> {
     readonly global: global;
     readonly mobxStore: Store;
     constructor(options?: {
@@ -142,16 +62,18 @@ export declare class ProConditions<Store, global = {}> {
     });
     private createUid;
     private createContainerProps;
+    private configs;
     getConditionsConfig(componentConfigKey: string): IProConditions['componentModel'];
-    renderSelectConfig(options: IRenderComponentParams<IQuerySelectProps>): ConditionSelectModel;
-    renderTextNumberConfig(options: IRenderComponentParams<IQueryTextNumberProps>): ConditionTextNumberModel;
-    renderRadioButtonConfig(options: IRenderComponentParams<IQueryRadioButtonProps>): ConditionRadioButtonModel;
-    renderTextAreaConfig(options: IRenderComponentParams<IQueryTextAreaProps>): ConditionTextAreaModel;
-    renderTextConfig(options: IRenderComponentParams<IQueryTextProps>): ConditionTextModel;
-    renderDateConfig(options: IRenderComponentParams<IQueryDateProps>): ConditionDateModel;
-    renderRangePickerConfig(options: IRenderComponentParams<IQueryRangePickerProps>): ConditionRangePickerModel;
-    renderCheckBoxConfig(options: IRenderComponentParams<IQueryCheckBoxProps>): ConditionCheckBoxModel;
-    renderGroupCheckBoxConfig(options: IRenderComponentParams<IQueryGroupCheckBoxProps>): ConditionGroupCheckBoxModel;
-    renderSearchConfig(options: IRenderComponentBaseParams<IQuerySearchConfigProps>): ConditionSearchModel;
+    renderConfig<T extends ProConditions['config_types']>(type: T, options: componentConfigType<T>): any;
+    private renderSelectConfig;
+    private renderTextNumberConfig;
+    private renderRadioButtonConfig;
+    private renderTextAreaConfig;
+    private renderTextConfig;
+    private renderDateConfig;
+    private renderRangePickerConfig;
+    private renderCheckBoxConfig;
+    private renderGroupCheckBoxConfig;
+    private renderSearchConfig;
 }
 export {};

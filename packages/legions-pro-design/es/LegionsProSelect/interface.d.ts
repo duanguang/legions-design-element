@@ -7,13 +7,11 @@ export interface IProSelectProps extends SelectProps, Weaken<SelectProps, 'onSea
      * 总数
      *
      * @type {number}
-     * @memberof IHLSelectProps
      */
     total?: number;
     /**
      *传入此函数 会在启用分页和远程搜索时执行切换页码时调用
      *
-     * @memberof IHLSelectProps
      */
     onPagingQuery?: (pageIndex: number, pageSize: number, value?: string | string[] | number[] | LabeledValue | LabeledValue[]) => void;
     options: IOptions[];
@@ -23,96 +21,76 @@ export interface IProSelectProps extends SelectProps, Weaken<SelectProps, 'onSea
      * 最多显示多少个 tag 默认80000
      *
      * @type {number}
-     * @memberof IHLSelectProps
      */
     maxTagCount?: number;
     /**
      * 组件加载时，抛回下拉组件生成的唯一uid
      *
-     * @memberof IHLSelectProps
      */
     onReady?: (uid: string) => void;
     /**
      *
      * 是否默认展开下拉菜单 默认不展开
      * @type {boolean}
-     * @memberof IHLSelectProps
      */
     defaultOpen?: boolean;
     /**
      * 是否展开下拉菜单
      *
      * @type {boolean}
-     * @memberof IHLSelectProps
      */
     open?: boolean;
     /**
      * 是否启动分页
      *
      * @type {boolean}
-     * @memberof IHLSelectProps
      */
     paging?: boolean;
     /**
-     * 是否使用远程搜索 默认false
-     * 如果启用远程搜索才会触发方法
-     * @type {boolean}
-     * @memberof IHLSelectProps
-     */
-    remote?: boolean;
-    /**
      * 在开启远程搜索触发
      * 没有开启分页或者开启远程搜索时，才触发上层onSearch
-     * @memberof IHLSelectProps
      */
     onSearch?: (value: string) => any;
     /**
      *  清除选中数据时触发，主要是单选和combobox模式触发
      *
-     * @memberof IHLSelectProps
      */
     onClear?: () => void;
     pageSize?: number;
     /**
      * packingValue 详细的选中数据
      *
-     * @memberof IHLSelectProps
      */
     onChange?: (value: SelectValue, packingValue?: LabeledValue[] | LabeledValue) => void;
     /**
      * 全选样式，表单select 内部组件使用
      *
      * @type {string}
-     * @memberof IHLSelectProps
      */
     selectAllClass?: string;
+}
+export interface ProSelect {
+    labeledValue: LabeledValue;
+    options: IOptions;
 }
 export interface IOptGroupProps {
     label: string | JSX.Element;
     key?: string;
 }
 export interface LabeledValue {
-    key: string | number;
+    /**和 value 含义一致。如果 React 需要你设置此项，此项值与 value 的值相同，然后可以省略 value 设置 */
+    key: string;
     label: React.ReactNode;
     title?: number | string;
-    extendedField: string;
-    value: string;
+    value: any;
+    extendedField?: any;
 }
 export interface IOptions extends OptionProps {
-    value: string;
-    key: string;
-    /**
-     *
-     * 扩展字段，上层传入，选中时直接输出
-     * @type {string}
-     * @memberof ISelectProps
-     */
-    extendedField?: string;
-    /**
-    * 分组信息
-    *
-    * @type {(string|number)}
-    * @memberof IAntdSelectOption
-    */
-    groupKey?: string | number;
+    /** 和 value 含义一致。如果 React 需要你设置此项，此项值与 value 的值相同，然后可以省略 value 设置 */
+    key?: string;
+    label: string;
+    group_key?: string;
+    value: any;
+    /** 扩展字段，如果下拉数据项还需要保存其他数据时，可使用此选项 */
+    extendedField?: any;
 }
